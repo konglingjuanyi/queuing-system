@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-target
-.externalToolBuilders
-.settings
-deploy
-logs
-/generator.xml
-=======
 ﻿# kdiff3 ignore
 *.orig
 
@@ -40,4 +32,3 @@ Thumbs.db
 # *.zip
 # *.tar
 # *.tar.gz
->>>>>>> 924d69f5ecd67397a7ea199c88f219a07b348e9d
