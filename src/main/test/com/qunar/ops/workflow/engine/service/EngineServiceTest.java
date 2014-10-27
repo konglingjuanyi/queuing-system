@@ -1,7 +1,5 @@
 package com.qunar.ops.workflow.engine.service;
 
-import static org.junit.Assert.*;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,19 +16,17 @@ import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.task.TaskDefinition;
-import org.activiti.engine.task.Task;
 import org.activiti.engine.test.ActivitiRule;
 import org.activiti.engine.test.Deployment;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.qunar.ops.workflow.engine.result.ListInfo;
-import com.qunar.ops.workflow.engine.result.ProcessInstanceDetailInfo;
-import com.qunar.ops.workflow.engine.result.ProcessInstanceInfo;
+import com.qunar.ops.workflow.oaengine.result.ProcessInstanceDetailInfo;
+import com.qunar.ops.workflow.oaengine.result.ProcessInstanceInfo;
+import com.qunar.ops.workflow.oaengine.service.EngineService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring.xml"})

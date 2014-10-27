@@ -1,8 +1,5 @@
 package com.qunar.ops.workflow.engine.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.annotation.Resource;
 
 import org.junit.Test;
@@ -12,8 +9,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.qunar.ops.workflow.engine.result.BaseResult;
-import com.qunar.ops.workflow.engine.result.SendToMQInfo;
+import com.qunar.ops.workflow.oaengine.result.BaseResult;
+import com.qunar.ops.workflow.oaengine.result.SendToMQInfo;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
