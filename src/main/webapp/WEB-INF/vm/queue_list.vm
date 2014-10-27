@@ -1,0 +1,76 @@
+#set($layout = "layout/layout.vm")
+<h3 class="header smaller lighter blue">任务队列列表</h3>
+<table width="100%" class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<!--<th><input type='checkbox' id='toggleCheck' onclick="toggleCheck()"/></th>-->
+				<th>ProcessId</th>
+				<th>ProcessDefinitionId</th>
+				<th>TaskID</th>
+				<th>OID</th>
+				<th>UserID</th>
+				<th>类型</th>
+				<th>状态</th>
+				<th>时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			#foreach($info in $infos)
+				<tr class="ace-thumbnails">
+					<!--<td><input type='checkbox' name='queue' value='$info[2]_$info[4]_$info[5]'/></td>-->
+					<td>$info[0]</td>
+					<td>$info[1]</td>
+					<td>$info[2]</td>
+					<td>$info[3]</td>
+					<td>$info[4]</td>
+					<td>$info[5]</td>
+					<td>$info[6]</td>
+					<td>$info[7]</td>
+					<td><button onclick="doPost('$info[2]', '$info[4]', '$info[5]')">重试</button><button onclick="onDelete('$info[2]')">删除</button></td>
+				</tr>
+			#end
+		</tbody>
+	</table>
+<script language=JavaScript>
+function toggleCheck() {
+	var checked = $('#toggleCheck').prop('checked');
+	$("input[name='queue']").each(function(){
+		$(this).prop('checked', checked);
+	});
+}
+
+function onDelete(value){
+	if (confirm("确认删除！")) window.location = "admin/queue/delete/" + value ;
+}
+
+function doPost(taskId, userId, type){
+	var url = "approve/task/complet";
+	if(type == '驳回'){
+		url = "approve/task/reject";
+	}
+	var params = {
+            "userId": userId,
+            "vars": {"taskIds": taskId}
+        }
+	$.ajax({
+		contentType: "application/json; charset=utf-8",
+		dataType: 'json',
+		url: url,
+		type: "post",
+		data: JSON.stringify(params),
+		success: function(resp) {
+			if(resp.errorCode == 0){
+				alert("成功");
+				window.location = "admin/queue/delete/" + taskId ;
+			}else{
+				alert("失败："+resp.errorMessage);
+			}
+                
+		},
+		"error": function(jqxhr, textstatus, errorthrown) {
+        	alert('网络错误');
+		}
+	});
+}
+</script>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
+  <process id="service_demo" name="service_demo" isExecutable="true">
+    <startEvent id="startevent1" name="Start">
+      <extensionElements>
+        <activiti:executionListener event="start" class="com.qunar.ops.workflow.engine.listener.AccountApplyListener"></activiti:executionListener>
+      </extensionElements>
+    </startEvent>
+    <serviceTask id="send_to_mq_service" name="Send To Mq" activiti:class="com.qunar.ops.workflow.engine.activitiservice.SendToMq">
+      <extensionElements>
+        <activiti:field name="text1">
+          <activiti:string>Welcome to Beijing</activiti:string>
+        </activiti:field>
+        <activiti:field name="text2">
+          <activiti:string>Hello Mr. Bai</activiti:string>
+        </activiti:field>
+      </extensionElements>
+    </serviceTask>
+    <endEvent id="endevent1" name="End"></endEvent>
+    <sequenceFlow id="flow17" sourceRef="send_to_mq_service" targetRef="endevent1"></sequenceFlow>
+    <userTask id="usertask1" name="User Task" activiti:candidateUsers="yongnian.jiang"></userTask>
+    <sequenceFlow id="flow19" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
+    <sequenceFlow id="flow20" sourceRef="usertask1" targetRef="send_to_mq_service"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_service_demo">
+    <bpmndi:BPMNPlane bpmnElement="service_demo" id="BPMNPlane_service_demo">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="70.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="BPMNShape_endevent1">
+        <omgdc:Bounds height="35.0" width="35.0" x="580.0" y="120.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="send_to_mq_service" id="BPMNShape_send_to_mq_service">
+        <omgdc:Bounds height="55.0" width="105.0" x="390.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="usertask1" id="BPMNShape_usertask1">
+        <omgdc:Bounds height="55.0" width="105.0" x="180.0" y="110.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow17" id="BPMNEdge_flow17">
+        <omgdi:waypoint x="495.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="580.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow19" id="BPMNEdge_flow19">
+        <omgdi:waypoint x="105.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="180.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow20" id="BPMNEdge_flow20">
+        <omgdi:waypoint x="285.0" y="137.0"></omgdi:waypoint>
+        <omgdi:waypoint x="390.0" y="137.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

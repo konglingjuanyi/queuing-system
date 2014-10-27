@@ -1,0 +1,251 @@
+#set($layout = "layout/layout.vm")
+<h3 class="header smaller lighter blue">流程实例列表</h3>
+<table width="100%" class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th>ProcessKey</th>
+				<th>ProcessDefinitionId</th>
+				<th>ID</th>
+				<th>OID</th>
+				<th>图片</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody>
+			#foreach($ins in $list)
+				<tr class="ace-thumbnails">
+					<td>$processKey</td>
+					<td>$processDefinitionId</td>
+					<td>$ins.processInstanceId</td>
+					<td>$ins.businessKey</td>
+					<td>
+					<!-- a href="admin/$processDefinitionId/$ins.processInstanceId/trace_pic.png" data-rel="colorbox">
+						查看
+					</a -->
+					<a href="javascript:void(0);" onclick="show_trace('$processKey', '$processDefinitionId', '$ins.processInstanceId')">
+						查看
+					</a>
+					</td>
+					<td>
+					<a href="javascript:onDelete('$processDefinitionId', '$ins.processInstanceId');">删除</a>
+					<!--<a id="$ins.processInstanceId" href="javascript:void(0)" data-rel="dialog">操作</a>-->
+					</td>
+				</tr>
+				<div id='dialog-message-$ins.processInstanceId' class="hide" style="width:100%">					
+					<ul id="menu" >
+						#foreach($info in $ins.taskInfos)
+							<li #if($info.taskType!='待处理')class="ui-state-disabled"#end>
+							$info.taskName
+							</li>
+						#end
+					</ul>
+				<div>
+			#end
+		</tbody>
+	</table>
+
+
+
+<script language=JavaScript>
+	function show_trace(pkey, pdid, piid) {
+	    var imageUrl = 'admin/resource/read.html?processDefinitionId='+pdid+'&resourceType=image';
+	    $.getJSON(pdid + '/' + piid + '/activity', function(infos) {
+	        var positionHtml = "";
+	        var varsArray = new Array();
+	        $.each(infos, function(i, v) {
+	        	var border_style = "position:absolute;";
+	        	border_style += "border-radius: 10px;";
+	        	border_style += "left:" + (v.x) + "px;";
+	        	border_style += "top:" + (v.y) + "px;";
+	        	border_style += "width:" + (v.width) + "px;";
+	        	border_style += "height:" + (v.height) + "px;";
+	        	border_style += "opactity:0;";
+	        	if(v.current){
+	        		border_style += "border:3px solid red;";
+	        	}else if(v.history){
+	        		border_style += "border:3px solid blue;";
+	        	}
+	        	border = '<div class="activity-attr-border" style="'+border_style+'"/>';
+	            positionHtml += border;
+	            varsArray[varsArray.length] = v;
+	        });
+	        if ($('#workflowTraceDialog').length > 0) {
+	        	$('#workflowTraceDialog').remove();
+	        }
+	        if ($('#workflowTraceDialog').length == 0) {
+	            $('<div/>', {
+	                id: 'workflowTraceDialog',
+	                title: '查看流程',
+	                html: "<div><img src='" + imageUrl + "' style='position:absolute; left:0px; top:0px;' />" +
+	                "<div id='processImageBorder'>" +
+	                positionHtml +
+	                "</div>" +
+	                "</div>"
+	            }).appendTo('body');
+	        }
+	
+	        // 设置每个节点的data
+	        $('#workflowTraceDialog .activity-attr-border').each(function(i, v) {
+	            $(this).data('info', varsArray[i]);
+	        });
+	
+	        // 打开对话框
+	        $('#workflowTraceDialog').dialog({
+	            modal: true,
+	            resizable: false,
+	            dragable: false,
+	            open: function() {
+	                $('#workflowTraceDialog').dialog('option', 'title', '查看流程');
+	                $('#workflowTraceDialog').css('padding', '0em');
+	                $('#workflowTraceDialog .ui-accordion-content').css('padding', '0.2em').height($('#workflowTraceDialog').height() - 75);
+	                $('#workflowTraceDialog .activity-attr-border').qtip({
+	                    content: function() {
+	                        var task = $(this).data('info');
+	                        info = task.info;
+	                      	var content = '';
+		                    content += "<table class='need-border'>";
+		                    if(task.current){
+			                    content += "<tr><td colspan=2>";
+			                    content += "<a href='javascript:void(0);' onclick='complet(\""+pkey+"\", \""+pdid+"\", \""+piid+"\", \""+info.taskId+"\")'>[处理]</a>";
+			                    content += "<a href='javascript:void(0);' onclick='turnback(\""+pkey+"\", \""+pdid+"\", \""+piid+"\",  \""+info.taskId+"\")'>[退回]</a>";
+			                    pkey, pdid, piid, 
+			                    content += "</td></tr>";
+		                    }
+		                    content += "<tr>";
+			                content += "<td>TaskId</td>";
+			                content += "<td>"+info.taskKey+"</td>";
+			                content += "</tr>";
+		                    if(info.assign){
+			                    content += "<tr>";
+			                    content += "<td>处理人</td>";
+			                    content += "<td>"+info.assign+"</td>";
+			                    content += "</tr>";
+		                    }
+		                    if(info.candidate){
+			                    content += "<tr>";
+			                    content += "<td>候选人</td>";
+			                    content += "<td>"+info.candidate+"</td>";
+			                    content += "</tr>";
+		                    }
+		                    if(info.startTime){
+			                    content += "<tr>";
+			                    content += "<td>开始时间</td>";
+			                    content += "<td>"+format(info.startTime)+"</td>";
+			                    content += "</tr>";
+		                    }
+		                    if(info.endTime){
+			                    content += "<tr>";
+			                    content += "<td>结束时间</td>";
+			                    content += "<td>"+format(info.endTime)+"</td>";
+			                    content += "</tr>";
+		                    }
+		                    content += "</table>";
+		                    return content;
+	                    },
+	                    position: 'topRight',
+	                    hide: {
+	                    	fixed: true
+	                    },
+	                    style: {
+                                width: 150,
+                                tip: 'leftMiddle',
+                                color: 'white',
+                                background:'#66CC33',
+                                name: 'green'
+                            },
+	                });
+	            },
+	            close: function() {
+	                $('#workflowTraceDialog').remove();
+	            },
+	            width: document.documentElement.clientWidth * 0.95,
+	            height: document.documentElement.clientHeight * 0.95
+	        });
+	    });
+	}
+	
+	function format(m){
+		date = new Date(m);
+		return (1900+date.getYear())+"-"+(date.getMonth()+1)+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+	}
+	
+	function complet(pkey, pdid, piid, taskId){
+		$.ajax({
+			type: 'POST',
+			url: pkey+'/task/'+taskId+'/complet',
+			data: '{"userId":"nuby"}',
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			success: function(data){
+				if(data.errorCode == 0){
+					alert("处理成功");
+				}else{
+					alert(data.errorMessage+"("+data.errorCode+")")
+				}
+				show_trace(pkey, pdid, piid)
+			}
+		});
+	}
+	function turnback(pkey, pdid, piid, taskId){
+		$.ajax({
+			type: 'POST',
+			url: pkey+'/task/'+taskId+'/turnback',
+			data: '{"userId":"nuby"}',
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			success: function(data){
+				if(data.errorCode == 0){
+					alert("退回成功");
+				}else{
+					alert(data.errorMessage+"("+data.errorCode+")")
+				}
+				show_trace(pkey, pdid, piid)
+			}
+		});
+	}
+	$( "#menu" ).menu();
+
+	function onDelete(processDefinitionId, processInstanceId){
+		if (confirm("确认删除！")) window.location = "admin/"+processDefinitionId+"/"+processInstanceId+"/delete";
+	}
+
+	var colorbox_params = {
+		reposition:true,
+		scalePhotos:true,
+		scrolling:false,
+		previous:'<i class="icon-arrow-left"></i>',
+		next:'<i class="icon-arrow-right"></i>',
+		close:'&times;',
+		current:'{current} of {total}',
+		maxWidth:'100%',
+		maxHeight:'100%',
+		onOpen:function(){
+			document.body.style.overflow = 'hidden';
+		},
+		onClosed:function(){
+			document.body.style.overflow = 'auto';
+		},
+		onComplete:function(){
+			$.colorbox.resize();
+		}
+	};
+	$('.ace-thumbnails [data-rel="colorbox"]').colorbox(colorbox_params);
+	
+	$('.ace-thumbnails [data-rel="dialog"]').on('click', function(e) {
+		id = $(this).attr('id');
+		e.preventDefault();
+		var dialog = $( "#dialog-message-"+id ).removeClass('hide').dialog({
+			modal: true,
+			title: "节点列表",
+			title_html: true,
+			buttons: [ 
+				{
+					text: "Cancel",
+					click: function() {
+						$( this ).dialog( "close" ); 
+					} 
+				}
+			]
+		});
+	});
+</script>

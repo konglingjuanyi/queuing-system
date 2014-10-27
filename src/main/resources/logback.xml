@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd HH:mm:ss}] %5p %c:%L %m%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="file"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${qunar.logs}/workflow.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${qunar.logs}/workflow.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="file_error"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${qunar.logs}/workflow_error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${qunar.logs}/workflow_error.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<appender name="file_remove"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${qunar.logs}/workflow_remove.log</file>
+		<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
+			<evaluator>
+				<expression>message.contains("remove")</expression>
+			</evaluator>
+			<OnMatch>ACCEPT</OnMatch>
+			<OnMismatch>DENY</OnMismatch>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${qunar.logs}/workflow_remove.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+	<root level="DEBUG">
+		<appender-ref ref="console" />
+	</root>
+	<root level="DEBUG">
+		<appender-ref ref="file" />
+	</root>
+	<root level="ERROR">
+		<appender-ref ref="file_error" />
+	</root>
+	<root level="WARN">
+		<appender-ref ref="file_remove" />
+	</root>
+</configuration>
