@@ -1,25 +1,16 @@
 package com.qunar.ops.oaengine.result;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ListInfo {
-	
+public class ListInfo<T> {
 	private int pageNo;
 	private int pageSize;
 	private long count;
-	private List<?> list;
+	private List<T> infos;
 	
-	public ListInfo(int pageNo, int pageSize, long count, List<?>list) {
-		this.pageNo = pageNo;
-		this.pageSize = pageSize;
-		this.list = list;
-		this.count = count;
-	}
-	public List<?> getList() {
-		return list;
-	}
-	public void setList(List<ProcessInstanceInfo> list) {
-		this.list = list;
+	public ListInfo() {
+		this.infos = new ArrayList<T>();
 	}
 	public int getPageNo() {
 		return pageNo;
@@ -33,11 +24,17 @@ public class ListInfo {
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
+	public List<T> getInfos() {
+		return infos;
+	}
+	public void setInfos(List<T> infos) {
+		this.infos = infos;
+	}
 	public long getCount() {
 		return count;
 	}
 	public void setCount(long count) {
 		this.count = count;
 	}
-	
+
 }

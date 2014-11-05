@@ -10,7 +10,8 @@
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${qunar.logs}/workflow.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${qunar.logs}/workflow.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<FileNamePattern>${qunar.logs}/workflow.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
 		</rollingPolicy>
 		<encoder>
 			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
@@ -21,7 +22,8 @@
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
 		<file>${qunar.logs}/workflow_error.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${qunar.logs}/workflow_error.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<FileNamePattern>${qunar.logs}/workflow_error.%d{yyyy-MM-dd}.log
+			</FileNamePattern>
 		</rollingPolicy>
 		<encoder>
 			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n

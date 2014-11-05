@@ -22,14 +22,6 @@
 		<filter-name>encodingFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-	<filter>
-		<filter-name>cors</filter-name>
-		<filter-class>com.qunar.ops.workflow.engine.filter.CorsFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>cors</filter-name>
-		<url-pattern>/approve/*</url-pattern>
-	</filter-mapping>
 	<listener>
 		<description>spring监听器</description>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

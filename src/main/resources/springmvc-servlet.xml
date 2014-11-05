@@ -8,7 +8,7 @@
   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd"
 	default-autowire="byName">
 
-	<context:component-scan base-package="com.qunar.ops.workflow.engine.controller" />
+	<context:component-scan base-package="com.qunar.ops.oaengine.controller" />
 
 	<mvc:annotation-driven />
 
@@ -51,7 +51,7 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/admin/*" />
-			<bean class="com.qunar.ops.workflow.engine.interceptor.AuthInterceptor" />
+			<bean class="com.qunar.ops.oaengine.interceptor.AuthInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>

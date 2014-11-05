@@ -18,7 +18,7 @@
 		ignore-unresolvable="true" local-override="true"
 		location="classpath*:/workflow.properties,classpath*:/mq.properties" />
 
-	<context:component-scan base-package="com.qunar.ops.workflow" />
+	<context:component-scan base-package="com.qunar.ops.oaengine" />
 
 	<!-- 引擎内部提供的UUID生成器，依赖fastxml的java-uuid-generator模块 -->
 	<bean id="uuidGenerator"
@@ -73,18 +73,8 @@
 	<bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService"/>
 	<bean id="formService" factory-bean="processEngine" factory-method="getFormService" />
 	
-	<bean id="physicalRequestListener"
-		class="com.qunar.ops.workflow.engine.listener.PhysicalRequestListener">
-		<property name="apiHost" value="${physicalrequest.apihost}" />
-	</bean>
-	<bean id="virtualRequestListener"
-		class="com.qunar.ops.workflow.engine.listener.VirtualRequestListener">
-		<property name="apiHost" value="${virtualrequest.apihost}" />
-	</bean>
-	<bean id="accountApplyCandateListener"
-		class="com.qunar.ops.workflow.engine.listener.AccountApplyCandateListener">
-		<property name="apiHost" value="${accountApplyCandate.apihost}" />
-	</bean>
+
+	<bean id="selectListener" class="com.qunar.ops.oaengine.listener.SelectListener"/>
 	
 	<!-- myBatis文件 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
 		<property name="dataSource" ref="dataSource" /> <property name="mapperLocations" 
@@ -96,20 +86,4 @@
 	<!-- 注解方式配置事物 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	
-	<!-- Redis 
-	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="${redis.host}" p:port="${redis.port}"/>
-	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="jedisConnectionFactory">
-		<property name="keySerializer">
-	         <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
-	    </property>
-	</bean> -->
-
-	<!-- Rabbit MQ -->
-	<!-- spring amqp默认的是jackson 的一个插件,目的将生产者生产的数据转换为json存入消息队列，由于fastjson的速度快于jackson,这里替换为fastjson的一个实现 -->
-    <bean id="jsonMessageConverter"  class="com.qunar.ops.workflow.engine.mq.FastJsonMessageConverter"></bean>
-    <rabbit:connection-factory id="connectionFactory" host="${mqHost}" port="${mqPort}" username="${mqUsername}" password="${mqPassword}"/>
-    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"  message-converter="jsonMessageConverter"/>
-    <rabbit:admin connection-factory="connectionFactory"/>
-	<rabbit:fanout-exchange name="account">
-	</rabbit:fanout-exchange>
 </beans>

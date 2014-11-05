@@ -259,6 +259,6 @@
 			</plugin>
 		</plugins>
 
-		<finalName>engine</finalName>
+		<finalName>oa</finalName>
 	</build>
 </project>
