@@ -1,6 +1,12 @@
 package com.qunar.ops.oaengine.result;
 
-public class TaskInfo {
+import java.io.Serializable;
+
+public class TaskInfo implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8933545444370281313L;
 	private String oid;
 	private String taskId;
 	private String processInstanceId;

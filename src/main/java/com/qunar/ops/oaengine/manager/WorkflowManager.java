@@ -32,6 +32,7 @@ import com.qunar.ops.oaengine.command.TurnBackTaskCmd;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
+import com.qunar.ops.oaengine.result.TaskResult;
 
 @Component
 public class WorkflowManager {
@@ -118,14 +119,37 @@ public class WorkflowManager {
 	 * @param userId
 	 * @return List<TaskInfo> 当前任务信息
 	 */
-	public List<TaskInfo> pass(String taskId, String userId) {
+	public TaskResult pass(String taskId, String userId) {
 		List<TaskInfo> infos = new ArrayList<TaskInfo>();
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
-		if(task == null) return infos;
+		if(task == null) return null;
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", "true");
 		taskService.complete(taskId, vars);
-		return this.getCurrentTasks(task.getProcessInstanceId());
+		
+		return new TaskResult(task, this.getCurrentTasks(task.getProcessInstanceId()));
+	}
+	
+	/**
+	 * 退回
+	 * @param taskId
+	 * @param turnback_reason
+	 */
+	public TaskResult back(String userId, String taskId, String turnback_reason){
+		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
+		if(task == null) return null;
+		List<HistoricActivityInstance> lastActs = this.findLastTasks(task);
+		TaskServiceImpl taskService = (TaskServiceImpl)this.taskService;
+		Map<String, String> destinationTasks = new HashMap<String, String>();
+		for(HistoricActivityInstance lastAct : lastActs){
+			destinationTasks.put(lastAct.getActivityId(), lastAct.getAssignee());
+		}
+		if(destinationTasks.isEmpty()){
+			return null;
+		}
+		Map<String, String> findFlowActivity = this.findFlowActivity(lastActs, task.getProcessDefinitionId());
+		taskService.getCommandExecutor().execute(new TurnBackTaskCmd(task.getId(), destinationTasks, findFlowActivity, turnback_reason));
+		return new TaskResult(task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
 	
 	/**
@@ -135,38 +159,17 @@ public class WorkflowManager {
 	 * @param assignees
 	 * @return
 	 */
-	public boolean endorse(String taskId, String userId, String assignees){
-		long count = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).count();
-		if(count <= 0) return false;
+	public TaskResult endorse(String taskId, String userId, String assignees){
+		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
+		if(task == null) return null;
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", "false");
 		vars.put("candidates", assignees);
 		taskService.complete(taskId, vars);
-		return true;
+		return new TaskResult(task, null);
 	}
 	
-	/**
-	 * 退回
-	 * @param taskId
-	 * @param turnback_reason
-	 */
-	public List<TaskInfo> back(String userId, String taskId, String turnback_reason){
-		List<TaskInfo> infos = new ArrayList<TaskInfo>();
-		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
-		if(task == null) return infos;
-		List<HistoricActivityInstance> lastActs = this.findLastTasks(task);
-		TaskServiceImpl taskService = (TaskServiceImpl)this.taskService;
-		Map<String, String> destinationTasks = new HashMap<String, String>();
-		for(HistoricActivityInstance lastAct : lastActs){
-			destinationTasks.put(lastAct.getActivityId(), lastAct.getAssignee());
-		}
-		if(destinationTasks.isEmpty()){
-			return infos;
-		}
-		Map<String, String> findFlowActivity = this.findFlowActivity(lastActs, task.getProcessDefinitionId());
-		taskService.getCommandExecutor().execute(new TurnBackTaskCmd(task.getId(), destinationTasks, findFlowActivity, turnback_reason));
-		return this.getCurrentTasks(task.getProcessInstanceId());
-	}
+
 	
 	/**
 	 * 取消申请

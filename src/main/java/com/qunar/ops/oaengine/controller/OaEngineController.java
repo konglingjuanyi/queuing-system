@@ -47,10 +47,10 @@ public class OaEngineController {
 		req.setTbMoney(100);
 		//Object[] startWorkflow = this.manager.startWorkflow("test", "nuby.zhang", req);
 		//ListInfo<TaskInfo> todoList = this.manager.todoList("test", "nuby", 0, 10);
-		//List<TaskInfo> pass = this.manager.pass("50962", "nuby");
-		//this.manager.endorse("45996", "nuby", "nuby,abc");
-		List<TaskInfo> back = this.manager.back("nuby", "50962", "xxx");
-		this.manager.cancel("test", "001", "nuby.zhang", "reason");
+		List<TaskInfo> pass = this.manager.pass("58541", "nuby");
+		//this.manager.endorse("58508", "nuby", "nuby,abc");
+		//List<TaskInfo> back = this.manager.back("nuby", "50962", "xxx");
+		//this.manager.cancel("test", "001", "nuby.zhang", "reason");
 		System.out.println("====");
 	}
 
