@@ -2,7 +2,7 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!-- 数据库驱动包位置 -->
-    <classPathEntry location="C:\Users\nuby.zhang.QUNARSERVERS\.m2\repository\postgresql\postgresql\9.2-1002.jdbc4\postgresql-9.2-1002.jdbc4.jar" />
+    <classPathEntry location="C:\Users\yongnian.jiang.QUNARSERVERS\.m2\repository\postgresql\postgresql\9.2-1002.jdbc4\postgresql-9.2-1002.jdbc4.jar" />
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <plugin type="com.qunar.ops.mybatis.generator.pagination.PostgreSQLPaginationPlugin"/>
         <commentGenerator>
