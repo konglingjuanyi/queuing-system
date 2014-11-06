@@ -35,7 +35,7 @@ public class OaEngineController {
 	protected WorkflowManager manager;
 	@Autowired
 	protected ProcessEngineFactoryBean processEngine;
-	
+
 
 	@RequestMapping(value = "/oa/test.html")
 	public void index(HttpServletRequest request) {
@@ -51,7 +51,17 @@ public class OaEngineController {
 		//this.manager.endorse("58508", "nuby", "nuby,abc");
 		//List<TaskInfo> back = this.manager.back("nuby", "50962", "xxx");
 		//this.manager.cancel("test", "001", "nuby.zhang", "reason");
-		System.out.println("====");
+		//System.out.println("====");
+		//Test test = new Test();
+		//test.setContent("sssss");
+		//this.testMapper.insert(test);
+//		TestExample e = new TestExample();
+//		e.setOrderByClause("id");
+//		e.createCriteria().andContentLike("%s%");
+//		e.limit(5, 3);
+//		
+//		List<Test> selectByExample = this.testMapper.selectByExample(e);
+//		System.out.println("");
 	}
 
  

@@ -1,6 +1,7 @@
 package com.qunar.ops.oaengine.manager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,8 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.TaskServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -23,6 +26,7 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
 import org.activiti.engine.task.Task;
+import org.activiti.engine.task.TaskQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +64,7 @@ public class WorkflowManager {
 		this.identityService.setAuthenticatedUserId(userId);
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("request", request);
+		vars.put("owner", userId);
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey, request.getOid(), vars);
 		if(processInstance == null){
 			logger.debug("start process fail! {key={}, bkey={}}", new Object[]{processKey, request.getOid()});
@@ -76,15 +81,30 @@ public class WorkflowManager {
 	 * 待审批列表
 	 * @param processKey
 	 * @param userId
+	 * @param startTime
+	 * @param endTime
+	 * @param owner
 	 * @param pageNo
 	 * @param pageSize
 	 * @return ListInfo<TaskInfo> 任务列表
 	 */
-	public ListInfo<TaskInfo> todoList(String processKey, String userId, int pageNo, int pageSize){
+	public ListInfo<TaskInfo> todoList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize){
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
-		long count = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateUser(userId).count();
-		List<Task> tasks = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId).listPage((pageNo - 1) * pageSize, pageSize);
+		
+		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateUser(userId);
+		if(startTime != null){
+			query.taskCreatedAfter(startTime);
+		}
+		if(endTime != null){
+			query.taskCreatedBefore(endTime);
+		}
+		if(owner != null){
+			query.processVariableValueEquals("owner", owner);
+		}
+		
+		long count = query.count();
+		List<Task> tasks = query.listPage((pageNo - 1) * pageSize, pageSize);
 		ListInfo<TaskInfo> infos = new ListInfo<TaskInfo>();
 		infos.setCount(count);
 		infos.setPageNo(pageNo);
@@ -101,6 +121,64 @@ public class WorkflowManager {
 			info.setTaskId(task.getId());
 			info.setTaskKey(task.getTaskDefinitionKey());
 			info.setTaskName(task.getName());
+			
+			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
+			if(nrOfInstances == null || nrOfInstances <= 0){
+				info.setEndorse(false);
+			}else{
+				info.setEndorse(true);
+			}
+
+			infos.getInfos().add(info);
+		}
+		return infos;
+	}
+	
+	/**
+	 * 审批历史批列表
+	 * @param processKey
+	 * @param userId
+	 * @param startTime
+	 * @param endTime
+	 * @param owner
+	 * @param pageNo
+	 * @param pageSize
+	 * @return ListInfo<TaskInfo> 任务列表
+	 */
+	public ListInfo<TaskInfo> historyList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize){
+		pageNo = pageNo <= 0 ? 1 : pageNo;
+		pageSize = pageSize > 0 ? pageSize : 20;
+		
+		HistoricTaskInstanceQuery query = this.historyService.createHistoricTaskInstanceQuery().processDefinitionKey(processKey).taskAssignee(userId);
+		if(startTime != null){
+			query.taskCreatedAfter(startTime);
+		}
+		if(endTime != null){
+			query.taskCreatedBefore(endTime);
+		}
+		if(owner != null){
+			query.processVariableValueEquals("owner", owner);
+		}
+		
+		long count = query.count();
+		List<HistoricTaskInstance> tasks = query.listPage((pageNo - 1) * pageSize, pageSize);
+		ListInfo<TaskInfo> infos = new ListInfo<TaskInfo>();
+		infos.setCount(count);
+		infos.setPageNo(pageNo);
+		infos.setPageSize(pageSize);
+		if(tasks != null)for(HistoricTaskInstance task : tasks){
+			TaskInfo info = new TaskInfo();
+			Request request = (Request)task.getProcessVariables().get("request");
+			if(request == null){
+				info.setOid("");
+			}else{
+				info.setOid(request.getOid());
+			}
+			info.setProcessInstanceId(task.getProcessInstanceId());
+			info.setTaskId(task.getId());
+			info.setTaskKey(task.getTaskDefinitionKey());
+			info.setTaskName(task.getName());
+			
 			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
 			if(nrOfInstances == null || nrOfInstances <= 0){
 				info.setEndorse(false);
@@ -187,7 +265,39 @@ public class WorkflowManager {
 		return true;
 	}
 	
+	/**
+	 * 增加代理审批人
+	 * @param ownerId
+	 * @param userIds
+	 * @return
+	 */
+	public boolean appendCandidate(String ownerId, List<String> userIds){
+		if(userIds == null || userIds.isEmpty()) return false;
+		List<Task> tasks = this.taskService.createTaskQuery().taskCandidateUser(ownerId).list();
+		if(tasks != null)for(Task task : tasks){
+			for(String userId : userIds){
+				taskService.addCandidateUser(task.getId(), userId);
+			}
+		}
+		return true;
+	}
 	
+	/**
+	 * 取消代理审批人
+	 * @param ownerId
+	 * @param userIds
+	 * @return
+	 */
+	public boolean removeCandidate(String ownerId, List<String> userIds){
+		if(userIds == null || userIds.isEmpty()) return false;
+		List<Task> tasks = this.taskService.createTaskQuery().taskCandidateUser(ownerId).list();
+		if(tasks != null)for(Task task : tasks){
+			for(String userId : userIds){
+				taskService.deleteCandidateUser(task.getId(), userId);
+			}
+		}
+		return true;
+	}
 	
 	private List<TaskInfo> getCurrentTasks(String processInstanceId) {
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();

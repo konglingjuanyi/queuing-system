@@ -40,6 +40,15 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+		<property name="dataSource" ref="dataSource" /> 
+		<property name="mapperLocations" value="classpath:com/qunar/ops/oaengine/mapping/*.xml" />
+	</bean> 
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
+		<property name="basePackage" value="com.qunar.ops.oaengine.dao" /> 
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> 
+	</bean>
 
 	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
 		<property name="dataSource" ref="dataSource" />
@@ -76,12 +85,6 @@
 
 	<bean id="selectListener" class="com.qunar.ops.oaengine.listener.SelectListener"/>
 	
-	<!-- myBatis文件 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
-		<property name="dataSource" ref="dataSource" /> <property name="mapperLocations" 
-		value="classpath:com/qunar/ops/workflow/engine/mapping/*.xml" /> </bean> 
-		<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> <property 
-		name="basePackage" value="com.qunar.ops.workflow.engine.dao" /> <property 
-		name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> </bean> -->
 
 	<!-- 注解方式配置事物 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
