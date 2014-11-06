@@ -73,18 +73,8 @@
 	<bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService"/>
 	<bean id="formService" factory-bean="processEngine" factory-method="getFormService" />
 	
-	<bean id="physicalRequestListener"
-		class="com.qunar.ops.workflow.engine.listener.PhysicalRequestListener">
-		<property name="apiHost" value="${physicalrequest.apihost}" />
-	</bean>
-	<bean id="virtualRequestListener"
-		class="com.qunar.ops.workflow.engine.listener.VirtualRequestListener">
-		<property name="apiHost" value="${virtualrequest.apihost}" />
-	</bean>
-	<bean id="accountApplyCandateListener"
-		class="com.qunar.ops.workflow.engine.listener.AccountApplyCandateListener">
-		<property name="apiHost" value="${accountApplyCandate.apihost}" />
-	</bean>
+
+	<bean id="selectListener" class="com.qunar.ops.oaengine.listener.SelectListener"/>
 	
 	<!-- myBatis文件 <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
 		<property name="dataSource" ref="dataSource" /> <property name="mapperLocations" 

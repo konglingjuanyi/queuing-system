@@ -5,7 +5,7 @@
 		<title>工作流引擎-Admin</title>
 		<meta name="description" content="" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<base href="/engine/" />
+		<base href="/oaengine/" />
 		<!-- basic styles -->
 		<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
 		<link rel="stylesheet" href="assets/css/font-awesome.min.css" />
@@ -91,11 +91,7 @@
 								<span class="menu-text"> 流程定义列表 </span>
 							</a>
 						</li>
-						<li>
-							<a href="admin/add_process_list.html">
-								<span class="menu-text"> 添加审批流程 </span>
-							</a>
-						</li>
+
 						<!--
 						<li>
 							<a href="admin/async_queue.html">

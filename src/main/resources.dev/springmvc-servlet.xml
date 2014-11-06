@@ -8,7 +8,7 @@
   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd"
 	default-autowire="byName">
 
-	<context:component-scan base-package="com.qunar.ops.workflow.engine.controller" />
+	<context:component-scan base-package="com.qunar.ops.oaengine.controller" />
 
 	<mvc:annotation-driven />
 
@@ -41,9 +41,17 @@
 	</bean>
 	<mvc:resources location="/WEB-INF/assets/js/" mapping="/assets/js/**" />
 	<mvc:resources location="/WEB-INF/assets/css/" mapping="/assets/css/**" />
-	<mvc:resources location="/WEB-INF/assets/images/" mapping="/assets/images/**" />
+	<mvc:resources location="/WEB-INF/assets/images/"
+		mapping="/assets/images/**" />
 	<mvc:resources location="/WEB-INF/assets/img/" mapping="/assets/img/**" />
-	<mvc:resources location="/WEB-INF/assets/avatars/" mapping="/assets/avatars/**" />
+	<mvc:resources location="/WEB-INF/assets/avatars/"
+		mapping="/assets/avatars/**" />
 	<mvc:resources location="/WEB-INF/images/" mapping="/images/**" />
-	<mvc:resources location="/WEB-INF/static/" mapping="/approve/static/**" />
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/*" />
+			<bean class="com.qunar.ops.oaengine.interceptor.AuthInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
 </beans>

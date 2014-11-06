@@ -1,38 +1,44 @@
 package com.qunar.ops.oaengine.result;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.Serializable;
 
-public class Request {
+
+public class Request implements Serializable{
+	private static final long serialVersionUID = 3196624015494364529L;
 	private String oid;
-	private String userId;
-	private Map<String, Object> vars;
-	private Map<String, String> form;
+	private int amountMoney;
+	private int tbMoney;
+	private boolean report2vp;
+	private String department;
+	public int getAmountMoney() {
+		return amountMoney;
+	}
+	public void setAmountMoney(int amountMoney) {
+		this.amountMoney = amountMoney;
+	}
+	public int getTbMoney() {
+		return tbMoney;
+	}
+	public void setTbMoney(int tbMoney) {
+		this.tbMoney = tbMoney;
+	}
+	public boolean isReport2vp() {
+		return report2vp;
+	}
+	public void setReport2vp(boolean report2vp) {
+		this.report2vp = report2vp;
+	}
+	public String getDepartment() {
+		return department;
+	}
+	public void setDepartment(String department) {
+		this.department = department;
+	}
 	public String getOid() {
 		return oid;
 	}
 	public void setOid(String oid) {
 		this.oid = oid;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public Map<String, Object> getVars() {
-		if(vars == null) return new HashMap<String, Object>();
-		return vars;
-	}
-	public void setVars(Map<String, Object> vars) {
-		this.vars = vars;
-	}
-	public Map<String, String> getForm() {
-		if(form == null) return new HashMap<String, String>();
-		return form;
-	}
-	public void setForm(Map<String, String> form) {
-		this.form = form;
 	}
 
 }

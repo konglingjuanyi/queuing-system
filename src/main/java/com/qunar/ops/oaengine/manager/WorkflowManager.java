@@ -1,0 +1,339 @@
+package com.qunar.ops.oaengine.manager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.TaskServiceImpl;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import org.activiti.engine.impl.pvm.PvmActivity;
+import org.activiti.engine.impl.pvm.PvmTransition;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.IdentityLink;
+import org.activiti.engine.task.IdentityLinkType;
+import org.activiti.engine.task.Task;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.qunar.ops.oaengine.command.TurnBackTaskCmd;
+import com.qunar.ops.oaengine.result.ListInfo;
+import com.qunar.ops.oaengine.result.Request;
+import com.qunar.ops.oaengine.result.TaskInfo;
+import com.qunar.ops.oaengine.result.TaskResult;
+
+@Component
+public class WorkflowManager {
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private RuntimeService runtimeService;
+	@Autowired
+	protected TaskService taskService;
+	@Autowired
+	protected HistoryService historyService;
+	@Autowired
+	protected RepositoryService repositoryService;
+	@Autowired
+	protected IdentityService identityService;
+	
+	/**
+	 * 启动申请流程
+	 * @param processKey
+	 * @param userId
+	 * @param request
+	 * @return Object[]; 0-流程ID；1-当前任务信息
+	 */
+	public Object[] startWorkflow(String processKey, String userId, Request request){
+		this.identityService.setAuthenticatedUserId(userId);
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("request", request);
+		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey, request.getOid(), vars);
+		if(processInstance == null){
+			logger.debug("start process fail! {key={}, bkey={}}", new Object[]{processKey, request.getOid()});
+			return null;
+		}
+		logger.debug(
+				"start process of {key={}, bkey={}, pid={}}",
+				new Object[] { processKey, request.getOid(), processInstance.getId()});
+		List<TaskInfo> currentTasks = this.getCurrentTasks(processInstance.getId());
+		return new Object[]{processInstance.getId(), currentTasks};
+	}
+	
+	/**
+	 * 待审批列表
+	 * @param processKey
+	 * @param userId
+	 * @param pageNo
+	 * @param pageSize
+	 * @return ListInfo<TaskInfo> 任务列表
+	 */
+	public ListInfo<TaskInfo> todoList(String processKey, String userId, int pageNo, int pageSize){
+		pageNo = pageNo <= 0 ? 1 : pageNo;
+		pageSize = pageSize > 0 ? pageSize : 20;
+		long count = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateUser(userId).count();
+		List<Task> tasks = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId).listPage((pageNo - 1) * pageSize, pageSize);
+		ListInfo<TaskInfo> infos = new ListInfo<TaskInfo>();
+		infos.setCount(count);
+		infos.setPageNo(pageNo);
+		infos.setPageSize(pageSize);
+		if(tasks != null)for(Task task : tasks){
+			TaskInfo info = new TaskInfo();
+			Request request = (Request)task.getProcessVariables().get("request");
+			if(request == null){
+				info.setOid("");
+			}else{
+				info.setOid(request.getOid());
+			}
+			info.setProcessInstanceId(task.getProcessInstanceId());
+			info.setTaskId(task.getId());
+			info.setTaskKey(task.getTaskDefinitionKey());
+			info.setTaskName(task.getName());
+			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
+			if(nrOfInstances == null || nrOfInstances <= 0){
+				info.setEndorse(false);
+			}else{
+				info.setEndorse(true);
+			}
+
+			infos.getInfos().add(info);
+		}
+		return infos;
+	}
+	
+	/**
+	 * 审批通过
+	 * @param taskIds
+	 * @param userId
+	 * @return List<TaskInfo> 当前任务信息
+	 */
+	public TaskResult pass(String taskId, String userId) {
+		List<TaskInfo> infos = new ArrayList<TaskInfo>();
+		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
+		if(task == null) return null;
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("complete", "true");
+		taskService.complete(taskId, vars);
+		
+		return new TaskResult(task, this.getCurrentTasks(task.getProcessInstanceId()));
+	}
+	
+	/**
+	 * 退回
+	 * @param taskId
+	 * @param turnback_reason
+	 */
+	public TaskResult back(String userId, String taskId, String turnback_reason){
+		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
+		if(task == null) return null;
+		List<HistoricActivityInstance> lastActs = this.findLastTasks(task);
+		TaskServiceImpl taskService = (TaskServiceImpl)this.taskService;
+		Map<String, String> destinationTasks = new HashMap<String, String>();
+		for(HistoricActivityInstance lastAct : lastActs){
+			destinationTasks.put(lastAct.getActivityId(), lastAct.getAssignee());
+		}
+		if(destinationTasks.isEmpty()){
+			return null;
+		}
+		Map<String, String> findFlowActivity = this.findFlowActivity(lastActs, task.getProcessDefinitionId());
+		taskService.getCommandExecutor().execute(new TurnBackTaskCmd(task.getId(), destinationTasks, findFlowActivity, turnback_reason));
+		return new TaskResult(task, this.getCurrentTasks(task.getProcessInstanceId()));
+	}
+	
+	/**
+	 * 加签
+	 * @param taskId
+	 * @param userId
+	 * @param assignees
+	 * @return
+	 */
+	public TaskResult endorse(String taskId, String userId, String assignees){
+		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
+		if(task == null) return null;
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("complete", "false");
+		vars.put("candidates", assignees);
+		taskService.complete(taskId, vars);
+		return new TaskResult(task, null);
+	}
+	
+
+	
+	/**
+	 * 取消申请
+	 * @param processKey
+	 * @param oid
+	 * @param userId
+	 * @param reason
+	 */
+	public boolean cancel(String processKey, String oid, String userId, String reason){
+		HistoricProcessInstance pi = historyService
+				.createHistoricProcessInstanceQuery()
+				.processDefinitionKey(processKey).processInstanceBusinessKey(oid).startedBy(userId).unfinished().singleResult();
+		if(pi == null) return false;
+		this.runtimeService.deleteProcessInstance(pi.getId(), reason);
+		return true;
+	}
+	
+	
+	
+	private List<TaskInfo> getCurrentTasks(String processInstanceId) {
+		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
+		List<TaskInfo> taskInfos = new ArrayList<TaskInfo>();
+		if (tasks.size() > 0)
+			for (Task _task : tasks) {
+				String candidate = "";
+				List<IdentityLink> ids = taskService.getIdentityLinksForTask(_task.getId());
+				for (IdentityLink id : ids) {
+					if (IdentityLinkType.CANDIDATE.equals(id.getType())) {
+						candidate += id.getUserId() + ",";
+					}
+				}
+				if (candidate.length() > 0) {
+					candidate = candidate.substring(0, candidate.length() - 1);
+				}
+				TaskInfo tinfo = new TaskInfo();
+				tinfo.setTaskKey(_task.getTaskDefinitionKey());
+				tinfo.setCandidate(candidate);
+				tinfo.setTaskId(_task.getId());
+				tinfo.setTaskName(_task.getName());
+				tinfo.setTaskKey(_task.getTaskDefinitionKey());
+				Integer nrOfInstances = this.runtimeService.getVariable(_task.getExecutionId(), "nrOfInstances", Integer.class);
+				if(nrOfInstances == null || nrOfInstances <= 0){
+					tinfo.setEndorse(false);
+				}else{
+					tinfo.setEndorse(true);
+				}
+				taskInfos.add(tinfo);
+			}
+		else {
+			TaskInfo tinfo = new TaskInfo();
+			tinfo.setCandidate(null);
+			tinfo.setTaskId(null);
+			tinfo.setTaskName(null);
+			taskInfos.add(tinfo);
+		}
+		return taskInfos;
+	}
+	
+	private List<HistoricActivityInstance> findLastTasks(Task task) {
+		List<HistoricActivityInstance> res = new ArrayList<HistoricActivityInstance>();
+		List<String> acts = new ArrayList<String>();
+		PvmActivity act = this.findActivitiImpl(task.getId(), null);
+		this.findIncomingTasks(act, acts);
+		for (String actid : acts) {
+			/*
+			List<HistoricTaskInstance> list = this.historyService
+					.createHistoricTaskInstanceQuery().processInstanceId(task.getProcessInstanceId()).finished()
+					.taskDefinitionKey(taskKey).orderByHistoricTaskInstanceEndTime()
+					.desc().list();
+			if (list.size() == 0) continue;
+			tasks.add(list.get(0));*/
+			
+			List<HistoricActivityInstance> list = this.historyService.createHistoricActivityInstanceQuery().processInstanceId(task.getProcessInstanceId()).finished().activityId(actid).orderByHistoricActivityInstanceEndTime().desc().list();
+			if (list.size() == 0) continue;
+			res.add(list.get(0));
+		}
+		return res;
+	}
+	
+	private ActivityImpl findActivitiImpl(String taskId, String activityId) {
+		TaskEntity task = findTaskById(taskId);
+		ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+				.getDeployedProcessDefinition(task.getProcessDefinitionId());
+		if (activityId == null || activityId.length() == 0) {
+			activityId = task.getTaskDefinitionKey();
+		}
+		if (activityId.toUpperCase().equals("END")) {
+			for (ActivityImpl activityImpl : processDefinition.getActivities()) {
+				List<PvmTransition> pvmTransitionList = activityImpl
+						.getOutgoingTransitions();
+				if (pvmTransitionList.isEmpty()) {
+					return activityImpl;
+				}
+			}
+		}
+		ActivityImpl activityImpl = processDefinition.findActivity(activityId);
+		return activityImpl;
+	}
+	
+	private void findIncomingTasks(PvmActivity act, List<String> taskKeys) {
+		List<PvmTransition> incomings = act.getIncomingTransitions();
+		if(incomings.isEmpty() && act.getParent() != null &&  act.getParent() instanceof PvmActivity) {
+			PvmActivity parent = (PvmActivity)act.getParent();
+			incomings = parent.getIncomingTransitions();
+		}
+		if (incomings.size() == 0)
+			return;
+		for (PvmTransition incoming : incomings) {
+			PvmActivity source = incoming.getSource();
+			if ("userTask".equals(source.getProperty("type"))) {
+				taskKeys.add(source.getId());
+			}else if("subProcess".equals(source.getProperty("type"))){
+				taskKeys.add(source.getId());
+				/*
+				for(PvmActivity _act : source.getActivities()){
+					if(((String)_act.getProperty("type")).toLowerCase().indexOf("endevent")>=0){
+						this.findIncomingTasks(_act, taskKeys);
+					}
+				}*/
+			}else{
+				this.findIncomingTasks(source, taskKeys);
+			}
+		}
+	}
+	
+	private TaskEntity findTaskById(String taskId) {
+		TaskEntity task = (TaskEntity) taskService.createTaskQuery()
+				.taskId(taskId).singleResult();
+		return task;
+	}
+	
+	private Map<String, String> findFlowActivity(List<HistoricActivityInstance> acts, String processDefinitionId){
+		Map<String, String> flowActivity = new HashMap<String, String>();
+		ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
+				.getDeployedProcessDefinition(processDefinitionId);
+		for(HistoricActivityInstance act : acts){
+			PvmActivity _act = processDefinition.findActivity(act.getActivityId());
+			this.getFollowTasks(_act, flowActivity, true);
+		}
+		return flowActivity;
+	}
+	
+	private void getFollowTasks(PvmActivity act, Map<String, String> acts, boolean init){
+		if(!init){
+			acts.put(act.getId(), (String)act.getProperty("type"));
+		}
+		List<PvmTransition> outgoingTransitions = act.getOutgoingTransitions();
+		if(outgoingTransitions.isEmpty() && act.getParent() != null &&  act.getParent() instanceof PvmActivity) {
+			PvmActivity parent = (PvmActivity)act.getParent();
+			outgoingTransitions = parent.getOutgoingTransitions();
+		}
+		for(PvmTransition outgoingTransition : outgoingTransitions){
+			PvmActivity dest = outgoingTransition.getDestination();
+			if(dest == null) continue;
+			if("subProcess".equals(dest.getProperty("type"))){
+				acts.put(dest.getId(), (String)dest.getProperty("type"));
+				for(PvmActivity _act : dest.getActivities()){
+					this.getFollowTasks(_act, acts, false);
+				}
+				
+			}else{
+				this.getFollowTasks(outgoingTransition.getDestination(), acts, false);
+			}
+		}
+	}
+	
+}
