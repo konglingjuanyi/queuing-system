@@ -16,9 +16,9 @@
 
 	<context:property-placeholder
 		ignore-unresolvable="true" local-override="true"
-		location="classpath*:/workflow.properties,classpath*:/mq.properties" />
+		location="classpath*:/oaengine.properties,classpath*:/mq.properties" />
 
-	<context:component-scan base-package="com.qunar.ops.workflow" />
+	<context:component-scan base-package="com.qunar.ops.oaengine" />
 
 	<!-- 引擎内部提供的UUID生成器，依赖fastxml的java-uuid-generator模块 -->
 	<bean id="uuidGenerator"
@@ -106,7 +106,7 @@
 
 	<!-- Rabbit MQ -->
 	<!-- spring amqp默认的是jackson 的一个插件,目的将生产者生产的数据转换为json存入消息队列，由于fastjson的速度快于jackson,这里替换为fastjson的一个实现 -->
-    <bean id="jsonMessageConverter"  class="com.qunar.ops.workflow.engine.mq.FastJsonMessageConverter"></bean>
+    <bean id="jsonMessageConverter"  class="com.qunar.ops.oaengine.mq.FastJsonMessageConverter"></bean>
     <rabbit:connection-factory id="connectionFactory" host="${mqHost}" port="${mqPort}" username="${mqUsername}" password="${mqPassword}"/>
     <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"  message-converter="jsonMessageConverter"/>
     <rabbit:admin connection-factory="connectionFactory"/>
