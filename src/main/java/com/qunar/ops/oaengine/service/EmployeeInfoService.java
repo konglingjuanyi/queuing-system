@@ -22,12 +22,12 @@ public class EmployeeInfoService {
 	}
 	
 	/**
-	 * 获取员工所在部门VP
+	 * 获取员工所在部门VP rtxId
 	 * @param userId
 	 * @return 没有找到返回空list
 	 * @throws RemoteAccessException
 	 */
-	public List<EmployeeInfo> findVP(String userId) throws RemoteAccessException{
+	public List<String> findVP(String userId) throws RemoteAccessException{
 		return null;
 	}
 	
@@ -37,17 +37,19 @@ public class EmployeeInfoService {
 	 * @return 没有找到返回空list
 	 * @throws RemoteAccessException
 	 */
-	public List<EmployeeInfo> findManager(String userId) throws RemoteAccessException{
+	public List<String> findManager(String userId) throws RemoteAccessException{
 		return null;
 	}
 	
 	/**
-	 * 获取员工上上级主管， 如果没有指定上级主管获取部门VP，如果VP没找到返回空list
+	 * 获取员工上上级主管；
+	 * 如果员工上上级主管是VP，返回上级主管；
+	 * 如果以上条件均没有获取到，返回VP，如果VP没找到返回空list
 	 * @param userId
 	 * @return
 	 * @throws RemoteAccessException
 	 */
-	public List<EmployeeInfo> findDirector(String userId) throws RemoteAccessException{
+	public List<String> findDirector(String userId) throws RemoteAccessException{
 		return null;
 	}
 	
