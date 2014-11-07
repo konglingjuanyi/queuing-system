@@ -280,6 +280,9 @@ public interface IOAEngineService {
 	 * @param ownerId
 	 * @param userIds
 	 * @return
+	 * 
+	 * FE:
+	 * userIds不允许为空，需要符合rtxid格式
 	 */
 	public boolean appendCandidate(String processKey, String ownerId, List<String> userIds);
 	
@@ -289,6 +292,8 @@ public interface IOAEngineService {
 	 * @param ownerId
 	 * @param userIds
 	 * @return
+	 * FE：
+	 * userIds不允许为空，删除需要二次确认
 	 */
 	public boolean removeCandidate(String processKey, String ownerId, List<String> userIds);
 	
@@ -298,6 +303,8 @@ public interface IOAEngineService {
 	 * @param ownerId - 允许null
 	 * @param userIds
 	 * @return
+	 * FE:
+	 * 不需要分页
 	 */
 	public List<Delegation> findDelegation(String processKey, String ownerId);
 	
