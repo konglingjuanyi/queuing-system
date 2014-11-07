@@ -299,7 +299,7 @@ public interface IOAEngineService {
 	 * @param userIds
 	 * @return
 	 */
-	public List<Delegation> removeCandidate(String processKey, String ownerId);
+	public List<Delegation> findDelegation(String processKey, String ownerId);
 	
 
 }

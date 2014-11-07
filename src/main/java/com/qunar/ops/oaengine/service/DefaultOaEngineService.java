@@ -164,7 +164,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public List<Delegation> removeCandidate(String processKey, String ownerId) {
+	public List<Delegation> findDelegation(String processKey, String ownerId) {
 		return this.delegationManager.findDelegationByMaster(ownerId);
 	}
 
