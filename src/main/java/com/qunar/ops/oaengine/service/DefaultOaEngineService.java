@@ -5,18 +5,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.qunar.ops.oaengine.manager.DelegationManager;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
-import com.qunar.ops.oaengine.result.AlertInfo;
-import com.qunar.ops.oaengine.result.ApprovalInfo;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
-import com.qunar.ops.oaengine.result.FormInfo;
-import com.qunar.ops.oaengine.result.FormInfoList;
 import com.qunar.ops.oaengine.result.ListInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.AlertInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
 
 @Component
 public class DefaultOaEngineService implements IOAEngineService {

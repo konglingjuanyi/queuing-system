@@ -4,12 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import com.qunar.ops.oaengine.model.Delegation;
-import com.qunar.ops.oaengine.result.AlertInfo;
-import com.qunar.ops.oaengine.result.ApprovalInfo;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
-import com.qunar.ops.oaengine.result.FormInfo;
-import com.qunar.ops.oaengine.result.FormInfoList;
 import com.qunar.ops.oaengine.result.ListInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.AlertInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
 
 public interface IOAEngineService {
 	/**
