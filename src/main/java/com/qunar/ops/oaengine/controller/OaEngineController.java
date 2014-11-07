@@ -45,23 +45,13 @@ public class OaEngineController {
 		req.setOid("001");
 		req.setReport2vp(true);
 		req.setTbMoney(100);
-		//Object[] startWorkflow = this.manager.startWorkflow("test", "nuby.zhang", req);
+		Object[] startWorkflow = this.manager.startWorkflow("test", "nuby.zhang", req);
 		//ListInfo<TaskInfo> todoList = this.manager.todoList("test", "nuby", 0, 10);
 		//List<TaskInfo> pass = this.manager.pass("58541", "nuby");
 		//this.manager.endorse("58508", "nuby", "nuby,abc");
 		//List<TaskInfo> back = this.manager.back("nuby", "50962", "xxx");
 		//this.manager.cancel("test", "001", "nuby.zhang", "reason");
 		//System.out.println("====");
-		//Test test = new Test();
-		//test.setContent("sssss");
-		//this.testMapper.insert(test);
-//		TestExample e = new TestExample();
-//		e.setOrderByClause("id");
-//		e.createCriteria().andContentLike("%s%");
-//		e.limit(5, 3);
-//		
-//		List<Test> selectByExample = this.testMapper.selectByExample(e);
-//		System.out.println("");
 	}
 
  

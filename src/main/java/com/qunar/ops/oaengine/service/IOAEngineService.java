@@ -3,6 +3,7 @@ package com.qunar.ops.oaengine.service;
 import java.util.Date;
 import java.util.List;
 
+import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.AlertInfo;
 import com.qunar.ops.oaengine.result.ApprovalInfo;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
@@ -290,6 +291,15 @@ public interface IOAEngineService {
 	 * @return
 	 */
 	public boolean removeCandidate(String processKey, String ownerId, List<String> userIds);
+	
+	/**
+	 * 获取代理审批人
+	 * @param processKey
+	 * @param ownerId - 允许null
+	 * @param userIds
+	 * @return
+	 */
+	public List<Delegation> removeCandidate(String processKey, String ownerId);
 	
 
 }

@@ -7,3 +7,5 @@ drop table formson_0118;
 drop table formson_0119;
 drop table form_update_log;
 drop table form_approve_log;
+DROP TABLE t_delegation;
+DROP INDEX t_delegation_master_user_id_idx;

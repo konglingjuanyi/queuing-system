@@ -273,3 +273,23 @@ CREATE TABLE formson_0119 (
   field0098 varchar(255) DEFAULT NULL,
   PRIMARY KEY (id)
 );
+
+--代理表
+CREATE TABLE t_delegation
+(
+  id serial NOT NULL,
+  master_user_id character varying(50),
+  agent_user_id character varying(50),
+  ts time with time zone,
+  is_delete boolean
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE t_delegation
+  OWNER TO postgres;
+
+CREATE INDEX t_delegation_master_user_id_idx
+  ON t_delegation
+  USING btree
+  (master_user_id COLLATE pg_catalog."default");

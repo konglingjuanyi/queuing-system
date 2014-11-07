@@ -97,12 +97,12 @@
 	    </property>
 	</bean> -->
 
-	<!-- Rabbit MQ -->
-	<!-- spring amqp默认的是jackson 的一个插件,目的将生产者生产的数据转换为json存入消息队列，由于fastjson的速度快于jackson,这里替换为fastjson的一个实现 -->
+	<!-- Rabbit MQ 
     <bean id="jsonMessageConverter"  class="com.qunar.ops.oaengine.mq.FastJsonMessageConverter"></bean>
     <rabbit:connection-factory id="connectionFactory" host="${mqHost}" port="${mqPort}" username="${mqUsername}" password="${mqPassword}"/>
     <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"  message-converter="jsonMessageConverter"/>
     <rabbit:admin connection-factory="connectionFactory"/>
 	<rabbit:fanout-exchange name="account">
 	</rabbit:fanout-exchange>
+	-->
 </beans>

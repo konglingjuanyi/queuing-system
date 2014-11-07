@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.qunar.ops.oaengine.dao.TestMapper" >
-  <resultMap id="BaseResultMap" type="com.qunar.ops.oaengine.model.Test" >
+<mapper namespace="com.qunar.ops.oaengine.dao.DelegationMapper" >
+  <resultMap id="BaseResultMap" type="com.qunar.ops.oaengine.model.Delegation" >
     <result column="id" property="id" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="master_user_id" property="masterUserId" jdbcType="VARCHAR" />
+    <result column="agent_user_id" property="agentUserId" jdbcType="VARCHAR" />
+    <result column="ts" property="ts" jdbcType="TIME" />
+    <result column="is_delete" property="isDelete" jdbcType="BIT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -64,16 +67,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, name
+    id, master_user_id, agent_user_id, ts, is_delete
   </sql>
-  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.oaengine.model.TestExample" >
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.oaengine.model.DelegationExample" >
     select
     <if test="distinct" >
       distinct
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from act_test
+    from t_delegation
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -84,49 +87,78 @@
       limit ${limit} offset ${offset}
     </if>
   </select>
-  <delete id="deleteByExample" parameterType="com.qunar.ops.oaengine.model.TestExample" >
-    delete from act_test
+  <delete id="deleteByExample" parameterType="com.qunar.ops.oaengine.model.DelegationExample" >
+    delete from t_delegation
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.qunar.ops.oaengine.model.Test" >
+  <insert id="insert" parameterType="com.qunar.ops.oaengine.model.Delegation" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('act_test_id_seq')
+      select currval('t_delegation_id_seq')
     </selectKey>
-    insert into act_test (name)
-    values (#{name,jdbcType=VARCHAR})
+    insert into t_delegation (master_user_id, agent_user_id, ts, 
+      is_delete)
+    values (#{masterUserId,jdbcType=VARCHAR}, #{agentUserId,jdbcType=VARCHAR}, #{ts,jdbcType=TIME}, 
+      #{isDelete,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.Test" >
+  <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.Delegation" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('act_test_id_seq')
+      select currval('t_delegation_id_seq')
     </selectKey>
-    insert into act_test
+    insert into t_delegation
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="name != null" >
-        name,
+      <if test="masterUserId != null" >
+        master_user_id,
+      </if>
+      <if test="agentUserId != null" >
+        agent_user_id,
+      </if>
+      <if test="ts != null" >
+        ts,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
+      <if test="masterUserId != null" >
+        #{masterUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="agentUserId != null" >
+        #{agentUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="ts != null" >
+        #{ts,jdbcType=TIME},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=BIT},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.qunar.ops.oaengine.model.TestExample" resultType="java.lang.Integer" >
-    select count(*) from act_test
+  <select id="countByExample" parameterType="com.qunar.ops.oaengine.model.DelegationExample" resultType="java.lang.Integer" >
+    select count(*) from t_delegation
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update act_test
+    update t_delegation
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.name != null" >
-        name = #{record.name,jdbcType=VARCHAR},
+      <if test="record.masterUserId != null" >
+        master_user_id = #{record.masterUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.agentUserId != null" >
+        agent_user_id = #{record.agentUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ts != null" >
+        ts = #{record.ts,jdbcType=TIME},
+      </if>
+      <if test="record.isDelete != null" >
+        is_delete = #{record.isDelete,jdbcType=BIT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -134,9 +166,12 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update act_test
+    update t_delegation
     set id = #{record.id,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=VARCHAR}
+      master_user_id = #{record.masterUserId,jdbcType=VARCHAR},
+      agent_user_id = #{record.agentUserId,jdbcType=VARCHAR},
+      ts = #{record.ts,jdbcType=TIME},
+      is_delete = #{record.isDelete,jdbcType=BIT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
