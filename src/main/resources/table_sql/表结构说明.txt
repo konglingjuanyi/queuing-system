@@ -1,0 +1,77 @@
+----------------------日常费用报销主表和日常费用报销主表_历史---------------------------
+id			主键ID			bigint
+oid			oid			varchar(255)
+proc_inst_id		proc_inst_id		varchar(64)
+state			表单状态		int DEFAULT NULL
+start_member_id		发起人			bigint DEFAULT NULL
+start_date		发起时间		timestamp with time zone DEFAULT NULL
+approve_member_id	审核人			bigint DEFAULT NULL
+approve_date		审核时间		timestamp with time zone DEFAULT NULL
+finishedflag		流程结束		int DEFAULT NULL
+ratifyflag		核定状态		int DEFAULT NULL
+ratify_member_id	核定人			bigint DEFAULT NULL
+ratify_date		核定时间		timestamp with time zone DEFAULT NULL
+field0001		一级部门		varchar(255) DEFAULT NULL
+field0002		二级部门		varchar(255) DEFAULT NULL
+field0003		三级部门		varchar(255) DEFAULT NULL
+field0004		申请人			varchar(255) DEFAULT NULL
+field0005		申请日期	
+field0006		借款单流水号		varchar(255) DEFAULT NULL
+field0007		是否有借款		varchar(255) DEFAULT NULL
+field0008		流水号			varchar(255) DEFAULT NULL
+field0009		四级部门		varchar(255) DEFAULT NULL
+field0010		其他费用金额合计	bigint DEFAULT NULL
+field0011		金额总计		bigint DEFAULT NULL
+field0012		本部门主管意见		text
+field0013		本部门主管签字		varchar(255) DEFAULT NULL
+field0014		本部门签字日期		date DEFAULT NULL
+field0015		上级部门主管意见	text
+field0016		上级部门主管签字	varchar(255) DEFAULT NULL
+field0017		上级部门主管签字日期	date DEFAULT NULL
+field0018		部门总监意见		text
+field0019		部门总监签字		varchar(255) DEFAULT NULL
+field0020		部门总监签字日期	date DEFAULT NULL
+field0021		副总裁意见		text
+field0022		副总裁签字		varchar(255) DEFAULT NULL
+field0023		副总裁签字日期		date DEFAULT NULL
+field0024		CFO意见			text
+field0025		CFO签字			varchar(255) DEFAULT NULL
+field0026		CFO签字日期		date DEFAULT NULL
+field0027		出纳办理		text
+field0028		出纳办理签字		varchar(255) DEFAULT NULL
+field0029		出纳办理签字日期	date DEFAULT NULL
+field0030		加班餐费金额合计	bigint DEFAULT NULL
+field0031		招待费金额合计		bigint DEFAULT NULL
+field0032		员工关系费金额合计	bigint DEFAULT NULL
+field0033		出租车费金额合计	bigint DEFAULT NULL
+field0063		部门级别		varchar(255) DEFAULT NULL
+field0064		人员编号		varchar(255) DEFAULT NULL
+field0065		加班餐费财务核实金额	bigint DEFAULT NULL
+field0066		招待费财务核实金额	bigint DEFAULT NULL
+field0067		员工关系费财务核实金额	bigint DEFAULT NULL
+field0068		出租车财务核实金额	bigint DEFAULT NULL
+field0069		财务确认总计		bigint DEFAULT NULL
+field0070		其他财务核实金额	bigint DEFAULT NULL
+field0071		财务审核		text
+field0072		财务审核签字		varchar(255) DEFAULT NULL
+field0073		财务审核签字日期	date DEFAULT NULL
+field0074		申请部门		varchar(255) DEFAULT NULL
+field0075		部门编号		varchar(255) DEFAULT NULL
+sort			排序			int DEFAULT NULL
+field0076		银行卡号		varchar(255) DEFAULT NULL
+field0078		仅一级部门		varchar(255) DEFAULT NULL
+field0079		财务总监意见		varchar(255) DEFAULT NULL
+field0080		财务总监签名		varchar(255) DEFAULT NULL
+field0081		财务总监时间		date DEFAULT NULL
+field0082		CEO意见			varchar(255) DEFAULT NULL
+field0083		CEO签名			varchar(255) DEFAULT NULL
+field0084		CEO时间			date DEFAULT NULL
+field0085		借款金额		bigint DEFAULT NULL
+field0086		通信费金额		bigint DEFAULT NULL
+field0087		通信费备注		text
+field0090		RTX_ID			varchar(255) DEFAULT NULL
+field0091		报销审核组姓名		varchar(255) DEFAULT NULL
+field0092		报销审核组日期		date DEFAULT NULL
+field0093		地址			varchar(255) DEFAULT NULL
+field0096		是否直接向VP汇报	varchar(255) DEFAULT NULL
+field0097		开户银行		varchar(255) DEFAULT NULL
