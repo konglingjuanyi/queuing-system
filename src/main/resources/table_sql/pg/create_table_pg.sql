@@ -10,7 +10,8 @@ CREATE TABLE form_approve_log(
   next_task_name varchar(255),
   next_candidate text,
   ts timestamp with time zone,
-     dob date
+  dob date,
+  PRIMARY KEY (id)
 );
 
 --表单修改历史日志表
@@ -22,22 +23,16 @@ CREATE TABLE form_update_log(
   old_value text,
   create_user varchar(30),
   ts timestamp with time zone,
-     dob date
+  dob date,
+  PRIMARY KEY (id)
 );
 
 --表单主表，表单名称对应表名
 CREATE TABLE form_appmain (
   id serial,
   appname varchar(500) NOT NULL,
-  ref_apptypeid bigint NOT NULL,
   table_name varchar(200),
-  datadefine text,
-  bind text,
   state smallint NOT NULL,
-  SYSTEMDATETIME varchar(20) DEFAULT NULL,
-  formstart smallint NOT NULL,
-  form_type bigint NOT NULL DEFAULT '1',
-  trigger_config text,
   PRIMARY KEY (id)
 );
 

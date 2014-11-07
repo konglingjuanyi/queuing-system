@@ -1,3 +1,9 @@
+----------------------表单主表-----------------------------------------------
+id	主键ID	bigint					
+appname	表单名称	varchar(500)	NOT	NULL			
+table_name	表名	varchar(500)	NOT	NULL			
+state	状态	smallint	NOT	NULL	0=草稿	1=试运行	2=已发布
+
 ----------------------日常费用报销主表和日常费用报销主表_历史---------------------------
 id			主键ID			bigint
 oid			oid			varchar(255)
@@ -75,3 +81,89 @@ field0092		报销审核组日期		date DEFAULT NULL
 field0093		地址			varchar(255) DEFAULT NULL
 field0096		是否直接向VP汇报	varchar(255) DEFAULT NULL
 field0097		开户银行		varchar(255) DEFAULT NULL
+
+
+----------------------日常费用报销子表---------------------------
+----------------------加班餐费---------------------------
+id	主键唯一ID	bigint		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0034	加班餐费日期	date	DEFAULT	NULL
+field0035	加班餐费备注	text		
+field0036	人均餐标	bigint	DEFAULT	NULL
+field0037	加班餐费金额	bigint	DEFAULT	NULL
+field0038	就餐人数	bigint	DEFAULT	NULL
+field0039	加班餐费同行人	varchar(255)	DEFAULT	NULL
+field0040	就餐地点	varchar(255)	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+field0077	发票金额	varchar(255)	DEFAULT	NULL
+field0094	加班餐费工时	decimal(20,2)	DEFAULT	NULL
+
+----------------------招待费---------------------------
+id	主键唯一ID	serial		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0041	招待费日期	date	DEFAULT	NULL
+field0042	招待费地点	varchar(255)	DEFAULT	NULL
+field0043	招待费金额	bigint	DEFAULT	NULL
+field0044	客户单位	varchar(255)	DEFAULT	NULL
+field0045	业务目的	varchar(255)	DEFAULT	NULL
+field0046	招待费参加人数	varchar(255)	DEFAULT	NULL
+field0047	客户姓名	varchar(255)	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+
+----------------------其他费用---------------------------
+id	主键唯一ID	serial		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0048	其他费用备注	varchar(255)	DEFAULT	NULL
+field0049	其他费用金额	bigint	DEFAULT	NULL
+field0050	其他费用项目	varchar(255)	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+
+----------------------员工关系费---------------------------
+id	主键唯一ID	serial		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0051	员工关系费金额	bigint	DEFAULT	NULL
+field0052	员工关系费地点	varchar(255)	DEFAULT	NULL
+field0053	员工关系日期	date	DEFAULT	NULL
+field0054	活动目的	varchar(255)	DEFAULT	NULL
+field0055	员工关系费同行人	varchar(255)	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+field0089	员工关系费备注	text		
+
+----------------------出租车费---------------------------
+id	主键唯一ID	serial		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0056	出租车同行人	varchar(255)	DEFAULT	NULL
+field0057	出租车费金额	bigint	DEFAULT	NULL
+field0058	出租车费用途	varchar(255)	DEFAULT	NULL
+field0059	出租车费具体时间	varchar(255)	DEFAULT	NULL
+field0060	终出租车费终点	varchar(255)	DEFAULT	NULL
+field0061	出租车费地点	varchar(255)	DEFAULT	NULL
+field0062	出租车费日期	date	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+field0088	出租车费具体时间新	varchar(255)	DEFAULT	NULL
+field0095	出租车费工时	decimal(202)	DEFAULT	NULL
+field0098	备注	varchar(255)	DEFAULT	NULL
+
+----------------------表单修改历史日志表---------------------------
+id	主键唯一ID	serial			
+form_id	form_id	bigint			
+form_item	表单中的字段名	text			
+new_value	修改后的值	text			
+old_value	修改前的值	text			
+create_user	修改人	varchar(30)			
+ts	修改时间	timestamp	with	time	zone
+dob	修改日期	date			
+
+----------------------审批日志表---------------------------
+id	主键唯一ID	serial			
+form_id	form_id	bigint			
+approve_user	审批人	varchar(30)			
+task_id	节点ID	varchar(100)			
+task_name	节点名称	varchar(255)			
+manager_type	审批结果	varchar(10)			
+next_task_id	下一节点ID	varchar(100)			
+next_task_name	下一节点名称	varchar(255)			
+next_candidate	下一节点审批候选人	text			
+ts	审批时间	timestamp	with	time	zone
+dob	审批日期	date			
+
