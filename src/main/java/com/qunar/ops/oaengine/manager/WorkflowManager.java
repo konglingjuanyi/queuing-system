@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.activiti.engine.ActivitiException;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
@@ -30,6 +31,7 @@ import org.activiti.engine.task.TaskQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.oaengine.command.TurnBackTaskCmd;
@@ -60,14 +62,14 @@ public class WorkflowManager {
 	 * @param request
 	 * @return Object[]; 0-流程ID；1-当前任务信息
 	 */
-	public Object[] startWorkflow(String processKey, String userId, Request request){
+	public Object[] startWorkflow(String processKey, String userId, Request request) throws ActivitiException{
 		this.identityService.setAuthenticatedUserId(userId);
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("request", request);
 		vars.put("owner", userId);
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey, request.getOid(), vars);
 		if(processInstance == null){
-			logger.debug("start process fail! {key={}, bkey={}}", new Object[]{processKey, request.getOid()});
+			logger.error("start process fail! {key={}, bkey={}}", new Object[]{processKey, request.getOid()});
 			return null;
 		}
 		logger.debug(
@@ -197,14 +199,15 @@ public class WorkflowManager {
 	 * @param userId
 	 * @return List<TaskInfo> 当前任务信息
 	 */
-	public TaskResult pass(String taskId, String userId) {
-		List<TaskInfo> infos = new ArrayList<TaskInfo>();
+	public TaskResult pass(String taskId, String userId) throws ActivitiException{
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
-		if(task == null) return null;
+		if(task == null) {
+			logger.warn("任务没有找到{}", taskId);
+			return null;
+		}
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", "true");
 		taskService.complete(taskId, vars);
-		
 		return new TaskResult(task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
 	
@@ -213,9 +216,12 @@ public class WorkflowManager {
 	 * @param taskId
 	 * @param turnback_reason
 	 */
-	public TaskResult back(String userId, String taskId, String turnback_reason){
+	public TaskResult back(String userId, String taskId, String turnback_reason)  throws ActivitiException{
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
-		if(task == null) return null;
+		if(task == null) {
+			logger.warn("任务没有找到{}", taskId);
+			return null;
+		}
 		List<HistoricActivityInstance> lastActs = this.findLastTasks(task);
 		TaskServiceImpl taskService = (TaskServiceImpl)this.taskService;
 		Map<String, String> destinationTasks = new HashMap<String, String>();
@@ -223,6 +229,7 @@ public class WorkflowManager {
 			destinationTasks.put(lastAct.getActivityId(), lastAct.getAssignee());
 		}
 		if(destinationTasks.isEmpty()){
+			logger.warn("无法回退{}", taskId);
 			return null;
 		}
 		Map<String, String> findFlowActivity = this.findFlowActivity(lastActs, task.getProcessDefinitionId());
@@ -237,9 +244,12 @@ public class WorkflowManager {
 	 * @param assignees
 	 * @return
 	 */
-	public TaskResult endorse(String taskId, String userId, String assignees){
+	public TaskResult endorse(String taskId, String userId, String assignees) throws ActivitiException {
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
-		if(task == null) return null;
+		if(task == null) {
+			logger.warn("任务没有找到{}", taskId);
+			return null;
+		}
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", "false");
 		vars.put("candidates", assignees);
@@ -256,11 +266,14 @@ public class WorkflowManager {
 	 * @param userId
 	 * @param reason
 	 */
-	public boolean cancel(String processKey, String oid, String userId, String reason){
+	public boolean cancel(String processKey, String oid, String userId, String reason) throws ActivitiException {
 		HistoricProcessInstance pi = historyService
 				.createHistoricProcessInstanceQuery()
 				.processDefinitionKey(processKey).processInstanceBusinessKey(oid).startedBy(userId).unfinished().singleResult();
-		if(pi == null) return false;
+		if(pi == null) {
+			logger.warn("流程实例没有找到 oid={}", oid);
+			return false;
+		}
 		this.runtimeService.deleteProcessInstance(pi.getId(), reason);
 		return true;
 	}
@@ -271,7 +284,7 @@ public class WorkflowManager {
 	 * @param userIds
 	 * @return
 	 */
-	public boolean appendCandidate(String ownerId, List<String> userIds){
+	public boolean appendCandidate(String ownerId, List<String> userIds)  throws ActivitiException {
 		if(userIds == null || userIds.isEmpty()) return false;
 		List<Task> tasks = this.taskService.createTaskQuery().taskCandidateUser(ownerId).list();
 		if(tasks != null)for(Task task : tasks){
@@ -288,7 +301,7 @@ public class WorkflowManager {
 	 * @param userIds
 	 * @return
 	 */
-	public boolean removeCandidate(String ownerId, List<String> userIds){
+	public boolean removeCandidate(String ownerId, List<String> userIds)  throws ActivitiException {
 		if(userIds == null || userIds.isEmpty()) return false;
 		List<Task> tasks = this.taskService.createTaskQuery().taskCandidateUser(ownerId).list();
 		if(tasks != null)for(Task task : tasks){
