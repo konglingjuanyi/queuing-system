@@ -1,0 +1,169 @@
+----------------------表单主表-----------------------------------------------
+id	主键ID	bigint					
+appname	表单名称	varchar(500)	NOT	NULL			
+table_name	表名	varchar(500)	NOT	NULL			
+state	状态	smallint	NOT	NULL	0=草稿	1=试运行	2=已发布
+
+----------------------日常费用报销主表和日常费用报销主表_历史---------------------------
+id			主键ID			bigint
+oid			oid			varchar(255)
+proc_inst_id		proc_inst_id		varchar(64)
+state			表单状态		int DEFAULT NULL
+start_member_id		发起人			bigint DEFAULT NULL
+start_date		发起时间		timestamp with time zone DEFAULT NULL
+approve_member_id	审核人			bigint DEFAULT NULL
+approve_date		审核时间		timestamp with time zone DEFAULT NULL
+finishedflag		流程结束		int DEFAULT NULL
+ratifyflag		核定状态		int DEFAULT NULL
+ratify_member_id	核定人			bigint DEFAULT NULL
+ratify_date		核定时间		timestamp with time zone DEFAULT NULL
+field0001		一级部门		varchar(255) DEFAULT NULL
+field0002		二级部门		varchar(255) DEFAULT NULL
+field0003		三级部门		varchar(255) DEFAULT NULL
+field0004		申请人			varchar(255) DEFAULT NULL
+field0005		申请日期	
+field0006		借款单流水号		varchar(255) DEFAULT NULL
+field0007		是否有借款		varchar(255) DEFAULT NULL
+field0008		流水号			varchar(255) DEFAULT NULL
+field0009		四级部门		varchar(255) DEFAULT NULL
+field0010		其他费用金额合计	bigint DEFAULT NULL
+field0011		金额总计		bigint DEFAULT NULL
+field0012		本部门主管意见		text
+field0013		本部门主管签字		varchar(255) DEFAULT NULL
+field0014		本部门签字日期		date DEFAULT NULL
+field0015		上级部门主管意见	text
+field0016		上级部门主管签字	varchar(255) DEFAULT NULL
+field0017		上级部门主管签字日期	date DEFAULT NULL
+field0018		部门总监意见		text
+field0019		部门总监签字		varchar(255) DEFAULT NULL
+field0020		部门总监签字日期	date DEFAULT NULL
+field0021		副总裁意见		text
+field0022		副总裁签字		varchar(255) DEFAULT NULL
+field0023		副总裁签字日期		date DEFAULT NULL
+field0024		CFO意见			text
+field0025		CFO签字			varchar(255) DEFAULT NULL
+field0026		CFO签字日期		date DEFAULT NULL
+field0027		出纳办理		text
+field0028		出纳办理签字		varchar(255) DEFAULT NULL
+field0029		出纳办理签字日期	date DEFAULT NULL
+field0030		加班餐费金额合计	bigint DEFAULT NULL
+field0031		招待费金额合计		bigint DEFAULT NULL
+field0032		员工关系费金额合计	bigint DEFAULT NULL
+field0033		出租车费金额合计	bigint DEFAULT NULL
+field0063		部门级别		varchar(255) DEFAULT NULL
+field0064		人员编号		varchar(255) DEFAULT NULL
+field0065		加班餐费财务核实金额	bigint DEFAULT NULL
+field0066		招待费财务核实金额	bigint DEFAULT NULL
+field0067		员工关系费财务核实金额	bigint DEFAULT NULL
+field0068		出租车财务核实金额	bigint DEFAULT NULL
+field0069		财务确认总计		bigint DEFAULT NULL
+field0070		其他财务核实金额	bigint DEFAULT NULL
+field0071		财务审核		text
+field0072		财务审核签字		varchar(255) DEFAULT NULL
+field0073		财务审核签字日期	date DEFAULT NULL
+field0074		申请部门		varchar(255) DEFAULT NULL
+field0075		部门编号		varchar(255) DEFAULT NULL
+sort			排序			int DEFAULT NULL
+field0076		银行卡号		varchar(255) DEFAULT NULL
+field0078		仅一级部门		varchar(255) DEFAULT NULL
+field0079		财务总监意见		varchar(255) DEFAULT NULL
+field0080		财务总监签名		varchar(255) DEFAULT NULL
+field0081		财务总监时间		date DEFAULT NULL
+field0082		CEO意见			varchar(255) DEFAULT NULL
+field0083		CEO签名			varchar(255) DEFAULT NULL
+field0084		CEO时间			date DEFAULT NULL
+field0085		借款金额		bigint DEFAULT NULL
+field0086		通信费金额		bigint DEFAULT NULL
+field0087		通信费备注		text
+field0090		RTX_ID			varchar(255) DEFAULT NULL
+field0091		报销审核组姓名		varchar(255) DEFAULT NULL
+field0092		报销审核组日期		date DEFAULT NULL
+field0093		地址			varchar(255) DEFAULT NULL
+field0096		是否直接向VP汇报	varchar(255) DEFAULT NULL
+field0097		开户银行		varchar(255) DEFAULT NULL
+
+
+----------------------日常费用报销子表---------------------------
+----------------------加班餐费---------------------------
+id	主键唯一ID	bigint		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0034	加班餐费日期	date	DEFAULT	NULL
+field0035	加班餐费备注	text		
+field0036	人均餐标	bigint	DEFAULT	NULL
+field0037	加班餐费金额	bigint	DEFAULT	NULL
+field0038	就餐人数	bigint	DEFAULT	NULL
+field0039	加班餐费同行人	varchar(255)	DEFAULT	NULL
+field0040	就餐地点	varchar(255)	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+field0077	发票金额	varchar(255)	DEFAULT	NULL
+field0094	加班餐费工时	decimal(20,2)	DEFAULT	NULL
+
+----------------------招待费---------------------------
+id	主键唯一ID	serial		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0041	招待费日期	date	DEFAULT	NULL
+field0042	招待费地点	varchar(255)	DEFAULT	NULL
+field0043	招待费金额	bigint	DEFAULT	NULL
+field0044	客户单位	varchar(255)	DEFAULT	NULL
+field0045	业务目的	varchar(255)	DEFAULT	NULL
+field0046	招待费参加人数	varchar(255)	DEFAULT	NULL
+field0047	客户姓名	varchar(255)	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+
+----------------------其他费用---------------------------
+id	主键唯一ID	serial		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0048	其他费用备注	varchar(255)	DEFAULT	NULL
+field0049	其他费用金额	bigint	DEFAULT	NULL
+field0050	其他费用项目	varchar(255)	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+
+----------------------员工关系费---------------------------
+id	主键唯一ID	serial		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0051	员工关系费金额	bigint	DEFAULT	NULL
+field0052	员工关系费地点	varchar(255)	DEFAULT	NULL
+field0053	员工关系日期	date	DEFAULT	NULL
+field0054	活动目的	varchar(255)	DEFAULT	NULL
+field0055	员工关系费同行人	varchar(255)	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+field0089	员工关系费备注	text		
+
+----------------------出租车费---------------------------
+id	主键唯一ID	serial		
+formmain_0114Id	主表ID	bigint	DEFAULT	NULL
+field0056	出租车同行人	varchar(255)	DEFAULT	NULL
+field0057	出租车费金额	bigint	DEFAULT	NULL
+field0058	出租车费用途	varchar(255)	DEFAULT	NULL
+field0059	出租车费具体时间	varchar(255)	DEFAULT	NULL
+field0060	终出租车费终点	varchar(255)	DEFAULT	NULL
+field0061	出租车费地点	varchar(255)	DEFAULT	NULL
+field0062	出租车费日期	date	DEFAULT	NULL
+sort	排序	int	DEFAULT	NULL
+field0088	出租车费具体时间新	varchar(255)	DEFAULT	NULL
+field0095	出租车费工时	decimal(202)	DEFAULT	NULL
+field0098	备注	varchar(255)	DEFAULT	NULL
+
+----------------------表单修改历史日志表---------------------------
+id	主键唯一ID	serial			
+form_id	form_id	bigint			
+form_item	表单中的字段名	text			
+new_value	修改后的值	text			
+old_value	修改前的值	text			
+create_user	修改人	varchar(30)			
+ts	修改时间	timestamp	with	time	zone
+dob	修改日期	date			
+
+----------------------审批日志表---------------------------
+id	主键唯一ID	serial			
+form_id	form_id	bigint			
+approve_user	审批人	varchar(30)			
+task_id	节点ID	varchar(100)			
+task_name	节点名称	varchar(255)			
+manager_type	审批结果	varchar(10)			
+next_task_id	下一节点ID	varchar(100)			
+next_task_name	下一节点名称	varchar(255)			
+next_candidate	下一节点审批候选人	text			
+ts	审批时间	timestamp	with	time	zone
+dob	审批日期	date			
+

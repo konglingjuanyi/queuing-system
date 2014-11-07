@@ -245,6 +245,9 @@ public class OAEngineService {
 	}
 	
 	//-------------------------------私有函数之日志相关------------------------------
+	private boolean addFormInfo(FormInfo formInfo){
+		return false;
+	}
 	private boolean addApprovalInfo(ApprovalInfo approvalInfo){
 		return false;
 	}
