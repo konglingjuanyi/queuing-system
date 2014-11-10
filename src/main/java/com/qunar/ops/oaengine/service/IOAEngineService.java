@@ -3,6 +3,7 @@ package com.qunar.ops.oaengine.service;
 import java.util.Date;
 import java.util.List;
 
+import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.ListInfo;
@@ -308,5 +309,27 @@ public interface IOAEngineService {
 	 */
 	public List<Delegation> findDelegation(String processKey, String ownerId);
 	
-
+	/**
+	 * 获取全部审核组以及组员
+	 * @param groupKey null表示全部租
+	 * @return
+	 * FE:不需要分页
+	 */
+	public List<GroupInfo> findGroup(String groupKey);
+	
+	/**
+	 * 添加组员
+	 * @param groupKey
+	 * @param memberUserId
+	 * FE:页面判断组员是否存在
+	 */
+	public void appendMember(String groupKey, String memberUserId);
+	
+	/**
+	 * 删除组员
+	 * @param groupKey
+	 * @param memberUserId
+	 * FE:页面判断组员是否存在
+	 */
+	public void removeMember(String groupKey, String memberUserId);
 }

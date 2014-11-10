@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.qunar.ops.oaengine.manager.DelegationManager;
+import com.qunar.ops.oaengine.manager.GroupManager;
+import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
@@ -24,6 +26,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private WorkflowManager workflowManager;
 	@Autowired
 	private DelegationManager delegationManager;
+	@Autowired
+	private GroupManager groupManager;
 
 	@Override
 	public int createForm(String processKey, String userId, FormInfo forminfo)
@@ -165,6 +169,23 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public List<Delegation> findDelegation(String processKey, String ownerId) {
 		return this.delegationManager.findDelegationByMaster(ownerId);
+	}
+
+	@Override
+	public List<GroupInfo> findGroup(String groupKey) {
+		return this.groupManager.getGroup(groupKey);
+	}
+
+	@Override
+	public void appendMember(String groupKey, String memberUserId) {
+		this.groupManager.appendMember(groupKey, memberUserId);
+		
+	}
+
+	@Override
+	public void removeMember(String groupKey, String memberUserId) {
+		this.groupManager.removeMember(groupKey, memberUserId);
+		
 	}
 
 }

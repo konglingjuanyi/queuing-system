@@ -16,10 +16,15 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Component;
 
 @Component
+@Configuration
 public class MailSenderService {
 
 	@Value("${mail.host}")
@@ -43,9 +48,9 @@ public class MailSenderService {
 	 * @param cc
 	 * @param title
 	 * @param content
+	 * @throws MessagingException 
 	 */
-	public void sender(String from, String[] to, String[] cc, String title,
-			String content) {
+	public void sender(String from, String[] to, String[] cc, String title, String content) {
 		final String username = this.username;
 		final String password = this.password;
 
@@ -78,13 +83,9 @@ public class MailSenderService {
 			message.setRecipients(Message.RecipientType.CC,
 					InternetAddress.parse(StringUtils.join(cc, ",")));
 			message.setSubject("A testing mail header !!!");
-			message.setText("Dear Mail Crawler,"
-					+ "\n\n No spam to my email, please!");
-
+			message.setText("Dear Mail Crawler," + "\n\n No spam to my email, please!");
 			Transport.send(message);
-
 			System.out.println("Done");
-
 		}catch (MessagingException e) {
 			// throw new RuntimeException(e);
 			System.out.println("Username or Password are incorrect ... exiting !");
@@ -94,8 +95,8 @@ public class MailSenderService {
 
 	public static void main(String[] args) {
 		String from = "abc";
-		String[] to = { "yongnian.jiang@qunar.com" };
-		String[] cc = { "yongnian.jiang@qunar.com" };
+		String[] to = { "nuby@sohu.com" };
+		String[] cc = { "nuby@sohu.com" };
 		
 		ApplicationContext c = new ClassPathXmlApplicationContext(new String[]{"spring.xml"});
 		MailSenderService ser = c.getBean(MailSenderService.class);

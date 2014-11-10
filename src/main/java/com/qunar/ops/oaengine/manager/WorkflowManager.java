@@ -16,6 +16,7 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
+import org.activiti.engine.identity.Group;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.TaskServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -206,7 +207,7 @@ public class WorkflowManager {
 			return null;
 		}
 		Map<String, Object> vars = new HashMap<String, Object>();
-		vars.put("complete", "true");
+		vars.put("complete", true);
 		taskService.complete(taskId, vars);
 		return new TaskResult(task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
@@ -251,7 +252,7 @@ public class WorkflowManager {
 			return null;
 		}
 		Map<String, Object> vars = new HashMap<String, Object>();
-		vars.put("complete", "false");
+		vars.put("complete", false);
 		vars.put("candidates", assignees);
 		taskService.complete(taskId, vars);
 		return new TaskResult(task, null);

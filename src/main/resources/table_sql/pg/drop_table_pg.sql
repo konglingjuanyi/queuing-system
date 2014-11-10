@@ -39,4 +39,5 @@ drop sequence formson_0117_log_id_seq;
 drop sequence formson_0118_log_id_seq;
 drop sequence formson_0119_log_id_seq;
 DROP TABLE t_delegation;
-DROP INDEX t_delegation_master_user_id_idx;
+DROP TABLE t_group;
+DROP TABLE t_group_member;
