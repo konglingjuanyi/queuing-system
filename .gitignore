@@ -32,6 +32,4 @@ Thumbs.db
 # *.zip
 # *.tar
 # *.tar.gz
-/deploy
-.bpmn
 /generator.xml

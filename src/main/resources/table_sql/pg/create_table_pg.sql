@@ -293,3 +293,32 @@ CREATE INDEX t_delegation_master_user_id_idx
   ON t_delegation
   USING btree
   (master_user_id COLLATE pg_catalog."default");
+
+  
+--组表
+CREATE TABLE t_group
+(
+  id serial NOT NULL,
+  group_key character varying(50),
+  group_name character varying(50),
+  ts time with time zone
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE t_group
+  OWNER TO postgres;
+
+--组员表
+CREATE TABLE t_group_member
+(
+  id serial NOT NULL,
+  group_key character varying(50),
+  member_user_id character varying(50),
+  ts time with time zone
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE t_group_member
+  OWNER TO postgres;

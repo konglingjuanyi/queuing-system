@@ -1,6 +1,7 @@
 package com.qunar.ops.oaengine.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,7 +66,10 @@ public class EmployeeInfoService {
 	 * @throws RemoteAccessException
 	 */
 	public List<String> findVP(String userId) throws RemoteAccessException{
-		return null;
+		
+		List<String> users = new ArrayList<String>();
+		users.add("nuby.zhang");
+		return users;
 	}
 	
 	/**
@@ -75,7 +79,9 @@ public class EmployeeInfoService {
 	 * @throws RemoteAccessException
 	 */
 	public List<String> findManager(String userId) throws RemoteAccessException{
-		return null;
+		List<String> users = new ArrayList<String>();
+		users.add("nuby.zhang");
+		return users;
 	}
 	
 	/**
@@ -87,7 +93,9 @@ public class EmployeeInfoService {
 	 * @throws RemoteAccessException
 	 */
 	public List<String> findDirector(String userId) throws RemoteAccessException{
-		return null;
+		List<String> users = new ArrayList<String>();
+		users.add("nuby.zhang");
+		return users;
 	}
 	
 	/**

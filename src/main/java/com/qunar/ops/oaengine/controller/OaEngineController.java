@@ -19,6 +19,7 @@ import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
+import com.qunar.ops.oaengine.result.TaskResult;
 import com.qunar.ops.oaengine.service.MailSenderService;
 
 @Controller
@@ -42,20 +43,21 @@ public class OaEngineController {
 
 	@RequestMapping(value = "/oa/test.html")
 	public void index(HttpServletRequest request) {
-		mailSenderService.sender("nuby.zhang@qunar.com", new String[]{"nuby.zhang@qunar.com"}, new String[]{"nuby.zhang@qunar.com"}, "", "");
-		//Request req = new Request();
-		//req.setAmountMoney(200);
-		//req.setDepartment("dep");
-		//req.setOid("001");
-		//req.setReport2vp(true);
-		//req.setTbMoney(100);
-		//Object[] startWorkflow = this.manager.startWorkflow("test", "nuby.zhang", req);
-		//ListInfo<TaskInfo> todoList = this.manager.todoList("test", "nuby", 0, 10);
-		//List<TaskInfo> pass = this.manager.pass("58541", "nuby");
-		//this.manager.endorse("58508", "nuby", "nuby,abc");
+		//mailSenderService.sender("nuby.zhang@qunar.com", new String[]{"nuby.zhang@qunar.com"}, new String[]{"nuby.zhang@qunar.com"}, "", "");
+		Request req = new Request();
+		req.setAmountMoney(200);
+		req.setDepartment("技术部");
+		req.setDepartmentII("OPS");
+		req.setOid("001");
+		req.setReport2vp(true);
+		req.setTbMoney(100);
+//		Object[] startWorkflow = this.manager.startWorkflow("oa_common", "nuby.zhang", req);
+//		ListInfo<TaskInfo> todoList = this.manager.todoList("test", "nuby", 0, 10);
+		TaskResult pass = this.manager.pass("5913", "nuby.zhang");
+		//this.manager.endorse("5", "nuby", "nuby,abc");
 		//List<TaskInfo> back = this.manager.back("nuby", "50962", "xxx");
 		//this.manager.cancel("test", "001", "nuby.zhang", "reason");
-		//System.out.println("====");
+		System.out.println("====");
 	}
 
  

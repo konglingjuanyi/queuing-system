@@ -63,9 +63,15 @@
         <table tableName="formson_0119" domainObjectName="Formson0119" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0119_id_seq')"/>
         </table>
-         -->
         <table tableName="t_delegation" domainObjectName="Delegation" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('t_delegation_id_seq')"/>
+        </table>
+         -->
+        <table tableName="t_group" domainObjectName="Group" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('t_group_id_seq')"/>
+        </table>
+        <table tableName="t_group_member" domainObjectName="GroupMember" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('t_group_member_id_seq')"/>
         </table>
     </context>
 </generatorConfiguration>

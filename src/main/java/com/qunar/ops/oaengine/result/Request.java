@@ -10,6 +10,10 @@ public class Request implements Serializable{
 	private int tbMoney;
 	private boolean report2vp;
 	private String department;
+	private String departmentII;
+	private String departmentIII;
+	private String departmentIV;
+	private String departmentV;
 	public int getAmountMoney() {
 		return amountMoney;
 	}
@@ -39,6 +43,30 @@ public class Request implements Serializable{
 	}
 	public void setOid(String oid) {
 		this.oid = oid;
+	}
+	public String getDepartmentII() {
+		return departmentII;
+	}
+	public void setDepartmentII(String departmentII) {
+		this.departmentII = departmentII;
+	}
+	public String getDepartmentIII() {
+		return departmentIII;
+	}
+	public void setDepartmentIII(String departmentIII) {
+		this.departmentIII = departmentIII;
+	}
+	public String getDepartmentIV() {
+		return departmentIV;
+	}
+	public void setDepartmentIV(String departmentIV) {
+		this.departmentIV = departmentIV;
+	}
+	public String getDepartmentV() {
+		return departmentV;
+	}
+	public void setDepartmentV(String departmentV) {
+		this.departmentV = departmentV;
 	}
 
 }
