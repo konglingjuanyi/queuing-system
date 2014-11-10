@@ -1,6 +1,8 @@
-package com.qunar.ops.oaengine.result;
+package com.qunar.ops.oaengine.result.dailysubmit;
 
 import java.util.List;
+
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
 
 public class FormInfoList {
 	private int pageNo;
