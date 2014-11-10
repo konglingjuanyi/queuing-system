@@ -107,7 +107,7 @@
       </multiInstanceLoopCharacteristics>
     </userTask>
     <endEvent id="endevent1" name="End"></endEvent>
-    <exclusiveGateway id="exclusivegateway1" name="Exclusive Gateway"></exclusiveGateway>
+    <exclusiveGateway id="exclusivegateway1" name="_"></exclusiveGateway>
     <exclusiveGateway id="exclusivegateway2" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow1" name="to Exclusive Gateway" sourceRef="startevent1" targetRef="exclusivegateway1"></sequenceFlow>
     <sequenceFlow id="flow2" name="tb费用=0" sourceRef="exclusivegateway1" targetRef="empty1">

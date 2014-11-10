@@ -25,7 +25,6 @@ public class GroupManagerTest {
 	
 	@Test
 	public void appendMemberTest(){
-		GroupMember member = new GroupMember();
 		this.manager.appendMember("tb_check", "nuby.zhang");
 		this.manager.appendMember("fin_check", "nuby.zhang");
 		this.manager.appendMember("fin_check_mdd", "nuby.zhang");
