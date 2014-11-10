@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Formson0119 {
-    private Integer id;
+    private Long id;
 
     private Long formmain0114id;
 
@@ -30,11 +30,11 @@ public class Formson0119 {
 
     private String field0098;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

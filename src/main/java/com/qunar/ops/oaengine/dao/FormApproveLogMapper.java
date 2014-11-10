@@ -10,7 +10,7 @@ public interface FormApproveLogMapper {
 
     int deleteByExample(FormApproveLogExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(FormApproveLog record);
 
@@ -18,7 +18,7 @@ public interface FormApproveLogMapper {
 
     List<FormApproveLog> selectByExample(FormApproveLogExample example);
 
-    FormApproveLog selectByPrimaryKey(Integer id);
+    FormApproveLog selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") FormApproveLog record, @Param("example") FormApproveLogExample example);
 

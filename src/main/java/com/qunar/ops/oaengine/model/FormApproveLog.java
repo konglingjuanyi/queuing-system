@@ -3,7 +3,7 @@ package com.qunar.ops.oaengine.model;
 import java.util.Date;
 
 public class FormApproveLog {
-    private Integer id;
+    private Long id;
 
     private Long formId;
 
@@ -25,11 +25,11 @@ public class FormApproveLog {
 
     private Date dob;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -1,7 +1,7 @@
 package com.qunar.ops.oaengine.model;
 
 public class Formson0117 {
-    private Integer id;
+    private Long id;
 
     private Long formmain0114id;
 
@@ -13,11 +13,11 @@ public class Formson0117 {
 
     private Integer sort;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

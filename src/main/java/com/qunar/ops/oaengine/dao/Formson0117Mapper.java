@@ -10,7 +10,7 @@ public interface Formson0117Mapper {
 
     int deleteByExample(Formson0117Example example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(Formson0117 record);
 
@@ -18,7 +18,7 @@ public interface Formson0117Mapper {
 
     List<Formson0117> selectByExample(Formson0117Example example);
 
-    Formson0117 selectByPrimaryKey(Integer id);
+    Formson0117 selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") Formson0117 record, @Param("example") Formson0117Example example);
 

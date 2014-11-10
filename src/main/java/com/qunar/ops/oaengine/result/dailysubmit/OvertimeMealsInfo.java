@@ -11,15 +11,15 @@ public class OvertimeMealsInfo extends Formson0115 implements Serializable{
 	 * 加班餐费
 	 */
 	private static final long serialVersionUID = 8933545444370281313L;
-	private Date overtimeMealsDate;
-    private String overtimeMealsComment;
-    private Long perMealsFee;
-    private Long overtimeMealsAmount;
-    private Long mealsPersonNum;
-    private String overtimeMealsPeerPeople;
-    private String mealsAddr;
-    private String invoiceAmount;
-    private BigDecimal overtimeMealsWorkhours;
+//	private Date overtimeMealsDate;
+//    private String overtimeMealsComment;
+//    private Long perMealsFee;
+//    private Long overtimeMealsAmount;
+//    private Long mealsPersonNum;
+//    private String overtimeMealsPeerPeople;
+//    private String mealsAddr;
+//    private String invoiceAmount;
+//    private BigDecimal overtimeMealsWorkhours;
     
 	public Date getOvertimeMealsDate() {
 		return super.getField0034();

@@ -10,13 +10,13 @@ public class HospitalityInfo extends Formson0116 implements Serializable{
 	 * 招待费
 	 */
 	private static final long serialVersionUID = 8933545444370281313L;
-    private Date hospitalityDate;
-    private String hospitalityAddr;
-    private Long hospitalityAmount;
-    private String customCompany;
-    private String businessPurpose;
-    private String hospitalityNum;
-    private String customName;
+//    private Date hospitalityDate;
+//    private String hospitalityAddr;
+//    private Long hospitalityAmount;
+//    private String customCompany;
+//    private String businessPurpose;
+//    private String hospitalityNum;
+//    private String customName;
     
 	public Date getHospitalityDate() {
 		return super.getField0041();

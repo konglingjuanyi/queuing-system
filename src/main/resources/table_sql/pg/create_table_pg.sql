@@ -1,35 +1,31 @@
---审批日志表
-CREATE TABLE form_approve_log(
-  id serial,
-  form_id bigint,
-  approve_user varchar(30),
-  task_id varchar(100),
-  task_name varchar(255),
-  manager_type varchar(10),
-  next_task_id varchar(100),
-  next_task_name varchar(255),
-  next_candidate text,
-  ts timestamp with time zone,
-  dob date,
-  PRIMARY KEY (id)
-);
-
 --表单修改历史日志表
+CREATE SEQUENCE form_update_log_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE form_update_log(
-  id serial,
+  id bigint DEFAULT nextval('form_update_log_id_seq'),
   form_id bigint,
   form_item text,
   new_value text,
   old_value text,
   create_user varchar(30),
   ts timestamp with time zone,
-  dob date,
+     dob date,
   PRIMARY KEY (id)
 );
 
 --表单主表，表单名称对应表名
+CREATE SEQUENCE form_appmain_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE form_appmain (
-  id serial,
+  id bigint DEFAULT nextval('form_appmain_id_seq'),
   appname varchar(500) NOT NULL,
   table_name varchar(200),
   state smallint NOT NULL,
@@ -37,8 +33,14 @@ CREATE TABLE form_appmain (
 );
 
 --日常费用报销主表：
+CREATE SEQUENCE formmain_0114_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE formmain_0114 (
-  id serial,
+  id bigint DEFAULT nextval('formmain_0114_id_seq'),
   oid varchar(255),
   proc_inst_id varchar(64),
   state int DEFAULT NULL,
@@ -118,8 +120,14 @@ CREATE TABLE formmain_0114 (
 );
 
 --日常费用报销主表_历史：
+CREATE SEQUENCE formmain_0114_history_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE formmain_0114_history(
-  id serial,
+  id bigint DEFAULT nextval('formmain_0114_history_id_seq'),
   oid varchar(255),
   proc_inst_id varchar(64),
   state int DEFAULT NULL,
@@ -200,8 +208,14 @@ CREATE TABLE formmain_0114_history(
 
 --日常费用报销子表：
 --加班餐费：
+CREATE SEQUENCE formson_0115_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE formson_0115 (
-  id serial,
+  id bigint DEFAULT nextval('formson_0115_id_seq'),
   formmain_0114Id bigint DEFAULT NULL,
   field0034 date DEFAULT NULL,
   field0035 text,
@@ -217,8 +231,14 @@ CREATE TABLE formson_0115 (
 );
 
 --招待费：
+CREATE SEQUENCE formson_0116_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE formson_0116 (
-  id serial,
+  id bigint DEFAULT nextval('formson_0116_id_seq'),
   formmain_0114Id bigint DEFAULT NULL,
   field0041 date DEFAULT NULL,
   field0042 varchar(255) DEFAULT NULL,
@@ -232,8 +252,14 @@ CREATE TABLE formson_0116 (
 );
 
 --其他费用：
+CREATE SEQUENCE formson_0117_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE formson_0117 (
-  id serial,
+  id bigint DEFAULT nextval('formson_0117_id_seq'),
   formmain_0114Id bigint DEFAULT NULL,
   field0048 varchar(255) DEFAULT NULL,
   field0049 bigint DEFAULT NULL,
@@ -243,8 +269,14 @@ CREATE TABLE formson_0117 (
 );
 
 --员工关系费：
+CREATE SEQUENCE formson_0118_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE formson_0118 (
-  id serial,
+  id bigint DEFAULT nextval('formson_0118_id_seq'),
   formmain_0114Id bigint DEFAULT NULL,
   field0051 bigint DEFAULT NULL,
   field0052 varchar(255) DEFAULT NULL,
@@ -257,8 +289,14 @@ CREATE TABLE formson_0118 (
 );
 
 --出租车费：
+CREATE SEQUENCE formson_0119_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE formson_0119 (
-  id serial,
+  id bigint DEFAULT nextval('formson_0119_id_seq'),
   formmain_0114Id bigint DEFAULT NULL,
   field0056 varchar(255) DEFAULT NULL,
   field0057 bigint DEFAULT NULL,
@@ -271,6 +309,228 @@ CREATE TABLE formson_0119 (
   field0088 varchar(255) DEFAULT NULL,
   field0095 decimal(20,2) DEFAULT NULL,
   field0098 varchar(255) DEFAULT NULL,
+  PRIMARY KEY (id)
+);
+
+--日常费用报销子表_历史数据：
+--加班餐费：
+CREATE SEQUENCE formson_0115_history_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0115_history(
+ id bigint DEFAULT nextval('formson_0115_history_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0034 date DEFAULT NULL,
+  field0035 text,
+  field0036 bigint DEFAULT NULL,
+  field0037 bigint DEFAULT NULL,
+  field0038 bigint DEFAULT NULL,
+  field0039 varchar(255) DEFAULT NULL,
+  field0040 varchar(255) DEFAULT NULL,
+  sort int DEFAULT NULL,
+  field0077 varchar(255) DEFAULT NULL,
+  field0094 decimal(20,2) DEFAULT NULL,
+  PRIMARY KEY (id)
+);
+
+--招待费：
+CREATE SEQUENCE formson_0116_history_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0116_history (
+  id bigint DEFAULT nextval('formson_0116_history_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0041 date DEFAULT NULL,
+  field0042 varchar(255) DEFAULT NULL,
+  field0043 bigint DEFAULT NULL,
+  field0044 varchar(255) DEFAULT NULL,
+  field0045 varchar(255) DEFAULT NULL,
+  field0046 varchar(255) DEFAULT NULL,
+  field0047 varchar(255) DEFAULT NULL,
+  sort int DEFAULT NULL,
+  PRIMARY KEY (id)
+);
+
+--其他费用：
+CREATE SEQUENCE formson_0117_history_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0117_history (
+  id bigint DEFAULT nextval('formson_0117_history_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0048 varchar(255) DEFAULT NULL,
+  field0049 bigint DEFAULT NULL,
+  field0050 varchar(255) DEFAULT NULL,
+  sort int DEFAULT NULL,
+  PRIMARY KEY (id)
+);
+
+--员工关系费：
+CREATE SEQUENCE formson_0118_history_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0118_history (
+  id bigint DEFAULT nextval('formson_0118_history_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0051 bigint DEFAULT NULL,
+  field0052 varchar(255) DEFAULT NULL,
+  field0053 date DEFAULT NULL,
+  field0054 varchar(255) DEFAULT NULL,
+  field0055 varchar(255) DEFAULT NULL,
+  sort int DEFAULT NULL,
+  field0089 text,
+  PRIMARY KEY (id)
+);
+
+--出租车费：
+CREATE SEQUENCE formson_0119_history_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0119_history (
+   id bigint DEFAULT nextval('formson_0119_history_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0056 varchar(255) DEFAULT NULL,
+  field0057 bigint DEFAULT NULL,
+  field0058 varchar(255) DEFAULT NULL,
+  field0059 varchar(255) DEFAULT NULL,
+  field0060 varchar(255) DEFAULT NULL,
+  field0061 varchar(255) DEFAULT NULL,
+  field0062 date DEFAULT NULL,
+  sort int DEFAULT NULL,
+  field0088 varchar(255) DEFAULT NULL,
+  field0095 decimal(20,2) DEFAULT NULL,
+  field0098 varchar(255) DEFAULT NULL,
+  PRIMARY KEY (id)
+);
+
+--日常费用报销子表_日志数据：
+--加班餐费：
+CREATE SEQUENCE formson_0115_log_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0115_log(
+  id bigint DEFAULT nextval('formson_0115_log_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0034 date DEFAULT NULL,
+  field0035 text,
+  field0036 bigint DEFAULT NULL,
+  field0037 bigint DEFAULT NULL,
+  field0038 bigint DEFAULT NULL,
+  field0039 varchar(255) DEFAULT NULL,
+  field0040 varchar(255) DEFAULT NULL,
+  sort int DEFAULT NULL,
+  field0077 varchar(255) DEFAULT NULL,
+  field0094 decimal(20,2) DEFAULT NULL,
+  ts timestamp with time zone DEFAULT NULL,
+  dob date,
+  PRIMARY KEY (id)
+);
+
+--招待费：
+CREATE SEQUENCE formson_0116_log_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0116_log(
+  id bigint DEFAULT nextval('formson_0116_log_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0041 date DEFAULT NULL,
+  field0042 varchar(255) DEFAULT NULL,
+  field0043 bigint DEFAULT NULL,
+  field0044 varchar(255) DEFAULT NULL,
+  field0045 varchar(255) DEFAULT NULL,
+  field0046 varchar(255) DEFAULT NULL,
+  field0047 varchar(255) DEFAULT NULL,
+  sort int DEFAULT NULL,
+  ts timestamp with time zone DEFAULT NULL,
+  dob date,
+  PRIMARY KEY (id)
+);
+
+--其他费用：
+CREATE SEQUENCE formson_0117_log_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0117_log(
+  id bigint DEFAULT nextval('formson_0117_log_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0048 varchar(255) DEFAULT NULL,
+  field0049 bigint DEFAULT NULL,
+  field0050 varchar(255) DEFAULT NULL,
+  sort int DEFAULT NULL,
+  ts timestamp with time zone DEFAULT NULL,
+  dob date,
+  PRIMARY KEY (id)
+);
+
+--员工关系费：
+CREATE SEQUENCE formson_0118_log_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0118_log(
+  id bigint DEFAULT nextval('formson_0118_log_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0051 bigint DEFAULT NULL,
+  field0052 varchar(255) DEFAULT NULL,
+  field0053 date DEFAULT NULL,
+  field0054 varchar(255) DEFAULT NULL,
+  field0055 varchar(255) DEFAULT NULL,
+  sort int DEFAULT NULL,
+  field0089 text,
+  ts timestamp with time zone DEFAULT NULL,
+  dob date,
+  PRIMARY KEY (id)
+);
+
+--出租车费：
+CREATE SEQUENCE formson_0119_log_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE formson_0119_log(
+  id bigint DEFAULT nextval('formson_0119_log_id_seq'),
+  formmain_0114Id bigint DEFAULT NULL,
+  field0056 varchar(255) DEFAULT NULL,
+  field0057 bigint DEFAULT NULL,
+  field0058 varchar(255) DEFAULT NULL,
+  field0059 varchar(255) DEFAULT NULL,
+  field0060 varchar(255) DEFAULT NULL,
+  field0061 varchar(255) DEFAULT NULL,
+  field0062 date DEFAULT NULL,
+  sort int DEFAULT NULL,
+  field0088 varchar(255) DEFAULT NULL,
+  field0095 decimal(20,2) DEFAULT NULL,
+  field0098 varchar(255) DEFAULT NULL,
+  ts timestamp with time zone DEFAULT NULL,
+  dob date,
   PRIMARY KEY (id)
 );
 
