@@ -1,3 +1,28 @@
+--审批日志表
+CREATE SEQUENCE form_approve_log_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+CREATE TABLE form_approve_log
+(
+  id bigint DEFAULT nextval('form_approve_log_id_seq'),
+  form_id bigint,
+  approve_user character varying(30),
+  task_id character varying(100),
+  task_name character varying(255),
+  manager_type character varying(10),
+  next_task_id character varying(100),
+  next_task_name character varying(255),
+  next_candidate text,
+  ts timestamp with time zone,
+  dob date,
+  memo character varying(200),
+  CONSTRAINT form_approve_log_pkey PRIMARY KEY (id)
+);
+
+
 --表单修改历史日志表
 CREATE SEQUENCE form_update_log_id_seq
 START WITH 1
@@ -535,50 +560,48 @@ CREATE TABLE formson_0119_log(
 );
 
 --代理表
+CREATE SEQUENCE t_delegation_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE t_delegation
 (
-  id serial NOT NULL,
+  id bigint DEFAULT nextval('t_delegation_id_seq'),
   master_user_id character varying(50),
   agent_user_id character varying(50),
   ts time with time zone,
   is_delete boolean
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE t_delegation
-  OWNER TO postgres;
-
-CREATE INDEX t_delegation_master_user_id_idx
-  ON t_delegation
-  USING btree
-  (master_user_id COLLATE pg_catalog."default");
 
   
 --组表
+CREATE SEQUENCE t_group_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE t_group
 (
-  id serial NOT NULL,
+  id bigint DEFAULT nextval('t_group_id_seq'),
   group_key character varying(50),
   group_name character varying(50),
   ts time with time zone
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE t_group
-  OWNER TO postgres;
 
 --组员表
+CREATE SEQUENCE t_group_member_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
 CREATE TABLE t_group_member
 (
-  id serial NOT NULL,
+  id bigint DEFAULT nextval('t_group_member_id_seq'),
   group_key character varying(50),
   member_user_id character varying(50),
   ts time with time zone
-)
-WITH (
-  OIDS=FALSE
 );
-ALTER TABLE t_group_member
-  OWNER TO postgres;

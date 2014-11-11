@@ -3,7 +3,7 @@ package com.qunar.ops.oaengine.model;
 import java.util.Date;
 
 public class Group {
-    private Integer id;
+    private Long id;
 
     private String groupKey;
 
@@ -11,11 +11,11 @@ public class Group {
 
     private Date ts;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

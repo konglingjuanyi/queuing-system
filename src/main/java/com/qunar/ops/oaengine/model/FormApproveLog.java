@@ -25,6 +25,8 @@ public class FormApproveLog {
 
     private Date dob;
 
+    private String memo;
+
     public Long getId() {
         return id;
     }
@@ -111,5 +113,13 @@ public class FormApproveLog {
 
     public void setDob(Date dob) {
         this.dob = dob;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo == null ? null : memo.trim();
     }
 }

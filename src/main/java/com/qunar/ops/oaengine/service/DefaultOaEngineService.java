@@ -1,19 +1,33 @@
 package com.qunar.ops.oaengine.service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.activiti.engine.ActivitiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.lang.StringUtils;
 
+import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.manager.DelegationManager;
+import com.qunar.ops.oaengine.manager.FormManager;
 import com.qunar.ops.oaengine.manager.GroupManager;
 import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
+import com.qunar.ops.oaengine.manager.LogManager;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.ListInfo;
+import com.qunar.ops.oaengine.result.TaskInfo;
+import com.qunar.ops.oaengine.result.TaskResult;
 import com.qunar.ops.oaengine.result.dailysubmit.AlertInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
@@ -28,7 +42,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private DelegationManager delegationManager;
 	@Autowired
 	private GroupManager groupManager;
-
+	@Autowired
+	private LogManager logManager;
+	@Autowired
+	private FormManager formManager;
+	@Autowired
+	private MailSenderService mailSenderService;
+	
 	@Override
 	public int createForm(String processKey, String userId, FormInfo forminfo)
 			throws Exception {
@@ -122,31 +142,93 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public void pass(String processKey, String userId, String formId,
-			String taskId) throws Exception {
-		// TODO Auto-generated method stub
-
+	@Transactional(rollbackFor=Exception.class)
+	public void pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException {
+		TaskResult tr = this._pass(processKey, userId, formId, taskId, memo);
+		this.sendMail(userId, "同意", tr.getOwner(), tr.getNextTasks(), memo);
+	}
+	
+	@Override
+	public List<Long> batchPass(String processKey, String userId, List<Long> formIds, List<String> taskIds, String memo) {
+		List<Long> errorFormIds = new ArrayList<Long>();
+		Map<String, String> owner = new HashMap<String, String>();
+		Map<String, String> approver = new HashMap<String, String>();
+		String form = "oa@qunar.com";
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+		String now = sdf.format(new Date());
+		for(int i=0; i<taskIds.size(); i++){
+			String taskId = taskIds.get(i);
+			long formId = formIds.get(i);
+			try{
+				TaskResult tr = this._pass(processKey, userId, formId, taskId, memo);
+				
+				String content = userId+" 于 ["+now+"]处理了《"+tr.getOwner()+"-日常报销》 [同意]";
+				if(memo != null) content += " 附言:"+memo;
+				owner.put(tr.getOwner(), content);
+				
+				if(tr != null && tr.getNextTasks() != null)for(TaskInfo info : tr.getNextTasks()){
+					String candidate = info.getCandidate();
+					if(candidate == null) continue;
+					for(String c : candidate.split(",")){
+						if(StringUtils.trim(c).length() == 0) continue;
+						approver.put(StringUtils.trim(c), "您有《日常报销》申请需要处理");
+					}
+				}
+				
+			}catch(Exception e){
+				errorFormIds.add(formId);
+			}
+		}
+		for(Map.Entry<String, String> e : owner.entrySet()){
+			mailSenderService.sender(form, new String[]{e.getKey()+"@qunar.com"}, null, e.getValue(), e.getValue());
+		}
+		for(Map.Entry<String, String> e : approver.entrySet()){
+			mailSenderService.sender(form, new String[]{e.getKey()+"@qunar.com"}, null, e.getValue(), e.getValue());
+		}
+		return errorFormIds;
+	}
+	
+	private TaskResult _pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException {
+		TaskResult tr = this.workflowManager.pass(taskId, userId);
+		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+		this.logManager.appendApproveLog(userId, formId, "pass", tr, memo);
+		if(tr.isFinished()){
+			this.formManager.deleteFormInfo(userId, formId);
+		}
+		return tr;
 	}
 
 	@Override
-	public void back(String processKey, String userId, String formId,
-			String taskId, String refuseReason) throws Exception {
-		// TODO Auto-generated method stub
-
+	@Transactional(rollbackFor=Exception.class)
+	public void back(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException {
+		TaskResult tr = this.workflowManager.back(userId, taskId, refuseReason);
+		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+		this.logManager.appendApproveLog(userId, formId, "back", tr, refuseReason);
+		this.sendMail(userId, "退回", tr.getOwner(), tr.getNextTasks(), refuseReason);
 	}
 
 	@Override
-	public void endorse(String processKey, String userId, String formId,
-			String taskId, String assignees) throws Exception {
-		// TODO Auto-generated method stub
-
+	@Transactional(rollbackFor=Exception.class)
+	public void endorse(String processKey, String userId, long formId, String taskId, String assignees, String memo) throws FormNotFoundException, ActivitiException {
+		TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees);
+		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+		if(memo == null) memo = "";
+		memo += "[加签给："+assignees+"]";
+		this.logManager.appendApproveLog(userId, formId, "endorse", tr, memo);
+		this.sendMail(userId, "加签", tr.getOwner(), tr.getNextTasks(), memo);
 	}
 
 	@Override
-	public void refuse(String processKey, String userId, String formId,
-			String taskId, String refuseReason) throws Exception {
-		// TODO Auto-generated method stub
-
+	@Transactional(rollbackFor=Exception.class)
+	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException {
+		TaskResult tr = this.workflowManager.cancel(processKey, Long.toString(formId), userId, refuseReason);
+		if(tr != null){
+			this.formManager.deleteFormInfo(userId, formId);
+			this.logManager.refuseLog(userId, formId, refuseReason);
+		}else{
+			throw new FormNotFoundException("任务没有找到", this.getClass());
+		}
+		this.sendMail(userId, "拒绝", tr.getOwner(), null, refuseReason);
 	}
 
 	@Override
@@ -186,6 +268,37 @@ public class DefaultOaEngineService implements IOAEngineService {
 	public void removeMember(String groupKey, String memberUserId) {
 		this.groupManager.removeMember(groupKey, memberUserId);
 		
+	}
+	
+	private void sendMail(String userId, String action, String owner, List<TaskInfo> infos, String memo){
+		if(owner == null) return;
+		String form = "oa@qunar.com";
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+		String now = sdf.format(new Date());
+		
+		String content = userId+" 于 ["+now+"]处理了《"+owner+"-日常报销》 ["+action+"]";
+		if(memo != null){
+			content += " 附言:"+memo;
+		}
+		mailSenderService.sender(form, new String[]{owner+"@qunar.com"}, null, content, content);
+		
+		if(infos == null) return;
+		Set<String> to = new HashSet<String>();
+		for(TaskInfo info : infos){
+			String candidate = info.getCandidate();
+			if(candidate == null) continue;
+			for(String c : candidate.split(",")){
+				if(StringUtils.trim(c).length() == 0) continue;
+				to.add(StringUtils.trim(c)+"@qunar.com");
+			}
+		}
+		if(to != null){
+			content = "您有《"+owner+"-日常报销》 需要处理";
+			if(memo != null){
+				content += " 附言:"+memo;
+			}
+			mailSenderService.sender(form, to.toArray(new String[]{}), null, content, content);
+		}
 	}
 
 }

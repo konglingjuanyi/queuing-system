@@ -3,7 +3,7 @@ package com.qunar.ops.oaengine.model;
 import java.util.Date;
 
 public class Delegation {
-    private Integer id;
+    private Long id;
 
     private String masterUserId;
 
@@ -13,11 +13,11 @@ public class Delegation {
 
     private Boolean isDelete;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
