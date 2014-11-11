@@ -11,16 +11,16 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable{
 	 * 出租车费
 	 */
 	private static final long serialVersionUID = 8933545444370281313L;
-	private String taxiFaresPeerPeople;
-    private Long taxiFaresAmount;
-    private String taxiFaresUse;
-    private String taxiFaresTime;
-    private String taxiFaresDest;
-    private String taxiFaresAddr;
-    private Date taxiFaresDate;
-    private String taxiFaresTimeNew;
-    private BigDecimal taxiFaresWorkhour;
-    private String comment;
+//	private String taxiFaresPeerPeople;
+//    private Long taxiFaresAmount;
+//    private String taxiFaresUse;
+//    private String taxiFaresTime;
+//    private String taxiFaresDest;
+//    private String taxiFaresAddr;
+//    private Date taxiFaresDate;
+//    private String taxiFaresTimeNew;
+//    private BigDecimal taxiFaresWorkhour;
+//    private String comment;
     
 	public String getTaxiFaresPeerPeople() {
 		return super.getField0056();

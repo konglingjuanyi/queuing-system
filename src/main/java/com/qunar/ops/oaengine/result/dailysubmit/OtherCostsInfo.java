@@ -9,9 +9,9 @@ public class OtherCostsInfo extends Formson0117 implements Serializable{
 	 * 其他费用
 	 */
 	private static final long serialVersionUID = 8933545444370281313L;
-    private String otherCostComment;
-    private Long otherCostAmount;
-    private String otherCostProject;
+//    private String otherCostComment;
+//    private Long otherCostAmount;
+//    private String otherCostProject;
     
 	public String getOtherCostComment() {
 		return super.getField0048();

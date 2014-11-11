@@ -2,14 +2,15 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!-- 数据库驱动包位置 -->
-    <classPathEntry location="C:\Users\nuby.zhang.QUNARSERVERS\.m2\repository\postgresql\postgresql\9.2-1002.jdbc4\postgresql-9.2-1002.jdbc4.jar" />
+    <!-- <classPathEntry location="C:\Users\nuby.zhang.QUNARSERVERS\.m2\repository\postgresql\postgresql\9.2-1002.jdbc4\postgresql-9.2-1002.jdbc4.jar" /> -->
+    <classPathEntry location="C:\Users\yongnian.jiang.QUNARSERVERS\.m2\repository\postgresql\postgresql\9.2-1002.jdbc4\postgresql-9.2-1002.jdbc4.jar" />
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <plugin type="com.qunar.ops.mybatis.generator.pagination.PostgreSQLPaginationPlugin"/>
         <commentGenerator>
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
         <!-- 数据库链接URL、用户名、密码 -->
-        <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://localhost:5432/oa"  userId="activiti" password="activiti">
+        <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://localhost:5432/activiti"  userId="activiti" password="activiti">
         </jdbcConnection>
         
         <javaTypeResolver>
@@ -32,6 +33,9 @@
         <!-- 
         <table tableName="act_test" domainObjectName="Test" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('act_test_id_seq')"/>
+        </table>
+        <table tableName="t_delegation" domainObjectName="Delegation" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('t_delegation_id_seq')"/>
         </table>
         <table tableName="form_approve_log" domainObjectName="FormApproveLog" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('form_approve_log_id_seq')"/>
@@ -63,15 +67,45 @@
         <table tableName="formson_0119" domainObjectName="Formson0119" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0119_id_seq')"/>
         </table>
+        <table tableName="formson_0115_history" domainObjectName="Formson0115History" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0115_history_id_seq')"/>
+        </table>
+        <table tableName="formson_0116_history" domainObjectName="Formson0116History" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0116_history_id_seq')"/>
+        </table>
+        <table tableName="formson_0117_history" domainObjectName="Formson0117History" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0117_history_id_seq')"/>
+        </table>
+        <table tableName="formson_0118_history" domainObjectName="Formson0118History" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0118_history_id_seq')"/>
+        </table>
+        <table tableName="formson_0119_history" domainObjectName="Formson0119History" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0119_history_id_seq')"/>
+        </table>
+        <table tableName="formson_0115_log" domainObjectName="Formson0115Log" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0115_log_id_seq')"/>
+        </table>
+        <table tableName="formson_0116_log" domainObjectName="Formson0116Log" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0116_log_id_seq')"/>
+        </table>
+        <table tableName="formson_0117_log" domainObjectName="Formson0117Log" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0117_log_id_seq')"/>
+        </table>
+        <table tableName="formson_0118_log" domainObjectName="Formson0118Log" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0118_log_id_seq')"/>
+        </table>
+        <table tableName="formson_0119_log" domainObjectName="Formson0119Log" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0119_log_id_seq')"/>
+        </table>
         <table tableName="t_delegation" domainObjectName="Delegation" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('t_delegation_id_seq')"/>
         </table>
-         -->
         <table tableName="t_group" domainObjectName="Group" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('t_group_id_seq')"/>
         </table>
         <table tableName="t_group_member" domainObjectName="GroupMember" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('t_group_member_id_seq')"/>
         </table>
+        -->
     </context>
 </generatorConfiguration>

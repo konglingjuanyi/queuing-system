@@ -99,7 +99,7 @@ field0077	发票金额	varchar(255)	DEFAULT	NULL
 field0094	加班餐费工时	decimal(20,2)	DEFAULT	NULL
 
 ----------------------招待费---------------------------
-id	主键唯一ID	serial		
+id	主键唯一ID	bigint		
 formmain_0114Id	主表ID	bigint	DEFAULT	NULL
 field0041	招待费日期	date	DEFAULT	NULL
 field0042	招待费地点	varchar(255)	DEFAULT	NULL
@@ -111,7 +111,7 @@ field0047	客户姓名	varchar(255)	DEFAULT	NULL
 sort	排序	int	DEFAULT	NULL
 
 ----------------------其他费用---------------------------
-id	主键唯一ID	serial		
+id	主键唯一ID	bigint		
 formmain_0114Id	主表ID	bigint	DEFAULT	NULL
 field0048	其他费用备注	varchar(255)	DEFAULT	NULL
 field0049	其他费用金额	bigint	DEFAULT	NULL
@@ -119,7 +119,7 @@ field0050	其他费用项目	varchar(255)	DEFAULT	NULL
 sort	排序	int	DEFAULT	NULL
 
 ----------------------员工关系费---------------------------
-id	主键唯一ID	serial		
+id	主键唯一ID	bigint		
 formmain_0114Id	主表ID	bigint	DEFAULT	NULL
 field0051	员工关系费金额	bigint	DEFAULT	NULL
 field0052	员工关系费地点	varchar(255)	DEFAULT	NULL
@@ -130,7 +130,7 @@ sort	排序	int	DEFAULT	NULL
 field0089	员工关系费备注	text		
 
 ----------------------出租车费---------------------------
-id	主键唯一ID	serial		
+id	主键唯一ID	bigint		
 formmain_0114Id	主表ID	bigint	DEFAULT	NULL
 field0056	出租车同行人	varchar(255)	DEFAULT	NULL
 field0057	出租车费金额	bigint	DEFAULT	NULL
@@ -145,7 +145,7 @@ field0095	出租车费工时	decimal(202)	DEFAULT	NULL
 field0098	备注	varchar(255)	DEFAULT	NULL
 
 ----------------------表单修改历史日志表---------------------------
-id	主键唯一ID	serial			
+id	主键唯一ID	bigint			
 form_id	form_id	bigint			
 form_item	表单中的字段名	text			
 new_value	修改后的值	text			
@@ -155,7 +155,7 @@ ts	修改时间	timestamp	with	time	zone
 dob	修改日期	date			
 
 ----------------------审批日志表---------------------------
-id	主键唯一ID	serial			
+id	主键唯一ID	bigint			
 form_id	form_id	bigint			
 approve_user	审批人	varchar(30)			
 task_id	节点ID	varchar(100)			

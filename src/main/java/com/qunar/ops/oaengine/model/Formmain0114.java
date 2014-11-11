@@ -3,7 +3,7 @@ package com.qunar.ops.oaengine.model;
 import java.util.Date;
 
 public class Formmain0114 {
-    private Integer id;
+    private Long id;
 
     private String oid;
 
@@ -155,11 +155,11 @@ public class Formmain0114 {
 
     private String field0097;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

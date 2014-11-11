@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qunar.ops.oaengine.dao.FormAppmainMapper" >
   <resultMap id="BaseResultMap" type="com.qunar.ops.oaengine.model.FormAppmain" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="BIGINT" />
     <result column="appname" property="appname" jdbcType="VARCHAR" />
     <result column="table_name" property="tableName" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="SMALLINT" />
@@ -86,15 +86,15 @@
       limit ${limit} offset ${offset}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from form_appmain
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from form_appmain
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.qunar.ops.oaengine.model.FormAppmainExample" >
     delete from form_appmain
@@ -103,7 +103,7 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.qunar.ops.oaengine.model.FormAppmain" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       select currval('form_appmain_id_seq')
     </selectKey>
     insert into form_appmain (appname, table_name, state
@@ -112,7 +112,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.FormAppmain" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       select currval('form_appmain_id_seq')
     </selectKey>
     insert into form_appmain
@@ -149,7 +149,7 @@
     update form_appmain
     <set >
       <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
+        id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.appname != null" >
         appname = #{record.appname,jdbcType=VARCHAR},
@@ -167,7 +167,7 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update form_appmain
-    set id = #{record.id,jdbcType=INTEGER},
+    set id = #{record.id,jdbcType=BIGINT},
       appname = #{record.appname,jdbcType=VARCHAR},
       table_name = #{record.tableName,jdbcType=VARCHAR},
       state = #{record.state,jdbcType=SMALLINT}
@@ -188,13 +188,13 @@
         state = #{state,jdbcType=SMALLINT},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qunar.ops.oaengine.model.FormAppmain" >
     update form_appmain
     set appname = #{appname,jdbcType=VARCHAR},
       table_name = #{tableName,jdbcType=VARCHAR},
       state = #{state,jdbcType=SMALLINT}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qunar.ops.oaengine.dao.Formson0116Mapper" >
   <resultMap id="BaseResultMap" type="com.qunar.ops.oaengine.model.Formson0116" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="BIGINT" />
     <result column="formmain_0114id" property="formmain0114id" jdbcType="BIGINT" />
     <result column="field0041" property="field0041" jdbcType="DATE" />
     <result column="field0042" property="field0042" jdbcType="VARCHAR" />
@@ -93,15 +93,15 @@
       limit ${limit} offset ${offset}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
     from formson_0116
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from formson_0116
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.qunar.ops.oaengine.model.Formson0116Example" >
     delete from formson_0116
@@ -110,7 +110,7 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.qunar.ops.oaengine.model.Formson0116" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       select currval('formson_0116_id_seq')
     </selectKey>
     insert into formson_0116 (formmain_0114id, field0041, field0042, 
@@ -123,7 +123,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.Formson0116" >
-    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       select currval('formson_0116_id_seq')
     </selectKey>
     insert into formson_0116
@@ -196,7 +196,7 @@
     update formson_0116
     <set >
       <if test="record.id != null" >
-        id = #{record.id,jdbcType=INTEGER},
+        id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.formmain0114id != null" >
         formmain_0114id = #{record.formmain0114id,jdbcType=BIGINT},
@@ -232,7 +232,7 @@
   </update>
   <update id="updateByExample" parameterType="map" >
     update formson_0116
-    set id = #{record.id,jdbcType=INTEGER},
+    set id = #{record.id,jdbcType=BIGINT},
       formmain_0114id = #{record.formmain0114id,jdbcType=BIGINT},
       field0041 = #{record.field0041,jdbcType=DATE},
       field0042 = #{record.field0042,jdbcType=VARCHAR},
@@ -277,7 +277,7 @@
         sort = #{sort,jdbcType=INTEGER},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qunar.ops.oaengine.model.Formson0116" >
     update formson_0116
@@ -290,6 +290,6 @@
       field0046 = #{field0046,jdbcType=VARCHAR},
       field0047 = #{field0047,jdbcType=VARCHAR},
       sort = #{sort,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

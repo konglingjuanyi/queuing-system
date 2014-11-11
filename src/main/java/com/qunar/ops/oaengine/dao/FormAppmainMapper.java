@@ -10,7 +10,7 @@ public interface FormAppmainMapper {
 
     int deleteByExample(FormAppmainExample example);
 
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(Long id);
 
     int insert(FormAppmain record);
 
@@ -18,7 +18,7 @@ public interface FormAppmainMapper {
 
     List<FormAppmain> selectByExample(FormAppmainExample example);
 
-    FormAppmain selectByPrimaryKey(Integer id);
+    FormAppmain selectByPrimaryKey(Long id);
 
     int updateByExampleSelective(@Param("record") FormAppmain record, @Param("example") FormAppmainExample example);
 
