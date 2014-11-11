@@ -35,7 +35,7 @@ public class GroupManager {
 		groupNames.put("cashier", "财务报销出纳组");
 	}
 	
-	@PostConstruct
+	//@PostConstruct
 	protected void init() {
 		int count = groupMapper.countByExample(new GroupExample());
 		if(count > 0 ) return;

@@ -1,9 +1,5 @@
 --审批日志表
 CREATE SEQUENCE form_approve_log_id_seq
-INCREMENT 1
-MINVALUE 1
-MAXVALUE 9223372036854775807
-START 1
 START WITH 1
 INCREMENT BY 1
 NO MINVALUE
@@ -19,6 +15,7 @@ CREATE TABLE form_approve_log(
   next_task_id varchar(100),
   next_task_name varchar(255),
   next_candidate text,
+  memo text,
   ts timestamp with time zone,
      dob date,
     PRIMARY KEY (id)

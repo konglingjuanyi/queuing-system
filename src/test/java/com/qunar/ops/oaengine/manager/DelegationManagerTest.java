@@ -27,7 +27,7 @@ public class DelegationManagerTest {
 	@Autowired
 	private DelegationManager manager;
 	
-	@Test
+	//@Test
 	public void appendDelegationTest(){
 		List<String> agents = new ArrayList<String>();
 		agents.add("nuby.zhang");

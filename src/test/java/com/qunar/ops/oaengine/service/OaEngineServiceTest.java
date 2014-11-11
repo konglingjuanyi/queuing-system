@@ -26,7 +26,7 @@ public class OaEngineServiceTest {
 	@Autowired
 	protected WorkflowManager manager;
 	
-	@Test
+	//@Test
 	public void passTest(){
 		Request req = new Request();
 		req.setDepartment("技术部");

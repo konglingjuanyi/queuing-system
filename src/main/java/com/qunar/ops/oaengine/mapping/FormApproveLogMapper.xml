@@ -11,9 +11,9 @@
     <result column="next_task_id" property="nextTaskId" jdbcType="VARCHAR" />
     <result column="next_task_name" property="nextTaskName" jdbcType="VARCHAR" />
     <result column="next_candidate" property="nextCandidate" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="ts" property="ts" jdbcType="TIMESTAMP" />
     <result column="dob" property="dob" jdbcType="DATE" />
-    <result column="memo" property="memo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -75,7 +75,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, form_id, approve_user, task_id, task_name, manager_type, next_task_id, next_task_name, 
-    next_candidate, ts, dob, memo
+    next_candidate, memo, ts, dob
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.oaengine.model.FormApproveLogExample" >
     select
@@ -117,12 +117,12 @@
     </selectKey>
     insert into form_approve_log (form_id, approve_user, task_id, 
       task_name, manager_type, next_task_id, 
-      next_task_name, next_candidate, ts, 
-      dob, memo)
+      next_task_name, next_candidate, memo, 
+      ts, dob)
     values (#{formId,jdbcType=BIGINT}, #{approveUser,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
       #{taskName,jdbcType=VARCHAR}, #{managerType,jdbcType=VARCHAR}, #{nextTaskId,jdbcType=VARCHAR}, 
-      #{nextTaskName,jdbcType=VARCHAR}, #{nextCandidate,jdbcType=VARCHAR}, #{ts,jdbcType=TIMESTAMP}, 
-      #{dob,jdbcType=DATE}, #{memo,jdbcType=VARCHAR})
+      #{nextTaskName,jdbcType=VARCHAR}, #{nextCandidate,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
+      #{ts,jdbcType=TIMESTAMP}, #{dob,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.FormApproveLog" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
@@ -154,14 +154,14 @@
       <if test="nextCandidate != null" >
         next_candidate,
       </if>
+      <if test="memo != null" >
+        memo,
+      </if>
       <if test="ts != null" >
         ts,
       </if>
       <if test="dob != null" >
         dob,
-      </if>
-      <if test="memo != null" >
-        memo,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -189,14 +189,14 @@
       <if test="nextCandidate != null" >
         #{nextCandidate,jdbcType=VARCHAR},
       </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
       <if test="ts != null" >
         #{ts,jdbcType=TIMESTAMP},
       </if>
       <if test="dob != null" >
         #{dob,jdbcType=DATE},
-      </if>
-      <if test="memo != null" >
-        #{memo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -236,14 +236,14 @@
       <if test="record.nextCandidate != null" >
         next_candidate = #{record.nextCandidate,jdbcType=VARCHAR},
       </if>
+      <if test="record.memo != null" >
+        memo = #{record.memo,jdbcType=VARCHAR},
+      </if>
       <if test="record.ts != null" >
         ts = #{record.ts,jdbcType=TIMESTAMP},
       </if>
       <if test="record.dob != null" >
         dob = #{record.dob,jdbcType=DATE},
-      </if>
-      <if test="record.memo != null" >
-        memo = #{record.memo,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -261,9 +261,9 @@
       next_task_id = #{record.nextTaskId,jdbcType=VARCHAR},
       next_task_name = #{record.nextTaskName,jdbcType=VARCHAR},
       next_candidate = #{record.nextCandidate,jdbcType=VARCHAR},
+      memo = #{record.memo,jdbcType=VARCHAR},
       ts = #{record.ts,jdbcType=TIMESTAMP},
-      dob = #{record.dob,jdbcType=DATE},
-      memo = #{record.memo,jdbcType=VARCHAR}
+      dob = #{record.dob,jdbcType=DATE}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -295,14 +295,14 @@
       <if test="nextCandidate != null" >
         next_candidate = #{nextCandidate,jdbcType=VARCHAR},
       </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
       <if test="ts != null" >
         ts = #{ts,jdbcType=TIMESTAMP},
       </if>
       <if test="dob != null" >
         dob = #{dob,jdbcType=DATE},
-      </if>
-      <if test="memo != null" >
-        memo = #{memo,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -317,9 +317,9 @@
       next_task_id = #{nextTaskId,jdbcType=VARCHAR},
       next_task_name = #{nextTaskName,jdbcType=VARCHAR},
       next_candidate = #{nextCandidate,jdbcType=VARCHAR},
+      memo = #{memo,jdbcType=VARCHAR},
       ts = #{ts,jdbcType=TIMESTAMP},
-      dob = #{dob,jdbcType=DATE},
-      memo = #{memo,jdbcType=VARCHAR}
+      dob = #{dob,jdbcType=DATE}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

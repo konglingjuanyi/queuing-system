@@ -21,11 +21,11 @@ public class FormApproveLog {
 
     private String nextCandidate;
 
+    private String memo;
+
     private Date ts;
 
     private Date dob;
-
-    private String memo;
 
     public Long getId() {
         return id;
@@ -99,6 +99,14 @@ public class FormApproveLog {
         this.nextCandidate = nextCandidate == null ? null : nextCandidate.trim();
     }
 
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo == null ? null : memo.trim();
+    }
+
     public Date getTs() {
         return ts;
     }
@@ -113,13 +121,5 @@ public class FormApproveLog {
 
     public void setDob(Date dob) {
         this.dob = dob;
-    }
-
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo == null ? null : memo.trim();
     }
 }

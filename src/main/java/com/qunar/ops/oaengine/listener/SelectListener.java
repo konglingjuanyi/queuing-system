@@ -20,6 +20,7 @@ import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.model.GroupMember;
 import com.qunar.ops.oaengine.service.EmployeeInfoService;
 
+
 public class SelectListener implements TaskListener  {
 
 	private static final long serialVersionUID = -2226505433680697029L;
