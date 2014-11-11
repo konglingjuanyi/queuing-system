@@ -1,27 +1,28 @@
 --审批日志表
 CREATE SEQUENCE form_approve_log_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-CREATE TABLE form_approve_log
-(
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE form_approve_log(
   id bigint DEFAULT nextval('form_approve_log_id_seq'),
   form_id bigint,
-  approve_user character varying(30),
-  task_id character varying(100),
-  task_name character varying(255),
-  manager_type character varying(10),
-  next_task_id character varying(100),
-  next_task_name character varying(255),
+  approve_user varchar(30),
+  task_id varchar(100),
+  task_name varchar(255),
+  manager_type varchar(10),
+  next_task_id varchar(100),
+  next_task_name varchar(255),
   next_candidate text,
   ts timestamp with time zone,
-  dob date,
-  memo character varying(200),
-  CONSTRAINT form_approve_log_pkey PRIMARY KEY (id)
+     dob date,
+    PRIMARY KEY (id)
 );
-
 
 --表单修改历史日志表
 CREATE SEQUENCE form_update_log_id_seq

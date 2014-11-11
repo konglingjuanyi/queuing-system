@@ -1,6 +1,7 @@
 package com.qunar.ops.oaengine.service;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -105,6 +106,7 @@ public class EmployeeInfoService {
 	 * @return
 	 */
 	public float getLaborHour(String userId, Date day){
+		String apiUrl = backyardUrl + "?require=workhours&rtx_id=" + userId + "&date=" + new SimpleDateFormat().format(day);
 		return 0;
 	}
 	

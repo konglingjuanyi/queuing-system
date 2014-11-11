@@ -33,6 +33,7 @@
         <table tableName="form_approve_log" domainObjectName="FormApproveLog" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('form_approve_log_id_seq')"/>
         </table>
+        <!-- 
         <table tableName="form_update_log" domainObjectName="FormUpdateLog" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('form_update_log_id_seq')"/>
         </table>
@@ -99,5 +100,6 @@
         <table tableName="t_group_member" domainObjectName="GroupMember" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('t_group_member_id_seq')"/>
         </table>
+        -->
     </context>
 </generatorConfiguration>

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.lang.StringUtils;
 
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.DelegationManager;
 import com.qunar.ops.oaengine.manager.FormManager;
 import com.qunar.ops.oaengine.manager.GroupManager;
@@ -28,6 +29,7 @@ import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.TaskInfo;
 import com.qunar.ops.oaengine.result.TaskResult;
+import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.dailysubmit.AlertInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
@@ -48,39 +50,63 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private FormManager formManager;
 	@Autowired
 	private MailSenderService mailSenderService;
-	
+	@Autowired
+	private EmployeeInfoService employeeInfoService;
+
 	@Override
-	public int createForm(String processKey, String userId, FormInfo forminfo)
+	public int createForm(String processKey, String userId, FormInfo formInfo)
 			throws Exception {
 		// TODO Auto-generated method stub
+		formManager.createFormInfo(userId, formInfo);
 		return 0;
 	}
 
 	@Override
 	public int createFormAndstart(String processKey, String userId,
-			FormInfo forminfo) throws Exception {
+			FormInfo formInfo) throws Exception {
 		// TODO Auto-generated method stub
+		formManager.createFormInfo(userId, formInfo);
+		Request request = new Request();
+		request.setOid(formInfo.getOid());
+		request.setReport2vp(Boolean.valueOf(formInfo.getIsDirectVp()));
+		request.setAmountMoney(formInfo.getMoneyAmount());
+		request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
+		//五级部门后续修改
+		request.setDepartment(formInfo.getFirstDep());
+		request.setDepartmentII(formInfo.getSecDep());
+		request.setDepartmentIII(formInfo.getThridDep());
+		request.setDepartmentIV(formInfo.getFourthDep());
+		workflowManager.startWorkflow(processKey, userId, request);
 		return 0;
 	}
 
 	@Override
 	public FormInfo updateFormInfo(String processKey, String userId,
-			String formId, FormInfo forminfo) throws Exception {
+			String formId, FormInfo formInfo) throws Exception {
 		// TODO Auto-generated method stub
+		formManager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
 		return null;
 	}
 
 	@Override
 	public FormInfo getFormInfo(String processKey, String userId, String formId) {
 		// TODO Auto-generated method stub
-		return null;
+		FormInfo formInfo = new FormInfo();
+		try {
+			formInfo = formManager.getFormInfo(Long.valueOf(formId));
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return formInfo;
 	}
 
 	@Override
 	public void deleteFormInfo(String processKey, String userId, String formId)
 			throws Exception {
 		// TODO Auto-generated method stub
-
+		formManager.deleteFormInfo(userId, Long.valueOf(formId));
 	}
 
 	@Override
@@ -102,9 +128,9 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public EmployeeInfo getEmployeeInfo(String userId) {
+	public EmployeeInfo getEmployeeInfo(String userId) throws RemoteAccessException {
 		// TODO Auto-generated method stub
-		return null;
+		return employeeInfoService.getEmployee(userId);
 	}
 
 	@Override

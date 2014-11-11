@@ -7,6 +7,7 @@ import java.util.List;
 import org.activiti.engine.ActivitiException;
 
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
@@ -130,8 +131,9 @@ public interface IOAEngineService {
 	 * 获取员工信息
 	 * @param userId
 	 * @return
+	 * @throws RemoteAccessException 
 	 */
-	public EmployeeInfo getEmployeeInfo(String userId);
+	public EmployeeInfo getEmployeeInfo(String userId) throws RemoteAccessException;
 	
 	/**
 	 * 获取工时
