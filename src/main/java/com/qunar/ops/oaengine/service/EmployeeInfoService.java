@@ -38,13 +38,16 @@ public class EmployeeInfoService {
 		EmployeeInfo eInfo = new EmployeeInfo();
 		String apiUrl = backyardUrl + "?require=info&rtx_id=" + userId;
 		JSONObject json = invokeGetApi(apiUrl);
+		System.out.println(json);
 		if (json.containsKey("err_id")) {
 			throw new RemoteAccessException(json.getString("msg"), EmployeeInfoService.class);
 		} else {
 			JSONObject data = json.getJSONObject("data");
 //			EmployeeInfo eInfo = JSONObject.toJavaObject(data, EmployeeInfo.class);
 			eInfo.setUserId((String)data.get("username"));
-			eInfo.setManager(((String)data.get("manager")).split(","));
+			eInfo.setUserMail((String)data.get("email"));
+			eInfo.setManager(((String)data.get("manager")));
+			eInfo.setManagerMail(((String)data.get("manager_email")));
 			eInfo.setSn((String)data.get("sn"));
 			eInfo.setAdName((String)data.get("ad_cn"));
 			eInfo.setDepartmentI((String)data.get("dept_level1"));
@@ -53,9 +56,13 @@ public class EmployeeInfoService {
 			eInfo.setDepartmentIV((String)data.get("dept_level4"));
 			eInfo.setDepartmentV((String)data.get("dept_level5"));
 			
+			//VP INFO
+			eInfo.setVp((String)data.get("vp"));
+			eInfo.setVpMail((String)data.get("vp_mail"));
+			
 			//银行卡号qunar.it暂时没有，看是否直接调用coreHr的API。
-			eInfo.setBankCardNo((String)data.get("dept_level5"));
-			eInfo.setBankName((String)data.get("dept_level5"));
+//			eInfo.setBankCardNo((String)data.get(""));
+//			eInfo.setBankName((String)data.get(""));
 		}
 		return eInfo;
 	}
@@ -104,10 +111,21 @@ public class EmployeeInfoService {
 	 * @param userId
 	 * @param day
 	 * @return
+	 * @throws RemoteAccessException 
 	 */
-	public float getLaborHour(String userId, Date day){
-		String apiUrl = backyardUrl + "?require=workhours&rtx_id=" + userId + "&date=" + new SimpleDateFormat().format(day);
-		return 0;
+	public float getLaborHour(String userId, Date day) throws RemoteAccessException{
+		float hours = 0.00f;
+		String apiUrl = backyardUrl + "?require=workhours&rtx_id=" + userId + "&date=" + new SimpleDateFormat("yyyy-MM-dd").format(day);
+		JSONObject json = invokeGetApi(apiUrl);
+		System.out.println(json);
+		if (json.containsKey("err_id") && !json.getInteger("err_id").equals(0)) {
+			throw new RemoteAccessException(json.getString("msg"), EmployeeInfoService.class);
+		} else {
+			JSONObject data = json.getJSONObject("data");
+//			EmployeeInfo eInfo = JSONObject.toJavaObject(data, EmployeeInfo.class);
+			hours = data.getFloatValue("hours");
+		}
+		return hours;
 	}
 	
 	/**
@@ -117,7 +135,6 @@ public class EmployeeInfoService {
 	 * @throws RemoteAccessException
 	 */
 	private JSONObject invokeGetApi(String apiUrl) throws RemoteAccessException{
-		System.out.println(apiUrl);
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
 			HttpGet httpget = new HttpGet(apiUrl);
@@ -159,5 +176,6 @@ public class EmployeeInfoService {
 	public static void main(String[] args) throws RemoteAccessException {
 		EmployeeInfoService s = new ClassPathXmlApplicationContext(new String[]{"spring.xml"}).getBean(EmployeeInfoService.class);
 		System.out.println(s.getEmployee("yongnian.jiang").getAdName());
+		System.out.println(s.getLaborHour("yongnian.jiang", new Date()));
 	}
 }
