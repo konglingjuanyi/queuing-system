@@ -23,7 +23,7 @@ public class GroupManagerTest {
 	@Autowired
 	private GroupManager manager;
 	
-	//@Test
+	@Test
 	public void appendMemberTest(){
 		this.manager.appendMember("tb_check", "nuby.zhang");
 		this.manager.appendMember("fin_check", "nuby.zhang");

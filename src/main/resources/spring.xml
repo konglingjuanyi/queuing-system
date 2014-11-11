@@ -97,12 +97,15 @@
 	    </property>
 	</bean> -->
 
-	<!-- Rabbit MQ 
+	<!-- Rabbit MQ -->
     <bean id="jsonMessageConverter"  class="com.qunar.ops.oaengine.mq.FastJsonMessageConverter"></bean>
-    <rabbit:connection-factory id="connectionFactory" host="${mqHost}" port="${mqPort}" username="${mqUsername}" password="${mqPassword}"/>
-    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"  message-converter="jsonMessageConverter"/>
+    <rabbit:connection-factory id="connectionFactory" addresses="${mqHost}" username="${mqUsername}" password="${mqPassword}"/>
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"/>
     <rabbit:admin connection-factory="connectionFactory"/>
-	<rabbit:fanout-exchange name="account">
-	</rabbit:fanout-exchange>
-	-->
+    <rabbit:queue name="oa.sendmail"/>
+    <rabbit:listener-container connection-factory="connectionFactory">
+    	<rabbit:listener queues="oa.sendmail" ref="mailSender" method="senderMail"/>
+	</rabbit:listener-container>
+	<bean id="mailSender" class=" com.qunar.ops.oaengine.service.MailSenderService"/>
+	
 </beans>

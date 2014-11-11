@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.activiti.engine.ActivitiException;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +55,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Autowired
 	private EmployeeInfoService employeeInfoService;
 
+	
 	@Override
 	public int createForm(String processKey, String userId, FormInfo formInfo)
 			throws Exception {
@@ -174,7 +176,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		Map<String, String> owner = new HashMap<String, String>();
 		Map<String, String> approver = new HashMap<String, String>();
 		String form = "oa@qunar.com";
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm");
 		String now = sdf.format(new Date());
 		for(int i=0; i<taskIds.size(); i++){
 			String taskId = taskIds.get(i);
@@ -293,7 +295,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private void sendMail(String userId, String action, String owner, List<TaskInfo> infos, String memo){
 		if(owner == null) return;
 		String form = "oa@qunar.com";
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm");
 		String now = sdf.format(new Date());
 		
 		String content = userId+" 于 ["+now+"]处理了《"+owner+"-日常报销》 ["+action+"]";
@@ -304,7 +306,9 @@ public class DefaultOaEngineService implements IOAEngineService {
 		
 		if(infos == null) return;
 		Set<String> to = new HashSet<String>();
+		String tn = "";
 		for(TaskInfo info : infos){
+			//tn = info.getTaskName();
 			String candidate = info.getCandidate();
 			if(candidate == null) continue;
 			for(String c : candidate.split(",")){
@@ -313,12 +317,14 @@ public class DefaultOaEngineService implements IOAEngineService {
 			}
 		}
 		if(to != null){
-			content = "您有《"+owner+"-日常报销》 需要处理";
+			content = "["+now+"]您有《"+owner+"-日常报销》 需要处理"+tn;
 			if(memo != null){
 				content += " 附言:"+memo;
 			}
 			mailSenderService.sender(form, to.toArray(new String[]{}), null, content, content);
 		}
 	}
+	
+
 
 }
