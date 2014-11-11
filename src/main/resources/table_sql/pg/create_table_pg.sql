@@ -1,3 +1,24 @@
+--审批日志表
+CREATE SEQUENCE form_approve_log_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE form_approve_log(
+  id bigint DEFAULT nextval('form_approve_log_id_seq'),
+  form_id bigint,
+  approve_user varchar(30),
+  task_id varchar(100),
+  task_name varchar(255),
+  manager_type varchar(10),
+  next_task_id varchar(100),
+  next_task_name varchar(255),
+  next_candidate text,
+  ts timestamp with time zone,
+     dob date,
+    PRIMARY KEY (id)
+);
 --表单修改历史日志表
 CREATE SEQUENCE form_update_log_id_seq
 START WITH 1

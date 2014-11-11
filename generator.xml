@@ -10,7 +10,7 @@
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
         <!-- 数据库链接URL、用户名、密码 -->
-        <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://localhost:5432/activiti"  userId="activiti" password="activiti">
+        <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://localhost:5432/oa"  userId="activiti" password="activiti">
         </jdbcConnection>
         
         <javaTypeResolver>
@@ -34,9 +34,7 @@
         <table tableName="act_test" domainObjectName="Test" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('act_test_id_seq')"/>
         </table>
-        <table tableName="t_delegation" domainObjectName="Delegation" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id" identity="true" sqlStatement="select currval('t_delegation_id_seq')"/>
-        </table>
+        
         <table tableName="form_approve_log" domainObjectName="FormApproveLog" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('form_approve_log_id_seq')"/>
         </table>
