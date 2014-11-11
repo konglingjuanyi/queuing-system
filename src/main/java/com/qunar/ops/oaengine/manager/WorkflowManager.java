@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.ActivitiIllegalArgumentException;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
@@ -209,7 +210,7 @@ public class WorkflowManager {
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", true);
 		taskService.complete(taskId, vars);
-		return new TaskResult(task, this.getCurrentTasks(task.getProcessInstanceId()));
+		return new TaskResult(getOwner(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
 	
 	/**
@@ -217,7 +218,7 @@ public class WorkflowManager {
 	 * @param taskId
 	 * @param turnback_reason
 	 */
-	public TaskResult back(String userId, String taskId, String turnback_reason)  throws ActivitiException{
+	public TaskResult back(String userId, String taskId, String turnback_reason)  throws ActivitiException {
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
 		if(task == null) {
 			logger.warn("任务没有找到{}", taskId);
@@ -231,11 +232,11 @@ public class WorkflowManager {
 		}
 		if(destinationTasks.isEmpty()){
 			logger.warn("无法回退{}", taskId);
-			return null;
+			throw new ActivitiIllegalArgumentException("没有前置审批节点，无法回退，请选择拒绝");
 		}
 		Map<String, String> findFlowActivity = this.findFlowActivity(lastActs, task.getProcessDefinitionId());
 		taskService.getCommandExecutor().execute(new TurnBackTaskCmd(task.getId(), destinationTasks, findFlowActivity, turnback_reason));
-		return new TaskResult(task, this.getCurrentTasks(task.getProcessInstanceId()));
+		return new TaskResult(getOwner(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
 	
 	/**
@@ -255,7 +256,7 @@ public class WorkflowManager {
 		vars.put("complete", false);
 		vars.put("candidates", assignees);
 		taskService.complete(taskId, vars);
-		return new TaskResult(task, null);
+		return new TaskResult(getOwner(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
 	
 
@@ -267,16 +268,17 @@ public class WorkflowManager {
 	 * @param userId
 	 * @param reason
 	 */
-	public boolean cancel(String processKey, String oid, String userId, String reason) throws ActivitiException {
+	public TaskResult cancel(String processKey, String oid, String userId, String reason) throws ActivitiException {
 		HistoricProcessInstance pi = historyService
 				.createHistoricProcessInstanceQuery()
 				.processDefinitionKey(processKey).processInstanceBusinessKey(oid).startedBy(userId).unfinished().singleResult();
 		if(pi == null) {
 			logger.warn("流程实例没有找到 oid={}", oid);
-			return false;
+			return null;
 		}
 		this.runtimeService.deleteProcessInstance(pi.getId(), reason);
-		return true;
+		String owner = (String)pi.getProcessVariables().get("owner");
+		return new TaskResult(owner, null, null);
 	}
 	
 	/**
@@ -313,6 +315,11 @@ public class WorkflowManager {
 		return true;
 	}
 	
+	private String getOwner(String processId){
+		Map<String, Object> variables = this.runtimeService.getVariables(processId);
+		return (String)this.runtimeService.getVariable(processId, "owner");
+	}
+	
 	private List<TaskInfo> getCurrentTasks(String processInstanceId) {
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 		List<TaskInfo> taskInfos = new ArrayList<TaskInfo>();
@@ -322,7 +329,9 @@ public class WorkflowManager {
 				List<IdentityLink> ids = taskService.getIdentityLinksForTask(_task.getId());
 				for (IdentityLink id : ids) {
 					if (IdentityLinkType.CANDIDATE.equals(id.getType())) {
-						candidate += id.getUserId() + ",";
+						if(id.getUserId() != null){
+							candidate += id.getUserId() + ",";
+						}
 					}
 				}
 				if (candidate.length() > 0) {

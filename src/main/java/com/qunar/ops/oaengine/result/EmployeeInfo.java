@@ -10,6 +10,14 @@ public class EmployeeInfo implements Serializable{
 	private String adName;
 	//员工编号
 	private String sn;
+	//userMail
+	private String userMail;
+	public String getUserMail() {
+		return userMail;
+	}
+	public void setUserMail(String userMail) {
+		this.userMail = userMail;
+	}
 	//一级部门
 	private String departmentI;
 	private String departmentII;
@@ -21,8 +29,24 @@ public class EmployeeInfo implements Serializable{
 	//开户行
 	private String bankName;
 	//直接主管
-	private String[] manager;
+	private String manager;
+	private String managerMail;
+	//VP
+	private String vp;
+	private String vpMail;
 	
+	public String getVp() {
+		return vp;
+	}
+	public void setVp(String vp) {
+		this.vp = vp;
+	}
+	public String getVpMail() {
+		return vpMail;
+	}
+	public void setVpMail(String vpMail) {
+		this.vpMail = vpMail;
+	}
 	public String getUserId() {
 		return userId;
 	}
@@ -83,11 +107,17 @@ public class EmployeeInfo implements Serializable{
 	public void setBankName(String bankName) {
 		this.bankName = bankName;
 	}
-	public String[] getManager() {
+	public String getManager() {
 		return manager;
 	}
-	public void setManager(String[] manager) {
+	public void setManager(String manager) {
 		this.manager = manager;
+	}
+	public String getManagerMail() {
+		return managerMail;
+	}
+	public void setManagerMail(String managerMail) {
+		this.managerMail = managerMail;
 	}
 	
 }

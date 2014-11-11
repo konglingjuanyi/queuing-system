@@ -81,7 +81,7 @@ public class OAEngineService {
 	 * @return
 	 */
 	public TaskResult endorse(String taskId, String userId, String assignees){
-		return new TaskResult(null, null);
+		return null;
 	}
 	
 

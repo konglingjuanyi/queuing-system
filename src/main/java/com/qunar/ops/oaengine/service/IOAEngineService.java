@@ -1,8 +1,13 @@
 package com.qunar.ops.oaengine.service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 
+import org.activiti.engine.ActivitiException;
+
+import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
@@ -126,16 +131,18 @@ public interface IOAEngineService {
 	 * 获取员工信息
 	 * @param userId
 	 * @return
+	 * @throws RemoteAccessException 
 	 */
-	public EmployeeInfo getEmployeeInfo(String userId);
+	public EmployeeInfo getEmployeeInfo(String userId) throws RemoteAccessException;
 	
 	/**
 	 * 获取工时
 	 * @param userId
 	 * @param day
 	 * @return
+	 * @throws RemoteAccessException 
 	 */
-	public float getLaborHour(String userId, Date day);
+	public float getLaborHour(String userId, Date day) throws RemoteAccessException;
 	
 	
 	/****************************************************
@@ -217,16 +224,30 @@ public interface IOAEngineService {
 	 *  
 	 ***************************************************/
 	/**
-	 * 通过 - controller需要实现单个/批量操作
+	 * 通过
 	 * @param processKey
 	 * @param userId
 	 * @param formId
-	 * @param taskIds
+	 * @param taskId
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
 	 * @throws 工单没有找到；任务没有找到；系统错误
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public void pass(String processKey, String userId, String formId, String taskId) throws Exception;
+	public void pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException;
+	
+	/**
+	 * 通过 - 批量操作
+	 * @param processKey
+	 * @param userId
+	 * @param formIds
+	 * @param taskIds
+	 * @return 失败工单id列表
+	 * 需要记录操作历史
+	 * 需要向发起人、下一节点审核人发送提醒邮件
+	 */
+	public List<Long> batchPass(String processKey, String userId, List<Long> formId, List<String> taskId, String memo);
 	
 	/**
 	 * 退回 - controller需要实现单个/批量操作
@@ -239,7 +260,7 @@ public interface IOAEngineService {
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public void back(String processKey, String userId, String formId, String taskId, String refuseReason) throws Exception;
+	public void back(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException;
 	
 	/**
 	 * 加签
@@ -252,7 +273,7 @@ public interface IOAEngineService {
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public void endorse(String processKey, String userId, String formId, String taskId, String assignees) throws Exception;
+	public void endorse(String processKey, String userId, long formId, String taskId, String assignees, String memo) throws FormNotFoundException, ActivitiException;
 
 	/**
 	 * 拒绝
@@ -261,11 +282,13 @@ public interface IOAEngineService {
 	 * @param formId
 	 * @param userId
 	 * @param refuseReason
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
 	 * @throws 工单没有找到；任务没有找到；系统错误
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public void refuse(String processKey, String userId, String formId, String taskId, String refuseReason) throws Exception;
+	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException;
 	
 	
 	/****************************************************

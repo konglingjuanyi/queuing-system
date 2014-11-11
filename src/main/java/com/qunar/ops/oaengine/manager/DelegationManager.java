@@ -11,11 +11,12 @@ import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.model.DelegationExample;
 import com.qunar.ops.oaengine.model.DelegationExample.Criteria;
 
+
 @Component
 public class DelegationManager {
 	
 	@Autowired
-	private DelegationMapper mapper;
+	private DelegationMapper delegationMapper;
 	
 	public void appendDelegation(String master, List<String> agents){
 		if(agents != null)for(String agent : agents){
@@ -24,7 +25,7 @@ public class DelegationManager {
 			delegation.setMasterUserId(master);
 			delegation.setIsDelete(false);
 			delegation.setTs(new Date());
-			this.mapper.insert(delegation);
+			this.delegationMapper.insert(delegation);
 		}
 	}
 	
@@ -37,7 +38,7 @@ public class DelegationManager {
 			delegation.setTs(new Date());
 			DelegationExample e = new DelegationExample();
 			e.createCriteria().andMasterUserIdEqualTo(master).andAgentUserIdEqualTo(agent);
-			this.mapper.updateByExample(delegation, e);
+			this.delegationMapper.updateByExample(delegation, e);
 		}
 	}
 	
@@ -48,7 +49,7 @@ public class DelegationManager {
 			c.andMasterUserIdEqualTo(master);
 		}
 		c.andIsDeleteEqualTo(false);
-		return this.mapper.selectByExample(e);
+		return this.delegationMapper.selectByExample(e);
 	}
 
 }

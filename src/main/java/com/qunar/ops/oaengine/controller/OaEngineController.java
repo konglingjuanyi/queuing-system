@@ -45,12 +45,12 @@ public class OaEngineController {
 	public void index(HttpServletRequest request) {
 		//mailSenderService.sender("nuby.zhang@qunar.com", new String[]{"nuby.zhang@qunar.com"}, new String[]{"nuby.zhang@qunar.com"}, "", "");
 		Request req = new Request();
-		req.setAmountMoney(200);
+		req.setAmountMoney(200l);
 		req.setDepartment("技术部");
 		req.setDepartmentII("OPS");
 		req.setOid("001");
 		req.setReport2vp(true);
-		req.setTbMoney(100);
+		req.setTbMoney(100l);
 //		Object[] startWorkflow = this.manager.startWorkflow("oa_common", "nuby.zhang", req);
 //		ListInfo<TaskInfo> todoList = this.manager.todoList("test", "nuby", 0, 10);
 		TaskResult pass = this.manager.pass("5913", "nuby.zhang");

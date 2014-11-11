@@ -6,24 +6,24 @@ import java.io.Serializable;
 public class Request implements Serializable{
 	private static final long serialVersionUID = 3196624015494364529L;
 	private String oid;
-	private int amountMoney;
-	private int tbMoney;
+	private Long amountMoney;
+	private Long tbMoney;
 	private boolean report2vp;
 	private String department;
 	private String departmentII;
 	private String departmentIII;
 	private String departmentIV;
 	private String departmentV;
-	public int getAmountMoney() {
+	public Long getAmountMoney() {
 		return amountMoney;
 	}
-	public void setAmountMoney(int amountMoney) {
+	public void setAmountMoney(Long amountMoney) {
 		this.amountMoney = amountMoney;
 	}
-	public int getTbMoney() {
+	public Long getTbMoney() {
 		return tbMoney;
 	}
-	public void setTbMoney(int tbMoney) {
+	public void setTbMoney(Long tbMoney) {
 		this.tbMoney = tbMoney;
 	}
 	public boolean isReport2vp() {

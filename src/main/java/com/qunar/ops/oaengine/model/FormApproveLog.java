@@ -21,6 +21,8 @@ public class FormApproveLog {
 
     private String nextCandidate;
 
+    private String memo;
+
     private Date ts;
 
     private Date dob;
@@ -95,6 +97,14 @@ public class FormApproveLog {
 
     public void setNextCandidate(String nextCandidate) {
         this.nextCandidate = nextCandidate == null ? null : nextCandidate.trim();
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo == null ? null : memo.trim();
     }
 
     public Date getTs() {
