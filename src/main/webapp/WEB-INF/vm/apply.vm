@@ -1,0 +1,335 @@
+#set($layout = "layout/layout.vm")
+<div class="col-xs-12">
+<!-- PAGE CONTENT BEGINS -->
+<div style="text-align: center" class="col-xs-9">
+    <h3 class="header smaller lighter blue" style="margin-left: auto;margin-right: auto;">日常费用报销单</h3>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
+                style="font-size:18px">个人基本信息</span></div>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>申请人</td>
+                <td><input type="text" style="width: 100%"></td>
+                <td>人员编号</td>
+                <td><input type="text" style="width: 100%"></td>
+                <td>申请日期</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+            <tr>
+                <td>一级部门</td>
+                <td><input type="text" style="width: 100%"></td>
+                <td>申请部门</td>
+                <td><input type="text" style="width: 100%"></td>
+                <td>部门编号</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+            <tr>
+                <td>是否直接向vp汇报</td>
+                <td><input type="text" style="width: 100%"></td>
+                <td>银行卡号</td>
+                <td><input type="text" style="width: 100%"></td>
+                <td>银行开户行</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+            <tr>
+                <td>是否有借款</td>
+                <td><input type="text" style="width: 100%"></td>
+                <td>借款单流水号</td>
+                <td><input type="text" style="width: 100%"></td>
+                <td>借款金额</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>报销金额总计</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
+                style="font-size:18px">出租车费明细(含汽车燃油费)</span></div>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>日期</td>
+                <td>起点</td>
+                <td>终点</td>
+                <td>具体时间</td>
+                <td>用途</td>
+                <td>同行人(姓名)</td>
+                <td>工时</td>
+                <td>金额</td>
+                <td>备注</td>
+            </tr>
+            <tr>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>金额总计</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
+                style="font-size:18px">通信费</span></div>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>金额</td>
+                <td><input type="text" style="width: 100%"></td>
+                <td>备注(话费实际发生月份)</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
+                style="font-size:18px">餐费明细(每人每餐报销不超过50元)</span></div>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>日期</td>
+                <td>就餐地点</td>
+                <td>同行人(姓名)</td>
+                <td>就餐人数</td>
+                <td>实报金额</td>
+                <td>人均餐费</td>
+                <td>发票金额</td>
+                <td>工时</td>
+                <td>备注</td>
+            </tr>
+            <tr>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>金额总计</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
+                style="font-size:18px">招待费明细</span></div>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>日期</td>
+                <td>地点</td>
+                <td>业务目的</td>
+                <td>客户单位</td>
+                <td>客户姓名</td>
+                <td>参加人数</td>
+                <td>金额</td>
+            </tr>
+            <tr>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>金额总计</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
+                style="font-size:18px">员工关系费明细</span></div>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>日期</td>
+                <td>地点</td>
+                <td>同行人(姓名)</td>
+                <td>活动目的</td>
+                <td>金额</td>
+                <td>备注</td>
+            </tr>
+            <tr>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>金额总计</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
+                style="font-size:18px">其他费用</span></div>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>费用项目</td>
+                <td>金额</td>
+                <td>备注</td>
+            </tr>
+            <tr>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>金额总计</td>
+                <td><input type="text" style="width: 100%"></td>
+            </tr>
+        </table>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
+                style="font-size:18px">审批记录</span></div>
+        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+            <tr>
+                <td>本部门主管意见<input type="text" style="width: 50%"></td>
+                <td>部门总监意见<input type="text" style="width: 50%"></td>
+            </tr>
+            <tr>
+                <td>部门VP意见<input type="text" style="width: 50%"></td>
+                <td>财务总监意见<input type="text" style="width: 50%"></td>
+            </tr>
+            <tr>
+                <td>CFO意见<input type="text" style="width: 50%"></td>
+                <td>CEO意见<input type="text" style="width: 50%"></td>
+            </tr>
+            <tr>
+                <td>报销审核组<input type="text" style="width: 50%"></td>
+                <td>出纳<input type="text" style="width: 50%"></td>
+            </tr>
+        </table>
+
+    </div>
+
+</div>
+
+</div>
+
+<script language=JavaScript>
+
+jQuery(function ($) {
+    $.ajax({
+        dataType: 'json',
+        url: 'approve/get_process',
+        type: "GET",
+        success: function (resp) {
+        	console.log(resp);
+            var id = "key";
+            var len = resp.length;
+            //$("#" + id).find("option").remove();
+            //var opstr = $.parseStr('<option value="%s" selected="selected">%s</option>', value, value);
+            //$("#" + id).append(opstr);
+            var r_len = resp.length;
+            for (var i = 0; i < r_len; i++) {
+                opstr = $.parseStr('<option value="%s">%s</option>', resp[i], resp[i]);
+                $("#" + id).append(opstr);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert('网络错误，请刷新后重试!');
+        }
+    })
+
+});
+function add_process_list() {
+	var expre = /http(s)?:////([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/; 
+	var regexp = new RegExp(expre); 
+	var url = $("#url").val();
+	if(!regexp.test(url)){
+		alert("url地址错误或含有非法字符，请检查");
+		return;
+	}
+    var params = {
+        "key": $("#key").val(),
+        "type": $("#type").val(),
+        "url": $("#url").val(),
+        "name": $("#name").val()
+    }
+    
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: 'approve/add/process',
+        type: "POST",
+        data: JSON.stringify(params),
+        success: function (resp) {
+            console.log(resp.data);
+            alert(resp.data);
+            window.location.reload();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            alert('网络错误，请刷新后重试!');
+        }
+    })
+}
+function onDelete(value){
+	if (confirm("确认删除！")) window.location = "approve/delete?key=" + value ;
+}
+
+//替换方法
+(function ($) {
+    $.parseStr = function (str) {
+        var args = [].slice.call(arguments, 1),
+                i = 0;
+        return str.replace(/%s/g, function () {
+            return args[i++];
+        });
+    }
+})(jQuery);
+	
+</script>
