@@ -40,26 +40,25 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public int createForm(String processKey, String userId, FormInfo formInfo)
 			throws Exception {
-		// TODO Auto-generated method stub
-		formManager.createFormInfo(userId, formInfo);
-		return 0;
+		return formManager.createFormInfo(userId, formInfo);
 	}
 
 	@Override
 	public int createFormAndstart(String processKey, String userId,
 			FormInfo formInfo) throws Exception {
-		// TODO Auto-generated method stub
 		formManager.createFormInfo(userId, formInfo);
 		Request request = new Request();
 		request.setOid(formInfo.getOid());
 		request.setReport2vp(Boolean.valueOf(formInfo.getIsDirectVp()));
 		request.setAmountMoney(formInfo.getMoneyAmount());
 		request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
-		//五级部门后续修改
-		request.setDepartment(formInfo.getFirstDep());
-		request.setDepartmentII(formInfo.getSecDep());
-		request.setDepartmentIII(formInfo.getThridDep());
-		request.setDepartmentIV(formInfo.getFourthDep());
+		//五级部门从员工信息中获取
+		EmployeeInfo employeeInfo = getEmployeeInfo(userId);
+		request.setDepartment(employeeInfo.getDepartmentI());
+		request.setDepartmentII(employeeInfo.getDepartmentII());
+		request.setDepartmentIII(employeeInfo.getDepartmentIII());
+		request.setDepartmentIV(employeeInfo.getDepartmentIV());
+		request.setDepartmentV(employeeInfo.getDepartmentV());
 		workflowManager.startWorkflow(processKey, userId, request);
 		return 0;
 	}
@@ -67,14 +66,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public FormInfo updateFormInfo(String processKey, String userId,
 			String formId, FormInfo formInfo) throws Exception {
-		// TODO Auto-generated method stub
-		formManager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
-		return null;
+		return formManager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
 	}
 
 	@Override
 	public FormInfo getFormInfo(String processKey, String userId, String formId) {
-		// TODO Auto-generated method stub
 		FormInfo formInfo = new FormInfo();
 		try {
 			formInfo = formManager.getFormInfo(Long.valueOf(formId));
@@ -89,7 +85,6 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public void deleteFormInfo(String processKey, String userId, String formId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		formManager.deleteFormInfo(userId, Long.valueOf(formId));
 	}
 
@@ -113,14 +108,12 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	public EmployeeInfo getEmployeeInfo(String userId) throws RemoteAccessException {
-		// TODO Auto-generated method stub
 		return employeeInfoService.getEmployee(userId);
 	}
 
 	@Override
-	public float getLaborHour(String userId, Date day) {
-		// TODO Auto-generated method stub
-		return 0;
+	public float getLaborHour(String userId, Date day) throws RemoteAccessException {
+		return employeeInfoService.getLaborHour(userId, day);
 	}
 
 	@Override

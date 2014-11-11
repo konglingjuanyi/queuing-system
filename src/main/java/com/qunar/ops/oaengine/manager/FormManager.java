@@ -113,19 +113,18 @@ public class FormManager {
 	@Autowired
 	private FormUpdateLogMapper formUpdateLogMapper;
 
-	public void createFormInfo(String userId, FormInfo formInfo) {
-		formmain0114Mapper.insert((Formmain0114) formInfo);
-
+	public int createFormInfo(String userId, FormInfo formInfo) {
 		createFormsonInfos(formInfo.getOvertimeMealsInfo(), OVERTIMEMEALS_INFO);
 		createFormsonInfos(formInfo.getHospitalityInfo(), HOSPITALITY_INFO);
 		createFormsonInfos(formInfo.getOtherCostsInfo(), OTHERCOSTS_INFO);
 		createFormsonInfos(formInfo.getEmployeeRelationsFeesInfo(), EMPLOYEERELATIONSFEES_INFO);
 		createFormsonInfos(formInfo.getTaxiFaresInfo(), TAXIFARES_INFO);
+		
+		return formmain0114Mapper.insert((Formmain0114) formInfo);
 	}
 
 	public void deleteFormInfo(String userId, Long formId)
 			throws IllegalAccessException, InvocationTargetException {
-		Date now = new Date();
 		// 移动到历史记录表中
 		copyFormInfoToHistory(formId);
 
@@ -136,7 +135,7 @@ public class FormManager {
 		addUpdateLog(userId, formId, "delete", "delete", "delete");
 	}
 
-	public void updateFormInfo(String userId, Long formId, FormInfo formInfo)
+	public FormInfo updateFormInfo(String userId, Long formId, FormInfo formInfo)
 			throws IllegalArgumentException, IllegalAccessException,
 			InvocationTargetException {
 		Formmain0114 formmain0114Old = formmain0114Mapper
@@ -161,6 +160,7 @@ public class FormManager {
 		updateFormson117Info(formId, formInfo);
 		updateFormson118Info(formId, formInfo);
 		updateFormson119Info(formId, formInfo);
+		return formInfo;
 	}
 
 	private void updateFormson115Info(Long formId, FormInfo formInfo)

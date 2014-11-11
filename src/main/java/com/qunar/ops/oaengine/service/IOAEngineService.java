@@ -136,8 +136,9 @@ public interface IOAEngineService {
 	 * @param userId
 	 * @param day
 	 * @return
+	 * @throws RemoteAccessException 
 	 */
-	public float getLaborHour(String userId, Date day);
+	public float getLaborHour(String userId, Date day) throws RemoteAccessException;
 	
 	
 	/****************************************************
