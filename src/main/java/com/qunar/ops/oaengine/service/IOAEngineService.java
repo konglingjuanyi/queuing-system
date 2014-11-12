@@ -108,7 +108,7 @@ public interface IOAEngineService {
 	 * @param formId
 	 * @return ListInfo<AlertInfo> 表单异动信息列表
 	 */
-	public ListInfo<AlertInfo> getAlertHisList(String processKey, String formId);
+	public ListInfo<AlertInfo> getAlertHisList(String processKey, String formId, int pageNo, int pageSize);
 	
 	/**
 	 * 获取操作历史
