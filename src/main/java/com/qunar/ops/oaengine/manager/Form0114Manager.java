@@ -34,7 +34,9 @@ import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.model.FormUpdateLog;
 import com.qunar.ops.oaengine.model.FormUpdateLogExample;
 import com.qunar.ops.oaengine.model.Formmain0114;
+import com.qunar.ops.oaengine.model.Formmain0114Example;
 import com.qunar.ops.oaengine.model.Formmain0114History;
+import com.qunar.ops.oaengine.model.Formmain0114HistoryExample;
 import com.qunar.ops.oaengine.model.Formson0115;
 import com.qunar.ops.oaengine.model.Formson0115Example;
 import com.qunar.ops.oaengine.model.Formson0115History;
@@ -59,6 +61,7 @@ import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.AlertInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.EmployeeRelationsFeesInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
 import com.qunar.ops.oaengine.result.dailysubmit.HospitalityInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.OtherCostsInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.OvertimeMealsInfo;
@@ -66,7 +69,7 @@ import com.qunar.ops.oaengine.result.dailysubmit.TaxiFaresInfo;
 import com.qunar.ops.oaengine.util.ModelUtils;
 
 @Component
-public class FormManager {
+public class Form0114Manager {
 
 	public static final int OVERTIMEMEALS_INFO = 115;
 	public static final int HOSPITALITY_INFO = 116;
@@ -140,7 +143,7 @@ public class FormManager {
 	 * @param userId
 	 * @param formId
 	 */
-	public void deleteFormInfo(String userId, Long formId){
+	public void deleteFormInfo(String userId, Long formId) {
 		// 移动到历史记录表中
 		copyFormInfoToHistory(formId);
 
@@ -161,7 +164,7 @@ public class FormManager {
 	 * @throws CompareModelException
 	 */
 	public FormInfo updateFormInfo(String userId, Long formId, FormInfo formInfo)
-			throws CompareModelException{
+			throws CompareModelException {
 		Formmain0114 formmain0114Old = formmain0114Mapper
 				.selectByPrimaryKey(formId);
 		Formmain0114 formmain0114New = (Formmain0114) formInfo;
@@ -214,6 +217,79 @@ public class FormManager {
 		return formInfo;
 	}
 
+	/**
+	 * 获取用户申请流程中列表
+	 * @param processKey
+	 * @param userId
+	 * @param startTime - 允许null
+	 * @param endTime - 允许null
+	 * @param pageNo
+	 * @param pageSize - 默认20
+	 * @return FormInfoList 用户申请流程中列表
+	 * 
+	 */
+	public FormInfoList getUserApplyList(String userId,
+			Date startTime, Date endTime, int pageNo, int pageSize) {
+		FormInfoList formInfoList = new FormInfoList();
+		List<FormInfo> formInfos = new ArrayList<FormInfo>();
+		Formmain0114Example example = new Formmain0114Example();
+		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+		if(startTime != null){
+			criteria = criteria.andStartDateGreaterThan(startTime);
+		}
+		if(endTime != null){
+			criteria = criteria.andStartDateLessThan(endTime);
+		}
+		int count = formmain0114Mapper.countByExample(example);
+		example.setOffset((pageNo - 1) * pageSize);
+		example.setLimit(pageSize);
+		example.setOrderByClause("start_date desc");
+		List<Formmain0114> formmain0114s = formmain0114Mapper.selectByExample(example);
+		FormInfo formInfo;
+		for(int i = 0; i < formmain0114s.size(); i++){
+			formInfo = new FormInfo();
+			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+			formInfos.add(formInfo);
+		}
+		formInfoList.setPageCount(count);
+		formInfoList.setPageSize(pageSize);
+		formInfoList.setPageNo(pageNo);
+		formInfoList.setFormInfos(formInfos);
+		
+		return formInfoList;
+	}
+	
+	public FormInfoList getApprovalHisList(String userId,
+			Date startTime, Date endTime, int pageNo, int pageSize) {
+		FormInfoList formInfoList = new FormInfoList();
+		List<FormInfo> formInfos = new ArrayList<FormInfo>();
+		Formmain0114HistoryExample example = new Formmain0114HistoryExample();
+		com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria criteria = example.createCriteria();
+		if(startTime != null){
+			criteria = criteria.andStartDateGreaterThan(startTime);
+		}
+		if(endTime != null){
+			criteria = criteria.andStartDateLessThan(endTime);
+		}
+		int count = formmain0114HistoryMapper.countByExample(example);
+		example.setOffset((pageNo - 1) * pageSize);
+		example.setLimit(pageSize);
+		example.setOrderByClause("start_date desc");
+		List<Formmain0114History> formmain0114Historys = formmain0114HistoryMapper.selectByExample(example);
+		FormInfo formInfo;
+		for(int i = 0; i < formmain0114Historys.size(); i++){
+			formInfo = new FormInfo();
+			BeanUtils.copyProperties(formmain0114Historys.get(i), formInfo);
+			formInfos.add(formInfo);
+		}
+		formInfoList.setPageCount(count);
+		formInfoList.setPageSize(pageSize);
+		formInfoList.setPageNo(pageNo);
+		formInfoList.setFormInfos(formInfos);
+		
+		return formInfoList;
+	}
+
 	// --------------------------日志相关----------------------------
 	/**
 	 * 表单变更日志
@@ -223,7 +299,8 @@ public class FormManager {
 	 * @param pageSize
 	 * @return
 	 */
-	public ListInfo<AlertInfo> getAlertInfos(Long formId, int pageNo, int pageSize) {
+	public ListInfo<AlertInfo> getAlertInfos(Long formId, int pageNo,
+			int pageSize) {
 		List<AlertInfo> alertInfos = new ArrayList<AlertInfo>();
 
 		// 获取主表的更新
@@ -245,11 +322,12 @@ public class FormManager {
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
 		res.setCount(count);
-		
+
 		return res;
 	}
 
-	private void updateFormson115Info(Long formId, FormInfo formInfo) throws CompareModelException{
+	private void updateFormson115Info(Long formId, FormInfo formInfo)
+			throws CompareModelException {
 		Map<String, Object> formson = getFormsonInfo(formId);
 		OvertimeMealsInfo[] overtimeMealsInfos = formInfo
 				.getOvertimeMealsInfo();
@@ -295,7 +373,8 @@ public class FormManager {
 		}
 	}
 
-	private void updateFormson116Info(Long formId, FormInfo formInfo) throws CompareModelException{
+	private void updateFormson116Info(Long formId, FormInfo formInfo)
+			throws CompareModelException {
 		Map<String, Object> formson = getFormsonInfo(formId);
 		HospitalityInfo[] hospitalityInfos = formInfo.getHospitalityInfo();
 		HospitalityInfo[] hospitalityInfosOld = (HospitalityInfo[]) formson
@@ -338,7 +417,8 @@ public class FormManager {
 		}
 	}
 
-	private void updateFormson117Info(Long formId, FormInfo formInfo) throws CompareModelException{
+	private void updateFormson117Info(Long formId, FormInfo formInfo)
+			throws CompareModelException {
 		Map<String, Object> formson = getFormsonInfo(formId);
 		OtherCostsInfo[] otherCostsInfos = formInfo.getOtherCostsInfo();
 		OtherCostsInfo[] otherCostsInfosOld = (OtherCostsInfo[]) formson
@@ -380,7 +460,8 @@ public class FormManager {
 		}
 	}
 
-	private void updateFormson118Info(Long formId, FormInfo formInfo) throws CompareModelException{
+	private void updateFormson118Info(Long formId, FormInfo formInfo)
+			throws CompareModelException {
 		Map<String, Object> formson = getFormsonInfo(formId);
 		EmployeeRelationsFeesInfo[] employeeRelationsFeesInfos = formInfo
 				.getEmployeeRelationsFeesInfo();
@@ -430,7 +511,8 @@ public class FormManager {
 		}
 	}
 
-	private void updateFormson119Info(Long formId, FormInfo formInfo) throws CompareModelException{
+	private void updateFormson119Info(Long formId, FormInfo formInfo)
+			throws CompareModelException {
 		Map<String, Object> formson = getFormsonInfo(formId);
 		TaxiFaresInfo[] taxiFaresInfos = formInfo.getTaxiFaresInfo();
 		TaxiFaresInfo[] taxiFaresInfosOld = (TaxiFaresInfo[]) formson
@@ -546,28 +628,29 @@ public class FormManager {
 		// SqlSession sqlSession = sqlSessionFactory.getObject().openSession();
 		// FormAppmainMapper mapper =
 		// sqlSession.getMapper(FormAppmainMapper.class);
-//		FormAppmainMapper mapper = new ClassPathXmlApplicationContext(
-//				new String[] { "spring.xml" }).getBean(FormAppmainMapper.class);
-//		FormAppmain main = new FormAppmain();
-//		main.setAppname("test");
-//		main.setId(10l);
-//		main.setState((short) 1);
-//		main.setTableName("test");
-//		mapper.insert(main);
-//		System.out.println(main.getId());
+		// FormAppmainMapper mapper = new ClassPathXmlApplicationContext(
+		// new String[] { "spring.xml" }).getBean(FormAppmainMapper.class);
+		// FormAppmain main = new FormAppmain();
+		// main.setAppname("test");
+		// main.setId(10l);
+		// main.setState((short) 1);
+		// main.setTableName("test");
+		// mapper.insert(main);
+		// System.out.println(main.getId());
 		// FormAppmain mod = mapper.selectByPrimaryKey(2l);
 		// System.out.println(mod.getAppname());
 
 		// 获取主表的更新
-//		FormUpdateLogMapper formUpdateLogMapper = new ClassPathXmlApplicationContext(
-//				new String[] { "spring.xml" }).getBean(FormUpdateLogMapper.class);
-//		FormUpdateLogExample example = new FormUpdateLogExample();
-//		example.createCriteria().andFormIdEqualTo(1l);
-//		example.setOffset((1 - 1) * 1);
-//		example.setLimit(1);
-//		List<GroupResultInfo> logs = formUpdateLogMapper
-//				.groupByExampleTs(example);
-//		System.out.println(logs);
+		// FormUpdateLogMapper formUpdateLogMapper = new
+		// ClassPathXmlApplicationContext(
+		// new String[] { "spring.xml" }).getBean(FormUpdateLogMapper.class);
+		// FormUpdateLogExample example = new FormUpdateLogExample();
+		// example.createCriteria().andFormIdEqualTo(1l);
+		// example.setOffset((1 - 1) * 1);
+		// example.setLimit(1);
+		// List<GroupResultInfo> logs = formUpdateLogMapper
+		// .groupByExampleTs(example);
+		// System.out.println(logs);
 
 	}
 
@@ -677,7 +760,7 @@ public class FormManager {
 		}
 	}
 
-	private void _deleteFormInfo(Long formId){
+	private void _deleteFormInfo(Long formId) {
 		// 删除主表的记录
 		formmain0114Mapper.deleteByPrimaryKey(formId);
 
@@ -685,7 +768,7 @@ public class FormManager {
 		_deleteFormsonInfo(formId);
 	}
 
-	private void _deleteFormsonInfo(Long formId){
+	private void _deleteFormsonInfo(Long formId) {
 		// 删除子表的记录
 		Formson0115Example example115 = new Formson0115Example();
 		example115.createCriteria().andFormmain0114idEqualTo(formId);
@@ -708,7 +791,7 @@ public class FormManager {
 		formson0119Mapper.deleteByExample(example119);
 	}
 
-	private Map<String, Object> getFormsonInfo(Long formId){
+	private Map<String, Object> getFormsonInfo(Long formId) {
 		Map<String, Object> res = new HashMap<String, Object>();
 		Formson0115Example example115 = new Formson0115Example();
 		example115.createCriteria().andFormmain0114idEqualTo(formId);

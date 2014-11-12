@@ -129,7 +129,7 @@ public interface IOAEngineService {
 	 * @param formId
 	 * @throws Exception
 	 */
-	public void reminder(String process, String userId, String formId);
+	public void reminder(String processKey, String userId, String formId, String approveId, String memo);
 	
 	/**
 	 * 获取员工信息

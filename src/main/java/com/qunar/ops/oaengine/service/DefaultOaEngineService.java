@@ -23,7 +23,7 @@ import com.qunar.ops.oaengine.exception.ErrorParamterException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.DelegationManager;
-import com.qunar.ops.oaengine.manager.FormManager;
+import com.qunar.ops.oaengine.manager.Form0114Manager;
 import com.qunar.ops.oaengine.manager.GroupManager;
 import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
 import com.qunar.ops.oaengine.manager.LogManager;
@@ -52,7 +52,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Autowired
 	private LogManager logManager;
 	@Autowired
-	private FormManager formManager;
+	private Form0114Manager formManager;
 	@Autowired
 	private MailSenderService mailSenderService;
 	@Autowired
@@ -64,11 +64,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	
 	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int createForm(String processKey, String userId, FormInfo formInfo){
 		return formManager.createFormInfo(userId, formInfo);
 	}
 
 	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public int createFormAndstart(String processKey, String userId,
 			FormInfo formInfo) throws RemoteAccessException{
 		formManager.createFormInfo(userId, formInfo);
@@ -95,6 +97,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public FormInfo updateFormInfo(String processKey, String userId,
 			String formId, FormInfo formInfo) throws CompareModelException{
 		return formManager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
@@ -108,6 +111,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public void deleteFormInfo(String processKey, String userId, String formId){
 		formManager.deleteFormInfo(userId, Long.valueOf(formId));
 	}
@@ -123,8 +127,16 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public void reminder(String process, String userId, String formId) {
-		// TODO Auto-generated method stub
+	public void reminder(String processKey, String userId, String formId, String approveId, String memo) {
+		ApprovalInfo info = logManager.getApprovalInfo(Long.valueOf(approveId));
+		String[] to = info.getNextCandidate().split(",");
+		String[] to_mail = new String[to.length];
+		for(int i = 0; i < to.length; i++){
+			to_mail[i] = to[i] + "@qunar.com";
+		}
+		String title = userId + "请你尽快处理日常报销，附言：" + memo;
+		String content = title;
+		mailSenderService.sender("oa@qunar.com", to_mail, null, title, content);
 	}
 
 	@Override
@@ -140,15 +152,14 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public FormInfoList getUserApplyList(String processKey, String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+		return formManager.getUserApplyList(userId, startTime, endTime, pageNo, pageSize);
 	}
 
 	@Override
 	public FormInfoList getApprovalHisList(String processKey, String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
 		// TODO Auto-generated method stub
-		return null;
+		return formManager.getApprovalHisList(userId, startTime, endTime, pageNo, pageSize);
 	}
 
 	@Override

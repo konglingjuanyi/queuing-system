@@ -90,4 +90,10 @@ public class LogManager {
 		return approvalInfos;
 	}
 	
+	public ApprovalInfo getApprovalInfo(long approveId){
+		ApprovalInfo info = new ApprovalInfo();
+		BeanUtils.copyProperties(formApproveLogMapper.selectByPrimaryKey(approveId), info);
+		return info;
+	}
+	
 }
