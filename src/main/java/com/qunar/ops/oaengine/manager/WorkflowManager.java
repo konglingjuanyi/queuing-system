@@ -77,8 +77,8 @@ public class WorkflowManager {
 		logger.debug(
 				"start process of {key={}, bkey={}, pid={}}",
 				new Object[] { processKey, request.getOid(), processInstance.getId()});
-		List<TaskInfo> currentTasks = this.getCurrentTasks(processInstance.getId());
-		return new Object[]{processInstance.getId(), currentTasks};
+		TaskResult tr = new TaskResult(userId, null, this.getCurrentTasks(processInstance.getId()));
+		return new Object[]{processInstance.getId(), tr};
 	}
 	
 	/**
@@ -207,10 +207,11 @@ public class WorkflowManager {
 			logger.warn("任务没有找到{}", taskId);
 			return null;
 		}
+		String owner = getOwner(task.getProcessInstanceId());
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", true);
 		taskService.complete(taskId, vars);
-		return new TaskResult(getOwner(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
+		return new TaskResult(owner, task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
 	
 	/**
@@ -276,8 +277,8 @@ public class WorkflowManager {
 			logger.warn("流程实例没有找到 oid={}", oid);
 			return null;
 		}
-		this.runtimeService.deleteProcessInstance(pi.getId(), reason);
 		String owner = (String)pi.getProcessVariables().get("owner");
+		this.runtimeService.deleteProcessInstance(pi.getId(), reason);
 		return new TaskResult(owner, null, null);
 	}
 	
@@ -316,7 +317,6 @@ public class WorkflowManager {
 	}
 	
 	private String getOwner(String processId){
-		Map<String, Object> variables = this.runtimeService.getVariables(processId);
 		return (String)this.runtimeService.getVariable(processId, "owner");
 	}
 	
