@@ -87,8 +87,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		//增加启动日志到审批日志表中
 		if(res != null && res.length == 2){
 			String processInstanceId = (String)res[0];
-			List<TaskInfo> currentTasks = (List<TaskInfo>)res[1];
-			TaskResult tr = new TaskResult(userId, null, currentTasks);
+			TaskResult tr = (TaskResult)res[1];
 			logManager.appendApproveLog(userId, formInfo.getId(), "start", tr, "");
 		}
 		return 0;
