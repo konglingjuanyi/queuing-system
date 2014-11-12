@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.lang.StringUtils;
 
+import com.qunar.ops.oaengine.exception.CompareModelException;
+import com.qunar.ops.oaengine.exception.ErrorParamterException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.DelegationManager;
@@ -64,14 +66,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	
 	@Override
-	public int createForm(String processKey, String userId, FormInfo formInfo)
-			throws Exception {
+	public int createForm(String processKey, String userId, FormInfo formInfo){
 		return formManager.createFormInfo(userId, formInfo);
 	}
 
 	@Override
 	public int createFormAndstart(String processKey, String userId,
-			FormInfo formInfo) throws Exception {
+			FormInfo formInfo) throws RemoteAccessException{
 		formManager.createFormInfo(userId, formInfo);
 		Request request = new Request();
 		request.setOid(formInfo.getOid());
@@ -98,7 +99,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	public FormInfo updateFormInfo(String processKey, String userId,
-			String formId, FormInfo formInfo) throws Exception {
+			String formId, FormInfo formInfo) throws CompareModelException{
 		return formManager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
 	}
 
@@ -110,8 +111,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public void deleteFormInfo(String processKey, String userId, String formId)
-			throws Exception {
+	public void deleteFormInfo(String processKey, String userId, String formId){
 		formManager.deleteFormInfo(userId, Long.valueOf(formId));
 	}
 
@@ -121,15 +121,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public ApprovalInfo getApprovalInfo(String processKey, String formId) {
-		// TODO Auto-generated method stub
-		return null;
+	public ListInfo<ApprovalInfo> getApprovalInfo(String processKey, String formId, int pageNo, int pageSize) {
+		return logManager.getApproveLogs(Long.valueOf(formId), pageNo, pageSize);
 	}
 
 	@Override
 	public void reminder(String process, String userId, String formId) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

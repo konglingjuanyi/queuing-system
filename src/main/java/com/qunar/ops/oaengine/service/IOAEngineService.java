@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.activiti.engine.ActivitiException;
 
+import com.qunar.ops.oaengine.exception.CompareModelException;
+import com.qunar.ops.oaengine.exception.ErrorParamterException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
@@ -53,7 +55,7 @@ public interface IOAEngineService {
 	 * BE:
 	 * 需要记录修改日志
 	 */
-	public int createForm(String processKey, String userId, FormInfo forminfo) throws Exception;
+	public int createForm(String processKey, String userId, FormInfo forminfo);
 	
 	/**
 	 * 创建工单并发起流程
@@ -61,12 +63,13 @@ public interface IOAEngineService {
 	 * @param userId
 	 * @param forminfo
 	 * @return 工单ID
+	 * @throws RemoteAccessException 
 	 * @throws 数据库保存错误、工作流启动错误、系统错误
 	 * FE:
 	 * BE:
 	 * 需要记录修改日志；需要记录操作历史
 	 */
-	public int createFormAndstart(String processKey, String userId, FormInfo forminfo) throws Exception;
+	public int createFormAndstart(String processKey, String userId, FormInfo forminfo) throws RemoteAccessException;
 	
 	/**
 	 * 更新工单
@@ -75,12 +78,13 @@ public interface IOAEngineService {
 	 * @param formId
 	 * @param forminfo
 	 * @return
+	 * @throws CompareModelException 
 	 * @throws 工单没有找到；工单被锁定(更新人与工单提交人不一致)；系统错误
 	 * FE:
 	 * BE：
 	 * 需要记录修改日志
 	 */
-	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo) throws Exception;
+	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo) throws CompareModelException;
 	
 	/**
 	 * 获取工单信息
@@ -100,7 +104,7 @@ public interface IOAEngineService {
 	 * @throws 工单没有找到；工单锁定（历史工单不允许删除、仅允许创建人删除）； 系统错误
 	 * 需要记录操作历史
 	 */
-	public void deleteFormInfo(String processKey, String userId, String formId) throws Exception;
+	public void deleteFormInfo(String processKey, String userId, String formId);
 	
 	/**
 	 * 获取修改日志列表
@@ -116,7 +120,7 @@ public interface IOAEngineService {
 	 * @param formId
 	 * @return AlertInfo 审批信息
 	 */
-	public ApprovalInfo getApprovalInfo(String processKey, String formId);
+	public ListInfo<ApprovalInfo> getApprovalInfo(String processKey, String formId, int pageNo, int pageSize);
 	
 	/**
 	 * 催办
