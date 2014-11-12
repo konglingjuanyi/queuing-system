@@ -357,6 +357,76 @@ public class Formmain0114HistoryExample {
             return (Criteria) this;
         }
 
+        public Criteria andProcTitleIsNull() {
+            addCriterion("proc_title is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleIsNotNull() {
+            addCriterion("proc_title is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleEqualTo(String value) {
+            addCriterion("proc_title =", value, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleNotEqualTo(String value) {
+            addCriterion("proc_title <>", value, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleGreaterThan(String value) {
+            addCriterion("proc_title >", value, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleGreaterThanOrEqualTo(String value) {
+            addCriterion("proc_title >=", value, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleLessThan(String value) {
+            addCriterion("proc_title <", value, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleLessThanOrEqualTo(String value) {
+            addCriterion("proc_title <=", value, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleLike(String value) {
+            addCriterion("proc_title like", value, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleNotLike(String value) {
+            addCriterion("proc_title not like", value, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleIn(List<String> values) {
+            addCriterion("proc_title in", values, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleNotIn(List<String> values) {
+            addCriterion("proc_title not in", values, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleBetween(String value1, String value2) {
+            addCriterion("proc_title between", value1, value2, "procTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andProcTitleNotBetween(String value1, String value2) {
+            addCriterion("proc_title not between", value1, value2, "procTitle");
+            return (Criteria) this;
+        }
+
         public Criteria andStateIsNull() {
             addCriterion("state is null");
             return (Criteria) this;

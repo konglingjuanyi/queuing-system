@@ -9,6 +9,8 @@ public class Formmain0114 {
 
     private String procInstId;
 
+    private String procTitle;
+
     private Integer state;
 
     private Long startMemberId;
@@ -177,6 +179,14 @@ public class Formmain0114 {
 
     public void setProcInstId(String procInstId) {
         this.procInstId = procInstId == null ? null : procInstId.trim();
+    }
+
+    public String getProcTitle() {
+        return procTitle;
+    }
+
+    public void setProcTitle(String procTitle) {
+        this.procTitle = procTitle == null ? null : procTitle.trim();
     }
 
     public Integer getState() {
