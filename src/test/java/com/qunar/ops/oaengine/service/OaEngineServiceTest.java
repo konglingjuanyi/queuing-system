@@ -15,6 +15,7 @@ import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
 import com.qunar.ops.oaengine.result.TaskResult;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -26,7 +27,8 @@ public class OaEngineServiceTest {
 	@Autowired
 	protected WorkflowManager manager;
 	
-	@Test
+	
+	//@Test
 	public void passTest(){
 		Request req = new Request();
 		req.setDepartment("技术部");
