@@ -72,7 +72,7 @@ public class WorkflowManagerTest {
 	}
 	
 	
-	//@Test
+	@Test
 	public void workflowITest(){
 		Request req = new Request();
 		String _start = null;
@@ -81,33 +81,33 @@ public class WorkflowManagerTest {
 		
 		req.setAmountMoney(200l);
 		req.setReport2vp(false);
-		Assert.assertEquals("[tb_check, direct_manager, director, fin_check, cashier, null]", this._start(req));
+		Assert.assertEquals("[tao.feng, direct_manager, director, fin_check, cashier, null]", this._start(req));
 		
 		req.setAmountMoney(500000l);
 		req.setReport2vp(false);
 		_start = this._start(req);
-		Assert.assertEquals("[tb_check, direct_manager, director, vp, fin_check, fin_director, cashier, null]", _start);
+		Assert.assertEquals("[tao.feng, direct_manager, director, vp, fin_check, fin_director, cashier, null]", _start);
 		
 		req.setAmountMoney(1000000l);
 		req.setReport2vp(false);
 		_start = this._start(req);
-		Assert.assertEquals("[tb_check, direct_manager, director, vp, fin_check, fin_director, cfo, cashier, null]", _start);
+		Assert.assertEquals("[tao.feng, direct_manager, director, vp, fin_check, fin_director, cfo, cashier, null]", _start);
 		
 
 		req.setAmountMoney(100000l);
 		req.setReport2vp(true);
 		_start = this._start(req);
-		Assert.assertEquals("[tb_check, vp, fin_check, cashier, null]", _start);
+		Assert.assertEquals("[tao.feng, vp, fin_check, cashier, null]", _start);
 		
 		req.setAmountMoney(500000l);
 		req.setReport2vp(true);
 		_start = this._start(req);
-		Assert.assertEquals("[tb_check, vp, fin_check, fin_director, cashier, null]", _start);
+		Assert.assertEquals("[tao.feng, vp, fin_check, fin_director, cashier, null]", _start);
 		
 		req.setAmountMoney(1000000l);
 		req.setReport2vp(true);
 		_start = this._start(req);
-		Assert.assertEquals("[tb_check, vp, fin_check, fin_director, cfo, cashier, null]", _start);
+		Assert.assertEquals("[tao.feng, vp, fin_check, fin_director, cfo, cashier, null]", _start);
 	}
 	
 	//@Test
@@ -149,7 +149,7 @@ public class WorkflowManagerTest {
 		Assert.assertEquals("[tb_check, vp, fin_check, fin_director, cfo, cashier, null]", _start);
 	}
 	
-	@Test
+	//@Test
 	public void workflowIIITest(){
 		Request req = new Request();
 		String _start = null;
