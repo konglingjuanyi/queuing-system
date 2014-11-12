@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.engine.task.Task;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -54,6 +57,10 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private MailSenderService mailSenderService;
 	@Autowired
 	private EmployeeInfoService employeeInfoService;
+	@Autowired
+	private RuntimeService runtimeService;
+	@Autowired
+	protected TaskService taskService;
 
 	
 	@Override
@@ -78,7 +85,14 @@ public class DefaultOaEngineService implements IOAEngineService {
 		request.setDepartmentIII(employeeInfo.getDepartmentIII());
 		request.setDepartmentIV(employeeInfo.getDepartmentIV());
 		request.setDepartmentV(employeeInfo.getDepartmentV());
-		workflowManager.startWorkflow(processKey, userId, request);
+		Object[] res = workflowManager.startWorkflow(processKey, userId, request);
+		//增加启动日志到审批日志表中
+		if(res != null && res.length == 2){
+			String processInstanceId = (String)res[0];
+			List<TaskInfo> currentTasks = (List<TaskInfo>)res[1];
+			TaskResult tr = new TaskResult(userId, null, currentTasks);
+			logManager.appendApproveLog(userId, formInfo.getId(), "start", tr, "");
+		}
 		return 0;
 	}
 
@@ -91,13 +105,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public FormInfo getFormInfo(String processKey, String userId, String formId) {
 		FormInfo formInfo = new FormInfo();
-		try {
-			formInfo = formManager.getFormInfo(Long.valueOf(formId));
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
+		formInfo = formManager.getFormInfo(Long.valueOf(formId));
 		return formInfo;
 	}
 
@@ -108,9 +116,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public ListInfo<AlertInfo> getAlertHisList(String processKey, String formId) {
-		// TODO Auto-generated method stub
-		return null;
+	public ListInfo<AlertInfo> getAlertHisList(String processKey, String formId, int pageNo, int pageSize) {
+		return formManager.getAlertInfos(Long.valueOf(formId), pageNo, pageSize);
 	}
 
 	@Override
