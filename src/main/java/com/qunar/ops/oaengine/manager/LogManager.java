@@ -37,13 +37,17 @@ public class LogManager {
 		log.setManagerType(type);
 		if(memo != null) log.setMemo(memo);
 		Task currentTask = tr.getCurrentTask();
-		log.setTaskId(currentTask.getTaskDefinitionKey());
-		log.setTaskName(currentTask.getName());
+		if(currentTask != null){
+			log.setTaskId(currentTask.getTaskDefinitionKey());
+			log.setTaskName(currentTask.getName());
+		}
 		List<TaskInfo> nextTasks = tr.getNextTasks();
-		TaskInfo info = nextTasks.get(0);
-		log.setNextTaskId(info.getTaskKey());
-		log.setNextTaskName(info.getTaskName());
-		log.setNextCandidate(info.getCandidate());
+		if(nextTasks != null && nextTasks.size() > 0){
+			TaskInfo info = nextTasks.get(0);
+			log.setNextTaskId(info.getTaskKey());
+			log.setNextTaskName(info.getTaskName());
+			log.setNextCandidate(info.getCandidate());
+		}
 		this.formApproveLogMapper.insert(log);
 	}
 	

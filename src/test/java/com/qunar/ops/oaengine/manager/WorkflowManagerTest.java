@@ -53,8 +53,8 @@ public class WorkflowManagerTest {
 	
 	private String _start(Request req){
 		Object[] startWorkflow = this.manager.startWorkflow("oa_common", "nuby.zhang", req);
-		List<TaskInfo> infos = (List<TaskInfo>)startWorkflow[1];
-		TaskInfo info = infos.get(0);
+		TaskResult tr = (TaskResult)startWorkflow[1];
+		TaskInfo info = tr.getNextTasks().get(0);
 		List<String> records = new ArrayList<String>();
 		records.add(info.getTaskKey());
 		this._pass(info.getTaskId(), records);
@@ -149,7 +149,7 @@ public class WorkflowManagerTest {
 		Assert.assertEquals("[tb_check, vp, fin_check, fin_director, cfo, cashier, null]", _start);
 	}
 	
-	//@Test
+	@Test
 	public void workflowIIITest(){
 		Request req = new Request();
 		String _start = null;
@@ -174,17 +174,17 @@ public class WorkflowManagerTest {
 		req.setAmountMoney(100000l);
 		req.setReport2vp(true);
 		_start = this._start(req);
-		Assert.assertEquals("[tao.feng, zoe.jin, vp, fin_check, cashier, null]", _start);
+		Assert.assertEquals("[tao.feng, vp, fin_check, cashier, null]", _start);
 		
 		req.setAmountMoney(500000l);
 		req.setReport2vp(true);
 		_start = this._start(req);
-		Assert.assertEquals("[tao.feng, zoe.jin, vp, fin_check, fin_director, cashier, null]", _start);
+		Assert.assertEquals("[tao.feng, vp, fin_check, fin_director, cashier, null]", _start);
 		
 		req.setAmountMoney(1000000l);
 		req.setReport2vp(true);
 		_start = this._start(req);
-		Assert.assertEquals("[tao.feng, zoe.jin, vp, fin_check, fin_director, cfo, cashier, null]", _start);
+		Assert.assertEquals("[tao.feng, vp, fin_check, fin_director, cfo, cashier, null]", _start);
 	}
 	
 	

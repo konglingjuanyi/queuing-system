@@ -13,8 +13,6 @@ import java.util.Set;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.task.Task;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,8 +88,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		//增加启动日志到审批日志表中
 		if(res != null && res.length == 2){
 			String processInstanceId = (String)res[0];
-			List<TaskInfo> currentTasks = (List<TaskInfo>)res[1];
-			TaskResult tr = new TaskResult(userId, null, currentTasks);
+			TaskResult tr = (TaskResult)res[1];
 			logManager.appendApproveLog(userId, formInfo.getId(), "start", tr, "");
 		}
 		return 0;
