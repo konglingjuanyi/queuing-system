@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="oid" property="oid" jdbcType="VARCHAR" />
     <result column="proc_inst_id" property="procInstId" jdbcType="VARCHAR" />
+    <result column="proc_title" property="procTitle" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="INTEGER" />
     <result column="start_member_id" property="startMemberId" jdbcType="BIGINT" />
     <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
@@ -138,16 +139,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, oid, proc_inst_id, state, start_member_id, start_date, approve_member_id, approve_date, 
-    finishedflag, ratifyflag, ratify_member_id, ratify_date, field0001, field0002, field0003, 
-    field0004, field0005, field0006, field0007, field0008, field0009, field0010, field0011, 
-    field0012, field0013, field0014, field0015, field0016, field0017, field0018, field0019, 
-    field0020, field0021, field0022, field0023, field0024, field0025, field0026, field0027, 
-    field0028, field0029, field0030, field0031, field0032, field0033, field0063, field0064, 
-    field0065, field0066, field0067, field0068, field0069, field0070, field0071, field0072, 
-    field0073, field0074, field0075, sort, field0076, field0078, field0079, field0080, 
-    field0081, field0082, field0083, field0084, field0085, field0086, field0087, field0090, 
-    field0091, field0092, field0093, field0096, field0097
+    id, oid, proc_inst_id, proc_title, state, start_member_id, start_date, approve_member_id, 
+    approve_date, finishedflag, ratifyflag, ratify_member_id, ratify_date, field0001, 
+    field0002, field0003, field0004, field0005, field0006, field0007, field0008, field0009, 
+    field0010, field0011, field0012, field0013, field0014, field0015, field0016, field0017, 
+    field0018, field0019, field0020, field0021, field0022, field0023, field0024, field0025, 
+    field0026, field0027, field0028, field0029, field0030, field0031, field0032, field0033, 
+    field0063, field0064, field0065, field0066, field0067, field0068, field0069, field0070, 
+    field0071, field0072, field0073, field0074, field0075, sort, field0076, field0078, 
+    field0079, field0080, field0081, field0082, field0083, field0084, field0085, field0086, 
+    field0087, field0090, field0091, field0092, field0093, field0096, field0097
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.oaengine.model.Formmain0114HistoryExample" >
     select
@@ -187,58 +188,58 @@
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       select currval('formmain_0114_history_id_seq')
     </selectKey>
-    insert into formmain_0114_history (oid, proc_inst_id, state, 
-      start_member_id, start_date, approve_member_id, 
-      approve_date, finishedflag, ratifyflag, 
-      ratify_member_id, ratify_date, field0001, 
-      field0002, field0003, field0004, 
-      field0005, field0006, field0007, 
-      field0008, field0009, field0010, 
-      field0011, field0012, field0013, 
-      field0014, field0015, field0016, 
-      field0017, field0018, field0019, 
-      field0020, field0021, field0022, 
-      field0023, field0024, field0025, 
-      field0026, field0027, field0028, 
-      field0029, field0030, field0031, 
-      field0032, field0033, field0063, 
-      field0064, field0065, field0066, 
-      field0067, field0068, field0069, 
-      field0070, field0071, field0072, 
-      field0073, field0074, field0075, 
-      sort, field0076, field0078, 
-      field0079, field0080, field0081, 
-      field0082, field0083, field0084, 
-      field0085, field0086, field0087, 
-      field0090, field0091, field0092, 
-      field0093, field0096, field0097
-      )
-    values (#{oid,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, 
-      #{startMemberId,jdbcType=BIGINT}, #{startDate,jdbcType=TIMESTAMP}, #{approveMemberId,jdbcType=BIGINT}, 
-      #{approveDate,jdbcType=TIMESTAMP}, #{finishedflag,jdbcType=INTEGER}, #{ratifyflag,jdbcType=INTEGER}, 
-      #{ratifyMemberId,jdbcType=BIGINT}, #{ratifyDate,jdbcType=TIMESTAMP}, #{field0001,jdbcType=VARCHAR}, 
-      #{field0002,jdbcType=VARCHAR}, #{field0003,jdbcType=VARCHAR}, #{field0004,jdbcType=VARCHAR}, 
-      #{field0005,jdbcType=DATE}, #{field0006,jdbcType=VARCHAR}, #{field0007,jdbcType=VARCHAR}, 
-      #{field0008,jdbcType=VARCHAR}, #{field0009,jdbcType=VARCHAR}, #{field0010,jdbcType=BIGINT}, 
-      #{field0011,jdbcType=BIGINT}, #{field0012,jdbcType=VARCHAR}, #{field0013,jdbcType=VARCHAR}, 
-      #{field0014,jdbcType=DATE}, #{field0015,jdbcType=VARCHAR}, #{field0016,jdbcType=VARCHAR}, 
-      #{field0017,jdbcType=DATE}, #{field0018,jdbcType=VARCHAR}, #{field0019,jdbcType=VARCHAR}, 
-      #{field0020,jdbcType=DATE}, #{field0021,jdbcType=VARCHAR}, #{field0022,jdbcType=VARCHAR}, 
-      #{field0023,jdbcType=DATE}, #{field0024,jdbcType=VARCHAR}, #{field0025,jdbcType=VARCHAR}, 
-      #{field0026,jdbcType=DATE}, #{field0027,jdbcType=VARCHAR}, #{field0028,jdbcType=VARCHAR}, 
-      #{field0029,jdbcType=DATE}, #{field0030,jdbcType=BIGINT}, #{field0031,jdbcType=BIGINT}, 
-      #{field0032,jdbcType=BIGINT}, #{field0033,jdbcType=BIGINT}, #{field0063,jdbcType=VARCHAR}, 
-      #{field0064,jdbcType=VARCHAR}, #{field0065,jdbcType=BIGINT}, #{field0066,jdbcType=BIGINT}, 
-      #{field0067,jdbcType=BIGINT}, #{field0068,jdbcType=BIGINT}, #{field0069,jdbcType=BIGINT}, 
-      #{field0070,jdbcType=BIGINT}, #{field0071,jdbcType=VARCHAR}, #{field0072,jdbcType=VARCHAR}, 
-      #{field0073,jdbcType=DATE}, #{field0074,jdbcType=VARCHAR}, #{field0075,jdbcType=VARCHAR}, 
-      #{sort,jdbcType=INTEGER}, #{field0076,jdbcType=VARCHAR}, #{field0078,jdbcType=VARCHAR}, 
-      #{field0079,jdbcType=VARCHAR}, #{field0080,jdbcType=VARCHAR}, #{field0081,jdbcType=DATE}, 
-      #{field0082,jdbcType=VARCHAR}, #{field0083,jdbcType=VARCHAR}, #{field0084,jdbcType=DATE}, 
-      #{field0085,jdbcType=BIGINT}, #{field0086,jdbcType=BIGINT}, #{field0087,jdbcType=VARCHAR}, 
-      #{field0090,jdbcType=VARCHAR}, #{field0091,jdbcType=VARCHAR}, #{field0092,jdbcType=DATE}, 
-      #{field0093,jdbcType=VARCHAR}, #{field0096,jdbcType=VARCHAR}, #{field0097,jdbcType=VARCHAR}
-      )
+    insert into formmain_0114_history (oid, proc_inst_id, proc_title, 
+      state, start_member_id, start_date, 
+      approve_member_id, approve_date, finishedflag, 
+      ratifyflag, ratify_member_id, ratify_date, 
+      field0001, field0002, field0003, 
+      field0004, field0005, field0006, 
+      field0007, field0008, field0009, 
+      field0010, field0011, field0012, 
+      field0013, field0014, field0015, 
+      field0016, field0017, field0018, 
+      field0019, field0020, field0021, 
+      field0022, field0023, field0024, 
+      field0025, field0026, field0027, 
+      field0028, field0029, field0030, 
+      field0031, field0032, field0033, 
+      field0063, field0064, field0065, 
+      field0066, field0067, field0068, 
+      field0069, field0070, field0071, 
+      field0072, field0073, field0074, 
+      field0075, sort, field0076, 
+      field0078, field0079, field0080, 
+      field0081, field0082, field0083, 
+      field0084, field0085, field0086, 
+      field0087, field0090, field0091, 
+      field0092, field0093, field0096, 
+      field0097)
+    values (#{oid,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, #{procTitle,jdbcType=VARCHAR}, 
+      #{state,jdbcType=INTEGER}, #{startMemberId,jdbcType=BIGINT}, #{startDate,jdbcType=TIMESTAMP}, 
+      #{approveMemberId,jdbcType=BIGINT}, #{approveDate,jdbcType=TIMESTAMP}, #{finishedflag,jdbcType=INTEGER}, 
+      #{ratifyflag,jdbcType=INTEGER}, #{ratifyMemberId,jdbcType=BIGINT}, #{ratifyDate,jdbcType=TIMESTAMP}, 
+      #{field0001,jdbcType=VARCHAR}, #{field0002,jdbcType=VARCHAR}, #{field0003,jdbcType=VARCHAR}, 
+      #{field0004,jdbcType=VARCHAR}, #{field0005,jdbcType=DATE}, #{field0006,jdbcType=VARCHAR}, 
+      #{field0007,jdbcType=VARCHAR}, #{field0008,jdbcType=VARCHAR}, #{field0009,jdbcType=VARCHAR}, 
+      #{field0010,jdbcType=BIGINT}, #{field0011,jdbcType=BIGINT}, #{field0012,jdbcType=VARCHAR}, 
+      #{field0013,jdbcType=VARCHAR}, #{field0014,jdbcType=DATE}, #{field0015,jdbcType=VARCHAR}, 
+      #{field0016,jdbcType=VARCHAR}, #{field0017,jdbcType=DATE}, #{field0018,jdbcType=VARCHAR}, 
+      #{field0019,jdbcType=VARCHAR}, #{field0020,jdbcType=DATE}, #{field0021,jdbcType=VARCHAR}, 
+      #{field0022,jdbcType=VARCHAR}, #{field0023,jdbcType=DATE}, #{field0024,jdbcType=VARCHAR}, 
+      #{field0025,jdbcType=VARCHAR}, #{field0026,jdbcType=DATE}, #{field0027,jdbcType=VARCHAR}, 
+      #{field0028,jdbcType=VARCHAR}, #{field0029,jdbcType=DATE}, #{field0030,jdbcType=BIGINT}, 
+      #{field0031,jdbcType=BIGINT}, #{field0032,jdbcType=BIGINT}, #{field0033,jdbcType=BIGINT}, 
+      #{field0063,jdbcType=VARCHAR}, #{field0064,jdbcType=VARCHAR}, #{field0065,jdbcType=BIGINT}, 
+      #{field0066,jdbcType=BIGINT}, #{field0067,jdbcType=BIGINT}, #{field0068,jdbcType=BIGINT}, 
+      #{field0069,jdbcType=BIGINT}, #{field0070,jdbcType=BIGINT}, #{field0071,jdbcType=VARCHAR}, 
+      #{field0072,jdbcType=VARCHAR}, #{field0073,jdbcType=DATE}, #{field0074,jdbcType=VARCHAR}, 
+      #{field0075,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{field0076,jdbcType=VARCHAR}, 
+      #{field0078,jdbcType=VARCHAR}, #{field0079,jdbcType=VARCHAR}, #{field0080,jdbcType=VARCHAR}, 
+      #{field0081,jdbcType=DATE}, #{field0082,jdbcType=VARCHAR}, #{field0083,jdbcType=VARCHAR}, 
+      #{field0084,jdbcType=DATE}, #{field0085,jdbcType=BIGINT}, #{field0086,jdbcType=BIGINT}, 
+      #{field0087,jdbcType=VARCHAR}, #{field0090,jdbcType=VARCHAR}, #{field0091,jdbcType=VARCHAR}, 
+      #{field0092,jdbcType=DATE}, #{field0093,jdbcType=VARCHAR}, #{field0096,jdbcType=VARCHAR}, 
+      #{field0097,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.Formmain0114History" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
@@ -251,6 +252,9 @@
       </if>
       <if test="procInstId != null" >
         proc_inst_id,
+      </if>
+      <if test="procTitle != null" >
+        proc_title,
       </if>
       <if test="state != null" >
         state,
@@ -478,6 +482,9 @@
       </if>
       <if test="procInstId != null" >
         #{procInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="procTitle != null" >
+        #{procTitle,jdbcType=VARCHAR},
       </if>
       <if test="state != null" >
         #{state,jdbcType=INTEGER},
@@ -718,6 +725,9 @@
       <if test="record.procInstId != null" >
         proc_inst_id = #{record.procInstId,jdbcType=VARCHAR},
       </if>
+      <if test="record.procTitle != null" >
+        proc_title = #{record.procTitle,jdbcType=VARCHAR},
+      </if>
       <if test="record.state != null" >
         state = #{record.state,jdbcType=INTEGER},
       </if>
@@ -947,6 +957,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       oid = #{record.oid,jdbcType=VARCHAR},
       proc_inst_id = #{record.procInstId,jdbcType=VARCHAR},
+      proc_title = #{record.procTitle,jdbcType=VARCHAR},
       state = #{record.state,jdbcType=INTEGER},
       start_member_id = #{record.startMemberId,jdbcType=BIGINT},
       start_date = #{record.startDate,jdbcType=TIMESTAMP},
@@ -1032,6 +1043,9 @@
       </if>
       <if test="procInstId != null" >
         proc_inst_id = #{procInstId,jdbcType=VARCHAR},
+      </if>
+      <if test="procTitle != null" >
+        proc_title = #{procTitle,jdbcType=VARCHAR},
       </if>
       <if test="state != null" >
         state = #{state,jdbcType=INTEGER},
@@ -1259,6 +1273,7 @@
     update formmain_0114_history
     set oid = #{oid,jdbcType=VARCHAR},
       proc_inst_id = #{procInstId,jdbcType=VARCHAR},
+      proc_title = #{procTitle,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER},
       start_member_id = #{startMemberId,jdbcType=BIGINT},
       start_date = #{startDate,jdbcType=TIMESTAMP},
