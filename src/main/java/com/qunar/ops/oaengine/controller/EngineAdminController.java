@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +58,14 @@ public class EngineAdminController {
 	@Autowired
 	protected ProcessEngineFactoryBean processEngine;
 
+	private Set<String> adminUsers = new HashSet<String>();
+	{
+		adminUsers.add("nuby.zhang");
+		adminUsers.add("yongnian.jiang");
+		adminUsers.add("zhen.pei");
+		adminUsers.add("weidong.jiang");
+	}
+	
 	/**
 	 * login
 	 * 
@@ -80,8 +90,10 @@ public class EngineAdminController {
 			JSONObject parseObject = JSON.parseObject(result.toString());
 			String ret = parseObject.getString("ret");
 			if (ret.equals("true")) {
-				String userId = parseObject.getJSONObject("data").getString(
-						"userId");
+				String userId = parseObject.getJSONObject("data").getString("userId");
+				if(!this.adminUsers.contains(userId)){
+					return "redirect:/admin/index.html";
+				}
 				request.getSession().setAttribute("USER_ID", userId);
 			} else {
 				return "redirect:/admin/index.html";

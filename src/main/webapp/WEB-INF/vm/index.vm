@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>工作流引擎控制台</title>
-<base href="/engine/"></base>
+<base href="/oaengine/"></base>
 </head>
 <body bgcolor="#FFFFFF">
 	<script
