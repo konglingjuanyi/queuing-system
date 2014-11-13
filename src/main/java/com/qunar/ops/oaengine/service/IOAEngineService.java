@@ -180,7 +180,7 @@ public interface IOAEngineService {
 	 * @param pageSize - 默认20
 	 * @return FormInfoList 表单审批信息列表
 	 */
-	public FormInfoList getApprovalHisList(String processKey, String userId, Date startTime, Date endTime, int pageNo, int pageSize);
+	public FormInfoList getUserApplyHisList(String processKey, String userId, Date startTime, Date endTime, int pageNo, int pageSize);
 	
 	
 	/****************************************************
@@ -200,8 +200,9 @@ public interface IOAEngineService {
 	 * @param pageNo
 	 * @param pageSize - 默认20
 	 * @return FormInfoList 工单列表
+	 * @throws FormNotFoundException 
 	 */
-	public FormInfoList todoList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize);
+	public FormInfoList todoList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException;
 	
 	/**
 	 * 参与审批的历史工单列表
@@ -213,8 +214,9 @@ public interface IOAEngineService {
 	 * @param pageNo
 	 * @param pageSize - 默认20
 	 * @return FormInfoList 工单列表
+	 * @throws FormNotFoundException 
 	 */
-	public FormInfoList historyList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize);
+	public FormInfoList historyList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException;
 	
 	
 	/****************************************************
