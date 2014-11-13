@@ -31,6 +31,7 @@ import com.qunar.ops.oaengine.dao.Formson0119HistoryMapper;
 import com.qunar.ops.oaengine.dao.Formson0119LogMapper;
 import com.qunar.ops.oaengine.dao.Formson0119Mapper;
 import com.qunar.ops.oaengine.exception.CompareModelException;
+import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.model.FormUpdateLog;
 import com.qunar.ops.oaengine.model.FormUpdateLogExample;
 import com.qunar.ops.oaengine.model.Formmain0114;
@@ -76,7 +77,9 @@ public class Form0114Manager {
 	public static final int OTHERCOSTS_INFO = 117;
 	public static final int EMPLOYEERELATIONSFEES_INFO = 118;
 	public static final int TAXIFARES_INFO = 119;
-
+	
+	@Autowired
+	private WorkflowManager workflowManager;
 	@Autowired
 	private FormAppmainMapper formAppmainMapper;
 	@Autowired
@@ -216,6 +219,39 @@ public class Form0114Manager {
 
 		return formInfo;
 	}
+	
+	/**
+	 * 表单查询
+	 * 
+	 * @param proc_inst_id
+	 * @return
+	 * @throws FormNotFoundException 
+	 */
+	public FormInfo getFormInfo(String proc_inst_id) throws FormNotFoundException {
+		FormInfo formInfo = new FormInfo();
+		Formmain0114Example example = new Formmain0114Example();
+		example.createCriteria().andProcInstIdEqualTo(proc_inst_id);
+		List<Formmain0114> formmain0114s = formmain0114Mapper
+				.selectByExample(example);
+		if(formmain0114s.size() != 1){
+			throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114s.size()), Form0114Manager.class);
+		}
+		BeanUtils.copyProperties(formInfo, formmain0114s.get(0));
+
+		Map<String, Object> formson = getFormsonInfo(formmain0114s.get(0).getId());
+		formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+				.get("overtimeMealsInfos"));
+		formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+				.get("hospitalityInfos"));
+		formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+				.get("otherCostsInfos"));
+		formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+				.get("employeeRelationsFeesInfos"));
+		formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+				.get("taxiFaresInfos"));
+
+		return formInfo;
+	}
 
 	/**
 	 * 获取用户申请流程中列表
@@ -259,7 +295,7 @@ public class Form0114Manager {
 		return formInfoList;
 	}
 	
-	public FormInfoList getApprovalHisList(String userId,
+	public FormInfoList getUserApplyHisList(String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
 		FormInfoList formInfoList = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
@@ -290,6 +326,13 @@ public class Form0114Manager {
 		return formInfoList;
 	}
 
+	public FormInfoList todoList(String processKey, String userId,
+			Date startTime, Date endTime, String owner, int pageNo, int pageSize) {
+		FormInfoList formInfoList = new FormInfoList();
+		List<FormInfo> formInfos = new ArrayList<FormInfo>();
+		return null;
+	}
+	
 	// --------------------------日志相关----------------------------
 	/**
 	 * 表单变更日志

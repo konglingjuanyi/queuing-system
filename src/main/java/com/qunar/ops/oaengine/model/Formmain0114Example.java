@@ -497,52 +497,62 @@ public class Formmain0114Example {
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdEqualTo(Long value) {
+        public Criteria andStartMemberIdEqualTo(String value) {
             addCriterion("start_member_id =", value, "startMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdNotEqualTo(Long value) {
+        public Criteria andStartMemberIdNotEqualTo(String value) {
             addCriterion("start_member_id <>", value, "startMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdGreaterThan(Long value) {
+        public Criteria andStartMemberIdGreaterThan(String value) {
             addCriterion("start_member_id >", value, "startMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andStartMemberIdGreaterThanOrEqualTo(String value) {
             addCriterion("start_member_id >=", value, "startMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdLessThan(Long value) {
+        public Criteria andStartMemberIdLessThan(String value) {
             addCriterion("start_member_id <", value, "startMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdLessThanOrEqualTo(Long value) {
+        public Criteria andStartMemberIdLessThanOrEqualTo(String value) {
             addCriterion("start_member_id <=", value, "startMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdIn(List<Long> values) {
+        public Criteria andStartMemberIdLike(String value) {
+            addCriterion("start_member_id like", value, "startMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartMemberIdNotLike(String value) {
+            addCriterion("start_member_id not like", value, "startMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andStartMemberIdIn(List<String> values) {
             addCriterion("start_member_id in", values, "startMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdNotIn(List<Long> values) {
+        public Criteria andStartMemberIdNotIn(List<String> values) {
             addCriterion("start_member_id not in", values, "startMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdBetween(Long value1, Long value2) {
+        public Criteria andStartMemberIdBetween(String value1, String value2) {
             addCriterion("start_member_id between", value1, value2, "startMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andStartMemberIdNotBetween(Long value1, Long value2) {
+        public Criteria andStartMemberIdNotBetween(String value1, String value2) {
             addCriterion("start_member_id not between", value1, value2, "startMemberId");
             return (Criteria) this;
         }
@@ -617,52 +627,62 @@ public class Formmain0114Example {
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdEqualTo(Long value) {
+        public Criteria andApproveMemberIdEqualTo(String value) {
             addCriterion("approve_member_id =", value, "approveMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdNotEqualTo(Long value) {
+        public Criteria andApproveMemberIdNotEqualTo(String value) {
             addCriterion("approve_member_id <>", value, "approveMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdGreaterThan(Long value) {
+        public Criteria andApproveMemberIdGreaterThan(String value) {
             addCriterion("approve_member_id >", value, "approveMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andApproveMemberIdGreaterThanOrEqualTo(String value) {
             addCriterion("approve_member_id >=", value, "approveMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdLessThan(Long value) {
+        public Criteria andApproveMemberIdLessThan(String value) {
             addCriterion("approve_member_id <", value, "approveMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdLessThanOrEqualTo(Long value) {
+        public Criteria andApproveMemberIdLessThanOrEqualTo(String value) {
             addCriterion("approve_member_id <=", value, "approveMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdIn(List<Long> values) {
+        public Criteria andApproveMemberIdLike(String value) {
+            addCriterion("approve_member_id like", value, "approveMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveMemberIdNotLike(String value) {
+            addCriterion("approve_member_id not like", value, "approveMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveMemberIdIn(List<String> values) {
             addCriterion("approve_member_id in", values, "approveMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdNotIn(List<Long> values) {
+        public Criteria andApproveMemberIdNotIn(List<String> values) {
             addCriterion("approve_member_id not in", values, "approveMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdBetween(Long value1, Long value2) {
+        public Criteria andApproveMemberIdBetween(String value1, String value2) {
             addCriterion("approve_member_id between", value1, value2, "approveMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andApproveMemberIdNotBetween(Long value1, Long value2) {
+        public Criteria andApproveMemberIdNotBetween(String value1, String value2) {
             addCriterion("approve_member_id not between", value1, value2, "approveMemberId");
             return (Criteria) this;
         }
@@ -857,52 +877,62 @@ public class Formmain0114Example {
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdEqualTo(Long value) {
+        public Criteria andRatifyMemberIdEqualTo(String value) {
             addCriterion("ratify_member_id =", value, "ratifyMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdNotEqualTo(Long value) {
+        public Criteria andRatifyMemberIdNotEqualTo(String value) {
             addCriterion("ratify_member_id <>", value, "ratifyMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdGreaterThan(Long value) {
+        public Criteria andRatifyMemberIdGreaterThan(String value) {
             addCriterion("ratify_member_id >", value, "ratifyMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andRatifyMemberIdGreaterThanOrEqualTo(String value) {
             addCriterion("ratify_member_id >=", value, "ratifyMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdLessThan(Long value) {
+        public Criteria andRatifyMemberIdLessThan(String value) {
             addCriterion("ratify_member_id <", value, "ratifyMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdLessThanOrEqualTo(Long value) {
+        public Criteria andRatifyMemberIdLessThanOrEqualTo(String value) {
             addCriterion("ratify_member_id <=", value, "ratifyMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdIn(List<Long> values) {
+        public Criteria andRatifyMemberIdLike(String value) {
+            addCriterion("ratify_member_id like", value, "ratifyMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatifyMemberIdNotLike(String value) {
+            addCriterion("ratify_member_id not like", value, "ratifyMemberId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRatifyMemberIdIn(List<String> values) {
             addCriterion("ratify_member_id in", values, "ratifyMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdNotIn(List<Long> values) {
+        public Criteria andRatifyMemberIdNotIn(List<String> values) {
             addCriterion("ratify_member_id not in", values, "ratifyMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdBetween(Long value1, Long value2) {
+        public Criteria andRatifyMemberIdBetween(String value1, String value2) {
             addCriterion("ratify_member_id between", value1, value2, "ratifyMemberId");
             return (Criteria) this;
         }
 
-        public Criteria andRatifyMemberIdNotBetween(Long value1, Long value2) {
+        public Criteria andRatifyMemberIdNotBetween(String value1, String value2) {
             addCriterion("ratify_member_id not between", value1, value2, "ratifyMemberId");
             return (Criteria) this;
         }

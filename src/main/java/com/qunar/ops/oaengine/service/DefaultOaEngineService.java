@@ -52,7 +52,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Autowired
 	private LogManager logManager;
 	@Autowired
-	private Form0114Manager formManager;
+	private Form0114Manager form0114Manager;
 	@Autowired
 	private MailSenderService mailSenderService;
 	@Autowired
@@ -66,14 +66,14 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int createForm(String processKey, String userId, FormInfo formInfo){
-		return formManager.createFormInfo(userId, formInfo);
+		return form0114Manager.createFormInfo(userId, formInfo);
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int createFormAndstart(String processKey, String userId,
 			FormInfo formInfo) throws RemoteAccessException{
-		formManager.createFormInfo(userId, formInfo);
+		form0114Manager.createFormInfo(userId, formInfo);
 		Request request = new Request();
 		request.setOid(formInfo.getOid());
 		request.setReport2vp(Boolean.valueOf(formInfo.getIsDirectVp()));
@@ -100,25 +100,25 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Transactional(rollbackFor=Exception.class)
 	public FormInfo updateFormInfo(String processKey, String userId,
 			String formId, FormInfo formInfo) throws CompareModelException{
-		return formManager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
+		return form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
 	}
 
 	@Override
 	public FormInfo getFormInfo(String processKey, String userId, String formId) {
 		FormInfo formInfo = new FormInfo();
-		formInfo = formManager.getFormInfo(Long.valueOf(formId));
+		formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		return formInfo;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void deleteFormInfo(String processKey, String userId, String formId){
-		formManager.deleteFormInfo(userId, Long.valueOf(formId));
+		form0114Manager.deleteFormInfo(userId, Long.valueOf(formId));
 	}
 
 	@Override
 	public ListInfo<AlertInfo> getAlertHisList(String processKey, String formId, int pageNo, int pageSize) {
-		return formManager.getAlertInfos(Long.valueOf(formId), pageNo, pageSize);
+		return form0114Manager.getAlertInfos(Long.valueOf(formId), pageNo, pageSize);
 	}
 
 	@Override
@@ -152,28 +152,55 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public FormInfoList getUserApplyList(String processKey, String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
-		return formManager.getUserApplyList(userId, startTime, endTime, pageNo, pageSize);
+		return form0114Manager.getUserApplyList(userId, startTime, endTime, pageNo, pageSize);
 	}
 
 	@Override
-	public FormInfoList getApprovalHisList(String processKey, String userId,
+	public FormInfoList getUserApplyHisList(String processKey, String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
-		return formManager.getApprovalHisList(userId, startTime, endTime, pageNo, pageSize);
+		return form0114Manager.getUserApplyHisList(userId, startTime, endTime, pageNo, pageSize);
 	}
 
 	@Override
 	public FormInfoList todoList(String processKey, String userId,
-			Date startTime, Date endTime, String owner, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
+		ListInfo<TaskInfo> taskInfos = workflowManager.todoList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
+		List<TaskInfo> _taskInfos = taskInfos.getInfos();
+		FormInfoList res = new FormInfoList();
+		List<FormInfo> formInfos = new ArrayList<FormInfo>();
+		FormInfo formInfo;
+		for(int i = 0; i < _taskInfos.size(); i++){
+			TaskInfo taskInfo = _taskInfos.get(i);
+			String proc_inst_id = taskInfo.getProcessInstanceId();
+			formInfo = form0114Manager.getFormInfo(proc_inst_id);
+			formInfo.setTaskId(taskInfo.getTaskId());
+			formInfos.add(formInfo);
+		}
+		res.setPageCount((int)taskInfos.getCount());
+		res.setPageNo(pageNo);
+		res.setPageSize(pageSize);
+		return res;
 	}
 
 	@Override
 	public FormInfoList historyList(String processKey, String userId,
-			Date startTime, Date endTime, String owner, int pageNo, int pageSize) {
-		// TODO Auto-generated method stub
-		return null;
+			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
+		ListInfo<TaskInfo> taskInfos = workflowManager.historyList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
+		List<TaskInfo> _taskInfos = taskInfos.getInfos();
+		FormInfoList res = new FormInfoList();
+		List<FormInfo> formInfos = new ArrayList<FormInfo>();
+		FormInfo formInfo;
+		for(int i = 0; i < _taskInfos.size(); i++){
+			TaskInfo taskInfo = _taskInfos.get(i);
+			String proc_inst_id = taskInfo.getProcessInstanceId();
+			formInfo = form0114Manager.getFormInfo(proc_inst_id);
+			formInfo.setTaskId(taskInfo.getTaskId());
+			formInfos.add(formInfo);
+		}
+		res.setPageCount((int)taskInfos.getCount());
+		res.setPageNo(pageNo);
+		res.setPageSize(pageSize);
+		return res;
 	}
 
 	@Override
@@ -228,7 +255,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, formId, "pass", tr, memo);
 		if(tr.isFinished()){
-			this.formManager.deleteFormInfo(userId, formId);
+			this.form0114Manager.deleteFormInfo(userId, formId);
 		}
 		return tr;
 	}
@@ -258,7 +285,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException {
 		TaskResult tr = this.workflowManager.cancel(processKey, Long.toString(formId), userId, refuseReason);
 		if(tr != null){
-			this.formManager.deleteFormInfo(userId, formId);
+			this.form0114Manager.deleteFormInfo(userId, formId);
 			this.logManager.refuseLog(userId, formId, refuseReason);
 		}else{
 			throw new FormNotFoundException("任务没有找到", this.getClass());

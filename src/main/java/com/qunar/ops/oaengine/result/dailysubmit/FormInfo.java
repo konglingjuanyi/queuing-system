@@ -73,6 +73,13 @@ public class FormInfo extends Formmain0114 implements Serializable{
 //    private String address;
 //    private String isDirectVp;
 //    private String bankName;
+	private String taskId;
+	public String getTaskId() {
+		return taskId;
+	}
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
 	private OvertimeMealsInfo[] overtimeMealsInfo;
 	private HospitalityInfo[] hospitalityInfo;
 	private OtherCostsInfo[] otherCostsInfo;
