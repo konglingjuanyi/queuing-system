@@ -13,11 +13,11 @@ public class Formmain0114 {
 
     private Integer state;
 
-    private Long startMemberId;
+    private String startMemberId;
 
     private Date startDate;
 
-    private Long approveMemberId;
+    private String approveMemberId;
 
     private Date approveDate;
 
@@ -25,7 +25,7 @@ public class Formmain0114 {
 
     private Integer ratifyflag;
 
-    private Long ratifyMemberId;
+    private String ratifyMemberId;
 
     private Date ratifyDate;
 
@@ -197,12 +197,12 @@ public class Formmain0114 {
         this.state = state;
     }
 
-    public Long getStartMemberId() {
+    public String getStartMemberId() {
         return startMemberId;
     }
 
-    public void setStartMemberId(Long startMemberId) {
-        this.startMemberId = startMemberId;
+    public void setStartMemberId(String startMemberId) {
+        this.startMemberId = startMemberId == null ? null : startMemberId.trim();
     }
 
     public Date getStartDate() {
@@ -213,12 +213,12 @@ public class Formmain0114 {
         this.startDate = startDate;
     }
 
-    public Long getApproveMemberId() {
+    public String getApproveMemberId() {
         return approveMemberId;
     }
 
-    public void setApproveMemberId(Long approveMemberId) {
-        this.approveMemberId = approveMemberId;
+    public void setApproveMemberId(String approveMemberId) {
+        this.approveMemberId = approveMemberId == null ? null : approveMemberId.trim();
     }
 
     public Date getApproveDate() {
@@ -245,12 +245,12 @@ public class Formmain0114 {
         this.ratifyflag = ratifyflag;
     }
 
-    public Long getRatifyMemberId() {
+    public String getRatifyMemberId() {
         return ratifyMemberId;
     }
 
-    public void setRatifyMemberId(Long ratifyMemberId) {
-        this.ratifyMemberId = ratifyMemberId;
+    public void setRatifyMemberId(String ratifyMemberId) {
+        this.ratifyMemberId = ratifyMemberId == null ? null : ratifyMemberId.trim();
     }
 
     public Date getRatifyDate() {

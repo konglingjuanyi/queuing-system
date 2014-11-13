@@ -7,13 +7,13 @@
     <result column="proc_inst_id" property="procInstId" jdbcType="VARCHAR" />
     <result column="proc_title" property="procTitle" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="INTEGER" />
-    <result column="start_member_id" property="startMemberId" jdbcType="BIGINT" />
+    <result column="start_member_id" property="startMemberId" jdbcType="VARCHAR" />
     <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
-    <result column="approve_member_id" property="approveMemberId" jdbcType="BIGINT" />
+    <result column="approve_member_id" property="approveMemberId" jdbcType="VARCHAR" />
     <result column="approve_date" property="approveDate" jdbcType="TIMESTAMP" />
     <result column="finishedflag" property="finishedflag" jdbcType="INTEGER" />
     <result column="ratifyflag" property="ratifyflag" jdbcType="INTEGER" />
-    <result column="ratify_member_id" property="ratifyMemberId" jdbcType="BIGINT" />
+    <result column="ratify_member_id" property="ratifyMemberId" jdbcType="VARCHAR" />
     <result column="ratify_date" property="ratifyDate" jdbcType="TIMESTAMP" />
     <result column="field0001" property="field0001" jdbcType="VARCHAR" />
     <result column="field0002" property="field0002" jdbcType="VARCHAR" />
@@ -215,9 +215,9 @@
       field0092, field0093, field0096, 
       field0097)
     values (#{oid,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, #{procTitle,jdbcType=VARCHAR}, 
-      #{state,jdbcType=INTEGER}, #{startMemberId,jdbcType=BIGINT}, #{startDate,jdbcType=TIMESTAMP}, 
-      #{approveMemberId,jdbcType=BIGINT}, #{approveDate,jdbcType=TIMESTAMP}, #{finishedflag,jdbcType=INTEGER}, 
-      #{ratifyflag,jdbcType=INTEGER}, #{ratifyMemberId,jdbcType=BIGINT}, #{ratifyDate,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=INTEGER}, #{startMemberId,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, 
+      #{approveMemberId,jdbcType=VARCHAR}, #{approveDate,jdbcType=TIMESTAMP}, #{finishedflag,jdbcType=INTEGER}, 
+      #{ratifyflag,jdbcType=INTEGER}, #{ratifyMemberId,jdbcType=VARCHAR}, #{ratifyDate,jdbcType=TIMESTAMP}, 
       #{field0001,jdbcType=VARCHAR}, #{field0002,jdbcType=VARCHAR}, #{field0003,jdbcType=VARCHAR}, 
       #{field0004,jdbcType=VARCHAR}, #{field0005,jdbcType=DATE}, #{field0006,jdbcType=VARCHAR}, 
       #{field0007,jdbcType=VARCHAR}, #{field0008,jdbcType=VARCHAR}, #{field0009,jdbcType=VARCHAR}, 
@@ -490,13 +490,13 @@
         #{state,jdbcType=INTEGER},
       </if>
       <if test="startMemberId != null" >
-        #{startMemberId,jdbcType=BIGINT},
+        #{startMemberId,jdbcType=VARCHAR},
       </if>
       <if test="startDate != null" >
         #{startDate,jdbcType=TIMESTAMP},
       </if>
       <if test="approveMemberId != null" >
-        #{approveMemberId,jdbcType=BIGINT},
+        #{approveMemberId,jdbcType=VARCHAR},
       </if>
       <if test="approveDate != null" >
         #{approveDate,jdbcType=TIMESTAMP},
@@ -508,7 +508,7 @@
         #{ratifyflag,jdbcType=INTEGER},
       </if>
       <if test="ratifyMemberId != null" >
-        #{ratifyMemberId,jdbcType=BIGINT},
+        #{ratifyMemberId,jdbcType=VARCHAR},
       </if>
       <if test="ratifyDate != null" >
         #{ratifyDate,jdbcType=TIMESTAMP},
@@ -732,13 +732,13 @@
         state = #{record.state,jdbcType=INTEGER},
       </if>
       <if test="record.startMemberId != null" >
-        start_member_id = #{record.startMemberId,jdbcType=BIGINT},
+        start_member_id = #{record.startMemberId,jdbcType=VARCHAR},
       </if>
       <if test="record.startDate != null" >
         start_date = #{record.startDate,jdbcType=TIMESTAMP},
       </if>
       <if test="record.approveMemberId != null" >
-        approve_member_id = #{record.approveMemberId,jdbcType=BIGINT},
+        approve_member_id = #{record.approveMemberId,jdbcType=VARCHAR},
       </if>
       <if test="record.approveDate != null" >
         approve_date = #{record.approveDate,jdbcType=TIMESTAMP},
@@ -750,7 +750,7 @@
         ratifyflag = #{record.ratifyflag,jdbcType=INTEGER},
       </if>
       <if test="record.ratifyMemberId != null" >
-        ratify_member_id = #{record.ratifyMemberId,jdbcType=BIGINT},
+        ratify_member_id = #{record.ratifyMemberId,jdbcType=VARCHAR},
       </if>
       <if test="record.ratifyDate != null" >
         ratify_date = #{record.ratifyDate,jdbcType=TIMESTAMP},
@@ -959,13 +959,13 @@
       proc_inst_id = #{record.procInstId,jdbcType=VARCHAR},
       proc_title = #{record.procTitle,jdbcType=VARCHAR},
       state = #{record.state,jdbcType=INTEGER},
-      start_member_id = #{record.startMemberId,jdbcType=BIGINT},
+      start_member_id = #{record.startMemberId,jdbcType=VARCHAR},
       start_date = #{record.startDate,jdbcType=TIMESTAMP},
-      approve_member_id = #{record.approveMemberId,jdbcType=BIGINT},
+      approve_member_id = #{record.approveMemberId,jdbcType=VARCHAR},
       approve_date = #{record.approveDate,jdbcType=TIMESTAMP},
       finishedflag = #{record.finishedflag,jdbcType=INTEGER},
       ratifyflag = #{record.ratifyflag,jdbcType=INTEGER},
-      ratify_member_id = #{record.ratifyMemberId,jdbcType=BIGINT},
+      ratify_member_id = #{record.ratifyMemberId,jdbcType=VARCHAR},
       ratify_date = #{record.ratifyDate,jdbcType=TIMESTAMP},
       field0001 = #{record.field0001,jdbcType=VARCHAR},
       field0002 = #{record.field0002,jdbcType=VARCHAR},
@@ -1051,13 +1051,13 @@
         state = #{state,jdbcType=INTEGER},
       </if>
       <if test="startMemberId != null" >
-        start_member_id = #{startMemberId,jdbcType=BIGINT},
+        start_member_id = #{startMemberId,jdbcType=VARCHAR},
       </if>
       <if test="startDate != null" >
         start_date = #{startDate,jdbcType=TIMESTAMP},
       </if>
       <if test="approveMemberId != null" >
-        approve_member_id = #{approveMemberId,jdbcType=BIGINT},
+        approve_member_id = #{approveMemberId,jdbcType=VARCHAR},
       </if>
       <if test="approveDate != null" >
         approve_date = #{approveDate,jdbcType=TIMESTAMP},
@@ -1069,7 +1069,7 @@
         ratifyflag = #{ratifyflag,jdbcType=INTEGER},
       </if>
       <if test="ratifyMemberId != null" >
-        ratify_member_id = #{ratifyMemberId,jdbcType=BIGINT},
+        ratify_member_id = #{ratifyMemberId,jdbcType=VARCHAR},
       </if>
       <if test="ratifyDate != null" >
         ratify_date = #{ratifyDate,jdbcType=TIMESTAMP},
@@ -1275,13 +1275,13 @@
       proc_inst_id = #{procInstId,jdbcType=VARCHAR},
       proc_title = #{procTitle,jdbcType=VARCHAR},
       state = #{state,jdbcType=INTEGER},
-      start_member_id = #{startMemberId,jdbcType=BIGINT},
+      start_member_id = #{startMemberId,jdbcType=VARCHAR},
       start_date = #{startDate,jdbcType=TIMESTAMP},
-      approve_member_id = #{approveMemberId,jdbcType=BIGINT},
+      approve_member_id = #{approveMemberId,jdbcType=VARCHAR},
       approve_date = #{approveDate,jdbcType=TIMESTAMP},
       finishedflag = #{finishedflag,jdbcType=INTEGER},
       ratifyflag = #{ratifyflag,jdbcType=INTEGER},
-      ratify_member_id = #{ratifyMemberId,jdbcType=BIGINT},
+      ratify_member_id = #{ratifyMemberId,jdbcType=VARCHAR},
       ratify_date = #{ratifyDate,jdbcType=TIMESTAMP},
       field0001 = #{field0001,jdbcType=VARCHAR},
       field0002 = #{field0002,jdbcType=VARCHAR},
