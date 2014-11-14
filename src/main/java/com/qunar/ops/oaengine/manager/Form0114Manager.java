@@ -333,7 +333,7 @@ public class Form0114Manager {
 			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
 			formInfos.add(formInfo);
 		}
-		formInfoList.setPageCount(count);
+		formInfoList.setCount(count);
 		formInfoList.setPageSize(pageSize);
 		formInfoList.setPageNo(pageNo);
 		formInfoList.setFormInfos(formInfos);
@@ -380,7 +380,7 @@ public class Form0114Manager {
 			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
 			formInfos.add(formInfo);
 		}
-		formInfoList.setPageCount(count);
+		formInfoList.setCount(count);
 		formInfoList.setPageSize(pageSize);
 		formInfoList.setPageNo(pageNo);
 		formInfoList.setFormInfos(formInfos);
@@ -471,7 +471,7 @@ public class Form0114Manager {
 			BeanUtils.copyProperties(formmain0114Historys.get(i), formInfo);
 			formInfos.add(formInfo);
 		}
-		formInfoList.setPageCount(count);
+		formInfoList.setCount(count);
 		formInfoList.setPageSize(pageSize);
 		formInfoList.setPageNo(pageNo);
 		formInfoList.setFormInfos(formInfos);

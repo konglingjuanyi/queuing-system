@@ -121,7 +121,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 			throw new ManagerFormException("不是你的申请，你无权修改", DefaultOaEngineService.class);
 		}
 		FormInfo res = form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
-		if(!workflowManager.findProcessInstanceCountByBusinessKey(processKey, formId)){
+		
+		if(_formInfo.getFinishedflag() != Constants.PROCESSING){
 			if(start){
 				_startProcess(processKey, userId, formInfo);
 			}
@@ -218,7 +219,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfos.add(formInfo);
 		}
-		res.setPageCount((int)taskInfos.getCount());
+		res.setCount((int)taskInfos.getCount());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
 		res.setFormInfos(formInfos);
@@ -240,7 +241,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfos.add(formInfo);
 		}
-		res.setPageCount((int)taskInfos.getCount());
+		res.setCount((int)taskInfos.getCount());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
 		return res;
