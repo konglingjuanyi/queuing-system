@@ -64,12 +64,14 @@ public interface IOAEngineService {
 	 * @param forminfo
 	 * @return 工单ID
 	 * @throws RemoteAccessException 
+	 * @throws FormNotFoundException 
+	 * @throws CompareModelException 
 	 * @throws 数据库保存错误、工作流启动错误、系统错误
 	 * FE:
 	 * BE:
 	 * 需要记录修改日志；需要记录操作历史
 	 */
-	public int createFormAndstart(String processKey, String userId, FormInfo forminfo) throws RemoteAccessException;
+	public int createFormAndstart(String processKey, String userId, FormInfo forminfo) throws RemoteAccessException, CompareModelException, FormNotFoundException;
 	
 	/**
 	 * 更新工单
@@ -79,12 +81,13 @@ public interface IOAEngineService {
 	 * @param forminfo
 	 * @return
 	 * @throws CompareModelException 
+	 * @throws FormNotFoundException 
 	 * @throws 工单没有找到；工单被锁定(更新人与工单提交人不一致)；系统错误
 	 * FE:
 	 * BE：
 	 * 需要记录修改日志
 	 */
-	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo) throws CompareModelException;
+	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo) throws CompareModelException, FormNotFoundException;
 	
 	/**
 	 * 获取工单信息
@@ -92,8 +95,9 @@ public interface IOAEngineService {
 	 * @param userId
 	 * @param formId
 	 * @return 没有找到返回 null
+	 * @throws FormNotFoundException 
 	 */
-	public FormInfo getFormInfo(String processKey, String userId, String formId);
+	public FormInfo getFormInfo(String processKey, String userId, String formId) throws FormNotFoundException;
 	
 	/**
 	 * 删除、取消工单 
@@ -154,8 +158,22 @@ public interface IOAEngineService {
 	 *  角色：申请发起人
 	 *  。处理中的申请
 	 *  。 结束的申请
+	 *  。 草稿中的申请
 	 *  
 	 ***************************************************/
+	/**
+	 * 获取用户草稿列表
+	 * @param processKey
+	 * @param userId
+	 * @param startTime - 允许null
+	 * @param endTime - 允许null
+	 * @param pageNo
+	 * @param pageSize - 默认20
+	 * @return FormInfoList 用户草稿列表
+	 * 
+	 */
+	public FormInfoList getUserDraftList(String processKey, String userId, int pageNo, int pageSize);
+	
 	/**
 	 * 获取用户申请流程中列表
 	 * @param processKey
@@ -361,4 +379,5 @@ public interface IOAEngineService {
 	 * FE:页面判断组员是否存在
 	 */
 	public void removeMember(String groupKey, String memberUserId);
+
 }

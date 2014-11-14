@@ -38,6 +38,7 @@ import com.qunar.ops.oaengine.result.dailysubmit.AlertInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
+import com.qunar.ops.oaengine.util.Constants;
 
 
 @Component
@@ -66,14 +67,18 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int createForm(String processKey, String userId, FormInfo formInfo){
-		return form0114Manager.createFormInfo(userId, formInfo);
+		FormInfo info = formInfo;
+		info.setFinishedflag(Constants.PROC_GRIFT);
+		form0114Manager.createFormInfo(userId, info);
+		return Constants.SUCCESS;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public int createFormAndstart(String processKey, String userId,
-			FormInfo formInfo) throws RemoteAccessException{
-		form0114Manager.createFormInfo(userId, formInfo);
+			FormInfo formInfo) throws RemoteAccessException, CompareModelException, FormNotFoundException{
+		FormInfo info = formInfo;
+		this.createForm(processKey, userId, info);
 		Request request = new Request();
 		request.setOid(formInfo.getOid());
 		request.setReport2vp(Boolean.valueOf(formInfo.getIsDirectVp()));
@@ -92,19 +97,22 @@ public class DefaultOaEngineService implements IOAEngineService {
 			String processInstanceId = (String)res[0];
 			TaskResult tr = (TaskResult)res[1];
 			logManager.appendApproveLog(userId, formInfo.getId(), "start", tr, "");
+			
+			//修改状态
+			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING);
 		}
-		return 0;
+		return Constants.SUCCESS;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public FormInfo updateFormInfo(String processKey, String userId,
-			String formId, FormInfo formInfo) throws CompareModelException{
+			String formId, FormInfo formInfo) throws CompareModelException, FormNotFoundException{
 		return form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
 	}
 
 	@Override
-	public FormInfo getFormInfo(String processKey, String userId, String formId) {
+	public FormInfo getFormInfo(String processKey, String userId, String formId) throws FormNotFoundException {
 		FormInfo formInfo = new FormInfo();
 		formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		return formInfo;
@@ -149,6 +157,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return employeeInfoService.getLaborHour(userId, day);
 	}
 
+	@Override
+	public FormInfoList getUserDraftList(String processKey, String userId, int pageNo, int pageSize) {
+		return form0114Manager.getUserDraftList(userId, pageNo, pageSize);
+	}
+	
 	@Override
 	public FormInfoList getUserApplyList(String processKey, String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
