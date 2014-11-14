@@ -67,16 +67,16 @@ public class DefaultOaEngineService implements IOAEngineService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int createForm(String processKey, String userId, FormInfo formInfo){
+	public long createForm(String processKey, String userId, FormInfo formInfo){
 		FormInfo info = formInfo;
 		info.setFinishedflag(Constants.PROC_GRIFT);
 		form0114Manager.createFormInfo(userId, info);
-		return Constants.SUCCESS;
+		return info.getId();//Constants.SUCCESS;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public int createFormAndstart(String processKey, String userId,
+	public long createFormAndstart(String processKey, String userId,
 			FormInfo formInfo) throws RemoteAccessException, CompareModelException, FormNotFoundException{
 		FormInfo info = formInfo;
 		this.createForm(processKey, userId, info);
@@ -103,7 +103,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			//修改状态
 			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING);
 		}
-		return Constants.SUCCESS;
+		return info.getId();//Constants.SUCCESS;
 	}
 
 	@Override
@@ -297,7 +297,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException {
+	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException {
 		TaskResult tr = this.workflowManager.cancel(processKey, Long.toString(formId), userId, refuseReason);
 		if(tr != null){
 			this.form0114Manager.deleteFormInfo(userId, formId);

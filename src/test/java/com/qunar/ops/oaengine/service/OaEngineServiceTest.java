@@ -4,7 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.activiti.engine.ActivitiException;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +17,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
+import com.qunar.ops.oaengine.manager.Form0114Manager;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
 import com.qunar.ops.oaengine.result.TaskResult;
 import com.qunar.ops.oaengine.result.dailysubmit.EmployeeRelationsFeesInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
 import com.qunar.ops.oaengine.result.dailysubmit.HospitalityInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.OtherCostsInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.OvertimeMealsInfo;
@@ -35,18 +40,32 @@ public class OaEngineServiceTest {
 	@Autowired
 	protected WorkflowManager manager;
 	
-	//@Test
+	@Autowired
+	private Form0114Manager form0114manager;
+	
+	private Long formId;
+	private String taskId;
+	
+	@After
+	public void destory_data() throws FormNotFoundException{
+		this.manager.cancel("oa_common", ""+formId, "nuby.zhang", "xxx");
+		form0114manager.deleteFormInfo("yongnian.jiang", formId);
+	}
+	
+	@Test
 	public void createFormAndstartTest(){
 		try {
-			this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
+			this.formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
+			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
+			Assert.assertEquals(1, list.getPageCount());
+			FormInfo info = list.getFormInfos().get(0);
+			this.taskId = info.getTaskId();
+			
 		} catch (RemoteAccessException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CompareModelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FormNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -55,7 +74,7 @@ public class OaEngineServiceTest {
 	//@Test
 	public void passTest(){
 		try {
-			this.service.pass("oa_common", "nuby.zhang", 2L, "380013", null);
+			this.service.pass("oa_common", "nuby.zhang", this.formId, this.taskId, null);
 		} catch (ActivitiException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -97,17 +116,11 @@ public class OaEngineServiceTest {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void refuseTest(){
 		try {
 			this.service.refuse("oa_common", "nuby.zhang", 4L, "387522", "xxx");
 		} catch (ActivitiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FormNotFoundException e) {

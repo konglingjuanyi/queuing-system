@@ -56,7 +56,7 @@ public interface IOAEngineService {
 	 * BE:
 	 * 需要记录修改日志
 	 */
-	public int createForm(String processKey, String userId, FormInfo forminfo);
+	public long createForm(String processKey, String userId, FormInfo forminfo);
 	
 	/**
 	 * 创建工单并发起流程
@@ -72,7 +72,7 @@ public interface IOAEngineService {
 	 * BE:
 	 * 需要记录修改日志；需要记录操作历史
 	 */
-	public int createFormAndstart(String processKey, String userId, FormInfo forminfo) throws RemoteAccessException, CompareModelException, FormNotFoundException;
+	public long createFormAndstart(String processKey, String userId, FormInfo forminfo) throws RemoteAccessException, CompareModelException, FormNotFoundException;
 	
 	/**
 	 * 更新工单
@@ -108,7 +108,7 @@ public interface IOAEngineService {
 	 * @param userId
 	 * @param formId
 	 * @return
-	 * @throws 工单没有找到；工单锁定（历史工单不允许删除、仅允许创建人删除）； 系统错误
+	 * @throws 工单没有找到；工单锁定（只允许删除草稿状态工单、仅允许创建人删除）； 系统错误
 	 * 需要记录操作历史
 	 */
 	public void deleteFormInfo(String processKey, String userId, String formId);
@@ -323,7 +323,7 @@ public interface IOAEngineService {
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException;
+	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException;
 	
 	
 	/****************************************************
