@@ -209,7 +209,7 @@ public class Form0114Manager {
 	 * @throws CompareModelException
 	 * @throws FormNotFoundException 
 	 */
-	public int updateFormFinishedFlag(String userId, Long formId, int finishedFlag)
+	public int updateFormFinishedFlag(String userId, Long formId, int finishedFlag, String proc_inst_id)
 			throws FormNotFoundException {
 		Formmain0114 formmain0114Old = formmain0114Mapper
 				.selectByPrimaryKey(formId);
@@ -225,6 +225,9 @@ public class Form0114Manager {
 		// 更新主表
 		Formmain0114 formmain0114New = formmain0114Old;
 		formmain0114New.setFinishedflag(finishedFlag);
+		if(proc_inst_id != null){
+			formmain0114New.setProcInstId(proc_inst_id);
+		}
 		formmain0114Mapper.updateByPrimaryKey(formmain0114New);
 
 		return 0;
@@ -308,10 +311,15 @@ public class Form0114Manager {
 	 * 
 	 */
 	public FormInfoList getUserDraftList(String userId, int pageNo, int pageSize) {
+		
+		pageNo = pageNo <= 0 ? 1 : pageNo;
+		pageSize = pageSize > 0 ? pageSize : 20;
+		
 		FormInfoList formInfoList = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		Formmain0114Example example = new Formmain0114Example();
 		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+		criteria.andStartMemberIdEqualTo(userId);
 		criteria.andFinishedflagEqualTo(Constants.PROC_GRIFT);
 		int count = formmain0114Mapper.countByExample(example);
 
@@ -346,10 +354,15 @@ public class Form0114Manager {
 	 */
 	public FormInfoList getUserApplyList(String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
+		
+		pageNo = pageNo <= 0 ? 1 : pageNo;
+		pageSize = pageSize > 0 ? pageSize : 20;
+		
 		FormInfoList formInfoList = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		Formmain0114Example example = new Formmain0114Example();
 		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+		criteria.andStartMemberIdEqualTo(userId);
 		if(startTime != null){
 			criteria = criteria.andStartDateGreaterThan(startTime);
 		}
@@ -375,12 +388,72 @@ public class Form0114Manager {
 		return formInfoList;
 	}
 	
+	/**
+	 * 获取用户申请草稿状态的总数
+	 * @param userId
+	 * @return int 用户申请草稿状态的总数
+	 * 
+	 */
+	public int getUserDraftCount(String userId) {
+		Formmain0114Example example = new Formmain0114Example();
+		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+		criteria.andStartMemberIdEqualTo(userId);
+		criteria.andFinishedflagEqualTo(Constants.PROC_GRIFT);
+		int count = formmain0114Mapper.countByExample(example);
+
+		return count;
+	}
+	
+	/**
+	 * 获取用户申请流程中总数
+	 * @param userId
+	 * @return int 用户申请流程中总数
+	 * 
+	 */
+	public int getUserApplyCount(String userId) {
+		Formmain0114Example example = new Formmain0114Example();
+		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+		criteria.andStartMemberIdEqualTo(userId);
+		int count = formmain0114Mapper.countByExample(example);
+
+		return count;
+	}
+	
+	/**
+	 * 获取用户历史流程总数
+	 * @param userId
+	 * @return int 用户历史流程总数
+	 * 
+	 */
+	public int getUserApplyHisCount(String userId) {
+		Formmain0114HistoryExample example = new Formmain0114HistoryExample();
+		com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria criteria = example.createCriteria();
+		criteria.andStartMemberIdEqualTo(userId);
+		int count = formmain0114HistoryMapper.countByExample(example);
+		return count;
+	}
+	
+	/**
+	 * 获取用户历史流程中列表
+	 * @param userId
+	 * @param startTime - 允许null
+	 * @param endTime - 允许null
+	 * @param pageNo
+	 * @param pageSize - 默认20
+	 * @return FormInfoList 用户历史流程中列表
+	 * 
+	 */
 	public FormInfoList getUserApplyHisList(String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
+		
+		pageNo = pageNo <= 0 ? 1 : pageNo;
+		pageSize = pageSize > 0 ? pageSize : 20;
+		
 		FormInfoList formInfoList = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		Formmain0114HistoryExample example = new Formmain0114HistoryExample();
 		com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria criteria = example.createCriteria();
+		criteria.andStartMemberIdEqualTo(userId);
 		if(startTime != null){
 			criteria = criteria.andStartDateGreaterThan(startTime);
 		}
@@ -424,6 +497,9 @@ public class Form0114Manager {
 	 */
 	public ListInfo<AlertInfo> getAlertInfos(Long formId, int pageNo,
 			int pageSize) {
+		pageNo = pageNo <= 0 ? 1 : pageNo;
+		pageSize = pageSize > 0 ? pageSize : 20;
+		
 		List<AlertInfo> alertInfos = new ArrayList<AlertInfo>();
 
 		// 获取主表的更新
