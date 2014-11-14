@@ -80,16 +80,17 @@ public interface IOAEngineService {
 	 * @param userId
 	 * @param formId
 	 * @param forminfo
-	 * @param 是否提交申请
+	 * @param 是否提交申请,是否保存并启动
 	 * @return
 	 * @throws CompareModelException 
 	 * @throws FormNotFoundException 
+	 * @throws RemoteAccessException 
 	 * @throws 工单没有找到；工单被锁定(更新人与工单提交人不一致)；系统错误
 	 * FE:
 	 * BE：
 	 * 需要记录修改日志
 	 */
-	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo, Boolean start) throws CompareModelException, FormNotFoundException;
+	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException;
 	
 	
 	/**

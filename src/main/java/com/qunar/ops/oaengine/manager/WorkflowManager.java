@@ -316,6 +316,20 @@ public class WorkflowManager {
 		return true;
 	}
 	
+	/**
+	 * 判断流程实例是否已经存在
+	 * @param processKey
+	 * @param businessKey
+	 * @return
+	 */
+	public boolean findProcessInstanceCountByBusinessKey(String processKey,
+			String businessKey) {
+		if(this.historyService.createHistoricProcessInstanceQuery().processDefinitionKey(processKey).processInstanceBusinessKey(businessKey).count() > 0){
+			return true;
+		}
+		return false;
+	}
+	
 	private String getOwner(String processId){
 		return (String)this.runtimeService.getVariable(processId, "owner");
 	}

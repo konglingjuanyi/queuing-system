@@ -78,8 +78,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Transactional(rollbackFor=Exception.class)
 	public int createFormAndstart(String processKey, String userId,
 			FormInfo formInfo) throws RemoteAccessException, CompareModelException, FormNotFoundException{
+		this.createForm(processKey, userId, formInfo);
+		_startProcess(processKey, userId, formInfo);
+		return Constants.SUCCESS;
+	}
+	
+	private void _startProcess(String processKey, String userId, FormInfo formInfo) throws RemoteAccessException, FormNotFoundException{
 		FormInfo info = formInfo;
-		this.createForm(processKey, userId, info);
 		Request request = new Request();
 		//request.setOid(formInfo.getOid());
 		request.setOid(""+formInfo.getId());
@@ -103,14 +108,22 @@ public class DefaultOaEngineService implements IOAEngineService {
 			//修改状态
 			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING);
 		}
-		return Constants.SUCCESS;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public FormInfo updateFormInfo(String processKey, String userId,
-			String formId, FormInfo formInfo, Boolean start) throws CompareModelException, FormNotFoundException{
-		return form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
+			String formId, FormInfo formInfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException{
+		
+		FormInfo res = form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
+		if(!workflowManager.findProcessInstanceCountByBusinessKey(processKey, formId)){
+			if(start){
+				_startProcess(processKey, userId, formInfo);
+			}
+		}
+		
+		return res;
+		
 	}
 
 	@Override
