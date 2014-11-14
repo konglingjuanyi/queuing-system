@@ -121,7 +121,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 			throw new ManagerFormException("不是你的申请，你无权修改", DefaultOaEngineService.class);
 		}
 		FormInfo res = form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
-		if(!workflowManager.findProcessInstanceCountByBusinessKey(processKey, formId)){
+		
+		if(_formInfo.getFinishedflag() != Constants.PROCESSING){
 			if(start){
 				_startProcess(processKey, userId, formInfo);
 			}
