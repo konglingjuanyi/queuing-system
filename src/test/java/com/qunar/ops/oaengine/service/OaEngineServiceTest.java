@@ -52,7 +52,7 @@ public class OaEngineServiceTest {
 		try {
 			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
 			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
-			Assert.assertEquals(1, list.getPageCount());
+			Assert.assertEquals(1, list.getCount());
 			FormInfo info = list.getFormInfos().get(0);
 			String taskId = info.getTaskId();
 			this.service.refuse("oa_common", "nuby.zhang", formId, taskId, "xxx");
@@ -72,7 +72,7 @@ public class OaEngineServiceTest {
 		try {
 			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
 			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
-			Assert.assertEquals(1, list.getPageCount());
+			Assert.assertEquals(1, list.getCount());
 			FormInfo info = list.getFormInfos().get(0);
 			String taskId = info.getTaskId();
 			this.service.pass("oa_common", "nuby.zhang", formId, taskId, null);
