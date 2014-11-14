@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
@@ -80,7 +81,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 		FormInfo info = formInfo;
 		this.createForm(processKey, userId, info);
 		Request request = new Request();
-		request.setOid(formInfo.getOid());
+		//request.setOid(formInfo.getOid());
+		request.setOid(""+formInfo.getId());
 		request.setReport2vp(Boolean.valueOf(formInfo.getIsDirectVp()));
 		request.setAmountMoney(formInfo.getMoneyAmount());
 		request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
@@ -107,7 +109,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public FormInfo updateFormInfo(String processKey, String userId,
-			String formId, FormInfo formInfo) throws CompareModelException, FormNotFoundException{
+			String formId, FormInfo formInfo, Boolean start) throws CompareModelException, FormNotFoundException{
 		return form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
 	}
 
@@ -376,6 +378,12 @@ public class DefaultOaEngineService implements IOAEngineService {
 			}
 			mailSenderService.sender(form, to.toArray(new String[]{}), null, content, content);
 		}
+	}
+
+	@Override
+	public TreeMap<String, Integer> getMenu(String processKey, String userId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 

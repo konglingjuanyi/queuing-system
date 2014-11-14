@@ -3,6 +3,7 @@ package com.qunar.ops.oaengine.service;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 
 import org.activiti.engine.ActivitiException;
 
@@ -79,6 +80,7 @@ public interface IOAEngineService {
 	 * @param userId
 	 * @param formId
 	 * @param forminfo
+	 * @param 是否提交申请
 	 * @return
 	 * @throws CompareModelException 
 	 * @throws FormNotFoundException 
@@ -87,7 +89,8 @@ public interface IOAEngineService {
 	 * BE：
 	 * 需要记录修改日志
 	 */
-	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo) throws CompareModelException, FormNotFoundException;
+	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo, Boolean start) throws CompareModelException, FormNotFoundException;
+	
 	
 	/**
 	 * 获取工单信息
@@ -151,6 +154,14 @@ public interface IOAEngineService {
 	 * @throws RemoteAccessException 
 	 */
 	public float getLaborHour(String userId, Date day) throws RemoteAccessException;
+	
+	/**
+	 * 获取菜单栏
+	 * @param processKey
+	 * @param userId
+	 * @return ("已发申请"=>数量; "已结束申请"=>数量; "我的草稿"=>数量; "待办申请"=>数量)
+	 */
+	public TreeMap<String, Integer> getMenu(String processKey, String userId);
 	
 	
 	/****************************************************
