@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import org.activiti.engine.ActivitiException;
 
 import com.qunar.ops.oaengine.exception.CompareModelException;
+import com.qunar.ops.oaengine.exception.ManagerFormException;
 import com.qunar.ops.oaengine.exception.ErrorParamterException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
@@ -56,7 +57,7 @@ public interface IOAEngineService {
 	 * BE:
 	 * 需要记录修改日志
 	 */
-	public long createForm(String processKey, String userId, FormInfo forminfo);
+	public Long createForm(String processKey, String userId, FormInfo forminfo);
 	
 	/**
 	 * 创建工单并发起流程
@@ -72,7 +73,7 @@ public interface IOAEngineService {
 	 * BE:
 	 * 需要记录修改日志；需要记录操作历史
 	 */
-	public long createFormAndstart(String processKey, String userId, FormInfo forminfo) throws RemoteAccessException, CompareModelException, FormNotFoundException;
+	public Long createFormAndstart(String processKey, String userId, FormInfo forminfo) throws RemoteAccessException, CompareModelException, FormNotFoundException;
 	
 	/**
 	 * 更新工单
@@ -80,16 +81,18 @@ public interface IOAEngineService {
 	 * @param userId
 	 * @param formId
 	 * @param forminfo
-	 * @param 是否提交申请
+	 * @param 是否提交申请,是否保存并启动
 	 * @return
 	 * @throws CompareModelException 
 	 * @throws FormNotFoundException 
+	 * @throws RemoteAccessException 
+	 * @throws ManagerFormException 
 	 * @throws 工单没有找到；工单被锁定(更新人与工单提交人不一致)；系统错误
 	 * FE:
 	 * BE：
 	 * 需要记录修改日志
 	 */
-	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo, Boolean start) throws CompareModelException, FormNotFoundException;
+	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException, ManagerFormException;
 	
 	
 	/**
@@ -108,10 +111,12 @@ public interface IOAEngineService {
 	 * @param userId
 	 * @param formId
 	 * @return
-	 * @throws 工单没有找到；工单锁定（只允许删除草稿状态工单、仅允许创建人删除）； 系统错误
+	 * @throws FormNotFoundException 
+	 * @throws ManagerFormException 
+	 * @throws 工单没有找到；工单锁定（历史工单不允许删除、仅允许创建人删除）； 系统错误
 	 * 需要记录操作历史
 	 */
-	public void deleteFormInfo(String processKey, String userId, String formId);
+	public void deleteFormInfo(String processKey, String userId, String formId) throws FormNotFoundException, ManagerFormException;
 	
 	/**
 	 * 获取修改日志列表
@@ -160,8 +165,9 @@ public interface IOAEngineService {
 	 * @param processKey
 	 * @param userId
 	 * @return ("已发申请"=>数量; "已结束申请"=>数量; "我的草稿"=>数量; "待办申请"=>数量)
+	 * @throws FormNotFoundException 
 	 */
-	public TreeMap<String, Integer> getMenu(String processKey, String userId);
+	public TreeMap<String, Integer> getMenu(String processKey, String userId) throws FormNotFoundException;
 	
 	
 	/****************************************************

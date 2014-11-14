@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.lang.StringUtils;
 
 import com.qunar.ops.oaengine.exception.CompareModelException;
+import com.qunar.ops.oaengine.exception.ManagerFormException;
 import com.qunar.ops.oaengine.exception.ErrorParamterException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
@@ -67,19 +68,24 @@ public class DefaultOaEngineService implements IOAEngineService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public long createForm(String processKey, String userId, FormInfo formInfo){
+	public Long createForm(String processKey, String userId, FormInfo formInfo){
 		FormInfo info = formInfo;
 		info.setFinishedflag(Constants.PROC_GRIFT);
 		form0114Manager.createFormInfo(userId, info);
-		return info.getId();//Constants.SUCCESS;
+		return info.getId();
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public long createFormAndstart(String processKey, String userId,
+	public Long createFormAndstart(String processKey, String userId,
 			FormInfo formInfo) throws RemoteAccessException, CompareModelException, FormNotFoundException{
+		this.createForm(processKey, userId, formInfo);
+		_startProcess(processKey, userId, formInfo);
+		return formInfo.getId();
+	}
+	
+	private void _startProcess(String processKey, String userId, FormInfo formInfo) throws RemoteAccessException, FormNotFoundException{
 		FormInfo info = formInfo;
-		this.createForm(processKey, userId, info);
 		Request request = new Request();
 		//request.setOid(formInfo.getOid());
 		request.setOid(""+formInfo.getId());
@@ -100,17 +106,28 @@ public class DefaultOaEngineService implements IOAEngineService {
 			TaskResult tr = (TaskResult)res[1];
 			logManager.appendApproveLog(userId, formInfo.getId(), "start", tr, "");
 			
-			//修改状态
-			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING);
+			//修改状态同时回写进程ID
+			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING, processInstanceId);
 		}
-		return info.getId();//Constants.SUCCESS;
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public FormInfo updateFormInfo(String processKey, String userId,
-			String formId, FormInfo formInfo, Boolean start) throws CompareModelException, FormNotFoundException{
-		return form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
+			String formId, FormInfo formInfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException, ManagerFormException{
+		FormInfo _formInfo = form0114Manager.getFormInfo(formId);
+		String _userId = _formInfo.getStartMemberId();
+		if(!userId.equals(_userId)){
+			throw new ManagerFormException("不是你的申请，你无权修改", DefaultOaEngineService.class);
+		}
+		FormInfo res = form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
+		if(!workflowManager.findProcessInstanceCountByBusinessKey(processKey, formId)){
+			if(start){
+				_startProcess(processKey, userId, formInfo);
+			}
+		}
+		
+		return res;
 	}
 
 	@Override
@@ -122,8 +139,18 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void deleteFormInfo(String processKey, String userId, String formId){
-		form0114Manager.deleteFormInfo(userId, Long.valueOf(formId));
+	public void deleteFormInfo(String processKey, String userId, String formId) throws FormNotFoundException, ManagerFormException{
+		//判断是否为申请人，草稿状态
+		FormInfo formInfo = form0114Manager.getFormInfo(formId);
+		String _userId = formInfo.getStartMemberId();
+		int finishedflag = formInfo.getFinishedflag();
+		if(userId.equals(_userId) && finishedflag == Constants.PROC_GRIFT){
+			form0114Manager.deleteFormInfo(userId, Long.valueOf(formId));
+		}else if(!userId.equals(_userId)){
+			throw new ManagerFormException("不是你的申请，你无权删除", DefaultOaEngineService.class);
+		}else{
+			throw new ManagerFormException("不为草稿状态，无法删除", DefaultOaEngineService.class);
+		}
 	}
 
 	@Override
@@ -381,11 +408,31 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public TreeMap<String, Integer> getMenu(String processKey, String userId) {
-		// TODO Auto-generated method stub
-		return null;
+	public TreeMap<String, Integer> getMenu(String processKey, String userId) throws FormNotFoundException {
+		TreeMap<String, Integer> map = new TreeMap<String, Integer>();
+		map.put("applyCount", getUserApplyCount(processKey, userId));
+		map.put("applyHisCount", getUserApplyHisCount(processKey, userId));
+		map.put("applyDraftCount", getUserDraftCount(processKey, userId));
+		map.put("todoCount", todoCount(processKey, userId, null, null, userId, 0, 0));
+		return map;
 	}
 	
+	private int getUserApplyCount(String processKey, String userId) {
+		return form0114Manager.getUserApplyCount(userId);
+	}
 
+	private int getUserApplyHisCount(String processKey, String userId) {
+		return form0114Manager.getUserApplyHisCount(userId);
+	}
+
+	private int getUserDraftCount(String processKey, String userId) {
+		return form0114Manager.getUserDraftCount(userId);
+	}
+	
+	private int todoCount(String processKey, String userId,
+			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
+		ListInfo<TaskInfo> taskInfos = workflowManager.todoList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
+		return (int)taskInfos.getCount();
+	}
 
 }
