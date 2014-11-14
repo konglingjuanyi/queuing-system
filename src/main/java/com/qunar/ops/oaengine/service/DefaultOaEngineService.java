@@ -219,9 +219,10 @@ public class DefaultOaEngineService implements IOAEngineService {
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfos.add(formInfo);
 		}
-		res.setPageCount((int)taskInfos.getCount());
+		res.setCount((int)taskInfos.getCount());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
+		res.setFormInfos(formInfos);
 		return res;
 	}
 
@@ -240,7 +241,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfos.add(formInfo);
 		}
-		res.setPageCount((int)taskInfos.getCount());
+		res.setCount((int)taskInfos.getCount());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
 		return res;

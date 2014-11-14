@@ -7,7 +7,7 @@ import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
 public class FormInfoList {
 	private int pageNo;
 	private int pageSize;
-	private int pageCount;
+	private int count;
 	private List<FormInfo> formInfos;
 	public int getPageNo() {
 		return pageNo;
@@ -21,11 +21,11 @@ public class FormInfoList {
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
-	public int getPageCount() {
-		return pageCount;
+	public int getCount() {
+		return count;
 	}
-	public void setPageCount(int pageCount) {
-		this.pageCount = pageCount;
+	public void setCount(int count) {
+		this.count = count;
 	}
 	public List<FormInfo> getFormInfos() {
 		return formInfos;
