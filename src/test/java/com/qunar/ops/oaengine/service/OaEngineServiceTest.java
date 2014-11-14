@@ -8,8 +8,10 @@ import junit.framework.Assert;
 
 import org.activiti.engine.ActivitiException;
 import org.junit.After;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,6 +35,7 @@ import com.qunar.ops.oaengine.result.dailysubmit.TaxiFaresInfo;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring.xml")
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class OaEngineServiceTest {
 	@Autowired(required=true)
 	protected IOAEngineService service;
@@ -43,23 +46,16 @@ public class OaEngineServiceTest {
 	@Autowired
 	private Form0114Manager form0114manager;
 	
-	private Long formId;
-	private String taskId;
 	
-	@After
-	public void destory_data() throws FormNotFoundException{
-		this.manager.cancel("oa_common", ""+formId, "nuby.zhang", "xxx");
-		form0114manager.deleteFormInfo("yongnian.jiang", formId);
-	}
-	
-	@Test
-	public void createFormAndstartTest(){
+	//@Test
+	public void TestCreateFormAndstart(){
 		try {
-			this.formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
+			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
 			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
 			Assert.assertEquals(1, list.getPageCount());
 			FormInfo info = list.getFormInfos().get(0);
-			this.taskId = info.getTaskId();
+			String taskId = info.getTaskId();
+			this.service.refuse("oa_common", "nuby.zhang", formId, taskId, "xxx");
 			
 		} catch (RemoteAccessException e) {
 			e.printStackTrace();
@@ -72,62 +68,59 @@ public class OaEngineServiceTest {
 	
 	
 	//@Test
-	public void passTest(){
+	public void TestPass(){
 		try {
-			this.service.pass("oa_common", "nuby.zhang", this.formId, this.taskId, null);
-		} catch (ActivitiException e) {
-			// TODO Auto-generated catch block
+			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
+			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
+			Assert.assertEquals(1, list.getPageCount());
+			FormInfo info = list.getFormInfos().get(0);
+			String taskId = info.getTaskId();
+			this.service.pass("oa_common", "nuby.zhang", formId, taskId, null);
+			this.service.refuse("oa_common", "nuby.zhang", formId, null, "xxx");
+		} catch (Exception e) {
+			// TODO Auto-generatd catch block
 			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FormNotFoundException e) {
-			// TODO Auto-generated catch block
+		} 
+	}
+	
+	@Test
+	public void TestBack(){
+		try {
+			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
+			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
+			FormInfo info = list.getFormInfos().get(0);
+			String taskId = info.getTaskId();
+			this.service.pass("oa_common", "nuby.zhang", formId, taskId, null);
+			list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
+			info = list.getFormInfos().get(0);
+			taskId = info.getTaskId();
+			this.service.pass("oa_common", "nuby.zhang", formId, taskId, null);
+			list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
+			info = list.getFormInfos().get(0);
+			taskId = info.getTaskId();
+			this.service.back("oa_common", "nuby.zhang", formId, taskId, "xxx");
+			this.service.refuse("oa_common", "nuby.zhang", formId, null, "xxx");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	//@Test
-	public void backTest(){
+	public void TestEndorse(){
 		try {
-			this.service.back("oa_common", "nuby.zhang", 2L, "380013", "xxxx");
-		} catch (ActivitiException e) {
+			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
+			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
+			//Assert.assertEquals(1, list.getPageCount());
+			FormInfo info = list.getFormInfos().get(0);
+			String taskId = info.getTaskId();
+			this.service.endorse("oa_common", "nuby.zhang", formId, taskId, "nuby.zhang,yongnina.jiang", null);
+			this.service.refuse("oa_common", "nuby.zhang", formId, null, "xxx");
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (FormNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 	}
 	
-	//@Test
-	public void endorseTest(){
-		try {
-			this.service.endorse("oa_common", "nuby.zhang", 2L, "380013", "nuby.zhang", "xxxx");
-		} catch (ActivitiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FormNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	//@Test
-	public void refuseTest(){
-		try {
-			this.service.refuse("oa_common", "nuby.zhang", 4L, "387522", "xxx");
-		} catch (ActivitiException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FormNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 	
 	private FormInfo initFormInfo(){

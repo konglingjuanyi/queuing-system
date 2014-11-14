@@ -221,6 +221,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		res.setPageCount((int)taskInfos.getCount());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
+		res.setFormInfos(formInfos);
 		return res;
 	}
 
