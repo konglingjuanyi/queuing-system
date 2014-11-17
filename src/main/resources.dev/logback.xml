@@ -8,9 +8,9 @@
 	</appender>
 	<appender name="file"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${qunar.logs}/workflow.log</file>
+		<file>${qunar.logs}/oaengine.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${qunar.logs}/workflow.%d{yyyy-MM-dd}.log
+			<FileNamePattern>${qunar.logs}/oaengine.%d{yyyy-MM-dd}.log
 			</FileNamePattern>
 		</rollingPolicy>
 		<encoder>
@@ -20,9 +20,9 @@
 	</appender>
 	<appender name="file_error"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${qunar.logs}/workflow_error.log</file>
+		<file>${qunar.logs}/oaengine_error.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${qunar.logs}/workflow_error.%d{yyyy-MM-dd}.log
+			<FileNamePattern>${qunar.logs}/oaengine_error.%d{yyyy-MM-dd}.log
 			</FileNamePattern>
 		</rollingPolicy>
 		<encoder>
@@ -32,7 +32,7 @@
 	</appender>
 	<appender name="file_remove"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${qunar.logs}/workflow_remove.log</file>
+		<file>${qunar.logs}/oaengine_remove.log</file>
 		<filter class="ch.qos.logback.core.filter.EvaluatorFilter">
 			<evaluator>
 				<expression>message.contains("remove")</expression>
@@ -41,7 +41,7 @@
 			<OnMismatch>DENY</OnMismatch>
 		</filter>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${qunar.logs}/workflow_remove.%d{yyyy-MM-dd}.log
+			<FileNamePattern>${qunar.logs}/oaengine_remove.%d{yyyy-MM-dd}.log
 			</FileNamePattern>
 		</rollingPolicy>
 		<encoder>

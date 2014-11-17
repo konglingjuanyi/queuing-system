@@ -89,4 +89,24 @@
 	<!-- 注解方式配置事物 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	
+	
+	<!-- Redis 
+	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="${redis.host}" p:port="${redis.port}"/>
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="jedisConnectionFactory">
+		<property name="keySerializer">
+	         <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
+	    </property>
+	</bean> -->
+
+	<!-- Rabbit MQ -->
+    <bean id="jsonMessageConverter"  class="com.qunar.ops.oaengine.mq.FastJsonMessageConverter"></bean>
+    <rabbit:connection-factory id="connectionFactory" addresses="${mqHost}" username="${mqUsername}" password="${mqPassword}"/>
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"/>
+    <rabbit:admin connection-factory="connectionFactory"/>
+    <rabbit:queue name="oa.sendmail"/>
+    <rabbit:listener-container connection-factory="connectionFactory">
+    	<rabbit:listener queues="oa.sendmail" ref="mailSender" method="senderMail"/>
+	</rabbit:listener-container>
+	<bean id="mailSender" class=" com.qunar.ops.oaengine.service.MailSenderService"/>
+	
 </beans>
