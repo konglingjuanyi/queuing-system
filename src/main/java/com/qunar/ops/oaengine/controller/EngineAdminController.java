@@ -64,6 +64,7 @@ public class EngineAdminController {
 		adminUsers.add("yongnian.jiang");
 		adminUsers.add("zhen.pei");
 		adminUsers.add("weidong.jiang");
+		adminUsers.add("zhenqing.wang");
 	}
 	
 	/**
@@ -127,9 +128,9 @@ public class EngineAdminController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/admin/add_process.html")
+	@RequestMapping(value = "/apply.html")
 	public ModelAndView addProcess(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("/add_process");
+		ModelAndView mav = new ModelAndView("/apply");
 		return mav;
 	}
 

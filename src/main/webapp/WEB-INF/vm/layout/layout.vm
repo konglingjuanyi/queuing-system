@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>工作流引擎-Admin</title>
+		<title>报销系统-Admin</title>
 		<meta name="description" content="" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<base href="/oaengine/" />
@@ -21,7 +21,8 @@
 		<link rel="stylesheet" href="assets/css/ace-skins.min.css" />
 		<link rel="stylesheet" href="assets/css/dropzone.css" />
 		<link rel="stylesheet" href="assets/css/colorbox.css" />
-		<link rel="stylesheet" href="assets/css/jquery.qtip.min.css" />
+		<!--<link rel="stylesheet" href="assets/css/jquery.qtip.min.css" />-->
+		<link rel="stylesheet" href="static/css/myplugin.css" />
 		
 		
 		<!--[if lte IE 8]>
@@ -61,6 +62,9 @@
 		<script src="assets/js/ace.min.js"></script>
 		<!-- inline scripts related to this page -->
 		<script src="assets/js/dropzone.min.js"></script>
+		
+		
+		
 	</head>
 	<body>
 		<div class="navbar navbar-default" id="navbar">
@@ -82,8 +86,8 @@
 				<div class="sidebar" id="sidebar">
 					<ul class="nav nav-list">
 						<li>
-							<a href="admin/add_process.html">
-								<span class="menu-text"> 流程部署 </span>
+							<a href="apply.html">
+								<span class="menu-text"> 员工报销申请 </span>
 							</a>
 						</li>
 						<li>
@@ -116,7 +120,7 @@ $screen_content
 				</div><!-- /.main-content -->
 			</div><!-- /.main-container-inner -->
 		</div><!-- /.main-container -->
-
+		
 		<script type="text/javascript">
 			jQuery(function($){
 			
