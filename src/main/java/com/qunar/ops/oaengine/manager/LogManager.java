@@ -21,7 +21,7 @@ import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
 @Component
 public class LogManager {
 	
-	@Autowired
+	@Autowired(required=true)
 	private FormApproveLogMapper formApproveLogMapper;
 	
 	public void appendApproveLog(String userId, long formId, String type, TaskResult tr, String memo){

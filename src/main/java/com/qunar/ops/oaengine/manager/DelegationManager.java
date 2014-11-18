@@ -12,10 +12,12 @@ import com.qunar.ops.oaengine.model.DelegationExample;
 import com.qunar.ops.oaengine.model.DelegationExample.Criteria;
 
 
+
+
 @Component
 public class DelegationManager {
 	
-	@Autowired
+	@Autowired(required=true)
 	private DelegationMapper delegationMapper;
 	
 	public void appendDelegation(String master, List<String> agents){

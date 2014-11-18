@@ -43,7 +43,7 @@
 	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
 		<property name="dataSource" ref="dataSource" /> 
-		<property name="mapperLocations" value="classpath:com/qunar/ops/oaengine/mapping/*.xml" />
+		<property name="mapperLocations" value="classpath*:com/qunar/ops/oaengine/mapping/*.xml" />
 	</bean> 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
 		<property name="basePackage" value="com.qunar.ops.oaengine.dao" /> 
@@ -89,13 +89,13 @@
 	<!-- 注解方式配置事物 -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	
-	<!-- Redis 
+	<!-- Redis -->
 	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" p:host-name="${redis.host}" p:port="${redis.port}"/>
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connection-factory-ref="jedisConnectionFactory">
 		<property name="keySerializer">
 	         <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"></bean>
 	    </property>
-	</bean> -->
+	</bean> 
 
 	<!-- Rabbit MQ -->
     <bean id="jsonMessageConverter"  class="com.qunar.ops.oaengine.mq.FastJsonMessageConverter"></bean>
