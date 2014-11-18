@@ -21,10 +21,10 @@ import com.qunar.ops.oaengine.model.GroupMemberExample;
 
 @Component
 public class GroupManager {
-	@Autowired
+	@Autowired(required=true)
 	private GroupMapper groupMapper;
 	
-	@Autowired
+	@Autowired(required=true)
 	private GroupMemberMapper groupMemberMapper;
 	
 	static Map<String, String> groupNames = new HashMap<String, String>();
@@ -35,7 +35,7 @@ public class GroupManager {
 		groupNames.put("cashier", "财务报销出纳组");
 	}
 	
-	@PostConstruct
+	//@PostConstruct
 	protected void init() {
 		int count = groupMapper.countByExample(new GroupExample());
 		if(count > 0 ) return;

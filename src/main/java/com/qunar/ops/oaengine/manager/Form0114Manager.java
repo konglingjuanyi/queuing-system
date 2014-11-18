@@ -81,45 +81,45 @@ public class Form0114Manager {
 	
 	@Autowired
 	private WorkflowManager workflowManager;
-	@Autowired
+	@Autowired(required=true)
 	private FormAppmainMapper formAppmainMapper;
-	@Autowired
+	@Autowired(required=true)
 	private FormApproveLogMapper formApproveLogMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formmain0114HistoryMapper formmain0114HistoryMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formmain0114Mapper formmain0114Mapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0115Mapper formson0115Mapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0116Mapper formson0116Mapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0117Mapper formson0117Mapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0118Mapper formson0118Mapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0119Mapper formson0119Mapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0115HistoryMapper formson0115HistoryMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0116HistoryMapper formson0116HistoryMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0117HistoryMapper formson0117HistoryMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0118HistoryMapper formson0118HistoryMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0119HistoryMapper formson0119HistoryMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0115LogMapper formson0115LogMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0116LogMapper formson0116LogMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0117LogMapper formson0117LogMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0118LogMapper formson0118LogMapper;
-	@Autowired
+	@Autowired(required=true)
 	private Formson0119LogMapper formson0119LogMapper;
-	@Autowired
+	@Autowired(required=true)
 	private FormUpdateLogMapper formUpdateLogMapper;
 
 	// --------------------------表单相关----------------------------
