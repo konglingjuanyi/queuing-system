@@ -94,15 +94,15 @@ td {
             <tr>
                 <td><span class="input-icon input-icon-right">
                 <input id="c_date0" type="text"/>
-                <i class="icon-calendar green" name="c_green"></i>
+                <i class="icon-calendar green" ></i>
             </span></td>
                 <td><input type="text" id="c_start0"></td>
                 <td><input type="text" id="c_end0"></td>
                 <td><input type="text" id="c_time0"></td>
                 <td><input type="text" id="c_usage0"></td>
                 <td><input type="text" id="c_acompany0"></td>
-                <td><input type="text" id="c_work_hour0"></td>
-                <td><input type="text" id="c_money0"></td>
+                <td><input type="text" id="c_work_hour0" onFocus="workHour()"></td>
+                <td><input type="text" id="c_money0" onblur="c_add()"></td>
                 <td><input type="text" id="c_remark0"></td>
                 <td>&nbsp;</td>
                 
@@ -111,10 +111,10 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0"></td>
+                <td><input type="text" value="0" id="c_count"></td>
             </tr>
         </table>
-        
+        <input name='txtTRLastIndex' type='hidden' id='txtTRLastIndex' value="1" />
     </div>
 
 </div>
@@ -317,23 +317,7 @@ td {
     取消申请
 </button>
 </div>
-<div>
-<table width="613" border="0" cellpadding="2" cellspacing="1" id="SignFrame">
-              <tr id="trHeader">
-                <td width="27" bgcolor="#96E0E2">序号</td>
-                <td width="64" bgcolor="#96E0E2">用户姓名</td>
-                <td width="98" bgcolor="#96E0E2">电子邮箱</td>
-                <td width="92" bgcolor="#96E0E2">固定电话</td>
-                <td width="86" bgcolor="#96E0E2">移动手机</td>
-                <td width="153" bgcolor="#96E0E2">公司名称</td>
-              </tr>
-        </table>
-   </div>
-   <div>
-        <input type="button" name="Submit" value="添加参与人" onclick="AddSignRow()" /> 
-     <input type="button" name="Submit2" value="清空" onclick="ClearAllSign()" />
-     <input name='txtTRLastIndex' type='hidden' id='txtTRLastIndex' value="1" />
-   </div>
+
 <script src="static/js/utils.js"></script>
 <script src="static/js/dialog_common.js"></script>
 <script src="static/My97DatePicker/WdatePicker.js"></script>
@@ -365,43 +349,42 @@ jQuery(function ($) {
 //        }
 //    })
     $("#c_date0").on('click', function () {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
-        var params = {
-    	        "whichDay": $("#c_date0").val()
-    	    }
-    	$.ajax({
-    		contentType: "application/json; charset=utf-8",
-    		url: "oa/laborhour",
-    		type: "POST",
-    		data: JSON.stringify(params),
-            success: function (resp) {
-    			console.log(resp);
-            	if(resp.errorCode == 0){
-            		var data = resp.data;
-            		$("#c_work_hour0").val(data[0]);
-            	}else{
-            		showCommonNoticeDialog('失败', 'icon-warning-sign',
-            		        generateNoticeMsg(resp.errorMessage), 300);
-            	}
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-            	showCommonNoticeDialog('网络错误', 'icon-bolt',
-            	        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
-            }
-        })
+        WdatePicker({dateFmt: 'yyyy-MM-dd',maxDate:'%y-%M-%d',onpicked:function(){c_work_hour0.focus()}});
+        
     });
-	$("#t_date_from1").on('click', function () {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
-    });
-	$("#z_date_from1").on('click', function () {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
-    });
-	$("#y_date_from1").on('click', function () {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
-    });
-	
+        
 });
 
+function workHour(){
+	var params = {
+	        "whichDay": $("#c_date0").val()
+	    }
+	console.log(params);
+	$.ajax({
+		contentType: "application/json; charset=utf-8",
+		url: "oa/laborhour",
+		type: "POST",
+		data: JSON.stringify(params),
+        success: function (resp) {
+			console.log(resp);
+        	if(resp.errorCode == 0){
+        		var data = resp.data;
+        		$("#c_work_hour0").val(data[0]);
+        	}else{
+        		showCommonNoticeDialog('失败', 'icon-warning-sign',
+        		        generateNoticeMsg(resp.errorMessage), 300);
+        	}
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        	showCommonNoticeDialog('网络错误', 'icon-bolt',
+        	        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+        }
+    });
+}
+
+function timeShow(){
+	WdatePicker({dateFmt: 'yyyy-MM-dd'});
+}
 function getNeedGoal(id, doc) {
     var p, needGoal;
     if (!doc) {
@@ -495,5 +478,12 @@ function DeleteSignRow(rowId) {
     signFrame.deleteRow(rowIndex);
 
 }//清空列表
+
+function c_add(){
+	var value = $("#c_money0").val();
+	var count = parseInt(value);
+	$("#c_count").val(count + parseInt($("#c_count").val()));
+	
+}
 
 </script>

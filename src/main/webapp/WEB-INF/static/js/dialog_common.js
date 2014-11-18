@@ -17,12 +17,12 @@
 function showCommonNoticeDialog(header, header_icon, msg, width) {
     $("#common-notice-dialog").empty();
     $("#common-notice-dialog").append(msg);
-    var title_html_str = $.parseStr('<div class="dialog_title"><li class="%s"></li>%s</div>', header_icon, header);
+    //var title_html_str = $.parseStr('<div class="dialog_title"><li class="%s"></li>%s</div>', header_icon, header);
     var dialog = $("#common-notice-dialog").removeClass('hide').dialog({
         modal: true,
         width: width,
         resizable: true,
-        title: title_html_str,
+        title: header,
         title_html: true,
         closeOnEscape: false,
         open: function (event, ui) {
