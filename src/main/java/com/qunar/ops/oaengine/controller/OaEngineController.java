@@ -1,5 +1,6 @@
 package com.qunar.ops.oaengine.controller;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -15,11 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
+import com.qunar.ops.oaengine.result.LaborRequest;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
@@ -73,7 +76,7 @@ public class OaEngineController {
 		System.out.println("====");
 	}
 
-	@RequestMapping(value = "admin/employeeinfo")
+	@RequestMapping(value = "oa/employeeinfo")
 	@ResponseBody
 	public BaseResult webEmployeeInfo(HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("USER_ID");
@@ -96,6 +99,40 @@ public class OaEngineController {
 				sdf.format(new Date(System.currentTimeMillis())),
 				employeeInfo.getDepartmentI(),
 				employeeInfo.getDepartmentIV()
+		};
+		return BaseResult.getSuccessResult(result);
+	}
+	
+	@RequestMapping(value = "oa/laborhour")
+	@ResponseBody
+	public BaseResult webLaborHour(HttpServletRequest request, @RequestBody LaborRequest laborRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn("登陆用户为空，无法获取员工信息");
+			return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+		}
+		String day = laborRequest.getWhichDay();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = null;
+		try {
+			date = sdf.parse(day);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+			String errMsg = "转换时间失败，请检查输入是否为yyyy-MM-dd样式";
+			logger.warn(errMsg);
+			return BaseResult.getErrorResult(-2, errMsg);
+		}
+		float laborHour = 0;
+		try {
+			laborHour = ioaEngineService.getLaborHour(userId, date);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			String errorMsg = "ACL限制，获取员工信息失败";
+			logger.warn(errorMsg);
+			return BaseResult.getErrorResult(-2, errorMsg);
+		}
+		String result[] = new String[] {
+			String.valueOf(laborHour)
 		};
 		return BaseResult.getSuccessResult(result);
 	}

@@ -17,8 +17,7 @@
 function showCommonNoticeDialog(header, header_icon, msg, width) {
     $("#common-notice-dialog").empty();
     $("#common-notice-dialog").append(msg);
-    var title_html_str = $.parseStr('<div class="dialog_title"><li class="%s"></li> %s</div>', header_icon, header);
-    console.log(title_html_str);
+    var title_html_str = $.parseStr('<div class="dialog_title"><li class="%s"></li>%s</div>', header_icon, header);
     var dialog = $("#common-notice-dialog").removeClass('hide').dialog({
         modal: true,
         width: width,
