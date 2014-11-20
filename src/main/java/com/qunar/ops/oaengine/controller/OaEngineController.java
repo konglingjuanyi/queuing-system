@@ -317,20 +317,20 @@ public class OaEngineController {
 		
 		formInfo.setMoneyAmount(Long.parseLong(vars.get("sum")));
 		
-		table = tableMap.get("table");
-		len = table.length;
-		for (int i = 0; i < len; i++) {
-			formInfo.setRtxId(table[i][0]);
-			formInfo.setApplyDate(sdf.parse(table[i][2]));
-			formInfo.setFirstDep(table[i][3]);
-			formInfo.setFourthDep(table[i][4]);
-			formInfo.setDepNum(table[i][5]);
-			formInfo.setIsDirectVp(table[i][6]);
-			formInfo.setBankNumber(table[i][7]);
-			formInfo.setBankName(table[i][8]);
-			formInfo.setIsBorrow(table[i][9]);
-			formInfo.setSerialNumber(table[i][10]);
-			formInfo.setBorrowAmount(Long.parseLong(table[i][11]));
-		}
+//		table = tableMap.get("table");
+//		len = table.length;
+//		for (int i = 0; i < len; i++) {
+//			formInfo.setRtxId(table[i][0]);
+//			formInfo.setApplyDate(sdf.parse(table[i][2]));
+//			formInfo.setFirstDep(table[i][3]);
+//			formInfo.setFourthDep(table[i][4]);
+//			formInfo.setDepNum(table[i][5]);
+//			formInfo.setIsDirectVp(table[i][6]);
+//			formInfo.setBankNumber(table[i][7]);
+//			formInfo.setBankName(table[i][8]);
+//			formInfo.setIsBorrow(table[i][9]);
+//			formInfo.setSerialNumber(table[i][10]);
+//			formInfo.setBorrowAmount(Long.parseLong(table[i][11]));
+//		}
 	}
 }

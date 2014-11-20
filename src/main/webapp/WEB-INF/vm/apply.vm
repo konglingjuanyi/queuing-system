@@ -509,14 +509,14 @@ function subTableInfos(flag) {
         var coLen = table.rows[0].cells.length;
         var list = new Array();
         for (var j = 1; j < rowLen; j++) {
-            list[j] = new Array();
+            list[j-1] = new Array();
             for (var k = 0; k < coLen - 1; k++) {
-            	list[j][k] = table.rows[j].cells[k].childNodes[0].value;
+            	list[j-1][k] = table.rows[j].cells[k].childNodes[0].value;
                 if (tableId != "table5" && k == 0) {
-                    list[j][k] = table.rows[j].cells[k].childNodes[0].childNodes[1].value
+                    list[j-1][k] = table.rows[j].cells[k].childNodes[0].childNodes[1].value
                 }
-				if(isNull(list[j][k])){
-					list[j][k] = "";
+				if(isNull(list[j-1][k])){
+					list[j-1][k] = "";
 				}
             }
         }
