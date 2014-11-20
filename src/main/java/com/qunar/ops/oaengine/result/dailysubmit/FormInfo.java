@@ -80,10 +80,15 @@ public class FormInfo extends Formmain0114 implements Serializable{
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
 	}
+//	加班餐费
 	private OvertimeMealsInfo[] overtimeMealsInfo;
+//	招待费
 	private HospitalityInfo[] hospitalityInfo;
+//	其他费用
 	private OtherCostsInfo[] otherCostsInfo;
+//	员工关系
 	private EmployeeRelationsFeesInfo[] employeeRelationsFeesInfo;
+//	出租车费
 	private TaxiFaresInfo[] taxiFaresInfo;
 	
     public OvertimeMealsInfo[] getOvertimeMealsInfo() {

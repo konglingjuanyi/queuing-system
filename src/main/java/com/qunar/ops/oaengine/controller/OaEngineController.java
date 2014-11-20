@@ -1,9 +1,12 @@
 package com.qunar.ops.oaengine.controller;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,6 +15,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.spring.ProcessEngineFactoryBean;
+import org.apache.commons.collections.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +31,13 @@ import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
 import com.qunar.ops.oaengine.result.TaskResult;
+import com.qunar.ops.oaengine.result.WebRequest;
 import com.qunar.ops.oaengine.service.DefaultOaEngineService;
 import com.qunar.ops.oaengine.service.IOAEngineService;
 import com.qunar.ops.oaengine.service.MailSenderService;
 import com.qunar.ops.oaengine.result.BaseResult;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.TaxiFaresInfo;
 
 @Controller
 public class OaEngineController {
@@ -52,7 +58,7 @@ public class OaEngineController {
 	private MailSenderService mailSenderService;
 	@Autowired
 	private IOAEngineService ioaEngineService;
-
+	
 	@RequestMapping(value = "/oa/test.html")
 	public void index(HttpServletRequest request) {
 		// mailSenderService.sender("nuby.zhang@qunar.com", new
@@ -136,4 +142,34 @@ public class OaEngineController {
 		};
 		return BaseResult.getSuccessResult(result);
 	}
+	
+	
+	@RequestMapping(value = "oa/data")
+	@ResponseBody
+	public BaseResult webPostData(HttpServletRequest request, @RequestBody WebRequest webRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn("登陆用户为空，无法获取员工信息");
+			return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+		}
+		Map<String, String> vars = webRequest.getVars();
+		Map<String, String[]> tableMap = webRequest.getTableMap();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String table1[] = tableMap.get("table1");
+		int len1 = table1.length;
+		TaxiFaresInfo[] taxiFaresInfo = new TaxiFaresInfo[len1];
+		for (int i = 0; i < len1; i++) {
+			taxiFaresInfo[i] = new TaxiFaresInfo();
+			taxiFaresInfo[i].setTaxiFaresTime(table1[0]);
+			taxiFaresInfo[i].setTaxiFaresAddr(table1[1]);
+			taxiFaresInfo[i].setTaxiFaresDest(table1[2]);
+			taxiFaresInfo[i].setTaxiFaresTimeNew(table1[3]);
+			taxiFaresInfo[i].setTaxiFaresUse(table1[4]);
+			taxiFaresInfo[i].setTaxiFaresPeerPeople(table1[5]);
+			taxiFaresInfo[i].setTaxiFaresWorkhour(new BigDecimal(table1[6]));
+			taxiFaresInfo[i].setComment(table1[7]);
+		}
+		return BaseResult.getSuccessResult(result);
+	}
+	
 }

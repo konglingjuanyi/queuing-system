@@ -134,7 +134,18 @@ public class EngineAdminController {
 		ModelAndView mav = new ModelAndView("/apply");
 		return mav;
 	}
-
+	
+	/**
+	 * 部署
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/test_apply.html")
+	public ModelAndView test_addProcess(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("/test_apply");
+		return mav;
+	}
 	/**
 	 * 部署
 	 * 
