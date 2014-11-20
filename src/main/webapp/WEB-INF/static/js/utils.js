@@ -34,3 +34,11 @@ function containsValue(list, value) {
     }
     return false;
 }
+
+/*   判断输入框值是否为空*/
+function isNull(value) {
+    if (value == undefined || value == '' || value == null) {
+        return true;
+    }
+    return false;
+}

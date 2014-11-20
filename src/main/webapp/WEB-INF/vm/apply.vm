@@ -76,39 +76,44 @@ td {
     <div class="col-sm-12">
         <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                 style="font-size:18px">出租车费明细(含汽车燃油费)</span></div>
-        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+        <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+        		id="table1">
             <tr>
-                <td>日期</td>
-                <td>起点</td>
-                <td>终点</td>
-                <td>具体时间</td>
-                <td>用途</td>
-                <td>同行人(姓名)</td>
-                <td>工时</td>
-                <td>金额</td>
-                <td>备注</td>
+                <td bgcolor="#96E0E2">日期</td>
+                <td bgcolor="#96E0E2">起点</td>
+                <td bgcolor="#96E0E2">终点</td>
+                <td bgcolor="#96E0E2">具体时间</td>
+                <td bgcolor="#96E0E2">用途</td>
+                <td bgcolor="#96E0E2">同行人(姓名)</td>
+                <td bgcolor="#96E0E2">工时</td>
+                <td bgcolor="#96E0E2">金额</td>
+                <td bgcolor="#96E0E2">备注</td>
+                <td bgcolor="#96E0E2" style="width:20px !important"><input type="button" name="Submit" value="添加报销" onclick=AddSignRow("table1","index1") /> </td>
             </tr>
             <tr>
                 <td><span class="input-icon input-icon-right">
-                <input id="c_date_from1" type="text"/>
-                <i class="icon-calendar green"></i>
+                <input id="c_date0" type="text"/>
+                <i class="icon-calendar green" ></i>
             </span></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
+                <td><input type="text" id="c_start0"></td>
+                <td><input type="text" id="c_end0"></td>
+                <td><input type="text" id="c_time0"></td>
+                <td><input type="text" id="c_usage0"></td>
+                <td><input type="text" id="c_acompany0"></td>
+                <td><input type="text" id="c_work_hour0" onFocus=workHour("c_date0",0)></td>
+                <td><input type="text" id="c_money0" onblur=cAdd("c_money0")></td>
+                <td><input type="text" id="c_remark0"></td>
+                <td>&nbsp;</td>
+                
             </tr>
         </table>
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0"></td>
+                <td><input type="text" value="0" id="c_count"></td>
             </tr>
         </table>
+        <input name='index1' type='hidden' id='index1' value="1" />
     </div>
 
 </div>
@@ -116,7 +121,8 @@ td {
     <div class="col-sm-12">
         <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                 style="font-size:18px">通信费</span></div>
-        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+        <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+        		>
             <tr>
                 <td>金额</td>
                 <td><input type="text"></td>
@@ -132,31 +138,33 @@ td {
     <div class="col-sm-12">
         <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                 style="font-size:18px">餐费明细(每人每餐报销不超过50元)</span></div>
-        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+        <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+        		id="table2">
             <tr>
-                <td>日期</td>
-                <td>就餐地点</td>
-                <td>同行人(姓名)</td>
-                <td>就餐人数</td>
-                <td>实报金额</td>
-                <td>人均餐费</td>
-                <td>发票金额</td>
-                <td>工时</td>
-                <td>备注</td>
+                <td bgcolor="#96E0E2">日期</td>
+                <td bgcolor="#96E0E2">就餐地点</td>
+                <td bgcolor="#96E0E2">同行人(姓名)</td>
+                <td bgcolor="#96E0E2">就餐人数</td>
+                <td bgcolor="#96E0E2">实报金额</td>
+                <td bgcolor="#96E0E2">人均餐费</td>
+                <td bgcolor="#96E0E2">发票金额</td>
+                <td bgcolor="#96E0E2">工时</td>
+                <td bgcolor="#96E0E2">备注</td>
+                <td bgcolor="#96E0E2"><input type="button" name="Submit" value="添加报销" onclick=AddSignRow("table2","index2") /> </td>
             </tr>
             <tr>
             <td><span class="input-icon input-icon-right">
-            <input id="t_date_from1" type="text"/>
+            <input id="t_date0" type="text"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
+                <td><input type="text" id="t_place0"></td>
+                <td><input type="text" id="t_acompany0"></td>
+                <td><input type="text" id="t_people_num0"></td>
+                <td><input type="text" id="t_ac_money0"></td>
+                <td><input type="text" id="t_ev_money0"></td>
+                <td><input type="text" id="t_money0"></td>
+                <td><input type="text" id="t_work_hour0"></td>
+                <td><input type="text" id="t_remark0"></td>
             </tr>
         </table>
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
@@ -165,6 +173,7 @@ td {
                 <td><input type="text" value="0"></td>
             </tr>
         </table>
+        <input name='index2' type='hidden' id='index2' value="1" />
     </div>
 
 </div>
@@ -173,27 +182,31 @@ td {
     <div class="col-sm-12">
         <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                 style="font-size:18px">招待费明细</span></div>
-        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+        <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+        		id="table3">
             <tr>
-                <td>日期</td>
-                <td>地点</td>
-                <td>业务目的</td>
-                <td>客户单位</td>
-                <td>客户姓名</td>
-                <td>参加人数</td>
-                <td>金额</td>
+                <td bgcolor="#96E0E2">日期</td>
+                <td bgcolor="#96E0E2">地点</td>
+                <td bgcolor="#96E0E2">业务目的</td>
+                <td bgcolor="#96E0E2">客户单位</td>
+                <td bgcolor="#96E0E2">客户姓名</td>
+                <td bgcolor="#96E0E2">参加人数</td>
+                <td bgcolor="#96E0E2">金额</td>
+                <td bgcolor="#96E0E2">备注</td>
+                <td bgcolor="#96E0E2"><input type="button" name="Submit" value="添加报销" onclick=AddSignRow("table3","index3") /> </td>
             </tr>
             <tr>
             <td><span class="input-icon input-icon-right">
             <input id="z_date_from1" type="text"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
+                <td><input type="text" id="z_place0"></td>
+                <td><input type="text" id="z_purpose0"></td>
+                <td><input type="text" id="z_cu_company0"></td>
+                <td><input type="text" id="z_cu_name0"></td>
+                <td><input type="text" id="z_cu_num"></td>
+                <td><input type="text" id="z_money0"></td>
+                <td><input type="text" id="z_remark0"></td>
             </tr>
         </table>
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
@@ -202,6 +215,7 @@ td {
                 <td><input type="text" value="0"></td>
             </tr>
         </table>
+        <input name='index3' type='hidden' id='index3' value="1" />
     </div>
 
 </div>
@@ -209,25 +223,27 @@ td {
     <div class="col-sm-12">
         <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                 style="font-size:18px">员工关系费明细</span></div>
-        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+          <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+        		id="table4">
             <tr>
-                <td>日期</td>
-                <td>地点</td>
-                <td>同行人(姓名)</td>
-                <td>活动目的</td>
-                <td>金额</td>
-                <td>备注</td>
+                <td bgcolor="#96E0E2">日期</td>
+                <td bgcolor="#96E0E2">地点</td>
+                <td bgcolor="#96E0E2">同行人(姓名)</td>
+                <td bgcolor="#96E0E2">活动目的</td>
+                <td bgcolor="#96E0E2">金额</td>
+                <td bgcolor="#96E0E2">备注</td>
+                <td bgcolor="#96E0E2"><input type="button" name="Submit" value="添加报销" onclick=AddSignRow("table4","index4") /> </td>
             </tr>
             <tr>
             <td><span class="input-icon input-icon-right">
-            <input id="y_date_from1" type="text"/>
+            <input id="y_date0" type="text"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
-                <td><input type="text"></td>
+                <td><input type="text" id="y_place0"></td>
+                <td><input type="text" id="y_acompany0"></td>
+                <td><input type="text" id="y_purpose0"></td>
+                <td><input type="text" id="y_money0"></td>
+                <td><input type="text" id="y_remark0"></td>
             </tr>
         </table>
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
@@ -236,6 +252,7 @@ td {
                 <td><input type="text" value="0"></td>
             </tr>
         </table>
+        <input name='index4' type='hidden' id='index4' value="1" />
     </div>
 
 </div>
@@ -244,11 +261,13 @@ td {
     <div class="col-sm-12">
         <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                 style="font-size:18px">其他费用</span></div>
-        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+         <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+        		id="table5">
             <tr>
-                <td>费用项目</td>
-                <td>金额</td>
-                <td>备注</td>
+                <td bgcolor="#96E0E2" id="q_ex_item0">费用项目</td>
+                <td bgcolor="#96E0E2" id="q_money0">金额</td>
+                <td bgcolor="#96E0E2" id="q_remark0">备注</td>
+                <td bgcolor="#96E0E2"><input type="button" name="Submit" value="添加报销" onclick=AddSignRow("table5","index5") /> </td>
             </tr>
             <tr>
                 <td><input type="text"></td>
@@ -262,6 +281,7 @@ td {
                 <td><input type="text" value="0"></td>
             </tr>
         </table>
+        <input name='index5' type='hidden' id='index5' value="1" />
     </div>
 
 </div>
@@ -269,7 +289,8 @@ td {
     <div class="col-sm-12">
         <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                 style="font-size:18px">审批记录</span></div>
-        <table style="border-collapse:collapse;" border="1" class="col-xs-9">
+        <table style="border-collapse:collapse;" border="1" cellpadding="2" cellspacing="1" class="col-xs-9"
+        		>
             <tr>
                 <td>本部门主管意见<input type="text" style="width: 50%"></td>
                 <td>部门总监意见<input type="text" style="width: 50%"></td>
@@ -314,7 +335,7 @@ td {
 
 <script src="static/js/utils.js"></script>
 <script src="static/js/dialog_common.js"></script>
-<script src="assets/js/My97DatePicker/WdatePicker.js"></script>
+<script src="static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
 
 jQuery(function ($) {
@@ -342,18 +363,157 @@ jQuery(function ($) {
 //        	        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
 //        }
 //    })
-    $("#c_date_from1").on('click', function () {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
+    $("#c_date0").on('click', function () {
+        WdatePicker({dateFmt: 'yyyy-MM-dd',maxDate:'%y-%M-%d',onpicked:function(){workHour("c_date0",0)}});
+        
     });
-	$("#t_date_from1").on('click', function () {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
-    });
-	$("#z_date_from1").on('click', function () {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
-    });
-	$("#y_date_from1").on('click', function () {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
-    });
+        
 });
-	
+
+function workHour(dateId, rowId) {
+    var params = {
+        "whichDay": $("#" + dateId).val()
+    };
+    $.ajax({
+        contentType: "application/json; charset=utf-8",
+        url: "oa/laborhour",
+        type: "POST",
+        data: JSON.stringify(params),
+        success: function (resp) {
+            console.log(resp);
+            if (resp.errorCode == 0) {
+                var data = resp.data;
+                $("#c_work_hour" + rowId).val(data[0]);
+            } else {
+                showCommonNoticeDialog('失败', 'icon-warning-sign',
+                        generateNoticeMsg(resp.errorMessage), 300);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showCommonNoticeDialog('网络错误', 'icon-bolt',
+                    generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+        }
+    });
+}
+
+function getNeedGoal(id, doc) {
+    var p, needGoal;
+    if (!doc) {
+        doc = document;
+    }
+    if ((p = id.indexOf("?")) > 0 && parent.frames.length) {
+        doc = parent.frames[id.substring(p + 1)].document;
+        id = id.substring(0, p);
+    }
+    if (!(needGoal = doc[id]) && doc.all) {
+        needGoal = doc.all[id];
+    }
+    for (var i = 0; !needGoal && i < doc.forms.length; i++) {
+        needGoal = doc.forms[i][id];
+    }
+    for (i = 0; !needGoal && doc.layers && i < doc.layers.length; i++) {
+        needGoal = getNeedGoal(id, doc.layers[i].document);
+    }
+    if (!needGoal && document.getElementById) {
+        needGoal = document.getElementById(id);
+    }
+    return needGoal;
+}
+//添加一个参与人填写行
+function AddSignRow(tableId, index) { //读取最后一行的行号，存放在txtTRLastIndex文本框中
+//var tableId = "table1";
+    index = getNeedGoal(index, document);
+    var rowId = parseInt(index.value);
+
+    var signFrame = getNeedGoal(tableId, document);
+    var newTR = signFrame.insertRow(signFrame.rows.length);
+    newTR.id = tableId + rowId;
+    var dateName = "";
+    var list = [];
+    var prefix = "";
+    if (containsValue(["table1", "table2", "table3", "table4"], tableId)) {
+        if (tableId == "table1") {
+            prefix = "c";
+            dateName = "c_date";
+            list = ["c_start", "c_end", "c_time", "c_usage", "c_acompany", "c_work_hour", "c_money", "c_remark"];
+        } else if (tableId == "table2") {
+            prefix = "t";
+            dateName = "t_date";
+            list = ["t_place", "t_acompany", "t_people_num", "t_ac_money", "t_ev_money", "t_money", "c_work_hour", "c_remark"];
+        } else if (tableId == "table3") {
+            prefix = "z";
+            dateName = "z_date";
+            list = ["z_place", "z_purpose", "z_cu_company", "z_cu_name", "z_cu_num", "z_money", "z_remark"];
+        } else if (tableId == "table4") {
+            prefix = "y";
+            dateName = "y_date";
+            list = ["y_place", "y_acompany", "y_purpose", "y_money", "y_remark"];
+        }
+        var cell0 = newTR.insertCell(0);
+        cell0.innerHTML = $.parseStr('<span class="input-icon input-icon-right"><input id="%s" type="text"/>' +
+                '<i class="icon-calendar green"></i></span>', dateName + rowId);
+        $("#" + dateName + rowId).val($("#" + dateName + (rowId - 1)).val());
+        var len = list.length;
+        for (var i = 0; i < len; i++) {
+            var innerHtml = $.parseStr('<input id="%s" type="text"/>', list[i] + rowId);
+            if (list[i] == prefix + "_money") {
+                var id = list[i] + rowId;
+                innerHtml = $.parseStr('<input id="%s" type="text" onblur=cAdd("' + id + '")>', list[i] + rowId);
+            }
+            var cell = newTR.insertCell(i + 1);
+            cell.innerHTML = innerHtml;
+            $("#" + list[i] + rowId).val($("#" + list[i] + (rowId - 1)).val());
+        }
+        var cell9 = newTR.insertCell(len + 1);
+        cell9.innerHTML = "<div style='width:40px;text-align:center'><a href='javascript:;' onclick=\"DeleteSignRow('"+tableId+"','" + tableId + rowId + "')\">删除</a></div>";
+        $("#" + dateName + rowId).on('click', function () {
+            var id = list[i] + rowId;
+            WdatePicker({dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d', onpicked: function () {
+                workHour(id, rowId)
+            }});
+        });
+        index.value = (rowId + 1).toString();
+    } else {
+        prefix = "q";
+        list = ["q_ex_item", "q_money", "q_remark"];
+        var len = list.length;
+        for (var i = 0; i < len; i++) {
+            var innerHtml = $.parseStr('<input id="%s" type="text"/>', list[i] + rowId);
+            if (list[i] == prefix + "_money") {
+                var id = list[i] + rowId;
+                innerHtml = $.parseStr('<input id="%s" type="text" onblur=cAdd("' + id + '")>', list[i] + rowId);
+            }
+            var cell = newTR.insertCell(i);
+            cell.innerHTML = innerHtml;
+            $("#" + list[i] + rowId).val($("#" + list[i] + (rowId - 1)).val());
+        }
+        var cell9 = newTR.insertCell(len);
+        cell9.innerHTML = "<div align='center' style='width:40px'><a href='javascript:;' onclick=\"DeleteSignRow('"+tableId+"','" + tableId +  rowId + "')\">删除</a></div>";
+        index.value = (rowId + 1).toString();
+    }
+
+
+}
+//删除指定行
+function DeleteSignRow(tableId, rowId) {
+    var signFrame = getNeedGoal(tableId, document);
+    var signItem = getNeedGoal(rowId, document);
+
+    //获取将要删除的行的Index
+    var rowIndex = signItem.rowIndex;
+    console.log(rowIndex);
+
+    //删除指定Index的行
+    signFrame.deleteRow(rowIndex);
+
+}//清空列表
+
+function cAdd(moneyId) {
+    var curMoney = $("#" + moneyId).val();
+    if (!isNull(curMoney)) {
+        var money = parseInt(curMoney);
+        $("#c_count").val(money + parseInt($("#c_count").val()));
+    }
+}
+
 </script>
