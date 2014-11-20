@@ -16,12 +16,13 @@ public class WebRequest implements Serializable{
 	 * vars主要是页面上唯一的数据
 	 */
 	private static final long serialVersionUID = 356235207021432802L;
-	private Map<String, String[]> tableMap;
+	private Map<String, String[][]> tableMap;
 	private Map<String, String> vars;
-	public Map<String, String[]> getTableMap() {
+	private boolean flag;
+	public Map<String, String[][]> getTableMap() {
 		return tableMap;
 	}
-	public void setTableMap(Map<String, String[]> tableMap) {
+	public void setTableMap(Map<String, String[][]> tableMap) {
 		this.tableMap = tableMap;
 	}
 	public Map<String, String> getVars() {
@@ -30,5 +31,10 @@ public class WebRequest implements Serializable{
 	public void setVars(Map<String, String> vars) {
 		this.vars = vars;
 	}
-	
+	public boolean isFlag() {
+		return flag;
+	}
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
 }
