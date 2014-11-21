@@ -27,6 +27,7 @@ import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
+import com.qunar.ops.oaengine.result.DataResult;
 import com.qunar.ops.oaengine.result.LaborRequest;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskResult;
@@ -37,6 +38,7 @@ import com.qunar.ops.oaengine.result.BaseResult;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.EmployeeRelationsFeesInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
 import com.qunar.ops.oaengine.result.dailysubmit.HospitalityInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.OtherCostsInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.OvertimeMealsInfo;
@@ -173,7 +175,7 @@ public class OaEngineController {
 			logger.warn(errorMsg);
 			return BaseResult.getErrorResult(-1, errorMsg);
 		}
-		String processKey = "oa";
+		String processKey = "oa_common";
 		boolean flag = webRequest.isFlag();
 		
 		long id = 0;
@@ -364,5 +366,40 @@ public class OaEngineController {
 			}
 		}
 		return true;
+	}
+	
+	@RequestMapping(value = "oa/applyinfo")
+	@ResponseBody
+	public BaseResult getAllMyApplyList(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn("登陆用户为空，无法获取员工信息");
+			return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+		}
+		String processKey = "oa_common";
+//		Date startTime, Date endTime, 
+		int pageNo = 0;
+		int pageSize = 20;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		FormInfoList formInfoList = ioaEngineService.getUserApplyList(processKey, userId, null, null, pageNo, pageSize);
+		DataResult dataResult = new DataResult();
+		List<FormInfo> formInfos = formInfoList.getFormInfos();
+		int size = formInfos.size();
+		List<String[]> tableInfos = new ArrayList<String[]>();
+		for (int i = 0; i < size; i++) {
+			FormInfo formInfo = formInfos.get(i);
+			String tableInfo[] = new String[]{
+				formInfo.getUserNumber(),
+				formInfo.getFirstDep()+"-"+formInfo.getSecDep()+"-"+formInfo.getThridDep()+"-"+formInfo.getFourthDep(),
+				formInfo.getRtxId(),
+				sdf.format(formInfo.getApplyDate()),
+				String.valueOf(formInfo.getMoneyAmount())
+			};
+			tableInfos.add(tableInfo);
+		}
+		dataResult.setCount((long)size);
+		dataResult.setFormInfos(formInfos);
+		dataResult.setAaData(tableInfos);
+		return BaseResult.getSuccessResult(dataResult);
 	}
 }
