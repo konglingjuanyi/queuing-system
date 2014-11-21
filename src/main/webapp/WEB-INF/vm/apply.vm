@@ -523,26 +523,26 @@ function subTableInfos(flag) {
 	//table 基本信息
 	var table = document.getElementById("table");
 	var list = new Array();
+	list[0] = new Array();
+	var k = 0;
 	for(var i = 0; i < 4; i++){
-		list[i] = new Array();
-		var k = 0;
 		for(j = 1; j < 6; j+= 2){
 			if((i == 2 || i == 3) && j == 1){
 				var input = table.rows[i].cells[j].childNodes[0].childNodes;
 				var input1 = input[1];
 				var input2 = input[4];
 				if(input1.checked){
-					list[i][k] = input1.value;
+					list[0][k] = input1.value;
 				}else if(input2.checked){
-					list[i][k] = input2.value;
+					list[0][k] = input2.value;
 				}
 			}else{
-				list[i][k] = table.rows[i].cells[j].childNodes[0].value;
+				list[0][k] = table.rows[i].cells[j].childNodes[0].value;
 			}
-			
-			if(isNull(list[i][k])){
-				list[i][k] = "";
+			if(isNull(list[0][k])){
+				list[0][k] = "";
 			}
+			k++;
 		}
 	}
 	tableMap["table"] = list;

@@ -357,7 +357,11 @@ public class OaEngineController {
 			formInfo.setBankName(table[i][8]);
 			formInfo.setIsBorrow(table[i][9]);
 			formInfo.setSerialNumber(table[i][10]);
-			formInfo.setBorrowAmount(Long.parseLong(table[i][11]));
+			if("".equals(table[i][11])){
+				formInfo.setBorrowAmount(0l);
+			}else{
+				formInfo.setBorrowAmount(Long.parseLong(table[i][11]));
+			}
 		}
 		return true;
 	}
