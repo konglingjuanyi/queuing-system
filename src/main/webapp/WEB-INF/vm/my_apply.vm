@@ -31,11 +31,10 @@
 <div class="row">
 <div class="col-xs-12">
     <div class="table-header">
-        考勤信息
+        申请报销信息
     </div>
     <div class="table-responsive" id="card_s">
         <div id="ems_table_wrapper" class="dataTables_wrapper" role="grid">
-
             <table id="ems_table" class="table table-striped table-bordered table-hover dataTable"
                    aria-describedby="ems_table_info" style="width: 100%;">
 
