@@ -11,9 +11,6 @@ public class OvertimeMealsInfo extends Formson0115 implements Serializable {
 	 * 加班餐费
 	 */
 	private static final long serialVersionUID = 8933545444370281313L;
-//TODO
-//	1、所有的金额都应该是float类型？long型会丢失精度。
-//	2、这个表少了备注信息。？
 
 	// 加班餐费日期
 	// private Date overtimeMealsDate;
