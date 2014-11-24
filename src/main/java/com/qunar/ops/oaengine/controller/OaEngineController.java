@@ -127,7 +127,7 @@ public class OaEngineController {
 			e.printStackTrace();
 			logger.error("sso 验证失败", e);
 		}
-        return "redirect:/oa/apply.html";
+        return "redirect:/oa/my_apply.html";
     } 
     
 	/**
@@ -142,7 +142,6 @@ public class OaEngineController {
 		if (userId != null) {
 			return addApply(request);
 		}
-		System.out.println("aaaaa");
 		ModelAndView mav = new ModelAndView("/oa/index");
 		return mav;
 	}
@@ -155,7 +154,6 @@ public class OaEngineController {
 	 */
 	@RequestMapping(value = "oa/apply.html")
 	public ModelAndView addApply(HttpServletRequest request) {
-		System.out.println("bbbbs");
 		ModelAndView mav = new ModelAndView("oa/apply");
 		return mav;
 	}
