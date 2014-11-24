@@ -364,10 +364,10 @@ public class Form0114Manager {
 		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
 		criteria.andStartMemberIdEqualTo(userId);
 		if(startTime != null){
-			criteria = criteria.andStartDateGreaterThan(startTime);
+			criteria = criteria.andStartDateGreaterThanOrEqualTo(startTime);
 		}
 		if(endTime != null){
-			criteria = criteria.andStartDateLessThan(endTime);
+			criteria = criteria.andStartDateLessThanOrEqualTo(endTime);
 		}
 		int count = formmain0114Mapper.countByExample(example);
 		example.setOffset((pageNo - 1) * pageSize);
@@ -455,10 +455,10 @@ public class Form0114Manager {
 		com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria criteria = example.createCriteria();
 		criteria.andStartMemberIdEqualTo(userId);
 		if(startTime != null){
-			criteria = criteria.andStartDateGreaterThan(startTime);
+			criteria = criteria.andStartDateGreaterThanOrEqualTo(startTime);
 		}
 		if(endTime != null){
-			criteria = criteria.andStartDateLessThan(endTime);
+			criteria = criteria.andStartDateLessThanOrEqualTo(endTime);
 		}
 		int count = formmain0114HistoryMapper.countByExample(example);
 		example.setOffset((pageNo - 1) * pageSize);

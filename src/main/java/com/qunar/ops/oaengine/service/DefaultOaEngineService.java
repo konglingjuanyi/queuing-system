@@ -70,6 +70,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Transactional(rollbackFor=Exception.class)
 	public Long createForm(String processKey, String userId, FormInfo formInfo){
 		FormInfo info = formInfo;
+		info.setStartMemberId(userId);
 		info.setFinishedflag(Constants.PROC_GRIFT);
 		form0114Manager.createFormInfo(userId, info);
 		return info.getId();
