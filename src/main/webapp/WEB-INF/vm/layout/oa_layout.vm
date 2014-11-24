@@ -62,8 +62,6 @@
 		<!-- inline scripts related to this page -->
 		<script src="static/ace/js/dropzone.min.js"></script>
 		
-		
-		
 	</head>
 	<body>
 		<div class="navbar navbar-default" id="navbar">

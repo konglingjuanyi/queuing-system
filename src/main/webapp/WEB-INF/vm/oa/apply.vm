@@ -327,10 +327,9 @@ td {
     取消申请
 </button>
 </div>
-
-<script src="static/js/utils.js"></script>
-<script src="static/js/dialog_common.js"></script>
-<script src="static/My97DatePicker/WdatePicker.js"></script>
+<script src="/oaengine/static/js/utils.js"></script>
+<script src="/oaengine/static/js/dialog_common.js"></script>
+<script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
 
 jQuery(function ($) {
@@ -340,7 +339,6 @@ jQuery(function ($) {
         url: "oa/employeeinfo",
         type: "GET",
         success: function (resp) {
-            console.log(resp);
             if (resp.errorCode == 0) {
                 var data = resp.data;
                 var table = document.getElementById("table");
