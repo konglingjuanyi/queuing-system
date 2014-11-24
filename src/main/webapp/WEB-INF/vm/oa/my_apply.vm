@@ -1,4 +1,4 @@
-#set($layout = "layout/layout.vm")
+#set($layout = "layout/oa_layout.vm")
 <div class="row">
 <div class="col-xs-12">
     <iframe style="display:none" name="export"></iframe>

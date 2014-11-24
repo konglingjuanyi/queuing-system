@@ -104,7 +104,7 @@ public class EngineAdminController {
 			e.printStackTrace();
 			logger.error("sso 验证失败", e);
 		}
-		return "redirect:/oa/apply.html";
+		return "redirect:/admin/process_list.html";
 	}
 
 	/**
@@ -133,30 +133,29 @@ public class EngineAdminController {
         ModelAndView mav = new ModelAndView("/add_process");
         return mav;
     } 
-	
-	/**
-	 * 我的申请报销页面
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/apply.html")
-	public ModelAndView addApply(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("/apply");
-		return mav;
-	}
-	
-	/**
-	 * 我的申请和已在审批中的报销页面
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/my_apply.html")
-	public ModelAndView myApply(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("/my_apply");
-		return mav;
-	}
+    
+    /**
+     * 流程定义列表
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/admin/process_list.html")
+    public ModelAndView processList(HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("process_list");
+
+        List<ProcessDefinition> list = repositoryService.createProcessDefinitionQuery().orderByDeploymentId().desc().list();
+        List<Object[]> infos = new ArrayList<Object[]>();
+        for(ProcessDefinition def : list){
+        	long c1 = runtimeService.createProcessInstanceQuery().processDefinitionId(def.getId()).count();
+        	long c2 = taskService.createTaskQuery().processDefinitionId(def.getId()).count();
+        	Deployment deployment = repositoryService.createDeploymentQuery().deploymentId(def.getDeploymentId()).singleResult();
+        	infos.add(new Object[]{def, deployment, c1, c2});
+        }
+        mav.addObject("page", infos);
+        mav.addObject("totalCount", list.size());
+        return mav;
+    }
+   
 	/**
 	 * 部署
 	 * 
@@ -212,34 +211,6 @@ public class EngineAdminController {
 			repositoryService.deleteDeployment(def.getDeploymentId());
 		}
 		return "redirect:/admin/process_list.html";
-	}
-
-	/**
-	 * 流程定义列表
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/admin/process_list.html")
-	public ModelAndView processList(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("process_list");
-
-		List<ProcessDefinition> list = repositoryService
-				.createProcessDefinitionQuery().orderByDeploymentId().desc()
-				.list();
-		List<Object[]> infos = new ArrayList<Object[]>();
-		for (ProcessDefinition def : list) {
-			long c1 = runtimeService.createProcessInstanceQuery()
-					.processDefinitionId(def.getId()).count();
-			long c2 = taskService.createTaskQuery()
-					.processDefinitionId(def.getId()).count();
-			Deployment deployment = repositoryService.createDeploymentQuery()
-					.deploymentId(def.getDeploymentId()).singleResult();
-			infos.add(new Object[] { def, deployment, c1, c2 });
-		}
-		mav.addObject("page", infos);
-		mav.addObject("totalCount", list.size());
-		return mav;
 	}
 
 	/**
