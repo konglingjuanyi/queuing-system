@@ -66,7 +66,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>报销金额总计</td>
-                <td><input type="text" value="0" id="sum"></td>
+                <td><input type="text" value="0" id="sum" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -110,7 +110,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum1"></td>
+                <td><input type="text" value="0" id="sum1" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -169,7 +169,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum2"></td>
+                <td><input type="text" value="0" id="sum2" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -210,7 +210,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum3"></td>
+                <td><input type="text" value="0" id="sum3" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -246,7 +246,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum4"></td>
+                <td><input type="text" value="0" id="sum4" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -274,7 +274,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum5"></td>
+                <td><input type="text" value="0" id="sum5" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -432,7 +432,7 @@ function deleteRow(tableId, curRow) {
     var rowId = curRow.parentNode.parentNode.parentNode.rowIndex;
     table.deleteRow(rowId);
     addMoney(tableId);
-}//清空列表
+}
 
 function addMoney(tableId) {
     var tableList = ["table1", "table2", "table3", "table4", "table5"];

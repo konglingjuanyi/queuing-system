@@ -224,7 +224,7 @@ public class OaEngineController {
 			e.printStackTrace();
 			String errorMsg = "ACL限制，获取员工信息失败";
 			logger.warn(errorMsg);
-			return BaseResult.getErrorResult(-2, errorMsg);
+			laborHour = 0;
 		}
 		String result[] = new String[] { String.valueOf(laborHour) };
 		return BaseResult.getSuccessResult(result);
@@ -234,7 +234,6 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult webPostData(HttpServletRequest request,
 			@RequestBody WebRequest webRequest) {
-		System.out.println("oa/data");
 		String userId = (String) request.getSession().getAttribute("USER_ID");
 		if (userId == null || userId.length() == 0) {
 			logger.warn("登陆用户为空，无法获取员工信息");
@@ -335,7 +334,7 @@ public class OaEngineController {
 			Float money = Float.parseFloat(table[i][4]);
 			String sMoney = String.valueOf((int) (money * 100));
 			overInfo.setOvertimeMealsAmount(Long.parseLong(sMoney));
-			overInfo.setPerMealsFee(Long.parseLong(table[i][5]));
+			overInfo.setPerMealsFee((long)(Float.parseFloat(table[i][5]) * 100));
 			overInfo.setInvoiceAmount(table[i][6]);
 			overInfo.setOvertimeMealsWorkhours(new BigDecimal(table[i][7]));
 			list2.add(overInfo);
@@ -420,29 +419,22 @@ public class OaEngineController {
 				.toArray(new OtherCostsInfo[size]);
 		formInfo.setOtherCostsInfo(otherInfos);
 		// 存储所有数据之和
-		formInfo.setSumTaxiFaresAmount(Long.parseLong(String
-				.valueOf((int) Float.parseFloat(vars.get("sum1")) * 100)));
-		formInfo.setSumOvertimeMealsAmount(Long.parseLong(String
-				.valueOf((int) Float.parseFloat(vars.get("sum2")) * 100)));
-		formInfo.setSumHospitalityAmount(Long.parseLong(String
-				.valueOf((int) Float.parseFloat(vars.get("sum3")) * 100)));
-		formInfo.setSumEmployeeRelationsFees(Long.parseLong(String
-				.valueOf((int) Float.parseFloat(vars.get("sum4")) * 100)));
-		formInfo.setSumOtherAmount(Long.parseLong(String.valueOf((int) Float
-				.parseFloat(vars.get("sum5")) * 100)));
+		formInfo.setSumTaxiFaresAmount((long)(Float.parseFloat(vars.get("sum1")) * 100));
+		formInfo.setSumOvertimeMealsAmount((long)(Float.parseFloat(vars.get("sum2")) * 100));
+		formInfo.setSumHospitalityAmount((long)(Float.parseFloat(vars.get("sum3")) * 100));
+		formInfo.setSumEmployeeRelationsFees((long)(Float.parseFloat(vars.get("sum4")) * 100));
+		formInfo.setSumOtherAmount((long)(Float.parseFloat(vars.get("sum5")) * 100));
 
-		formInfo.setCommunicationCosts(Long.parseLong(String
-				.valueOf((int) Float.parseFloat(vars.get("sum6")) * 100)));
+		formInfo.setCommunicationCosts((long)(Float.parseFloat(vars.get("sum6")) * 100));
 		formInfo.setCommuCostsComment(vars.get("remark"));
 
-		formInfo.setMoneyAmount(Long.parseLong(String.valueOf((int) Float
-				.parseFloat(vars.get("sum")) * 100)));
-
+		formInfo.setMoneyAmount((long)(Float.parseFloat(vars.get("sum")) * 100));
+		sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		table = tableMap.get("table");
 		len = table.length;
 		for (int i = 0; i < len; i++) {
 			formInfo.setRtxId(table[i][0]);
-			formInfo.setApplyDate(sdf.parse(table[i][2]));
+			formInfo.setApplyDate((new Date(System.currentTimeMillis())));
 			formInfo.setFirstDep(table[i][3]);
 			formInfo.setFourthDep(table[i][4]);
 			formInfo.setDepNum(table[i][5]);
@@ -479,30 +471,24 @@ public class OaEngineController {
 		// 默认一页显示50条数据
 		int pageSize = 50;
 		int pageNo = iDisplayStart / 50 + 1;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		FormInfoList formInfoList = ioaEngineService.getUserApplyList(
 				processKey, userId, null, null, pageNo, pageSize);
-		System.out.println(formInfoList.getFormInfos().size());
+		
+		return BaseResult.getSuccessResult(dataResult);
+	}
+	
+	private DataResult getTableInfos(FormInfoList formInfoList, String userId) throws RemoteAccessException{
 		DataResult dataResult = new DataResult();
 		List<FormInfo> formInfos = formInfoList.getFormInfos();
 		int size = formInfos.size();
 		List<String[]> tableInfos = new ArrayList<String[]>();
 		EmployeeInfo employeeInfo = new EmployeeInfo();
-		try {
 			employeeInfo = ioaEngineService.getEmployeeInfo(userId);
-		} catch (RemoteAccessException e) {
-			e.printStackTrace();
-			logger.warn("ACL限制，获取员工信息失败");
-			return BaseResult.getErrorResult(-2, "ACL限制，获取员工信息失败");
-		}
-		String depart = employeeInfo.getDepartmentI() + "-"
-				+ employeeInfo.getDepartmentII() + "-"
-				+ employeeInfo.getDepartmentIII() + "-"
-				+ employeeInfo.getDepartmentIV();
+		String depart = getDepartMent(employeeInfo);
 		String sn = employeeInfo.getSn();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for (int i = 0; i < size; i++) {
 			FormInfo formInfo = formInfos.get(i);
-
 			String tableInfo[] = new String[] { sn, depart,
 					formInfo.getRtxId(), sdf.format(formInfo.getApplyDate()),
 					String.valueOf(formInfo.getMoneyAmount()) };
@@ -511,6 +497,34 @@ public class OaEngineController {
 		dataResult.setCount((long) size);
 		dataResult.setFormInfos(formInfos);
 		dataResult.setAaData(tableInfos);
-		return BaseResult.getSuccessResult(dataResult);
+		return dataResult;
+	}
+
+	private String getDepartMent(EmployeeInfo employeeInfo) {
+		String depart = employeeInfo.getDepartmentI();
+		String other = employeeInfo.getDepartmentII();
+		if (!isNull(other)) {
+			depart += "-" + other;
+		}
+		other = employeeInfo.getDepartmentIII();
+		if (!isNull(other)) {
+			depart += "-" + other;
+		}
+		other = employeeInfo.getDepartmentIV();
+		if (!isNull(other)) {
+			depart += "-" + other;
+		}
+		other = employeeInfo.getDepartmentV();
+		if (!isNull(other)) {
+			depart += "-" + other;
+		}
+		return depart;
+	}
+	
+	private boolean isNull(String value){
+		if (value == null || "".equals(value)) {
+			return true;
+		}
+		return false;
 	}
 }
