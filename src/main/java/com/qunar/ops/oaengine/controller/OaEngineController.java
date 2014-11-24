@@ -472,17 +472,21 @@ public class OaEngineController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		FormInfoList formInfoList = ioaEngineService.getUserApplyList(
 				processKey, userId, null, null, pageNo, pageSize);
+		System.out.println(formInfoList.getFormInfos().size());
 		DataResult dataResult = new DataResult();
 		List<FormInfo> formInfos = formInfoList.getFormInfos();
 		int size = formInfos.size();
 		List<String[]> tableInfos = new ArrayList<String[]>();
 		for (int i = 0; i < size; i++) {
 			FormInfo formInfo = formInfos.get(i);
+			String depart = formInfo.getFirstDep() + "-" + 
+					formInfo.getSecDep() + "-"
+					+ formInfo.getThridDep() + "-"
+					+ formInfo.getFourthDep();
 			String tableInfo[] = new String[] {
 					formInfo.getUserNumber(),
-					formInfo.getFirstDep() + "-" + formInfo.getSecDep() + "-"
-							+ formInfo.getThridDep() + "-"
-							+ formInfo.getFourthDep(), formInfo.getRtxId(),
+					depart,
+					formInfo.getRtxId(),
 					sdf.format(formInfo.getApplyDate()),
 					String.valueOf(formInfo.getMoneyAmount()) };
 			tableInfos.add(tableInfo);

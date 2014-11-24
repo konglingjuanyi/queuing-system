@@ -106,6 +106,7 @@ function showInfo(url) {
                     var iTotalRecords = data.count || 0;
                     var iTotalDisplayRecords = iTotalRecords;
                     var aaData = showApplyInfo(data);
+					console.log(aaData);
                     var data = {
                         "aaData": aaData,
                         "iTotalRecords": (iTotalRecords || 0),
@@ -145,19 +146,20 @@ function showInfo(url) {
 
 function showApplyInfo(data) {
     var aaData = [];
-    if (data) {
-        var d_len = data.count;
-		data = data.aaData;
+	var needData = data.aaData;
+        var d_len = needData.length;
         for (var i = 0; i < d_len; i++) {
+			var money = parseFloat(needData[i][4]);
+			money /= 100;
+			console.log(money);
             aaData.push([
-				data[0],
-				data[1],
-				data[2],
-				data[3],
-				data[4]
+				needData[i][0],
+				needData[i][1],
+				needData[i][2],
+				needData[i][3],
+				money.toFixed(2)
             ]);
         }
-    }
     return aaData;
 }
 
