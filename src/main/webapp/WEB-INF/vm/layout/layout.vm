@@ -85,13 +85,18 @@
 				<div class="sidebar" id="sidebar">
 					<ul class="nav nav-list">
 						<li>
+							<a href="admin/add_process.html">
+								<span class="menu-text"> 流程部署 </span>
+							</a>
+						</li>
+						<li>
 							<a href="apply.html">
 								<span class="menu-text"> 员工报销申请 </span>
 							</a>
 						</li>
 						<li>
-							<a href="admin/process_list.html">
-								<span class="menu-text"> 流程定义列表 </span>
+							<a href="my_apply.html">
+								<span class="menu-text"> 我的申请 </span>
 							</a>
 						</li>
 

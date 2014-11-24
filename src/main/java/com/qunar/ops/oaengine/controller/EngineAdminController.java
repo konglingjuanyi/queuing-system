@@ -104,7 +104,7 @@ public class EngineAdminController {
 			e.printStackTrace();
 			logger.error("sso 验证失败", e);
 		}
-		return "redirect:/admin/process_list.html";
+		return "redirect:/oa/apply.html";
 	}
 
 	/**
@@ -122,19 +122,41 @@ public class EngineAdminController {
 		ModelAndView mav = new ModelAndView("/index");
 		return mav;
 	}
-
+	
 	/**
-	 * 部署
+     * 部署
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/admin/add_process.html")
+    public ModelAndView addProcess(HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("/add_process");
+        return mav;
+    } 
+	
+	/**
+	 * 我的申请报销页面
 	 * 
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = "/apply.html")
-	public ModelAndView addProcess(HttpServletRequest request) {
+	public ModelAndView addApply(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("/apply");
 		return mav;
 	}
-
+	
+	/**
+	 * 我的申请和已在审批中的报销页面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/my_apply.html")
+	public ModelAndView myApply(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("/my_apply");
+		return mav;
+	}
 	/**
 	 * 部署
 	 * 
