@@ -333,6 +333,19 @@ public class Form0114Manager {
 		for(int i = 0; i < formmain0114s.size(); i++){
 			formInfo = new FormInfo();
 			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+			
+			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+					.get("overtimeMealsInfos"));
+			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+					.get("hospitalityInfos"));
+			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+					.get("otherCostsInfos"));
+			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+					.get("employeeRelationsFeesInfos"));
+			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+					.get("taxiFaresInfos"));
+			
 			formInfos.add(formInfo);
 		}
 		formInfoList.setCount(count);
@@ -380,6 +393,19 @@ public class Form0114Manager {
 		for(int i = 0; i < formmain0114s.size(); i++){
 			formInfo = new FormInfo();
 			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+			
+			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+					.get("overtimeMealsInfos"));
+			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+					.get("hospitalityInfos"));
+			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+					.get("otherCostsInfos"));
+			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+					.get("employeeRelationsFeesInfos"));
+			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+					.get("taxiFaresInfos"));
+			
 			formInfos.add(formInfo);
 		}
 		formInfoList.setCount(count);
@@ -471,6 +497,19 @@ public class Form0114Manager {
 		for(int i = 0; i < formmain0114Historys.size(); i++){
 			formInfo = new FormInfo();
 			BeanUtils.copyProperties(formmain0114Historys.get(i), formInfo);
+			
+			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+					.get("overtimeMealsInfos"));
+			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+					.get("hospitalityInfos"));
+			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+					.get("otherCostsInfos"));
+			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+					.get("employeeRelationsFeesInfos"));
+			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+					.get("taxiFaresInfos"));
+			
 			formInfos.add(formInfo);
 		}
 		formInfoList.setCount(count);
