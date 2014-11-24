@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>报销系统-Admin</title>
+		<title>工作流引擎-Admin</title>
 		<meta name="description" content="" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<base href="/oaengine/" />
@@ -85,8 +85,8 @@
 				<div class="sidebar" id="sidebar">
 					<ul class="nav nav-list">
 						<li>
-							<a href="apply.html">
-								<span class="menu-text"> 员工报销申请 </span>
+							<a href="admin/add_process.html">
+								<span class="menu-text"> 流程部署 </span>
 							</a>
 						</li>
 						<li>

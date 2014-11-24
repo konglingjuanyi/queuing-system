@@ -145,7 +145,6 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
 	}
-
 	// 加班餐费
 	private OvertimeMealsInfo[] overtimeMealsInfo;
 	// 招待费
