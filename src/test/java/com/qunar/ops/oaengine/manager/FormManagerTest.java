@@ -37,7 +37,7 @@ public class FormManagerTest {
 	@Before
 	public void init_data() throws FormNotFoundException{
 		FormInfo info = initFormInfo();
-		int i = form0114manager.createFormInfo("yongnian.jiang", info);
+		Long i = form0114manager.createFormInfo("yongnian.jiang", info);
 		
 		FormInfo formInfo = form0114manager.getFormInfo("jyn_test");
 		formId = formInfo.getId();

@@ -130,14 +130,15 @@ public class Form0114Manager {
 	 * @param formInfo
 	 * @return
 	 */
-	public int createFormInfo(String userId, FormInfo formInfo) {
-		int formId = formmain0114Mapper.insert((Formmain0114) formInfo);
-		createFormsonInfos(formInfo.getOvertimeMealsInfo(), OVERTIMEMEALS_INFO, (long)formId);
-		createFormsonInfos(formInfo.getHospitalityInfo(), HOSPITALITY_INFO, (long)formId);
-		createFormsonInfos(formInfo.getOtherCostsInfo(), OTHERCOSTS_INFO, (long)formId);
+	public Long createFormInfo(String userId, FormInfo formInfo) {
+		int res = formmain0114Mapper.insert((Formmain0114) formInfo);
+		Long formId = formInfo.getId();
+		createFormsonInfos(formInfo.getOvertimeMealsInfo(), OVERTIMEMEALS_INFO, formId);
+		createFormsonInfos(formInfo.getHospitalityInfo(), HOSPITALITY_INFO, formId);
+		createFormsonInfos(formInfo.getOtherCostsInfo(), OTHERCOSTS_INFO, formId);
 		createFormsonInfos(formInfo.getEmployeeRelationsFeesInfo(),
-				EMPLOYEERELATIONSFEES_INFO, (long)formId);
-		createFormsonInfos(formInfo.getTaxiFaresInfo(), TAXIFARES_INFO, (long)formId);
+				EMPLOYEERELATIONSFEES_INFO, formId);
+		createFormsonInfos(formInfo.getTaxiFaresInfo(), TAXIFARES_INFO, formId);
 
 		return formId;
 	}
