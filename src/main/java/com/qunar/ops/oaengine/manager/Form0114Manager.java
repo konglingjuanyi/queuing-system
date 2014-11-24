@@ -1049,6 +1049,7 @@ public class Form0114Manager {
 		OvertimeMealsInfo[] overtimeMealsInfos = new OvertimeMealsInfo[formson0115s
 				.size()];
 		for (int i = 0; i < formson0115s.size(); i++) {
+			overtimeMealsInfos[i] = new OvertimeMealsInfo();
 			BeanUtils
 					.copyProperties(formson0115s.get(i), overtimeMealsInfos[i]);
 		}
@@ -1061,6 +1062,7 @@ public class Form0114Manager {
 		HospitalityInfo[] hospitalityInfos = new HospitalityInfo[formson0116s
 				.size()];
 		for (int i = 0; i < formson0116s.size(); i++) {
+			hospitalityInfos[i] = new HospitalityInfo();
 			BeanUtils.copyProperties(formson0116s.get(i), hospitalityInfos[i]);
 		}
 		res.put("hospitalityInfos", hospitalityInfos);
@@ -1072,6 +1074,7 @@ public class Form0114Manager {
 		OtherCostsInfo[] otherCostsInfos = new OtherCostsInfo[formson0117s
 				.size()];
 		for (int i = 0; i < formson0117s.size(); i++) {
+			otherCostsInfos[i] = new OtherCostsInfo();
 			BeanUtils.copyProperties(formson0117s.get(i), otherCostsInfos[i]);
 		}
 		res.put("otherCostsInfos", otherCostsInfos);
@@ -1083,6 +1086,7 @@ public class Form0114Manager {
 		EmployeeRelationsFeesInfo[] employeeRelationsFeesInfos = new EmployeeRelationsFeesInfo[formson0118s
 				.size()];
 		for (int i = 0; i < formson0118s.size(); i++) {
+			employeeRelationsFeesInfos[i] = new EmployeeRelationsFeesInfo();
 			BeanUtils.copyProperties(formson0118s.get(i),
 					employeeRelationsFeesInfos[i]);
 		}
@@ -1094,6 +1098,7 @@ public class Form0114Manager {
 				.selectByExample(example119);
 		TaxiFaresInfo[] taxiFaresInfos = new TaxiFaresInfo[formson0119s.size()];
 		for (int i = 0; i < formson0119s.size(); i++) {
+			taxiFaresInfos[i] = new TaxiFaresInfo();
 			BeanUtils.copyProperties(formson0119s.get(i), taxiFaresInfos[i]);
 		}
 		res.put("taxiFaresInfos", taxiFaresInfos);
