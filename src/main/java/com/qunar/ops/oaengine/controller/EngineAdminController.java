@@ -63,7 +63,6 @@ public class EngineAdminController {
 		adminUsers.add("nuby.zhang");
 		adminUsers.add("yongnian.jiang");
 		adminUsers.add("zhen.pei");
-		adminUsers.add("zhenqing.yang");
 		adminUsers.add("weidong.jiang");
 		adminUsers.add("zhenqing.wang");
 	}

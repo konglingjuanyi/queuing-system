@@ -86,7 +86,7 @@ function showInfo(url) {
         "bProcessing": false,
         "bServerSide": true,
         "sDom": 't<"row"<"col-sm-12"i>>',
-        "bSort": true,
+        "bSort": false,
         "bScrollCollapse": true,
         "iDisplayLength":20,
         "iDisplayStart": 0,

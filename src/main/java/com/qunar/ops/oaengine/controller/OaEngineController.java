@@ -95,21 +95,23 @@ public class OaEngineController {
 		// this.manager.cancel("test", "001", "nuby.zhang", "reason");
 		System.out.println("====");
 	}
-	
+
 	/**
-     * login
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/oa/login")
-    public String login(HttpServletRequest request) {
-    	HttpClient client = HttpClientBuilder.create().build() ;
-    	String token = request.getParameter("token");
-    	HttpGet method = new HttpGet("http://qsso.corp.qunar.com/api/verifytoken.php?token="+token);
-    	try {
+	 * login
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/oa/login")
+	public String login(HttpServletRequest request) {
+		HttpClient client = HttpClientBuilder.create().build();
+		String token = request.getParameter("token");
+		HttpGet method = new HttpGet(
+				"http://qsso.corp.qunar.com/api/verifytoken.php?token=" + token);
+		try {
 			HttpResponse response = client.execute(method);
-			BufferedReader rd = new BufferedReader(
-			        new InputStreamReader(response.getEntity().getContent()));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
 			StringBuffer result = new StringBuffer();
 			String line = "";
 			while ((line = rd.readLine()) != null) {
@@ -117,19 +119,20 @@ public class OaEngineController {
 			}
 			JSONObject parseObject = JSON.parseObject(result.toString());
 			String ret = parseObject.getString("ret");
-			if(ret.equals("true")){
-				String userId = parseObject.getJSONObject("data").getString("userId");
+			if (ret.equals("true")) {
+				String userId = parseObject.getJSONObject("data").getString(
+						"userId");
 				request.getSession().setAttribute("USER_ID", userId);
-			}else{
+			} else {
 				return "redirect:/oa/index.html";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("sso 验证失败", e);
 		}
-        return "redirect:/oa/my_apply.html";
-    } 
-    
+		return "redirect:/oa/my_apply.html";
+	}
+
 	/**
 	 * index
 	 * 
@@ -465,10 +468,17 @@ public class OaEngineController {
 			logger.warn("登陆用户为空，无法获取员工信息");
 			return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
 		}
+		int iDisplayStart = Integer.parseInt(request
+				.getParameter("iDisplayStart"));
+		int iDisplayLength = Integer.parseInt(request
+				.getParameter("iDisplayLength"));
+		System.out.println(iDisplayStart);
+		System.out.println(iDisplayLength);
 		String processKey = "oa_common";
 		// Date startTime, Date endTime,
-		int pageNo = 0;
-		int pageSize = 20;
+		// 默认一页显示50条数据
+		int pageSize = 50;
+		int pageNo = iDisplayStart / 50 + 1;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		FormInfoList formInfoList = ioaEngineService.getUserApplyList(
 				processKey, userId, null, null, pageNo, pageSize);
@@ -477,17 +487,24 @@ public class OaEngineController {
 		List<FormInfo> formInfos = formInfoList.getFormInfos();
 		int size = formInfos.size();
 		List<String[]> tableInfos = new ArrayList<String[]>();
+		EmployeeInfo employeeInfo = new EmployeeInfo();
+		try {
+			employeeInfo = ioaEngineService.getEmployeeInfo(userId);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.warn("ACL限制，获取员工信息失败");
+			return BaseResult.getErrorResult(-2, "ACL限制，获取员工信息失败");
+		}
+		String depart = employeeInfo.getDepartmentI() + "-"
+				+ employeeInfo.getDepartmentII() + "-"
+				+ employeeInfo.getDepartmentIII() + "-"
+				+ employeeInfo.getDepartmentIV();
+		String sn = employeeInfo.getSn();
 		for (int i = 0; i < size; i++) {
 			FormInfo formInfo = formInfos.get(i);
-			String depart = formInfo.getFirstDep() + "-" + 
-					formInfo.getSecDep() + "-"
-					+ formInfo.getThridDep() + "-"
-					+ formInfo.getFourthDep();
-			String tableInfo[] = new String[] {
-					formInfo.getUserNumber(),
-					depart,
-					formInfo.getRtxId(),
-					sdf.format(formInfo.getApplyDate()),
+
+			String tableInfo[] = new String[] { sn, depart,
+					formInfo.getRtxId(), sdf.format(formInfo.getApplyDate()),
 					String.valueOf(formInfo.getMoneyAmount()) };
 			tableInfos.add(tableInfo);
 		}
