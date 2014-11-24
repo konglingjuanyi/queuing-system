@@ -131,14 +131,15 @@ public class Form0114Manager {
 	 * @return
 	 */
 	public int createFormInfo(String userId, FormInfo formInfo) {
-		createFormsonInfos(formInfo.getOvertimeMealsInfo(), OVERTIMEMEALS_INFO);
-		createFormsonInfos(formInfo.getHospitalityInfo(), HOSPITALITY_INFO);
-		createFormsonInfos(formInfo.getOtherCostsInfo(), OTHERCOSTS_INFO);
+		int formId = formmain0114Mapper.insert((Formmain0114) formInfo);
+		createFormsonInfos(formInfo.getOvertimeMealsInfo(), OVERTIMEMEALS_INFO, (long)formId);
+		createFormsonInfos(formInfo.getHospitalityInfo(), HOSPITALITY_INFO, (long)formId);
+		createFormsonInfos(formInfo.getOtherCostsInfo(), OTHERCOSTS_INFO, (long)formId);
 		createFormsonInfos(formInfo.getEmployeeRelationsFeesInfo(),
-				EMPLOYEERELATIONSFEES_INFO);
-		createFormsonInfos(formInfo.getTaxiFaresInfo(), TAXIFARES_INFO);
+				EMPLOYEERELATIONSFEES_INFO, (long)formId);
+		createFormsonInfos(formInfo.getTaxiFaresInfo(), TAXIFARES_INFO, (long)formId);
 
-		return formmain0114Mapper.insert((Formmain0114) formInfo);
+		return formId;
 	}
 
 	/**
@@ -852,23 +853,33 @@ public class Form0114Manager {
 
 	}
 
-	private <T> void createFormsonInfos(T[] infos, int type) {
+	private <T> void createFormsonInfos(T[] infos, int type, Long formId) {
 		for (int i = 0; i < infos.length; i++) {
 			switch (type) {
 			case OVERTIMEMEALS_INFO:
+				Formson0115 temp0115 = (Formson0115) infos[i];
+				temp0115.setFormmain0114id(formId);
 				formson0115Mapper.insert((Formson0115) infos[i]);
 				break;
 			case HOSPITALITY_INFO:
-				formson0116Mapper.insert((Formson0116) infos[i]);
+				Formson0116 temp0116 = (Formson0116) infos[i];
+				temp0116.setFormmain0114id(formId);
+				formson0116Mapper.insert(temp0116);
 				break;
 			case OTHERCOSTS_INFO:
-				formson0117Mapper.insert((Formson0117) infos[i]);
+				Formson0117 temp0117 = (Formson0117) infos[i];
+				temp0117.setFormmain0114id(formId);
+				formson0117Mapper.insert(temp0117);
 				break;
 			case EMPLOYEERELATIONSFEES_INFO:
-				formson0118Mapper.insert((Formson0118) infos[i]);
+				Formson0118 temp0118 = (Formson0118) infos[i];
+				temp0118.setFormmain0114id(formId);
+				formson0118Mapper.insert(temp0118);
 				break;
 			case TAXIFARES_INFO:
-				formson0119Mapper.insert((Formson0119) infos[i]);
+				Formson0119 temp0119 = (Formson0119) infos[i];
+				temp0119.setFormmain0114id(formId);
+				formson0119Mapper.insert(temp0119);
 				break;
 			}
 		}
