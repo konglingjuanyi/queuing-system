@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -433,10 +434,10 @@ public class OaEngineController {
 		table = tableMap.get("table");
 		len = table.length;
 		for (int i = 0; i < len; i++) {
-			formInfo.setRtxId(table[i][0]);
+			formInfo.setApplyUser(table[i][0]);
 			formInfo.setApplyDate((new Date(System.currentTimeMillis())));
 			formInfo.setFirstDep(table[i][3]);
-			formInfo.setFourthDep(table[i][4]);
+			formInfo.setApplyDep(table[i][4]);
 			formInfo.setDepNum(table[i][5]);
 			formInfo.setIsDirectVp(table[i][6]);
 			formInfo.setBankNumber(table[i][7]);
@@ -473,7 +474,15 @@ public class OaEngineController {
 		int pageNo = iDisplayStart / 50 + 1;
 		FormInfoList formInfoList = ioaEngineService.getUserApplyList(
 				processKey, userId, null, null, pageNo, pageSize);
-		
+		DataResult dataResult;
+		try {
+			dataResult = getTableInfos(formInfoList, userId);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			String errorMsg = "ACL限制，获取员工信息失败";
+			logger.warn(errorMsg);
+			return BaseResult.getErrorResult(-2, errorMsg);
+		}
 		return BaseResult.getSuccessResult(dataResult);
 	}
 	
@@ -487,17 +496,146 @@ public class OaEngineController {
 		String depart = getDepartMent(employeeInfo);
 		String sn = employeeInfo.getSn();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<Map<String, String>> varList = new ArrayList<Map<String,String>>();
+		List<Map<String, String[][]>> tableMapList = new ArrayList<Map<String,String[][]>>();
 		for (int i = 0; i < size; i++) {
 			FormInfo formInfo = formInfos.get(i);
 			String tableInfo[] = new String[] { sn, depart,
 					formInfo.getRtxId(), sdf.format(formInfo.getApplyDate()),
 					String.valueOf(formInfo.getMoneyAmount()) };
 			tableInfos.add(tableInfo);
+			constructTableMap(formInfo, varList, tableMapList);
+			
+			
 		}
 		dataResult.setCount((long) size);
-		dataResult.setFormInfos(formInfos);
-		dataResult.setAaData(tableInfos);
+		dataResult.setTableMapList(tableMapList);
+		dataResult.setVarList(varList);
 		return dataResult;
+	}
+
+	private void constructTableMap(FormInfo formInfo, List<Map<String, String>> varList,
+			List<Map<String, String[][]>> tableMapList) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Map<String, String[][]> tableMap = new HashMap<String, String[][]>();
+		String table[][] = new String[1][12];
+		table[0][0] = formInfo.getApplyUser();
+		table[0][1] = formInfo.getSerialNumber();
+		table[0][2] = sdf.format(formInfo.getApplyDate());
+		table[0][3] = formInfo.getFirstDep();
+		table[0][4] = formInfo.getApplyDep();
+		table[0][5] = formInfo.getDepNum();
+		table[0][6] = formInfo.getIsDirectVp();
+		table[0][7] = formInfo.getBankNumber();
+		table[0][8] = formInfo.getBankName();
+		table[0][9] = formInfo.getIsBorrow();
+		table[0][10] = formInfo.getBorrowSN();
+		table[0][11] = String.valueOf(formInfo.getBorrowAmount());
+		tableMap.put("table", table);
+		TaxiFaresInfo infos1[] = formInfo.getTaxiFaresInfo();
+		int len = infos1.length;
+		if (len == 0) {
+			table = new String[0][0];
+		}else{
+			table = new String[len][9];
+			for (int i = 0; i < len; i++) {
+				table[i][0] = sdf.format(infos1[i].getTaxiFaresDate());
+				table[i][1] = infos1[i].getTaxiFaresAddr();
+				table[i][2] = infos1[i].getTaxiFaresDest();
+				table[i][3] = infos1[i].getTaxiFaresTime();
+				table[i][4] = infos1[i].getTaxiFaresUse();
+				table[i][5] = infos1[i].getTaxiFaresPeerPeople();
+				table[i][6] = infos1[i].getTaxiFaresWorkhour().toString();
+				table[i][7] = String.valueOf(infos1[i].getTaxiFaresAmount());
+				table[i][8] = infos1[i].getComment();
+			}
+		}
+		tableMap.put("table1", table);
+		
+		OvertimeMealsInfo infos2[] = formInfo.getOvertimeMealsInfo();
+		len = infos2.length;
+		if (len == 0) {
+			table = new String[0][0]; 
+		}else{
+			table = new String[len][9];
+			for (int i = 0; i < len; i++) {
+				table[i][0] = sdf.format(infos2[i].getOvertimeMealsDate());
+				table[i][1] = infos2[i].getMealsAddr();
+				table[i][2] = infos2[i].getOvertimeMealsPeerPeople();
+				table[i][3] = String.valueOf(infos2[i].getMealsPersonNum());
+				table[i][4] = String.valueOf(infos2[i].getOvertimeMealsAmount());
+				table[i][5] = String.valueOf(infos2[i].getPerMealsFee());
+				table[i][6] = infos2[i].getInvoiceAmount();
+				table[i][7] = String.valueOf(infos2[i].getInvoiceAmount());
+				table[i][8] = infos2[i].getOvertimeMealsWorkhours().toString();
+			}
+		}
+		tableMap.put("table2", table);
+		
+		HospitalityInfo infos3[] = formInfo.getHospitalityInfo();
+		len = infos3.length;
+		if (len == 0) {
+			table = new String[0][0]; 
+		}else{
+			table = new String[len][7];
+			for (int i = 0; i < len; i++) {
+				table[i][0] = sdf.format(infos3[i].getHospitalityDate());
+				table[i][1] = infos3[i].getHospitalityAddr();
+				table[i][2] = infos3[i].getBusinessPurpose();
+				table[i][3] = infos3[i].getCustomCompany();
+				table[i][4] = infos3[i].getCustomName();
+				table[i][5] = infos3[i].getHospitalityNum();
+				table[i][6] = String.valueOf(infos3[i].getHospitalityAmount());
+			}
+		}
+		tableMap.put("table3", table);
+		
+		EmployeeRelationsFeesInfo infos4[] = formInfo.getEmployeeRelationsFeesInfo();
+		len = infos4.length;
+		if (len == 0) {
+			table = new String[0][0]; 
+		}else{
+			table = new String[len][6];
+			for (int i = 0; i < len; i++) {
+				table[i][0] = sdf.format(infos4[i].getEmRelationsDate());
+				table[i][1] = infos4[i].getEmRelationsAddress();
+				table[i][2] = infos4[i].getEmRelationsPeerPeople();
+				table[i][3] = infos4[i].getActDest();
+				table[i][4] = String.valueOf(infos4[i].getEmRelationsFees());
+				table[i][5] = infos4[i].getEmRelationsFeesComment();
+			}
+		}
+		tableMap.put("table4", table);
+		
+		OtherCostsInfo infos5[] = formInfo.getOtherCostsInfo();
+		len = infos5.length;
+		if (len == 0) {
+			table = new String[0][0]; 
+		}else{
+			table = new String[len][3];
+			for (int i = 0; i < len; i++) {
+				table[i][0] = infos5[i].getOtherCostProject();
+				table[i][1] = String.valueOf(infos5[i].getOtherCostAmount());
+				table[i][2] = infos5[i].getOtherCostComment();
+			}
+		}
+		tableMap.put("table5", table);
+		
+		Map<String, String> vars = new HashMap<String, String>();
+		vars.put("sum1", formInfo.getSumTaxiFaresAmount().toString());
+		vars.put("sum2", formInfo.getSumOvertimeMealsAmount().toString());
+
+		vars.put("sum3", formInfo.getHospitalityNotifyAmount().toString());
+
+		vars.put("sum4", formInfo.getSumEmployeeRelationsFees().toString());
+		vars.put("sum5", formInfo.getSumOtherAmount().toString());
+		vars.put("sum", formInfo.getMoneyAmount().toString());
+		
+		vars.put("sum6", formInfo.getCommunicationCosts().toString());
+		vars.put("sum", formInfo.getCommuCostsComment().toString());
+		
+		varList.add(vars);
+		tableMapList.add(tableMap);
 	}
 
 	private String getDepartMent(EmployeeInfo employeeInfo) {
