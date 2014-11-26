@@ -130,15 +130,17 @@ public class Form0114Manager {
 	 * @param formInfo
 	 * @return
 	 */
-	public int createFormInfo(String userId, FormInfo formInfo) {
-		createFormsonInfos(formInfo.getOvertimeMealsInfo(), OVERTIMEMEALS_INFO);
-		createFormsonInfos(formInfo.getHospitalityInfo(), HOSPITALITY_INFO);
-		createFormsonInfos(formInfo.getOtherCostsInfo(), OTHERCOSTS_INFO);
+	public Long createFormInfo(String userId, FormInfo formInfo) {
+		int res = formmain0114Mapper.insert((Formmain0114) formInfo);
+		Long formId = formInfo.getId();
+		createFormsonInfos(formInfo.getOvertimeMealsInfo(), OVERTIMEMEALS_INFO, formId);
+		createFormsonInfos(formInfo.getHospitalityInfo(), HOSPITALITY_INFO, formId);
+		createFormsonInfos(formInfo.getOtherCostsInfo(), OTHERCOSTS_INFO, formId);
 		createFormsonInfos(formInfo.getEmployeeRelationsFeesInfo(),
-				EMPLOYEERELATIONSFEES_INFO);
-		createFormsonInfos(formInfo.getTaxiFaresInfo(), TAXIFARES_INFO);
+				EMPLOYEERELATIONSFEES_INFO, formId);
+		createFormsonInfos(formInfo.getTaxiFaresInfo(), TAXIFARES_INFO, formId);
 
-		return formmain0114Mapper.insert((Formmain0114) formInfo);
+		return formId;
 	}
 
 	/**
@@ -331,6 +333,19 @@ public class Form0114Manager {
 		for(int i = 0; i < formmain0114s.size(); i++){
 			formInfo = new FormInfo();
 			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+			
+			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+					.get("overtimeMealsInfos"));
+			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+					.get("hospitalityInfos"));
+			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+					.get("otherCostsInfos"));
+			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+					.get("employeeRelationsFeesInfos"));
+			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+					.get("taxiFaresInfos"));
+			
 			formInfos.add(formInfo);
 		}
 		formInfoList.setCount(count);
@@ -364,10 +379,10 @@ public class Form0114Manager {
 		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
 		criteria.andStartMemberIdEqualTo(userId);
 		if(startTime != null){
-			criteria = criteria.andStartDateGreaterThan(startTime);
+			criteria = criteria.andStartDateGreaterThanOrEqualTo(startTime);
 		}
 		if(endTime != null){
-			criteria = criteria.andStartDateLessThan(endTime);
+			criteria = criteria.andStartDateLessThanOrEqualTo(endTime);
 		}
 		int count = formmain0114Mapper.countByExample(example);
 		example.setOffset((pageNo - 1) * pageSize);
@@ -378,6 +393,19 @@ public class Form0114Manager {
 		for(int i = 0; i < formmain0114s.size(); i++){
 			formInfo = new FormInfo();
 			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+			
+			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+					.get("overtimeMealsInfos"));
+			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+					.get("hospitalityInfos"));
+			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+					.get("otherCostsInfos"));
+			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+					.get("employeeRelationsFeesInfos"));
+			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+					.get("taxiFaresInfos"));
+			
 			formInfos.add(formInfo);
 		}
 		formInfoList.setCount(count);
@@ -455,10 +483,10 @@ public class Form0114Manager {
 		com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria criteria = example.createCriteria();
 		criteria.andStartMemberIdEqualTo(userId);
 		if(startTime != null){
-			criteria = criteria.andStartDateGreaterThan(startTime);
+			criteria = criteria.andStartDateGreaterThanOrEqualTo(startTime);
 		}
 		if(endTime != null){
-			criteria = criteria.andStartDateLessThan(endTime);
+			criteria = criteria.andStartDateLessThanOrEqualTo(endTime);
 		}
 		int count = formmain0114HistoryMapper.countByExample(example);
 		example.setOffset((pageNo - 1) * pageSize);
@@ -469,6 +497,19 @@ public class Form0114Manager {
 		for(int i = 0; i < formmain0114Historys.size(); i++){
 			formInfo = new FormInfo();
 			BeanUtils.copyProperties(formmain0114Historys.get(i), formInfo);
+			
+			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+					.get("overtimeMealsInfos"));
+			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+					.get("hospitalityInfos"));
+			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+					.get("otherCostsInfos"));
+			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+					.get("employeeRelationsFeesInfos"));
+			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+					.get("taxiFaresInfos"));
+			
 			formInfos.add(formInfo);
 		}
 		formInfoList.setCount(count);
@@ -852,23 +893,33 @@ public class Form0114Manager {
 
 	}
 
-	private <T> void createFormsonInfos(T[] infos, int type) {
+	private <T> void createFormsonInfos(T[] infos, int type, Long formId) {
 		for (int i = 0; i < infos.length; i++) {
 			switch (type) {
 			case OVERTIMEMEALS_INFO:
+				Formson0115 temp0115 = (Formson0115) infos[i];
+				temp0115.setFormmain0114id(formId);
 				formson0115Mapper.insert((Formson0115) infos[i]);
 				break;
 			case HOSPITALITY_INFO:
-				formson0116Mapper.insert((Formson0116) infos[i]);
+				Formson0116 temp0116 = (Formson0116) infos[i];
+				temp0116.setFormmain0114id(formId);
+				formson0116Mapper.insert(temp0116);
 				break;
 			case OTHERCOSTS_INFO:
-				formson0117Mapper.insert((Formson0117) infos[i]);
+				Formson0117 temp0117 = (Formson0117) infos[i];
+				temp0117.setFormmain0114id(formId);
+				formson0117Mapper.insert(temp0117);
 				break;
 			case EMPLOYEERELATIONSFEES_INFO:
-				formson0118Mapper.insert((Formson0118) infos[i]);
+				Formson0118 temp0118 = (Formson0118) infos[i];
+				temp0118.setFormmain0114id(formId);
+				formson0118Mapper.insert(temp0118);
 				break;
 			case TAXIFARES_INFO:
-				formson0119Mapper.insert((Formson0119) infos[i]);
+				Formson0119 temp0119 = (Formson0119) infos[i];
+				temp0119.setFormmain0114id(formId);
+				formson0119Mapper.insert(temp0119);
 				break;
 			}
 		}
@@ -998,6 +1049,7 @@ public class Form0114Manager {
 		OvertimeMealsInfo[] overtimeMealsInfos = new OvertimeMealsInfo[formson0115s
 				.size()];
 		for (int i = 0; i < formson0115s.size(); i++) {
+			overtimeMealsInfos[i] = new OvertimeMealsInfo();
 			BeanUtils
 					.copyProperties(formson0115s.get(i), overtimeMealsInfos[i]);
 		}
@@ -1010,6 +1062,7 @@ public class Form0114Manager {
 		HospitalityInfo[] hospitalityInfos = new HospitalityInfo[formson0116s
 				.size()];
 		for (int i = 0; i < formson0116s.size(); i++) {
+			hospitalityInfos[i] = new HospitalityInfo();
 			BeanUtils.copyProperties(formson0116s.get(i), hospitalityInfos[i]);
 		}
 		res.put("hospitalityInfos", hospitalityInfos);
@@ -1021,6 +1074,7 @@ public class Form0114Manager {
 		OtherCostsInfo[] otherCostsInfos = new OtherCostsInfo[formson0117s
 				.size()];
 		for (int i = 0; i < formson0117s.size(); i++) {
+			otherCostsInfos[i] = new OtherCostsInfo();
 			BeanUtils.copyProperties(formson0117s.get(i), otherCostsInfos[i]);
 		}
 		res.put("otherCostsInfos", otherCostsInfos);
@@ -1032,6 +1086,7 @@ public class Form0114Manager {
 		EmployeeRelationsFeesInfo[] employeeRelationsFeesInfos = new EmployeeRelationsFeesInfo[formson0118s
 				.size()];
 		for (int i = 0; i < formson0118s.size(); i++) {
+			employeeRelationsFeesInfos[i] = new EmployeeRelationsFeesInfo();
 			BeanUtils.copyProperties(formson0118s.get(i),
 					employeeRelationsFeesInfos[i]);
 		}
@@ -1043,6 +1098,7 @@ public class Form0114Manager {
 				.selectByExample(example119);
 		TaxiFaresInfo[] taxiFaresInfos = new TaxiFaresInfo[formson0119s.size()];
 		for (int i = 0; i < formson0119s.size(); i++) {
+			taxiFaresInfos[i] = new TaxiFaresInfo();
 			BeanUtils.copyProperties(formson0119s.get(i), taxiFaresInfos[i]);
 		}
 		res.put("taxiFaresInfos", taxiFaresInfos);

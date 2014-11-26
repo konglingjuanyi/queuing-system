@@ -1,4 +1,4 @@
-#set($layout = "layout/layout.vm")
+#set($layout = "layout/oa_layout.vm")
 <style type="text/css">
 td input{
 	width: 100%;
@@ -9,6 +9,7 @@ td input{
 td {
 	text-align: center;
 }
+
 </style>
 <div id="common-notice-dialog" class="hide"></div>
 <div class="col-xs-12">
@@ -24,19 +25,19 @@ td {
         		id="table">
             <tr>
                 <td>申请人</td>
-                <td><input type="text"></td>
+                <td><input type="text" readonly="readonly"></td>
                 <td>员工编号</td>
-                <td><input type="text"></td>
+                <td><input type="text" readonly="readonly"></td>
                 <td>申请日期</td>
-                <td><input type="text"style="color:red"></td>
+                <td><input type="text"style="color:red" readonly="readonly"></td>
             </tr>
             <tr>
                 <td>一级部门</td>
-                <td><input type="text"></td>
+                <td><input type="text" readonly="readonly"></td>
                 <td>申请部门</td>
-                <td><input type="text"></td>
+                <td><input type="text" readonly="readonly"></td>
                 <td>部门编号</td>
-                <td><input type="text"></td>
+                <td><input type="text" readonly="readonly"></td>
             </tr>
             <tr>
             	<td>是否直接向VP汇报</td>
@@ -45,9 +46,9 @@ td {
                 <input name="Fruit" type="radio" checked="true" style="width:25% !important" value="否"/><span style="width:10%">否</<span>
                 </form></td>
                 <td>银行卡号</td>
-                <td><input type="text"></td>
+                <td><input type="text" readonly="readonly"></td>
                 <td>银行开户行</td>
-                <td><input type="text"></td>
+                <td><input type="text" readonly="readonly"></td>
             </tr>
             <tr>
                 <td>是否有借款</td>
@@ -56,16 +57,16 @@ td {
                 <input name="Fruit" type="radio" checked="true" style="width:25% !important" value="否"/><span style="width:10%">否</<span>
                 </form></td>
                 <td>借款单流水号</td>
-                <td><input type="text"></td>
+                <td><input type="text" readonly="readonly"></td>
                 <td>借款金额</td>
-                <td><input type="text"></td>
+                <td><input type="text" readonly="readonly"></td>
             </tr>
             <tr>
         </table>
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>报销金额总计</td>
-                <td><input type="text" value="0" id="sum"></td>
+                <td><input type="text" value="0" id="sum" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -109,7 +110,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum1"></td>
+                <td><input type="text" value="0" id="sum1" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -168,7 +169,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum2"></td>
+                <td><input type="text" value="0" id="sum2" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -209,7 +210,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum3"></td>
+                <td><input type="text" value="0" id="sum3" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -245,7 +246,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum4"></td>
+                <td><input type="text" value="0" id="sum4" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -273,7 +274,7 @@ td {
         <table style="border-collapse:collapse;" border="1" class="col-xs-9">
             <tr>
                 <td>金额总计</td>
-                <td><input type="text" value="0" id="sum5"></td>
+                <td><input type="text" value="0" id="sum5" readonly="readonly"></td>
             </tr>
         </table>
     </div>
@@ -326,10 +327,9 @@ td {
     取消申请
 </button>
 </div>
-
-<script src="static/js/utils.js"></script>
-<script src="static/js/dialog_common.js"></script>
-<script src="static/My97DatePicker/WdatePicker.js"></script>
+<script src="/oaengine/static/js/utils.js"></script>
+<script src="/oaengine/static/js/dialog_common.js"></script>
+<script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
 
 jQuery(function ($) {
@@ -339,7 +339,6 @@ jQuery(function ($) {
         url: "oa/employeeinfo",
         type: "GET",
         success: function (resp) {
-            console.log(resp);
             if (resp.errorCode == 0) {
                 var data = resp.data;
                 var table = document.getElementById("table");
@@ -415,10 +414,10 @@ function addRow(tableId) { //读取最后一行的行号，存放在txtTRLastInd
     for (var i = 0; i < coLen - 1; i++) {
         var cell = nRow.insertCell(i);
         cell.innerHTML = table.rows[rowLen - 1].cells[i].innerHTML;
-        cell.childNodes[0].value = table.rows[rowLen - 1].cells[i].childNodes[0].value
-        if (tableId != "table5" && i == 0) {
-            cell.childNodes[0].childNodes[1].value = table.rows[rowLen - 1].cells[i].childNodes[0].childNodes[1].value
-        }
+//        cell.childNodes[0].value = table.rows[rowLen - 1].cells[i].childNodes[0].value
+//        if (tableId != "table5" && i == 0) {
+//            cell.childNodes[0].childNodes[1].value = table.rows[rowLen - 1].cells[i].childNodes[0].childNodes[1].value
+//        }
     }
     var cell = nRow.insertCell(coLen - 1);
     cell.innerHTML = "<div align='center' style='width:40px'><a href='javascript:;' " +
@@ -433,7 +432,7 @@ function deleteRow(tableId, curRow) {
     var rowId = curRow.parentNode.parentNode.parentNode.rowIndex;
     table.deleteRow(rowId);
     addMoney(tableId);
-}//清空列表
+}
 
 function addMoney(tableId) {
     var tableList = ["table1", "table2", "table3", "table4", "table5"];
