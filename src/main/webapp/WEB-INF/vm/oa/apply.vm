@@ -342,6 +342,7 @@ jQuery(function ($) {
             if (resp.errorCode == 0) {
                 var data = resp.data;
                 var table = document.getElementById("table");
+                console.log(table);
                 var k = 0;
                 for (var i = 0; i < 2; i++) {
                     for (var j = 1; j < 6; j += 2) {

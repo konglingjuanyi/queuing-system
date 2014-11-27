@@ -6,11 +6,12 @@
         color: red;
         font-size: larger;
     }
-    
+
     td {
         text-align: center;
     }
-    
+
+
 </style>
 <div class="row">
     <div class="col-xs-12">
@@ -18,13 +19,26 @@
         </iframe>
         <form id="form1" action="/user/?do=export" target="export" method="POST">
             <div class="form-group dash-button-group">
-                <input type="button" id="today" class="btn btn-minier btn-success" value="今天"><input type="button" id="week" class="btn btn-minier btn-warning" value="本周"><input type="button" id="last_month" class="btn btn-minier btn-info" value="上月"><input type="button" id="month" class="btn btn-minier btn-pink" value="本月"><span class="input-icon input-icon-right"><input name="start_date" id="card-date-from" type="text"><i class="icon-calendar green"></i></span>
-                <span class="input-icon input-icon-right"><input name="end_date" id="card-date-to" type="text"><i class="icon-calendar green"></i></span>
+                <input type="button" id="today" class="btn btn-minier btn-success" value="今天"><input type="button"
+                                                                                                     id="week"
+                                                                                                     class="btn btn-minier btn-warning"
+                                                                                                     value="本周"><input
+                    type="button" id="last_month" class="btn btn-minier btn-info" value="上月"><input type="button"
+                                                                                                    id="month"
+                                                                                                    class="btn btn-minier btn-pink"
+                                                                                                    value="本月"><span
+                    class="input-icon input-icon-right"><input name="start_date" id="card-date-from" type="text"><i
+                    class="icon-calendar green"></i></span>
+                <span class="input-icon input-icon-right"><input name="end_date" id="card-date-to" type="text"><i
+                        class="icon-calendar green"></i></span>
                 <input id="card-display-name" type="hidden" value=""><input id="is-plus" type="checkbox">
                 <label for="is-plus">
                     是否加班
                 </label>
-                <input type="button" id="search" class="btn btn-minier btn-primary" value="查询"><input onclick="$('form1').submit()" type="submit" id="export" class="btn btn-minier btn-primary" value="导出"><input onclick="$('form1').submit()" type="submit" id="export_sub" name="sub" class="btn btn-minier btn-primary" value="导出下属">
+                <input type="button" id="search" class="btn btn-minier btn-primary" value="查询"><input
+                    onclick="$('form1').submit()" type="submit" id="export" class="btn btn-minier btn-primary"
+                    value="导出"><input onclick="$('form1').submit()" type="submit" id="export_sub" name="sub"
+                                      class="btn btn-minier btn-primary" value="导出下属">
             </div>
         </form>
     </div>
@@ -36,7 +50,8 @@
         </div>
         <div class="table-responsive" id="card_s">
             <div id="ems_table_wrapper" class="dataTables_wrapper" role="grid">
-                <table id="apply_table" class="table table-striped table-bordered table-hover dataTable" aria-describedby="ems_table_info" style="width: 100%;">
+                <table id="apply_table" class="table table-striped table-bordered table-hover dataTable"
+                       aria-describedby="ems_table_info" style="width: 100%;">
                 </table>
             </div>
         </div>
@@ -45,12 +60,13 @@
 <div id="dialog-confirm" class="hide">
     <form class="form-horizontal">
         <div id="edit-form">
-            <div id="edit_content">
+            <div id="edit_content" align="center">
             </div>
         </div>
     </form>
 </div>
 <!--详情页模版-->
+##
 <div id="inner" style="display:none">
     <div class="row">
         <div class="col-sm-12">
@@ -75,7 +91,7 @@
                         申请日期
                     </td>
                     <td>
-                        <input type="text"style="color:red" readonly="readonly">
+                        <input type="text" style="color:red" readonly="readonly">
                     </td>
                 </tr>
                 <tr>
@@ -103,8 +119,6 @@
                         是否直接向VP汇报
                     </td>
                     <td>
-                        <div id="vp">
-                        </div>
                     </td>
                     <td>
                         银行卡号
@@ -124,8 +138,6 @@
                         是否有借款
                     </td>
                     <td>
-                        <div id="bw">
-                        </div>
                     </td>
                     <td>
                         借款单流水号
@@ -158,7 +170,8 @@
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;">
                 <span style="font-size:18px">出租车费明细(含汽车燃油费)</span>
             </div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9" id="table1">
+            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+                   id="table1">
                 <tr>
                     <td bgcolor="#96E0E2">
                         日期
@@ -206,7 +219,8 @@
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;">
                 <span style="font-size:18px">通信费</span>
             </div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9" id="table6">
+            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+                   id="table6">
                 <tr>
                     <td>
                         金额
@@ -229,7 +243,8 @@
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;">
                 <span style="font-size:18px">餐费明细(每人每餐报销不超过50元)</span>
             </div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9" id="table2">
+            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+                   id="table2">
                 <tr>
                     <td bgcolor="#96E0E2">
                         日期
@@ -277,7 +292,8 @@
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;">
                 <span style="font-size:18px">招待费明细</span>
             </div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9" id="table3">
+            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+                   id="table3">
                 <tr>
                     <td bgcolor="#96E0E2">
                         日期
@@ -322,7 +338,8 @@
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;">
                 <span style="font-size:18px">员工关系费明细</span>
             </div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9" id="table4">
+            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+                   id="table4">
                 <tr>
                     <td bgcolor="#96E0E2">
                         日期
@@ -361,7 +378,8 @@
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;">
                 <span style="font-size:18px">其他费用</span>
             </div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9" id="table5">
+            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+                   id="table5">
                 <tr>
                     <td bgcolor="#96E0E2">
                         费用项目
@@ -437,14 +455,14 @@
 <script src="static/ace/js/jquery.dataTables.bootstrap.js">
 </script>
 <script language=JavaScript>
-    
-    jQuery(function($){
+
+    jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
         showInfo("oa/applyinfo");
-        
+
     });
     //显示表格数据
-    function showInfo(url){
+    function showInfo(url) {
         var ex = document.getElementById("apply_table");
         if ($.fn.dataTable.fnIsDataTable(ex)) {
             $(ex).dataTable().fnDestroy();
@@ -490,13 +508,13 @@
             "sAjaxSource": "",
             "bScrollInfinite": true,
             "sScrollY": sY,
-            "fnServerData": function(sSource, aDataSet, fnCallback){
+            "fnServerData": function (sSource, aDataSet, fnCallback) {
                 $.ajax({
                     "dataType": 'json',
                     "type": "POST",
                     "url": url,
                     "data": aDataSet,
-                    "success": function(resp){
+                    "success": function (resp) {
                         console.log(resp);
                         var data = resp.data;
                         var iTotalRecords = data.count || 0;
@@ -510,12 +528,12 @@
                         };
                         fnCallback(data);
                     },
-                    error: function(){
+                    error: function () {
                         showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
                     }
                 });
             },
-            "fnDrawCallback": function(){
+            "fnDrawCallback": function () {
                 if (!oTable) {
                     return;
                 }
@@ -523,7 +541,7 @@
                 oTable.$("tr").unbind('click');
                 oTable.$("tr").click({
                     oTable: oTable
-                }, function(e){
+                }, function (e) {
                     if ($(this).hasClass('row_selected')) {
                         $(this).removeClass('row_selected');
                     }
@@ -535,12 +553,29 @@
             }
         })
     }
-    
+
+    function showApplyInfo(data) {
+        var aaData = [];
+        var needData = data.tableInfos;
+        var tableMapList = data.tableMapList;
+        var varsList = data.varsList;
+        var d_len = needData.length;
+        for (var i = 0; i < d_len; i++) {
+            var money = parseFloat(needData[i][4]);
+            money /= 100;
+            var tempMap = JSON.stringify(tableMapList[i]);
+            var tempVar = JSON.stringify(varsList[i]);
+            var map = $.parseStr("<a href='javascript:void(0);' onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
+            aaData.push([needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map]);
+        }
+        return aaData;
+    }
+
     //显示编辑对话框
-    function showEditDialog(formInfo){
+    function showEditDialog(tableMap, vars) {
         $('#edit-form').html(edit_form);
-        
-        $('#edit_content').append($('#inner').show());
+        var fixedInfo = fixedTableInfo(tableMap, vars);
+        $('#edit_content').append(fixedInfo);
         $("#dialog-confirm").removeClass('hide').dialog({
             width: 1500,
             height: 1200,
@@ -548,35 +583,239 @@
             draggable: true,
             resizable: false,
             title: "报销页详情",
-            close: function(){
+            close: function () {
                 $(this).dialog('destroy');
                 $('#edit-form').empty();
             }
         });
     }
-    
-	function tableInfo(forminfo){
-		var table = document.getElementById("table");
-        table.rows[0].cells[1].childNodes[0].value = forminfo.rtxId;
-		table.rows[0].cells[3].childNodes[0].value = forminfo.serialNumber;
-		table.rows[0].cells[5].childNodes[0].value = forminfo.applyDate;
-	}
-	
-    function showApplyInfo(data){
-        var aaData = [];
-        var needData = data.aaData;
-        var formInfos = data.formInfos;
-        var d_len = needData.length;
-        for (var i = 0; i < d_len; i++) {
-            var money = parseFloat(needData[i][4]);
-            money /= 100;
-            console.log(formInfos[i]);
-            var map = '<a href="javascript:void(0);" onclick="showEditDialog(\'' + formInfos[i] + '\')"><i class="icon-link"></i></a>';
-            aaData.push([needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map]);
+
+    function fixedTableInfo(tableMap, vars){
+        var tableList = ["table1", "table6", "table2", "table3", "table4", "table5"];
+        var tableHeadList = ["出租车费明细(含汽车燃油费)", "通信费",
+            "餐费明细（每人每餐报销不超过50元）",
+            "招待费明细", "员工关系费明细", "其他费用"];
+
+        var tableForm = '';
+        tableForm += table0BodyForm(tableMap["table"]); //这里应该先加table信息
+        for(var i = 0; i < 6; i++){
+            tableForm += '<div class="row">'
+            tableForm += '<div class="col-sm-12">';
+            tableForm += tableHeadForm(tableHeadList[i]);
+            tableForm += $.parseStr('<table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" ' +
+            'class="col-xs-9" id="%s">', tableList[i]);
+            var num1 = i;
+            var num2 = i;
+            if(i > 0){
+                num1 -= 1;
+            }else{
+                num2 += 1;
+            }
+            if(tableList[i] == "table6"){
+                tableForm += table6BodyForm();
+            }else{
+                tableForm += tableBodyForm(tableMap, tableList[i], num1);
+            }
+            tableForm += '</table>';
+            tableForm += tableSumForm(num2);
+            tableForm += '</div>';
+            tableForm += '</div>';
         }
-        return aaData;
+        for (var i = 1; i < 7; i++) {
+            $("#sum" + i).val(vars["sum" + i]);
+        }
+        $("#sum").val(vars["sum" + i]);
+        return tableForm;
     }
-    
+
+    //  每个表的第一行中文字符。
+    function tableZeroNameDic(){
+        var table1Name = ["日期", "起点", "终点", "具体时间", "用途", "同行人(姓名)", "工时", "金额", "备注"];
+        var table2Name = ["日期", "就餐地点", "同行人（姓名）", "就餐人数", "实报金额", "人均餐费", "发票金额", "工时", "备注"];
+        var table3Name = ["日期", "地点", "业务目的", "客户单位", "客户姓名", "参加人数", "金额"];
+        var table4Name = ["日期", "地点", "同行人（姓名）", "活动目的", "金额", "备注"];
+        var table5Name = ["费用项目", "金额", "备注" ];
+        var tableNames = [table1Name, table2Name, table3Name, table4Name, table5Name];
+        return tableNames;
+    }
+
+    function tableHeadForm(headName){
+        var tableHead = '';
+        tableHead += '<div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;">'
+        tableHead += $.parseStr('<span style="font-size:18px">%s</span>', headName);
+        tableHead += '</div>'
+        return tableHead;
+    }
+
+    function tableBodyForm(tableMap, tableId, num){
+        var tableNames = tableZeroNameDic();
+        var headNameList = tableNames[num];
+        var bodyForm = '';
+        var headLen = headNameList.length;
+        bodyForm += '<tr>';
+        for(i = 0; i < headLen; i++){
+            console.log(i)
+            bodyForm += '<td bgcolor="#96E0E2">';
+            bodyForm += headNameList[i];
+            bodyForm += '</td>';
+        }
+        bodyForm += '</tr>';
+        var tableInfo = tableMap[tableId];
+        var tableLen = tableInfo.length;
+        if (tableLen == 0) {
+            bodyForm += '<tr>';
+            for (var i = 0; i < headLen; i++) {
+                bodyForm += '<td>';
+                bodyForm += '<input type="text" style="width: 100%" readonly="readonly" value="">';
+                bodyForm += '</td>';
+            }
+            bodyForm += '</tr>';
+        }else{
+            for(var i = 0; i < tableLen; i++){
+                bodyForm += '<tr>';
+                for (var j = 0; j < headLen; j++) {
+                    var value = tableInfo[i][j];
+                    if (isNull(value)) {
+                        value = "";
+                    }
+                    bodyForm += '<td>';
+                    bodyForm += $.parseStr('<input type="text" style="width: 100%" readonly="readonly" value="%s">', value);
+                    bodyForm += '</td>';
+                }
+                bodyForm += '</tr>';
+            }
+        }
+        return bodyForm;
+    }
+
+    function table6BodyForm(){
+        var form = '';
+        form += '<tr>';
+        form += '<td>金额</td>';
+        form += '<td>';
+        form += '<input type="text" value="0" id="sum6">';
+        form += '</td>';
+        form += '<td>备注(话费实际发生月份)</td>';
+        form += '<td>';
+        form += '<input type="text" value="0" id="sum6">';
+        form += '</td>';
+        form += '</tr>';
+        return form;
+    }
+
+    function table0BodyForm(table0){
+        var form = '';
+        form += '<div class="row">';
+        form += '<div class="col-sm-12">';
+        form += tableHeadForm("个人基本信息");
+        form += '<table style="border-collapse:collapse;" border="1" class="col-xs-9" id="table">';
+        var list1 = ["申请人", "人员编号", "申请日期"];
+        var list2 = ["一级部门", "申请部门", "部门编号"];
+        var list3 = ["是否直接向VP汇报", "银行卡", "开户银行"];
+        var list4 = ["是否有借款", "借款单流水号", "借款金额"];
+        var list = [list1, list2, list3, list4];
+        var k = 0;
+        for(var i = 0; i < 4; i++){
+            form += '<tr>';
+            for(var j = 0; j < 3; j++){
+                form += $.parseStr('<td>%s</td>', list[i][j]);
+                var value = table0[0][k];
+                if(isNull(value)){
+                    value = "";
+                }
+                form += $.parseStr('<td><input type="text" readonly="readonly" value="%s"></td>', value);
+                k++;
+            }
+            form += '</tr>';
+        }
+        form += tableSumForm("");
+        form += '</div>';
+        form += '</div>';
+        return form;
+    }
+
+    function tableSumForm(num){
+        var form = '';
+        form += '<table style="border-collapse:collapse;" border="1" class="col-xs-9">';
+        form += '<tr>';
+        form += '<td>金额总计</td>';
+        form += '<td>';
+        form += $.parseStr('<input type="text" value="0" id="%s" readonly="readonly">', "sum" + num);
+        form += '<td>';
+        form += '<tr>';
+        form += '</table>';
+        return form;
+    }
+
+    function showTableInfo(tableMap, vars) {
+        var table = document.getElementById("table");
+        var rowLen = table.rows.length;
+        var tableInfo = tableMap["table"];
+        var k = 0;
+        for (i = 0; i < 4; i++) {
+            for (j = 1; j < 6; j += 2) {
+                var value = tableInfo[0][k];
+                if (isNull(value)) {
+                    value = "";
+                }
+
+                if ((i == 2 || i == 3) && j == 1) {
+                    table.rows[i].cells[j].innerHTML = formatCheckBox(value);
+
+                } else {
+                    table.rows[i].cells[j].childNodes[1].value = value;
+                }
+                k++;
+            }
+        }
+        var list = ["table1", "table2", "table3", "table4", "table5"];
+        var len = list.length;
+        for (i = 0; i < len; i++) {
+            var table = document.getElementById(list[i]);
+            var rowLen = table.rows.length;
+            var coLen = table.rows[0].cells.length;
+            tableInfo = tableMap[list[i]];
+            var tableLen = tableInfo.length;
+            if (tableLen == 0) {
+                var nRow = table.insertRow(1);
+                for (j = 0; j < coLen; j++) {
+                    cell = nRow.insertCell(j);
+                    cell.innerHTML = '<input type="text" value="">';
+                }
+            }
+            else {
+                for (var j = 0; j < tableLen; j++) {
+                    nRow = table.insertRow(j + 1);
+                    for (k = 0; k < coLen; k++) {
+                        var cell = nRow.insertCell(k);
+                        cell.innerHTML = $.parseStr('<input type="text" value="%s">', tableInfo[j][k]);
+                    }
+                }
+            }
+        }
+
+    }
+
+    function formatCheckBox(value) {
+        var innerHtml = '';
+        innerHtml += '<form action="" method="get">';
+        if (value == "是") {
+            innerHtml += '<input name="Fruit" type="radio" checked="true" style="width:25% !important" value="是" readonly="readonly"/>' +
+            '<span style="width:10%">是</span>';
+            innerHtml += '<input name="Fruit" type="radio" checked="false" style="width:25% !important" value="否" readonly="readonly"/>' +
+            '<span style="width:10%">否</span>';
+        }
+        else {
+            innerHtml += '<input name="Fruit" type="radio" checked="false" style="width:25% !important" value="是" readonly="readonly"/>' +
+            '<span style="width:10%" readonly="readonly">是</span>';
+            innerHtml += '<input name="Fruit" type="radio" checked="true" style="width:25% !important" value="否" readonly="readonly"/>' +
+            '<span style="width:10%">否</span>';
+        }
+        innerHtml += '</form>'
+        return innerHtml;
+    }
+
+
     $.extend(true, $.fn.dataTable.defaults, {
         "sPaginationType": "bootstrap",
         "oLanguage": {

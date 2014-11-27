@@ -496,7 +496,7 @@ public class OaEngineController {
 		String depart = getDepartMent(employeeInfo);
 		String sn = employeeInfo.getSn();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		List<Map<String, String>> varList = new ArrayList<Map<String,String>>();
+		List<Map<String, String>> varsList = new ArrayList<Map<String,String>>();
 		List<Map<String, String[][]>> tableMapList = new ArrayList<Map<String,String[][]>>();
 		for (int i = 0; i < size; i++) {
 			FormInfo formInfo = formInfos.get(i);
@@ -504,17 +504,16 @@ public class OaEngineController {
 					formInfo.getRtxId(), sdf.format(formInfo.getApplyDate()),
 					String.valueOf(formInfo.getMoneyAmount()) };
 			tableInfos.add(tableInfo);
-			constructTableMap(formInfo, varList, tableMapList);
-			
-			
+			constructTableMap(formInfo, varsList, tableMapList);
 		}
 		dataResult.setCount((long) size);
 		dataResult.setTableMapList(tableMapList);
-		dataResult.setVarList(varList);
+		dataResult.setVarsList(varsList);
+		dataResult.setTableInfos(tableInfos);
 		return dataResult;
 	}
 
-	private void constructTableMap(FormInfo formInfo, List<Map<String, String>> varList,
+	private void constructTableMap(FormInfo formInfo, List<Map<String, String>> varsList,
 			List<Map<String, String[][]>> tableMapList) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Map<String, String[][]> tableMap = new HashMap<String, String[][]>();
@@ -622,19 +621,18 @@ public class OaEngineController {
 		tableMap.put("table5", table);
 		
 		Map<String, String> vars = new HashMap<String, String>();
-		vars.put("sum1", formInfo.getSumTaxiFaresAmount().toString());
-		vars.put("sum2", formInfo.getSumOvertimeMealsAmount().toString());
+		vars.put("sum1", String.valueOf(formInfo.getSumTaxiFaresAmount()));
+		vars.put("sum2", String.valueOf(formInfo.getSumOvertimeMealsAmount()));
+		vars.put("sum3", String.valueOf(formInfo.getSumHospitalityAmount()));
 
-		vars.put("sum3", formInfo.getHospitalityNotifyAmount().toString());
+		vars.put("sum4", String.valueOf(formInfo.getSumEmployeeRelationsFees()));
+		vars.put("sum5", String.valueOf(formInfo.getSumOtherAmount()));
+		vars.put("sum", String.valueOf(formInfo.getMoneyAmount()));
+		
+		vars.put("sum6", String.valueOf(formInfo.getCommunicationCosts()));
+		vars.put("sum", String.valueOf(formInfo.getCommuCostsComment()));
 
-		vars.put("sum4", formInfo.getSumEmployeeRelationsFees().toString());
-		vars.put("sum5", formInfo.getSumOtherAmount().toString());
-		vars.put("sum", formInfo.getMoneyAmount().toString());
-		
-		vars.put("sum6", formInfo.getCommunicationCosts().toString());
-		vars.put("sum", formInfo.getCommuCostsComment().toString());
-		
-		varList.add(vars);
+		varsList.add(vars);
 		tableMapList.add(tableMap);
 	}
 
