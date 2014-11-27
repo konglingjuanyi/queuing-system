@@ -315,7 +315,7 @@ public class OaEngineController {
 			list1.add(taxiInfo);
 		}
 		int size = list1.size();
-		TaxiFaresInfo[] taxiInfos = (TaxiFaresInfo[]) list1
+		TaxiFaresInfo[] taxiInfos = list1
 				.toArray(new TaxiFaresInfo[size]);
 		formInfo.setTaxiFaresInfo(taxiInfos);
 
@@ -327,7 +327,6 @@ public class OaEngineController {
 				continue;
 			}
 			OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
-			overInfo = new OvertimeMealsInfo();
 			overInfo.setOvertimeMealsDate(sdf.parse(table[i][0]));
 			overInfo.setMealsAddr(table[i][1]);
 			overInfo.setOvertimeMealsPeerPeople(table[i][2]);
@@ -341,7 +340,7 @@ public class OaEngineController {
 			list2.add(overInfo);
 		}
 		size = list2.size();
-		OvertimeMealsInfo[] overInfos = (OvertimeMealsInfo[]) list2
+		OvertimeMealsInfo[] overInfos = list2
 				.toArray(new OvertimeMealsInfo[size]);
 		formInfo.setOvertimeMealsInfo(overInfos);
 
@@ -365,7 +364,7 @@ public class OaEngineController {
 			list3.add(hosInfo);
 		}
 		size = list3.size();
-		HospitalityInfo[] hosInfos = (HospitalityInfo[]) list3
+		HospitalityInfo[] hosInfos = list3
 				.toArray(new HospitalityInfo[size]);
 		formInfo.setHospitalityInfo(hosInfos);
 
@@ -389,7 +388,7 @@ public class OaEngineController {
 
 		}
 		size = list4.size();
-		EmployeeRelationsFeesInfo[] employInfos = (EmployeeRelationsFeesInfo[]) list4
+		EmployeeRelationsFeesInfo[] employInfos = list4
 				.toArray(new EmployeeRelationsFeesInfo[size]);
 		formInfo.setEmployeeRelationsFeesInfo(employInfos);
 
@@ -416,7 +415,7 @@ public class OaEngineController {
 			return false;
 		}
 
-		OtherCostsInfo[] otherInfos = (OtherCostsInfo[]) list5
+		OtherCostsInfo[] otherInfos = list5
 				.toArray(new OtherCostsInfo[size]);
 		formInfo.setOtherCostsInfo(otherInfos);
 		// 存储所有数据之和
@@ -436,6 +435,7 @@ public class OaEngineController {
 		for (int i = 0; i < len; i++) {
 			formInfo.setApplyUser(table[i][0]);
 			formInfo.setApplyDate((new Date(System.currentTimeMillis())));
+			formInfo.setSerialNumber(table[i][1]);
 			formInfo.setFirstDep(table[i][3]);
 			formInfo.setApplyDep(table[i][4]);
 			formInfo.setDepNum(table[i][5]);
@@ -630,7 +630,7 @@ public class OaEngineController {
 		vars.put("sum", String.valueOf(formInfo.getMoneyAmount()));
 		
 		vars.put("sum6", String.valueOf(formInfo.getCommunicationCosts()));
-		vars.put("sum", String.valueOf(formInfo.getCommuCostsComment()));
+		vars.put("remark", String.valueOf(formInfo.getCommuCostsComment()));
 
 		varsList.add(vars);
 		tableMapList.add(tableMap);
