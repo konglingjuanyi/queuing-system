@@ -23,8 +23,8 @@
 		<link rel="stylesheet" href="static/ace/css/colorbox.css" />
 		<link rel="stylesheet" href="static/ace/css/jquery.qtip.min.css" />
 		<link rel="stylesheet" href="static/css/myplugin.css" />
-		
-		
+
+
 		<!--[if lte IE 8]>
 		  <link rel="stylesheet" href="static/ace/css/ace-ie.min.css" />
 		<![endif]-->
@@ -36,7 +36,7 @@
 		<script src="static/ace/js/html5shiv.js"></script>
 		<script src="static/ace/js/respond.min.js"></script>
 		<![endif]-->
-		
+
 		<script type="text/javascript">
 			window.jQuery || document.write("<script src='static/ace/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
 		</script>
@@ -61,7 +61,7 @@
 		<script src="static/ace/js/ace.min.js"></script>
 		<!-- inline scripts related to this page -->
 		<script src="static/ace/js/dropzone.min.js"></script>
-		
+
 	</head>
 	<body>
 		<div class="navbar navbar-default" id="navbar">
@@ -78,7 +78,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 			<div class="main-container-inner">
 				<div class="sidebar" id="sidebar">
 					<ul class="nav nav-list">
@@ -88,10 +88,45 @@
 							</a>
 						</li>
 						<li>
-							<a href="oa/my_apply.html">
+							<a href="#">
 								<span class="menu-text"> 我的申请 </span>
 							</a>
+                            <ul class="submenu" style="display:block">
+                                <li>
+                                    <a href="oa/my_apply_todo.html">
+                                        <i class="icon-double-angle-right"></i>
+                                        待审批
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="oa/my_apply_history.html">
+                                        <i class="icon-double-angle-right"></i>
+                                        已审批
+                                    </a>
+                                </li>
+                                <li>
+                            </ul>
 						</li>
+                        <li>
+                            <a href="#">
+                                <span class="menu-text"> 我的审批 </span>
+                            </a>
+                            <ul class="submenu" style="display:block">
+                                <li>
+                                    <a href="oa/approve_todo.html">
+                                        <i class="icon-double-angle-right"></i>
+                                        待审批
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="oa/approve_history.html">
+                                        <i class="icon-double-angle-right"></i>
+                                        已审批
+                                    </a>
+                                </li>
+                                <li>
+                            </ul>
+                        </li>
 					</ul>
 				</div>
 				<div class="main-content">
@@ -107,12 +142,12 @@
 		</div>
 		<script type="text/javascript">
 			jQuery(function($){
-			
+
 			try {
 			  $(".dropzone").dropzone({
 			    paramName: "file", // The name that will be used to transfer the file
 			    maxFilesize: 0.5, // MB
-			  
+
 				addRemoveLinks : true,
 				dictDefaultMessage :
 				'<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
@@ -120,18 +155,18 @@
 				<i class="upload-icon icon-cloud-upload blue icon-3x"></i>'
 			,
 				dictResponseError: 'Error while uploading file!',
-				
+
 				//change the previewTemplate to use Bootstrap progress bars
 				previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
 			  });
 			} catch(e) {
 			  alert('Dropzone.js does not support older browsers!');
 			}
-			
+
 			});
-			
-			
-			
+
+
+
 		</script>
 
 	</body>

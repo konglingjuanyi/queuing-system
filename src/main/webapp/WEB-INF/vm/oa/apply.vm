@@ -302,20 +302,20 @@
             <table style="border-collapse:collapse;" border="1" cellpadding="2" cellspacing="1" class="col-xs-9"
                     >
                 <tr>
-                    <td>本部门主管意见<input type="text" style="width: 50%"></td>
-                    <td>部门总监意见<input type="text" style="width: 50%"></td>
+                    <td valign="right"><table><tr><td>本部门主管意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
+                    <td><table><tr><td>部门总监意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
                 </tr>
                 <tr>
-                    <td>部门VP意见<input type="text" style="width: 50%"></td>
-                    <td>财务总监意见<input type="text" style="width: 50%"></td>
+                    <td><table><tr><td>部门VP意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
+                    <td><table><tr><td>财务总监意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
                 </tr>
                 <tr>
-                    <td>CFO意见<input type="text" style="width: 50%"></td>
-                    <td>CEO意见<input type="text" style="width: 50%"></td>
+                    <td><table><tr><td>CFO意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
+                    <td><table><tr><td>CEO意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
                 </tr>
                 <tr>
-                    <td>报销审核组<input type="text" style="width: 50%"></td>
-                    <td>出纳<input type="text" style="width: 50%"></td>
+                    <td><table><tr><td>报销审核组</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
+                    <td><table><tr><td>出纳</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
                 </tr>
             </table>
 
@@ -465,18 +465,18 @@
             var coLen = table.rows[0].cells.length;
             var tableSum = 0;
             for (var i = 1; i < rowLen; i++) {
+                var innerSum = '';
                 if (tableId == "table2") {
-                    var innerSum = table.rows[i].cells[coLen - 4].childNodes[0].value;
+                    innerSum = table.rows[i].cells[coLen - 4].childNodes[0].value;
                 } else {
-                    var innerSum = table.rows[i].cells[coLen - 3].childNodes[0].value;
+                    innerSum = table.rows[i].cells[coLen - 3].childNodes[0].value;
                 }
                 var regexp = new RegExp("^[0-9]*$")
                 if (isNull(innerSum)) {
                     innerSum = 0;
                 } else if (!regexp.test(innerSum)) {
-                    console.log(innerSum);
                     alert("aaa");
-                    alert(dic[tableId] + "必须为数字，请检查");
+                    alert("必须为数字，请检查");
                     return;
                 } else {
                     innerSum = parseFloat(innerSum);
@@ -585,7 +585,6 @@
             type: "POST",
             data: JSON.stringify(params),
             success: function (resp) {
-                console.log(resp);
                 if (resp.errorCode == 0) {
                     showCommonNoticeDialog('成功', 'icon-warning-sign',
                             generateNoticeMsg("创建报销申请成功！"), 300);
