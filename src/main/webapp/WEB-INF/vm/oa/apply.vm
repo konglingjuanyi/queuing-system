@@ -474,11 +474,13 @@
                 var regexp = new RegExp("^[0-9]*$")
                 if (isNull(innerSum)) {
                     innerSum = 0;
-                } else if (!regexp.test(innerSum)) {
-                    alert("aaa");
-                    alert("必须为数字，请检查");
-                    return;
-                } else {
+                }
+//                else if (!regexp.test(innerSum)) {
+//                    alert("aaa");
+//                    alert("必须为数字，请检查");
+//                    return;
+//                }
+                else {
                     innerSum = parseFloat(innerSum);
                 }
                 tableSum = parseFloat(tableSum);

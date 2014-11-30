@@ -1,0 +1,84 @@
+#set($layout = "layout/oa_layout.vm")
+<style type="text/css">
+    td input {
+        width: 100%;
+        text-align: center;
+        color: red;
+        font-size: larger;
+    }
+
+    td {
+        text-align: center;
+    }
+
+
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
+        <span class="input-icon input-icon-right">
+            <input class="date" id="date-from" type="text" style="width: 186px" placeholder="申请日期..."/>
+            <i class="icon-calendar green"></i>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input class="date" id="date-to" type="text" style="width: 186px" placeholder="申请日期..."/>
+            <i class="icon-calendar green"></i>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input id="approve-user" type="text" placeholder="申请人..." style="width: 100px"/>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input id="search-text" type="text" placeholder="要搜索的关键字..." style="width: 240px"/>
+        </span>
+            <button id="search"
+                    style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                    class="btn btn-minier btn-primary">
+                查询
+            </button>
+        </div>
+        <div class="col-xs-12">
+            <div id="approve-page" class="col-sm-12 widget-container-span ui-sortable">
+                <div class="widget-box transparent" style="opacity: 1; z-index: 0;">
+                    <div class="widget-body">
+                        <div class="widget-main no-padding-top no-padding-left no-padding-right">
+                            <div class="table-responsive">
+                                <table id="approve_history"
+                                       class="table table-striped table-bordered table-hover dataTable">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-confirm" class="hide">
+    <form class="form-horizontal">
+        <div id="edit-form">
+            <div id="edit_content" align="center">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="static/js/utils.js">
+</script>
+<script src="static/js/dialog_common.js">
+</script>
+<script src="static/js/approve_common.js">
+</script>
+<script src="static/ace/js/jquery.dataTables.min.js">
+</script>
+<script src="static/ace/js/jquery.dataTables.bootstrap.js">
+</script>
+
+<script language=JavaScript>
+
+    jQuery(function ($) {
+        window.edit_form = $("#edit-form").html();
+        showApproveTableInfo("oa/approve_history");
+    });
+
+</script>

@@ -50,11 +50,46 @@ function showInfo(url) {
         "bScrollInfinite": true,
         "sScrollY": sY,
         "fnServerData": function (sSource, aDataSet, fnCallback) {
+            console.log("aaaaa");
+            var startDate = $.trim($('#date-from').val());
+            var endDate = $.trim($('#date-to').val());
+            var approveUser = $.trim($('#approve-user').val());
+            var keywords = $.trim($('#search-text').val());
+            var start = 0;
+            var length = 0;
+            for (var i = 0; i < aDataSet.length; i++) {
+                if (aDataSet[i].name == 'iDisplayStart') {
+                    start = aDataSet[i].value;
+                }
+                if (aDataSet[i].name == 'iDisplayLength') {
+                    length = aDataSet[i].value;
+                }
+            }
+            var vars = {};
+            vars["start"] = start;
+            vars["length"] = length;
+            if (startDate != '') {
+                vars["startTime"] = startDate;
+            }
+            if (endDate != '') {
+                vars["endTime"] = endDate;
+            }
+            if (keywords != '') {
+                vars["keywords"] = keywords;
+            }
+            if (approveUser != '') {
+                vars["approveUser"] = approveUser;
+            }
+            var params = {};
+            params["vars"] = vars;
+            params["tableMap"] = {};
+            params["flag"] = "";
+            console.log("bbbb");
             $.ajax({
-                "dataType": 'json',
+                "contentType": "application/json; charset=utf-8",
                 "type": "POST",
                 "url": url,
-                "data": aDataSet,
+                "data": JSON.stringify(params),
                 "success": function (resp) {
                     console.log(resp);
                     var data = resp.data;
@@ -316,18 +351,3 @@ function tableSumForm(num, vars) {
     return form;
 }
 
-$.extend(true, $.fn.dataTable.defaults, {
-    "sPaginationType": "bootstrap",
-    "oLanguage": {
-        "sEmptyTable": "无数据",
-        "sProcessing": "正在获取数据，请稍后...",
-        "oPaginate.sFirst": "第一页",
-        "oPaginate.sLast": "最后一页",
-        "oPaginate.sNext": "下一页",
-        "oPaginate.sPrevious": "上一页",
-        "sInfo": "本页 _START_ - _END_ , 共 _TOTAL_ 条记录",
-        "sInfoEmpty": "本页 0 - 0 , 共 0 条记录",
-        "sSearch": "搜索: ",
-        "sLengthMenu": "共_MENU_记录"
-    }
-});
