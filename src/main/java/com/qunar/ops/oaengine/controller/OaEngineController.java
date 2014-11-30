@@ -2,6 +2,7 @@ package com.qunar.ops.oaengine.controller;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.sql.Struct;
 import java.text.DecimalFormat;
@@ -17,10 +18,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import com.qunar.ops.oaengine.result.*;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.engine.impl.juel.ObjectValueExpression;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.http.HttpResponse;
@@ -635,7 +633,7 @@ public class OaEngineController {
         FormInfoList formInfoList = null;
         try {
             formInfoList = ioaEngineService.todoList(
-                    processKey, "nuby.zhang", null, null, null, 0, 20);
+                    processKey, "nuby.zhang", _startTime, _endTime, approve_user, pageNo, pageSize);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
             String errorMsg = "ACL限制，获取员工信息失败";
@@ -643,7 +641,7 @@ public class OaEngineController {
             ApproveResult approveResult = new ApproveResult();
             return BaseResult.getSuccessResult(approveResult);
         }
-        ApproveResult approveResult = getApproveInfos(formInfoList);
+        ApproveResult approveResult = getApproveTodoInfos(formInfoList);
         return BaseResult.getSuccessResult(approveResult);
     }
 
@@ -696,7 +694,7 @@ public class OaEngineController {
             ApproveResult approveResult = new ApproveResult();
             return BaseResult.getSuccessResult(approveResult);
         }
-        ApproveResult approveResult = getApproveInfos(formInfoList);
+        ApproveResult approveResult = getApproveHistoryInfos(formInfoList);
         return BaseResult.getSuccessResult(approveResult);
     }
 
@@ -706,9 +704,9 @@ public class OaEngineController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/approve/task/complet")
+    @RequestMapping(value = "/approve_pass")
     @ResponseBody
-    public BaseResult batchComplet(HttpServletRequest request,
+    public BaseResult approvePass(HttpServletRequest request,
                                    @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
@@ -721,28 +719,159 @@ public class OaEngineController {
         List<Long> formIdList = new ArrayList<Long>();
         List<String> taskIdList = new ArrayList<String>();
         String formMsg[] = formIds.split(",");
-        for (int i = 0; i < formMsg.length - 1; i++) {
+        for (int i = 0; i < formMsg.length; i++) {
             formIdList.add(Long.parseLong(formMsg[i]));
         }
         String taskMsg[] = taskIds.split(",");
-        for (int i = 0; i < taskMsg.length - 1; i++) {
+        for (int i = 0; i < taskMsg.length; i++) {
             taskIdList.add(taskMsg[i]);
         }
-
         String msg = vars.get("reason");
-        ioaEngineService.batchPass("oa_common", userId, formIdList, taskIdList, msg);
-        System.out.println("同意");
-        return new BaseResult();
+        System.out.println(formIdList.size());
+        System.out.println(taskIdList.size());
+        userId = "nuby.zhang";
+        List<Long> errorFormIds = ioaEngineService.batchPass("oa_common", userId, formIdList, taskIdList, msg);
+        int size = errorFormIds.size();
+        if (size == 0){
+            return BaseResult.getSuccessResult("同意操作成功");
+        }
+        return BaseResult.getSuccessResult(errorFormIds.toArray());
+
     }
 
-    private ApproveResult getApproveInfos(FormInfoList formInfoList) {
+    /**
+     * 批量拒绝任务
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/approve_reject")
+    @ResponseBody
+    public BaseResult approveReject(HttpServletRequest request,
+                                  @RequestBody WebRequest webRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn("登陆用户为空，无法获取员工信息");
+            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+        }
+        Map<String, String> vars = webRequest.getVars();
+        String formIds = vars.get("formIds");
+        String taskIds = vars.get("taskIds");
+        String formMsg[] = formIds.split(",");
+        int len = formMsg.length;
+        String taskMsg[] = taskIds.split(",");
+        String msg = vars.get("reason");
+        for (int i = 0; i < len; i++) {
+            try {
+                ioaEngineService.refuse("oa_common", "nuby.zhang", Long.parseLong(formMsg[i]), taskMsg[i], msg);
+            } catch (FormNotFoundException e) {
+                e.printStackTrace();
+                String errorMsg = "任务没有找到,请检查";
+                logger.warn(errorMsg);
+                return BaseResult.getErrorResult(-3, errorMsg);
+            } catch (ActivitiException e) {
+                e.printStackTrace();
+                String errorMsg = "工作流系统错误,请检查";
+                logger.warn(errorMsg);
+                return BaseResult.getErrorResult(-3, errorMsg);
+            }
+        }
+        return BaseResult.getSuccessResult("拒绝审批结束");
+    }
+
+    /**
+     * 批量退回任务
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/approve_back")
+    @ResponseBody
+    public BaseResult approveBack(HttpServletRequest request,
+                                    @RequestBody WebRequest webRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn("登陆用户为空，无法获取员工信息");
+            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+        }
+        Map<String, String> vars = webRequest.getVars();
+        String formIds = vars.get("formIds");
+        String taskIds = vars.get("taskIds");
+        String formMsg[] = formIds.split(",");
+        int len = formMsg.length;
+        String taskMsg[] = taskIds.split(",");
+        String msg = vars.get("reason");
+        for (int i = 0; i < len; i++) {
+            try {
+                ioaEngineService.back("oa_common", "nuby.zhang", Long.parseLong(formMsg[i]), taskMsg[i], msg);
+            } catch (FormNotFoundException e) {
+                e.printStackTrace();
+                String errorMsg = "任务没有找到,请检查";
+                logger.warn(errorMsg);
+                return BaseResult.getErrorResult(-3, errorMsg);
+            } catch (ActivitiException e) {
+                e.printStackTrace();
+                String errorMsg = "工作流系统错误,请检查";
+                logger.warn(errorMsg);
+                return BaseResult.getErrorResult(-3, errorMsg);
+            }
+        }
+        return BaseResult.getSuccessResult("回退审批结束");
+
+    }
+
+    /**
+     * 批量加签任务
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/approve_endorse")
+    @ResponseBody
+    public BaseResult approveEndorse(HttpServletRequest request,
+                                  @RequestBody WebRequest webRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn("登陆用户为空，无法获取员工信息");
+            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+        }
+        Map<String, String> vars = webRequest.getVars();
+        String formIds = vars.get("formIds");
+        String taskIds = vars.get("taskIds");
+        String formMsg[] = formIds.split(",");
+        int len = formMsg.length;
+        String taskMsg[] = taskIds.split(",");
+        String msg = vars.get("reason");
+        for (int i = 0; i < len; i++) {
+            try {
+                ioaEngineService.endorse("oa_common", "nuby.zhang", Long.parseLong(formMsg[i]), taskMsg[i], msg, "");
+            } catch (FormNotFoundException e) {
+                e.printStackTrace();
+                String errorMsg = "任务没有找到,请检查";
+                logger.warn(errorMsg);
+                return BaseResult.getErrorResult(-3, errorMsg);
+            } catch (ActivitiException e) {
+                e.printStackTrace();
+                String errorMsg = "工作流系统错误,请检查";
+                logger.warn(errorMsg);
+                return BaseResult.getErrorResult(-3, errorMsg);
+            }
+        }
+        return BaseResult.getSuccessResult("加签结束");
+
+    }
+
+    private ApproveResult getApproveTodoInfos(FormInfoList formInfoList) {
         List<FormInfo> formInfos = formInfoList.getFormInfos();
         ApproveResult approveResult = new ApproveResult();
         long count = formInfoList.getCount();
+        if(count == 0){
+            return approveResult;
+        }
         List<String[]> infos = new ArrayList<String[]>();
-        int len = formInfos.size();
+        int size = formInfos.size();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        for (int i = 0; i < len; i++) {
+        for (int i = 0; i < size; i++) {
             FormInfo formInfo = formInfos.get(i);
             String[] tableInfo = new String[6];
             tableInfo[0] = String.valueOf(formInfo.getId());
@@ -758,6 +887,32 @@ public class OaEngineController {
         return approveResult;
     }
 
+    private ApproveResult getApproveHistoryInfos(FormInfoList formInfoList) {
+        List<FormInfo> formInfos = formInfoList.getFormInfos();
+        ApproveResult approveResult = new ApproveResult();
+        long count = formInfoList.getCount();
+        if(count == 0){
+            return approveResult;
+        }
+        List<String[]> infos = new ArrayList<String[]>();
+        int size = formInfos.size();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        for (int i = 0; i < size; i++) {
+            FormInfo formInfo = formInfos.get(i);
+            String[] tableInfo = new String[6];
+            tableInfo[0] = String.valueOf(formInfo.getId());
+            tableInfo[1] = formInfo.getApplyUser();
+            tableInfo[2] = formInfo.getApplyDep();
+            tableInfo[3] = sdf.format(formInfo.getApplyDate());
+            tableInfo[4] = "不知道结束时间怎么定义";
+            tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
+            infos.add(tableInfo);
+        }
+        approveResult.setCount(count);
+        approveResult.setInfos(infos);
+        return approveResult;
+    }
+
     private DataResult getTableInfos(FormInfoList formInfoList, String userId) throws RemoteAccessException {
         DataResult dataResult = new DataResult();
         List<FormInfo> formInfos = formInfoList.getFormInfos();
@@ -765,13 +920,12 @@ public class OaEngineController {
         List<String[]> tableInfos = new ArrayList<String[]>();
         EmployeeInfo employeeInfo = ioaEngineService.getEmployeeInfo(userId);
         String depart = getDepartMent(employeeInfo);
-        String sn = employeeInfo.getSn();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<Map<String, String>> varsList = new ArrayList<Map<String, String>>();
         List<Map<String, String[][]>> tableMapList = new ArrayList<Map<String, String[][]>>();
         for (int i = 0; i < size; i++) {
             FormInfo formInfo = formInfos.get(i);
-            String tableInfo[] = new String[]{sn, depart,
+            String tableInfo[] = new String[]{formInfo.getSerialNumber(), depart,
                     formInfo.getApplyUser(), sdf.format(formInfo.getApplyDate()),
                     String.valueOf(formInfo.getMoneyAmount())};
             tableInfos.add(tableInfo);

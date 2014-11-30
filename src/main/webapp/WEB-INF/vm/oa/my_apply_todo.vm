@@ -16,18 +16,15 @@
 <div class="col-xs-12">
     <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
         <span class="input-icon input-icon-right">
-            <input class="date" id="date-from" type="text" style="width: 186px" placeholder="申请日期..."/>
+            <input class="date" id="date-from" type="text" style="width: 186px" onclick="showTime()" placeholder="申请日期..."/>
             <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">
-            <input class="date" id="date-to" type="text" style="width: 186px" placeholder="申请日期..."/>
+            <input class="date" id="date-to" type="text" style="width: 186px" onclick="showTime()" placeholder="申请日期..."/>
             <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">
             <input id="approve-user" type="text" placeholder="申请人..." style="width: 100px"/>
-        </span>
-        <span class="input-icon input-icon-right">
-            <input id="search-text" type="text" placeholder="要搜索的关键字..." style="width: 240px"/>
         </span>
         <button id="search"
                 style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
@@ -69,11 +66,15 @@
 </script>
 <script src="static/js/my_apply_utils.js">
 </script>
+<script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
 
     jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
         showInfo("oa/todo");
     });
+    function showTime() {
+        WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+    }
 
 </script>

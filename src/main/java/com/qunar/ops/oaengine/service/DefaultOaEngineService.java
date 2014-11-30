@@ -261,14 +261,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 		Map<String, String> owner = new HashMap<String, String>();
 		Map<String, String> approver = new HashMap<String, String>();
 		String form = "oa@qunar.com";
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String now = sdf.format(new Date());
 		for(int i=0; i<taskIds.size(); i++){
 			String taskId = taskIds.get(i);
 			long formId = formIds.get(i);
 			try{
 				TaskResult tr = this._pass(processKey, userId, formId, taskId, memo);
-				
 				String content = userId+" 于 ["+now+"]处理了《"+tr.getOwner()+"-日常报销》 [同意]";
 				if(memo != null) content += " 附言:"+memo;
 				owner.put(tr.getOwner(), content);

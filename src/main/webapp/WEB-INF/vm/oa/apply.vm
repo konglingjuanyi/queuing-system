@@ -295,34 +295,6 @@
         </div>
 
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
-                    style="font-size:18px">审批记录</span></div>
-            <table style="border-collapse:collapse;" border="1" cellpadding="2" cellspacing="1" class="col-xs-9"
-                    >
-                <tr>
-                    <td valign="right"><table><tr><td>本部门主管意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
-                    <td><table><tr><td>部门总监意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
-                </tr>
-                <tr>
-                    <td><table><tr><td>部门VP意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
-                    <td><table><tr><td>财务总监意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
-                </tr>
-                <tr>
-                    <td><table><tr><td>CFO意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
-                    <td><table><tr><td>CEO意见</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
-                </tr>
-                <tr>
-                    <td><table><tr><td>报销审核组</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
-                    <td><table><tr><td>出纳</td><td><input type="text"></td><td><input type="text"></td></tr></table></td>
-                </tr>
-            </table>
-
-        </div>
-
-    </div>
-
 </div>
 <div class="row">
     <div class="col-sm-12">

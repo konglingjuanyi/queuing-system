@@ -50,11 +50,9 @@ function showInfo(url) {
         "bScrollInfinite": true,
         "sScrollY": sY,
         "fnServerData": function (sSource, aDataSet, fnCallback) {
-            console.log("aaaaa");
             var startDate = $.trim($('#date-from').val());
             var endDate = $.trim($('#date-to').val());
             var approveUser = $.trim($('#approve-user').val());
-            var keywords = $.trim($('#search-text').val());
             var start = 0;
             var length = 0;
             for (var i = 0; i < aDataSet.length; i++) {
@@ -74,9 +72,6 @@ function showInfo(url) {
             if (endDate != '') {
                 vars["endTime"] = endDate;
             }
-            if (keywords != '') {
-                vars["keywords"] = keywords;
-            }
             if (approveUser != '') {
                 vars["approveUser"] = approveUser;
             }
@@ -84,7 +79,6 @@ function showInfo(url) {
             params["vars"] = vars;
             params["tableMap"] = {};
             params["flag"] = "";
-            console.log("bbbb");
             $.ajax({
                 "contentType": "application/json; charset=utf-8",
                 "type": "POST",
@@ -113,6 +107,12 @@ function showInfo(url) {
             if (!oTable) {
                 return;
             }
+            $("#search").unbind("click");
+            $("#search").on("click", function (e) {
+                showInfo(url);
+            }).on("dblclick", function (e) {
+                e.preventDefault();
+            });
             oTable.$('tr.row_selected').removeClass('row_selected');
             oTable.$("tr").unbind('click');
             oTable.$("tr").click({
