@@ -1,0 +1,80 @@
+#set($layout = "layout/oa_layout.vm")
+<style type="text/css">
+    td input {
+        width: 100%;
+        text-align: center;
+        color: red;
+        font-size: larger;
+    }
+
+    td {
+        text-align: center;
+    }
+
+
+</style>
+<div class="col-xs-12">
+    <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
+        <span class="input-icon input-icon-right">
+            <input class="date" id="date-from" type="text" style="width: 186px" onclick="showTime()" placeholder="申请日期..."/>
+            <i class="icon-calendar green"></i>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input class="date" id="date-to" type="text" style="width: 186px" onclick="showTime()" placeholder="申请日期..."/>
+            <i class="icon-calendar green"></i>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input id="approve-user" type="text" placeholder="申请人..." style="width: 100px"/>
+        </span>
+        <button id="search"
+                style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                class="btn btn-minier btn-primary">
+            查询
+        </button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-header">
+            申请报销信息
+        </div>
+        <div class="table-responsive" id="card_s">
+            <div id="ems_table_wrapper" class="dataTables_wrapper" role="grid">
+                <table id="apply_table" class="table table-striped table-bordered table-hover dataTable"
+                       aria-describedby="ems_table_info" style="width: 100%;">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialog-confirm" class="hide">
+    <form class="form-horizontal">
+        <div id="edit-form">
+            <div id="edit_content" align="center">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="static/js/utils.js">
+</script>
+<script src="static/js/dialog_common.js">
+</script>
+<script src="static/ace/js/jquery.dataTables.min.js">
+</script>
+<script src="static/ace/js/jquery.dataTables.bootstrap.js">
+</script>
+<script src="static/js/my_apply_utils.js">
+</script>
+<script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
+<script language=JavaScript>
+
+    jQuery(function ($) {
+        window.edit_form = $("#edit-form").html();
+        showInfo("oa/todo");
+    });
+    function showTime() {
+        WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+    }
+
+</script>

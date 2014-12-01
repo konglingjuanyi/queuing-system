@@ -1,0 +1,219 @@
+#set($layout = "layout/oa_layout.vm")
+<style type="text/css">
+    td input {
+        width: 100%;
+        text-align: center;
+        color: red;
+        font-size: larger;
+    }
+
+    td {
+        text-align: center;
+    }
+
+
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
+        <span class="input-icon input-icon-right">
+            <input class="date" id="date-from" type="text" style="width: 186px" onclick="showTime()" placeholder="申请日期..."/>
+            <i class="icon-calendar green"></i>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input class="date" id="date-to" type="text" style="width: 186px" onclick="showTime()" placeholder="申请日期..."/>
+            <i class="icon-calendar green"></i>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input id="approve-user" type="text" placeholder="申请人..." style="width: 100px"/>
+        </span>
+            <button id="search"
+                    style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                    class="btn btn-minier btn-primary">
+                查询
+            </button>
+        </div>
+        <div class="col-xs-12">
+            <div id="approve-page" class="col-sm-12 widget-container-span ui-sortable">
+                <div class="widget-box transparent" style="opacity: 1; z-index: 0;">
+                    <div class="widget-body">
+                        <div class="widget-main no-padding-top no-padding-left no-padding-right">
+                            <div class="table-responsive">
+                                <table id="approve_history"
+                                       class="table table-striped table-bordered table-hover dataTable">
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-confirm" class="hide">
+    <form class="form-horizontal">
+        <div id="edit-form">
+            <div id="edit_content" align="center">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="approve-result-dialog" class="hide"></div>
+<div id="reject-msg-dialog" class="hide"></div>
+<div id="approve-detail-dialog" class="hide"></div>
+<div id="approve-msg-dialog" class="hide"></div>
+
+<script src="static/js/utils.js">
+</script>
+<script src="static/js/dialog_common.js">
+</script>
+<script src="static/js/approve_common.js">
+</script>
+<script src="static/ace/js/jquery.dataTables.min.js">
+</script>
+<script src="static/ace/js/jquery.dataTables.bootstrap.js">
+</script>
+<script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
+
+<script language=JavaScript>
+
+    jQuery(function ($) {
+        window.edit_form = $("#edit-form").html();
+        showApproveTableInfo("oa/approve_history");
+    });
+
+    function showApproveTableInfo(url) {
+        var ex = document.getElementById("approve_history");
+        if ($.fn.dataTable.fnIsDataTable(ex)) {
+            $(ex).dataTable().fnDestroy();
+        }
+        var aoColumns = [
+            {"sTitle": 'ID', "sWidth": "120px", "sClass": "center"},
+            {"sTitle": '申请人', "sWidth": "120px", "sClass": "center"},
+            {"sTitle": '申请部门', "sWidth": "120px", "sClass": "center"},
+            {"sTitle": '申请时间', "sWidth": "150px", "sClass": "center"},
+            {"sTitle": '处理时间', "sWidth": "120px", "sClass": "center"},
+            {"sTitle": '金额', "sWidth": "150px", "sClass": "center"}];
+        var wh = $(window).height();
+        var sY = (wh - 100) + 'px';
+        var oTable = $(ex).dataTable({
+            "bFilter": false,
+            "bAutoWidth": true,
+            "bProcessing": false,
+            "bServerSide": true,
+            "sDom": 't<"row"<"col-sm-12"i>>',
+            "bSort": false,
+            "bScrollCollapse": true,
+            "iDisplayLength": 20,
+            "iDisplayStart": 0,
+            "aoColumns": aoColumns,
+            "sAjaxSource": "",
+            "bScrollInfinite": true,
+            "sScrollY": sY,
+            "fnServerData": function (sSource, aDataSet, fnCallback) {
+                var startDate = $.trim($('#date-from').val());
+                var endDate = $.trim($('#date-to').val());
+                var approveUser = $.trim($('#approve-user').val());
+                var start = 0;
+                var length = 0;
+                for (var i = 0; i < aDataSet.length; i++) {
+                    if (aDataSet[i].name == 'iDisplayStart') {
+                        start = aDataSet[i].value;
+                    }
+                    if (aDataSet[i].name == 'iDisplayLength') {
+                        length = aDataSet[i].value;
+                    }
+                }
+                var vars = {};
+                vars["start"] = start;
+                vars["length"] = length;
+                if (startDate != '') {
+                    vars["startTime"] = startDate;
+                }
+                if (endDate != '') {
+                    vars["endTime"] = endDate;
+                }
+                if (approveUser != '') {
+                    vars["approveUser"] = approveUser;
+                }
+                var params = {};
+                params["vars"] = vars;
+                params["tableMap"] = {};
+                params["flag"] = "";
+                $.ajax({
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "POST",
+                    "url": url,
+                    "data": JSON.stringify(params),
+                    "success": function (resp) {
+                        var data = resp.data;
+                        var iTotalRecords = data.count || 0;
+                        var iTotalDisplayRecords = iTotalRecords;
+                        var aaData = showTableInfo(data);
+                        data = {
+                            "aaData": aaData,
+                            "iTotalRecords": (iTotalRecords || 0),
+                            "iTotalDisplayRecords": (iTotalDisplayRecords || 0)
+                        };
+                        fnCallback(data);
+                    },
+                    error: function () {
+                        showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                    }
+                });
+            },
+            "fnDrawCallback": function () {
+                if (!oTable) {
+                    return;
+                }
+
+                $("#search").unbind("click");
+                $("#search").on("click", function (e) {
+                    showApproveTableInfo(url);
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+                oTable.$('tr.row_selected').removeClass('row_selected');
+                oTable.$("tr").unbind('click');
+                oTable.$("tr").click({
+                    oTable: oTable
+                }, function (e) {
+                    if ($(this).hasClass('row_selected')) {
+                        $(this).removeClass('row_selected');
+                    }
+                    else {
+                        e.data.oTable.$('tr.row_selected').removeClass('row_selected');
+                        $(this).addClass('row_selected');
+                    }
+                });
+            },
+            fnInitComplete: function () {
+                $('#current-approve-table-select-all').prop('checked', false);
+                $('#current-approve-table-select-all').attr('checked', false);
+                toggleCheck(oTable);
+            }
+        })
+    }
+
+
+    function showTableInfo(data) {
+        var aaData = [];
+        var needData = data.infos;
+        var d_len = data.count;
+        for (var i = 0; i < d_len; i++) {
+            var money = parseFloat(needData[i][4]);
+            money /= 100;
+            var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
+            aaData.push([checkbox, needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), needData[i][5]]);
+        }
+        return aaData;
+    }
+
+    function showTime() {
+        WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+    }
+
+
+</script>

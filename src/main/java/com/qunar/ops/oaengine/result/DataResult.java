@@ -1,30 +1,43 @@
 package com.qunar.ops.oaengine.result;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
+import java.util.Map;
 
 public class DataResult {
-	private List<String[]> aaData = new ArrayList<String[]>();
-	private List<FormInfo> formInfos = new ArrayList<FormInfo>();
-	private Long count;
-	public List<String[]> getAaData() {
-		return aaData;
+	private List<Map<String, String>> varsList;
+	private List<Map<String, String[][]>> tableMapList;
+	private List<String[]> tableInfos;
+	private long count;
+
+	public List<Map<String, String>> getVarsList() {
+		return varsList;
 	}
-	public void setAaData(List<String[]> aaData) {
-		this.aaData = aaData;
+
+	public void setVarsList(List<Map<String, String>> varsList) {
+		this.varsList = varsList;
 	}
-	public List<FormInfo> getFormInfos() {
-		return formInfos;
+
+	public List<Map<String, String[][]>> getTableMapList() {
+		return tableMapList;
 	}
-	public void setFormInfos(List<FormInfo> formInfos) {
-		this.formInfos = formInfos;
+
+	public void setTableMapList(List<Map<String, String[][]>> tableMapList) {
+		this.tableMapList = tableMapList;
 	}
-	public Long getCount() {
+
+	public List<String[]> getTableInfos() {
+		return tableInfos;
+	}
+
+	public void setTableInfos(List<String[]> tableInfos) {
+		this.tableInfos = tableInfos;
+	}
+
+	public long getCount() {
 		return count;
 	}
-	public void setCount(Long count) {
+
+	public void setCount(long count) {
 		this.count = count;
 	}
 }
