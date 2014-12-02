@@ -57,7 +57,7 @@
                     <h5 class="bigger lighter"><i class="icon-bar-chart"></i>详细信息</h5>
                 </div>
                 <div class="widget-body">
-                    <div id="history-application-details-list" class="widget-main"></div>
+                    <div id="history-approve-details-list" class="widget-main"></div>
                 </div>
             </div>
         </div>
@@ -85,6 +85,8 @@
 </script>
 <script src="static/js/all_common.js">
 </script>
+<script src="static/js/approve_common.js">
+</script>
 <script src="static/ace/js/jquery.dataTables.min.js">
 </script>
 <script src="static/ace/js/jquery.dataTables.bootstrap.js">
@@ -109,7 +111,8 @@
             {"sTitle": '申请部门', "sWidth": "120px", "sClass": "center"},
             {"sTitle": '申请时间', "sWidth": "150px", "sClass": "center"},
             {"sTitle": '处理时间', "sWidth": "120px", "sClass": "center"},
-            {"sTitle": '金额', "sWidth": "150px", "sClass": "center"}];
+            {"sTitle": '金额', "sWidth": "150px", "sClass": "center"},
+            {"sTitle": "报销详情", "sWidth": "100px", "sClass": "center"}]
         var wh = $(window).height();
         var sY = (wh - 100) + 'px';
         var oTable = $(ex).dataTable({
@@ -200,7 +203,7 @@
                     else {
                         e.data.oTable.$('tr.row_selected').removeClass('row_selected');
                         $(this).addClass('row_selected');
-                        var id = e.data.oTable.fnGetData(this)[1];
+                        var id = e.data.oTable.fnGetData(this)[0];
                         showApproveHistoryDetailsList(id);
 
                     }
@@ -214,16 +217,21 @@
         })
     }
 
-
     function showTableInfo(data) {
+        console.log(data);
         var aaData = [];
-        var needData = data.infos;
-        var d_len = data.count;
+        var needData = data.tableInfos;
+        var tableMapList = data.tableMapList;
+        var varsList = data.varsList;
+        var d_len = needData.length;
         for (var i = 0; i < d_len; i++) {
-            var money = parseFloat(needData[i][4]);
+            var money = parseFloat(needData[i][5]);
             money /= 100;
-            var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
-            aaData.push([checkbox, needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), needData[i][5]]);
+            var tempMap = JSON.stringify(tableMapList[i]);
+            var tempVar = JSON.stringify(varsList[i]);
+            var map = $.parseStr("<a href='javascript:void(0);' " +
+            "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
+            aaData.push([needData[i][0], needData[i][1], needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map]);
         }
         return aaData;
     }
@@ -255,7 +263,7 @@
                         try {
                             var details = resp.data;
                             var html = '';
-                            html += __generateDetailHtml('当前审批状态', 'icon-eye-open', "审批完成");
+                            html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"]);
                             var len1 = details.length;
                             for (var i = 0; i < len1; i++) {
                                 html += __generateDetailHtml('审批历史', 'icon-book', details[i]);

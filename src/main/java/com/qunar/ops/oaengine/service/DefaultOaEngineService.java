@@ -269,6 +269,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			String taskId = taskIds.get(i);
 			long formId = formIds.get(i);
 			try{
+				taskService.claim(taskId, userId);
 				TaskResult tr = this._pass(processKey, userId, formId, taskId, memo);
 				String content = userId+" 于 ["+now+"]处理了《"+tr.getOwner()+"-日常报销》 [同意]";
 				if(memo != null) content += " 附言:"+memo;

@@ -112,6 +112,8 @@
 </script>
 <script src="static/js/all_common.js">
 </script>
+<script src="static/js/approve_common.js">
+</script>
 <script src="static/ace/js/jquery.dataTables.min.js">
 </script>
 <script src="static/ace/js/jquery.dataTables.bootstrap.js">
@@ -133,14 +135,16 @@
             {
                 "sTitle": '<lable><input id="current-approve-table-select-all" ' +
                 'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
-                "sWidth": "30px", "bSortable": false, "sClass": "center"
+                "sWidth": "30", "bSortable": false, "sClass": "center"
             },
-            {"sTitle": 'ID', "sWidth": "120px", "sClass": "center"},
-            {"sTitle": '申请人', "sWidth": "120px", "sClass": "center"},
-            {"sTitle": '申请部门', "sWidth": "120px", "sClass": "center"},
-            {"sTitle": '申请时间', "sWidth": "150px", "sClass": "center"},
-            {"sTitle": '金额', "sWidth": "150px", "sClass": "center"},
-            {"sTitle": 'taskId', "sWidth": "150px", "sClass": "center", "bVisible": true}];
+            {"sTitle": 'ID', "sWidth": "100", "sClass": "center"},
+            {"sTitle": '申请人', "sWidth": "120", "sClass": "center"},
+            {"sTitle": '申请部门', "sWidth": "120", "sClass": "center"},
+            {"sTitle": '申请时间', "sWidth": "150", "sClass": "center"},
+            {"sTitle": '金额', "sWidth": "150", "sClass": "center"},
+            {"sTitle": "报销详情", "sWidth": "100", "sClass": "center"},
+            {"sTitle": 'taskId', "sWidth": "150", "sClass": "center", "bVisible": true}];
+
         var wh = $(window).height();
         var sY = (wh - 100) + 'px';
         var oTable = $(ex).dataTable({
@@ -554,7 +558,7 @@
             var nTds = $('td', row);
             console.log(nTds);
             var formId = nTds[1].childNodes[0].data;
-            var taskId = nTds[6].childNodes[0].data;
+            var taskId = nTds[7].childNodes[0].data;
             console.log(formId);
             console.log(taskId);
             formIds += formId + ",";
@@ -686,19 +690,6 @@
         return form;
     }
 
-    function showTableInfo(data) {
-        var aaData = [];
-        var needData = data.infos;
-        var d_len = data.count;
-        for (var i = 0; i < d_len; i++) {
-            var money = parseFloat(needData[i][4]);
-            money /= 100;
-            var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
-            aaData.push([checkbox, needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), needData[i][5]]);
-        }
-        return aaData;
-    }
-
     function toggleCheck(oTable) {
         $('input', oTable.fnGetNodes()).unbind("click");
         $('input', oTable.fnGetNodes()).on("click", function () {
@@ -721,6 +712,25 @@
         }
     }
 
+    function showTableInfo(data) {
+        var aaData = [];
+        var needData = data.tableInfos;
+        var tableMapList = data.tableMapList;
+        var varsList = data.varsList;
+        var d_len = needData.length;
+        for (var i = 0; i < d_len; i++) {
+            var money = parseFloat(needData[i][4]);
+            money /= 100;
+            var tempMap = JSON.stringify(tableMapList[i]);
+            var tempVar = JSON.stringify(varsList[i]);
+            var map = $.parseStr("<a href='javascript:void(0);' " +
+            "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
+            var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
+            aaData.push([checkbox, needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map, needData[i][5]]);
+        }
+        return aaData;
+    }
+
     function showTime() {
         WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
     }
@@ -731,18 +741,18 @@
             return;
         }
         var params = {
-            "tableMap":{},
-            "flag" :"",
-            "vars":{
-                formId:id
+            "tableMap": {},
+            "flag": "",
+            "vars": {
+                formId: id
             }
         };
         $.ajax({
             "contentType": "application/json; charset=utf-8",
             "url": "approve_info",
             "type": "POST",
-            "data":JSON.stringify(params),
-            success: function(resp) {
+            "data": JSON.stringify(params),
+            success: function (resp) {
                 if (resp.errorCode == "0") {
                     if (resp.data.length != 0) {
                         try {
@@ -750,7 +760,7 @@
                             var html = '';
                             html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"]);
                             var len1 = details.length;
-                            for(var i = 0; i < len1; i++){
+                            for (var i = 0; i < len1; i++) {
                                 html += __generateDetailHtml('审批历史', 'icon-book', details[i]);
                             }
                             console.log(html)
@@ -764,13 +774,12 @@
                     $("#todo-approve-details-list").html(resp.errorMessage);
                 }
             },
-            error: function(jqXHR, textStatus, errorThrown) {
+            error: function (jqXHR, textStatus, errorThrown) {
                 showCommonNoticeDialog('网络错误', 'icon-warning-sign',
                         generateNoticeMsg('网络错误，请刷新后重试!'), 300);
             }
         })
     }
-
 
 
 </script>
