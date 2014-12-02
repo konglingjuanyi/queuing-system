@@ -85,7 +85,7 @@
         <div class="col-sm-12">
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                     style="font-size:18px">出租车费明细(含汽车燃油费)</span></div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+            <table frame="vsides" class="col-xs-9"
                    id="table1">
                 <tr>
                     <td bgcolor="#96E0E2">日期</td>
@@ -131,7 +131,7 @@
         <div class="col-sm-12">
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                     style="font-size:18px">通信费</span></div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+            <table frame="vsides" class="col-xs-9"
                    id="table6">
                 <tr>
                     <td>金额</td>
@@ -148,7 +148,7 @@
         <div class="col-sm-12">
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                     style="font-size:18px">餐费明细(每人每餐报销不超过50元)</span></div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+            <table frame="vsides" class="col-xs-9"
                    id="table2">
                 <tr>
                     <td bgcolor="#96E0E2">日期</td>
@@ -192,7 +192,7 @@
         <div class="col-sm-12">
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                     style="font-size:18px">招待费明细</span></div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+            <table frame="vsides" class="col-xs-9"
                    id="table3">
                 <tr>
                     <td bgcolor="#96E0E2">日期</td>
@@ -233,7 +233,7 @@
         <div class="col-sm-12">
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                     style="font-size:18px">员工关系费明细</span></div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+            <table frame="vsides" class="col-xs-9"
                    id="table4">
                 <tr>
                     <td bgcolor="#96E0E2">日期</td>
@@ -271,7 +271,7 @@
         <div class="col-sm-12">
             <div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                     style="font-size:18px">其他费用</span></div>
-            <table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" class="col-xs-9"
+            <table frame="vsides" class="col-xs-9"
                    id="table5">
                 <tr>
                     <td bgcolor="#96E0E2">费用项目</td>

@@ -15,15 +15,15 @@ function showInfo(url, tableName, rTableId, status) {
         "bVisible": false
     }, {
         "sTitle": "员工编号",
-        "sWidth": 200,
+        "sWidth": 150,
         "sClass": "center"
     }, {
         "sTitle": "部门",
-        "sWidth": 400,
+        "sWidth": 300,
         "sClass": "center"
     }, {
         "sTitle": "姓名",
-        "sWidth": 200,
+        "sWidth": 150,
         "sClass": "center"
     }, {
         "sTitle": "申请日期",
@@ -35,7 +35,11 @@ function showInfo(url, tableName, rTableId, status) {
         "sClass": "center"
     }, {
         "sTitle": "报销详情",
-        "sWidth": 100,
+        "sWidth": 200,
+        "sClass": "center"
+    }, {
+        "sTitle": "动作",
+        "sWidth": 200,
         "sClass": "center"
     }];
     var wh = $(window).height();
@@ -110,9 +114,10 @@ function showInfo(url, tableName, rTableId, status) {
             if (!oTable) {
                 return;
             }
+
             $("#search").unbind("click");
             $("#search").on("click", function (e) {
-                showInfo(url);
+                showInfo(url, tableName, rTableId, status);
             }).on("dblclick", function (e) {
                 e.preventDefault();
             });
@@ -148,8 +153,11 @@ function showApplyInfo(data) {
         var tempVar = JSON.stringify(varsList[i]);
         var map = $.parseStr("<a href='javascript:void(0);' " +
         "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
+        var push = '<a href="javascript:void(0);" role="button" ' +
+            'onclick="sendEmailToCandidate(\'' + needData[i][0] + '\')" class="green"><i class="icon-user">催办</i></a>';
+
         aaData.push([needData[i][0], needData[i][1],
-            needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map]);
+            needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map, push]);
     }
     return aaData;
 }
@@ -198,4 +206,25 @@ function showApplyTodoOrHistoryDetailsList(id, tableId, status) {
                 generateNoticeMsg('网络错误，请刷新后重试!'), 300);
         }
     })
+}
+
+function sendEmailToCandidate(id){
+    console.log(id);
+    var params = {};
+    params["vars"] = {"formId":id};
+    params["tableMap"] = {};
+    params["flag"] = "";
+    $.ajax({
+        "contentType": "application/json; charset=utf-8",
+        "type": "POST",
+        "url": "push_approve",
+        "data": JSON.stringify(params),
+        "success": function (resp) {
+            console.log(resp);
+            showSuccessTips(resp.data);
+        },
+        error: function () {
+            showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+        }
+    });
 }

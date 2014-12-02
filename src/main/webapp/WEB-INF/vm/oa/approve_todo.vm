@@ -135,15 +135,15 @@
             {
                 "sTitle": '<lable><input id="current-approve-table-select-all" ' +
                 'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
-                "sWidth": "30", "bSortable": false, "sClass": "center"
+                "bSortable": false, "sClass": "center"
             },
-            {"sTitle": 'ID', "sWidth": "100", "sClass": "center"},
-            {"sTitle": '申请人', "sWidth": "120", "sClass": "center"},
-            {"sTitle": '申请部门', "sWidth": "120", "sClass": "center"},
-            {"sTitle": '申请时间', "sWidth": "150", "sClass": "center"},
-            {"sTitle": '金额', "sWidth": "150", "sClass": "center"},
-            {"sTitle": "报销详情", "sWidth": "100", "sClass": "center"},
-            {"sTitle": 'taskId', "sWidth": "150", "sClass": "center", "bVisible": true}];
+            {"sTitle": 'ID', "sClass": "center"},
+            {"sTitle": '申请人', "sClass": "center"},
+            {"sTitle": '申请部门', "sWidth": "200px", "sClass": "center"},
+            {"sTitle": '申请时间', "sClass": "center"},
+            {"sTitle": '金额', "sClass": "center"},
+            {"sTitle": "报销详情", "sClass": "center"},
+            {"sTitle": 'taskId', "sClass": "center", "bVisible": true}];
 
         var wh = $(window).height();
         var sY = (wh - 100) + 'px';
