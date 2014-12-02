@@ -9,9 +9,9 @@ import java.util.Map;
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
-import org.activiti.engine.identity.Group;
 import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.TaskServiceImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -27,11 +27,11 @@ import org.activiti.engine.task.TaskQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.oaengine.command.TurnBackTaskCmd;
 import com.qunar.ops.oaengine.result.ListInfo;
+import com.qunar.ops.oaengine.result.ProcessInstanceInfo;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
 import com.qunar.ops.oaengine.result.TaskResult;
@@ -190,6 +190,53 @@ public class WorkflowManager {
 			}else{
 				info.setEndorse(true);
 			}
+			infos.getInfos().add(info);
+		}
+		return infos;
+	}
+	
+	/**
+	 * 审批历史流程列表
+	 * @param processKey
+	 * @param userId
+	 * @param startTime
+	 * @param endTime
+	 * @param owner
+	 * @param pageNo
+	 * @param pageSize
+	 * @return ListInfo<TaskInfo> 任务列表
+	 */
+	public ListInfo<ProcessInstanceInfo> historyInstList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize){
+		pageNo = pageNo <= 0 ? 1 : pageNo;
+		pageSize = pageSize > 0 ? pageSize : 20;
+		
+		HistoricProcessInstanceQuery query = this.historyService.createHistoricProcessInstanceQuery().processDefinitionKey(processKey).involvedUser(userId);
+		if(startTime != null){
+			query.startedAfter(startTime);
+		}
+		if(endTime != null){
+			query.startedBefore(endTime);
+		}
+		if(owner != null){
+			query.startedBy(owner);
+		}
+		
+		long count = query.count();
+		List<HistoricProcessInstance> list = new ArrayList<HistoricProcessInstance>();
+//		List<HistoricTaskInstance> tasks = query.listPage((pageNo - 1) * pageSize, pageSize);
+//		if (pageSize > 0) {
+		list = query.orderByProcessInstanceEndTime().desc().listPage((pageNo - 1) * pageSize, (pageNo * pageSize) - 1);
+//		} else {
+//			list = query.orderByProcessInstanceEndTime().desc().list();
+//		}
+		ListInfo<ProcessInstanceInfo> infos = new ListInfo<ProcessInstanceInfo>();
+		infos.setCount(count);
+		infos.setPageNo(pageNo);
+		infos.setPageSize(pageSize);
+		if(list != null)for(HistoricProcessInstance inst : list){
+			ProcessInstanceInfo info = new ProcessInstanceInfo();
+			info.setProcessInstanceId(inst.getId());
+			info.setTaskInfos(getCurrentTasks(inst.getId()));
 			infos.getInfos().add(info);
 		}
 		return infos;
