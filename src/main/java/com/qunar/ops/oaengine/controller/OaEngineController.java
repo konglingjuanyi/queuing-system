@@ -56,6 +56,8 @@ public class OaEngineController {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+    private String processKey = "oa_common";
+
     @RequestMapping(value = "/oa/test.html")
     public void index(HttpServletRequest request) {
         // mailSenderService.sender("nuby.zhang@qunar.com", new
@@ -68,7 +70,7 @@ public class OaEngineController {
         req.setOid("001");
         req.setReport2vp(true);
         req.setTbMoney(100l);
-        // Object[] startWorkflow = this.manager.startWorkflow("oa_common",
+        // Object[] startWorkflow = this.manager.startWorkflow(processKey,
         // "nuby.zhang", req);
         // ListInfo<TaskInfo> todoList = this.manager.todoList("test", "nuby",
         // 0, 10);
@@ -293,7 +295,6 @@ public class OaEngineController {
             logger.warn(errorMsg);
             return BaseResult.getErrorResult(-1, errorMsg);
         }
-        String processKey = "oa_common";
         boolean flag = webRequest.isFlag();
 
         long id = 0;
@@ -340,7 +341,6 @@ public class OaEngineController {
             logger.warn("登陆用户为空，无法获取员工信息");
             return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
         }
-        String processKey = "oa_common";
         Map<String, String> vars = webRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
@@ -401,7 +401,7 @@ public class OaEngineController {
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
-        String processKey = "oa_common";
+        
         String startTime = vars.get("startTime");
         String endTime = vars.get("endTime");
         Date _startTime = null;
@@ -455,7 +455,6 @@ public class OaEngineController {
             logger.warn("登陆用户为空，无法获取员工信息");
             return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
         }
-        String processKey = "oa_common";
         // Date startTime, Date endTime,
         // 默认一页显示50条数据
         Map<String, String> vars = webRequest.getVars();
@@ -523,7 +522,6 @@ public class OaEngineController {
             logger.warn("登陆用户为空，无法获取员工信息");
             return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
         }
-        String processKey = "oa_common";
         Map<String, String> vars = webRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
@@ -556,7 +554,7 @@ public class OaEngineController {
         }
         FormInfoList formInfoList = null;
         try {
-            formInfoList = ioaEngineService.historyList(
+            formInfoList = ioaEngineService.historyProcessInstList(
                     processKey, "nuby.zhang", _startTime, _endTime, approve_user, pageNo, pageSize);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
@@ -607,7 +605,7 @@ public class OaEngineController {
         }
         String msg = vars.get("reason");
         userId = "nuby.zhang";
-        List<Long> errorFormIds = ioaEngineService.batchPass("oa_common", userId, formIdList, taskIdList, msg);
+        List<Long> errorFormIds = ioaEngineService.batchPass(processKey, userId, formIdList, taskIdList, msg);
         int size = errorFormIds.size();
         if (size == 0) {
             return BaseResult.getSuccessResult("同意操作成功");
@@ -640,7 +638,7 @@ public class OaEngineController {
         String msg = vars.get("reason");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.refuse("oa_common", "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
+                ioaEngineService.refuse(processKey, "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -680,7 +678,7 @@ public class OaEngineController {
         String msg = vars.get("reason");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.back("oa_common", "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
+                ioaEngineService.back(processKey, "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -721,7 +719,7 @@ public class OaEngineController {
         String msg = vars.get("reason");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.endorse("oa_common", "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg, "");
+                ioaEngineService.endorse(processKey, "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg, "");
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -755,7 +753,7 @@ public class OaEngineController {
         }
         Map<String, String> vars = webRequest.getVars();
         String formId = vars.get("formId");
-        ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo("oa_common", formId, 1, 20);
+        ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 20);
         long count = approveInfos.getCount();
         if (count == 0) {
             return BaseResult.getSuccessResult("没有获取到审批候选人");
@@ -764,8 +762,56 @@ public class OaEngineController {
         int size = infos.size();
         ApprovalInfo approvalInfo = infos.get(size - 1);
         Long approveId = approvalInfo.getId();
-        ioaEngineService.reminder("oa_common", userId, formId, String.valueOf(approveId), "催办");
+        ioaEngineService.reminder(processKey, userId, formId, String.valueOf(approveId), "催办");
         return BaseResult.getSuccessResult("催办成功");
+
+    }
+
+    /**
+     * 重新发起
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/restart_form")
+    @ResponseBody
+    public BaseResult restartForm(HttpServletRequest request,
+                                  @RequestBody WebRequest webRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn("登陆用户为空，无法获取员工信息");
+            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+        }
+        Map<String, String> vars = webRequest.getVars();
+        String formId = vars.get("formId");
+        FormInfo formInfo = null;
+        try {
+            formInfo = ioaEngineService.getFormInfo(processKey, userId, formId);
+        } catch (FormNotFoundException e) {
+            e.printStackTrace();
+            String errorMsg = "表单未找到, 请检查!";
+            return BaseResult.getErrorResult(-2, errorMsg);
+        }
+        try {
+            ioaEngineService.createFormAndstart(processKey, userId,
+                    formInfo);
+        } catch (RemoteAccessException e) {
+            e.printStackTrace();
+            String errorMsg = "ACL限制，获取员工信息失败";
+            logger.warn(errorMsg);
+            return BaseResult.getErrorResult(-1, errorMsg);
+        } catch (CompareModelException e) {
+            e.printStackTrace();
+            String errorMsg = "日期字段填写错误，请检查";
+            logger.warn(errorMsg);
+            return BaseResult.getErrorResult(-1, errorMsg);
+        } catch (FormNotFoundException e) {
+            e.printStackTrace();
+            String errorMsg = "表单未找到，请检查！";
+            logger.warn(errorMsg);
+            return BaseResult.getErrorResult(-1, errorMsg);
+        }
+        return BaseResult.getSuccessResult("重新发起流程成功!");
 
     }
 
@@ -786,7 +832,7 @@ public class OaEngineController {
         }
         Map<String, String> vars = webRequest.getVars();
         String formId = vars.get("formId");
-        ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo("oa_common", formId, 1, 20);
+        ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 20);
         long count = approveInfos.getCount();
         if (count == 0) {
             return BaseResult.getSuccessResult("");

@@ -397,7 +397,19 @@ public interface IOAEngineService {
 	 */
 	public void removeMember(String groupKey, String memberUserId);
 
-	FormInfoList historyProcessInstList(String processKey, String userId,
+	/**
+	 * 获取历史审批工单
+	 * @param processKey
+	 * @param userId
+	 * @param startTime
+	 * @param endTime
+	 * @param owner
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 * @throws FormNotFoundException
+	 */
+	public FormInfoList historyProcessInstList(String processKey, String userId,
 			Date startTime, Date endTime, String owner, int pageNo, int pageSize)
 			throws FormNotFoundException;
 

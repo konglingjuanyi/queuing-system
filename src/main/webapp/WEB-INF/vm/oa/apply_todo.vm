@@ -88,7 +88,7 @@
 
     jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
-        showInfo("oa/todo", "apply_todo", "todo-apply-details-list", "审批过程中");
+        showInfo("oa/todo", "apply_todo", "todo-apply-details-list", "审批过程中", 1);
     });
     function showTime() {
         WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});

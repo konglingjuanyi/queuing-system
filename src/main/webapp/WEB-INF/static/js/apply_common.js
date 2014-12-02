@@ -3,7 +3,7 @@
  */
 
 //显示表格数据
-function showInfo(url, tableName, rTableId, status) {
+function showInfo(url, tableName, rTableId, status, num) {
     var ex = document.getElementById(tableName);
     if ($.fn.dataTable.fnIsDataTable(ex)) {
         $(ex).dataTable().fnDestroy();
@@ -37,11 +37,15 @@ function showInfo(url, tableName, rTableId, status) {
         "sTitle": "报销详情",
         "sWidth": 200,
         "sClass": "center"
-    }, {
+    }];
+    var col = {
         "sTitle": "动作",
         "sWidth": 200,
         "sClass": "center"
-    }];
+    };
+    if(num == 1){
+        aoColumns.push(col);
+    }
     var wh = $(window).height();
     var sY = (wh - 100) + 'px';
     var oTable = $(ex).dataTable({
@@ -97,7 +101,7 @@ function showInfo(url, tableName, rTableId, status) {
                     var data = resp.data;
                     var iTotalRecords = data.count || 0;
                     var iTotalDisplayRecords = iTotalRecords;
-                    var aaData = showApplyInfo(data);
+                    var aaData = showApplyInfo(data, num);
                     var data = {
                         "aaData": aaData,
                         "iTotalRecords": (iTotalRecords || 0),
@@ -140,7 +144,7 @@ function showInfo(url, tableName, rTableId, status) {
     })
 }
 
-function showApplyInfo(data) {
+function showApplyInfo(data, num) {
     var aaData = [];
     var needData = data.tableInfos;
     var tableMapList = data.tableMapList;
@@ -155,9 +159,14 @@ function showApplyInfo(data) {
         "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
         var push = '<a href="javascript:void(0);" role="button" ' +
             'onclick="sendEmailToCandidate(\'' + needData[i][0] + '\')" class="green"><i class="icon-user">催办</i></a>';
+        if(num == 1){
+            aaData.push([needData[i][0], needData[i][1],
+                needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map, push]);
+        }else{
+            aaData.push([needData[i][0], needData[i][1],
+                needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map]);
+        }
 
-        aaData.push([needData[i][0], needData[i][1],
-            needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map, push]);
     }
     return aaData;
 }

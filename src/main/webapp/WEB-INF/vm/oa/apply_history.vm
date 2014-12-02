@@ -87,7 +87,7 @@
 
     jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
-        showInfo("oa/history", "apply_history", "history-apply-details-list", "审批完成");
+        showInfo("oa/history", "apply_history", "history-apply-details-list", "审批完成", 2);
     });
     function showTime() {
         WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
