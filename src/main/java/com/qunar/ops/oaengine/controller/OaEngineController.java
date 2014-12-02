@@ -1,25 +1,16 @@
 package com.qunar.ops.oaengine.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.sql.Struct;
-import java.text.DecimalFormat;
-import java.text.Normalizer;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.qunar.ops.oaengine.exception.CompareModelException;
+import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.exception.RemoteAccessException;
+import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.result.*;
+import com.qunar.ops.oaengine.result.dailysubmit.*;
+import com.qunar.ops.oaengine.service.IOAEngineService;
+import com.qunar.ops.oaengine.service.MailSenderService;
 import org.activiti.engine.*;
-import org.activiti.engine.impl.juel.ObjectValueExpression;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -34,21 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.qunar.ops.oaengine.exception.CompareModelException;
-import com.qunar.ops.oaengine.exception.FormNotFoundException;
-import com.qunar.ops.oaengine.exception.RemoteAccessException;
-import com.qunar.ops.oaengine.manager.WorkflowManager;
-import com.qunar.ops.oaengine.service.IOAEngineService;
-import com.qunar.ops.oaengine.service.MailSenderService;
-import com.qunar.ops.oaengine.result.dailysubmit.EmployeeRelationsFeesInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
-import com.qunar.ops.oaengine.result.dailysubmit.HospitalityInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.OtherCostsInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.OvertimeMealsInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.TaxiFaresInfo;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class OaEngineController {
@@ -127,7 +111,7 @@ public class OaEngineController {
             e.printStackTrace();
             logger.error("sso 验证失败", e);
         }
-        return "redirect:/oa/my_apply_todo.html";
+        return "redirect:/oa/apply_todo.html";
     }
 
     /**
@@ -164,9 +148,9 @@ public class OaEngineController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "oa/my_apply_todo.html")
+    @RequestMapping(value = "oa/apply_todo.html")
     public ModelAndView myApplyTodo(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/my_apply_todo");
+        ModelAndView mav = new ModelAndView("oa/apply_todo");
         return mav;
     }
 
@@ -176,9 +160,9 @@ public class OaEngineController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "oa/my_apply_history.html")
+    @RequestMapping(value = "oa/apply_history.html")
     public ModelAndView myApplyHistory(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/my_apply_history");
+        ModelAndView mav = new ModelAndView("oa/apply_history");
         return mav;
     }
 
@@ -341,9 +325,9 @@ public class OaEngineController {
             taxiInfo.setTaxiFaresUse(table[i][4]);
             taxiInfo.setTaxiFaresPeerPeople(table[i][5]);
             taxiInfo.setTaxiFaresWorkhour(new BigDecimal(table[i][6]));
-            Float money = Float.parseFloat(table[i][7]);
+            Float money = Float.valueOf(table[i][7]);
             String sMoney = String.valueOf((int) (money * 100));
-            taxiInfo.setTaxiFaresAmount(Long.parseLong(sMoney));
+            taxiInfo.setTaxiFaresAmount(Long.valueOf(sMoney));
             taxiInfo.setComment(table[i][8]);
             list1.add(taxiInfo);
         }
@@ -363,11 +347,11 @@ public class OaEngineController {
             overInfo.setOvertimeMealsDate(sdf.parse(table[i][0]));
             overInfo.setMealsAddr(table[i][1]);
             overInfo.setOvertimeMealsPeerPeople(table[i][2]);
-            overInfo.setMealsPersonNum(Long.parseLong(table[i][3]));
-            Float money = Float.parseFloat(table[i][4]);
+            overInfo.setMealsPersonNum(Long.valueOf(table[i][3]));
+            Float money = Float.valueOf(table[i][4]);
             String sMoney = String.valueOf((int) (money * 100));
-            overInfo.setOvertimeMealsAmount(Long.parseLong(sMoney));
-            overInfo.setPerMealsFee((long) (Float.parseFloat(table[i][5]) * 100));
+            overInfo.setOvertimeMealsAmount(Long.valueOf(sMoney));
+            overInfo.setPerMealsFee((long) (Float.valueOf(table[i][5]) * 100));
             overInfo.setInvoiceAmount(table[i][6]);
             overInfo.setOvertimeMealsWorkhours(new BigDecimal(table[i][7]));
             overInfo.setOvertimeMealsComment(table[i][8]);
@@ -392,9 +376,9 @@ public class OaEngineController {
             hosInfo.setCustomCompany(table[i][3]);
             hosInfo.setCustomName(table[i][4]);
             hosInfo.setHospitalityNum(table[i][5]);
-            Float money = Float.parseFloat(table[i][6]);
+            Float money = Float.valueOf(table[i][6]);
             String sMoney = String.valueOf((int) (money * 100));
-            hosInfo.setHospitalityAmount(Long.parseLong(sMoney));
+            hosInfo.setHospitalityAmount(Long.valueOf(sMoney));
             list3.add(hosInfo);
         }
         size = list3.size();
@@ -414,9 +398,9 @@ public class OaEngineController {
             employInfo.setEmRelationsAddress(table[i][1]);
             employInfo.setEmRelationsPeerPeople(table[i][2]);
             employInfo.setActDest(table[i][3]);
-            Float money = Float.parseFloat(table[i][4]);
+            Float money = Float.valueOf(table[i][4]);
             String sMoney = String.valueOf((int) (money * 100));
-            employInfo.setEmRelationsFees(Long.parseLong(sMoney));
+            employInfo.setEmRelationsFees(Long.valueOf(sMoney));
             employInfo.setEmRelationsFeesComment(table[i][5]);
             list4.add(employInfo);
 
@@ -435,9 +419,9 @@ public class OaEngineController {
             }
             OtherCostsInfo otherInfo = new OtherCostsInfo();
             otherInfo.setOtherCostProject(table[i][0]);
-            Float money = Float.parseFloat(table[i][1]);
+            Float money = Float.valueOf(table[i][1]);
             String sMoney = String.valueOf((int) (money * 100));
-            otherInfo.setOtherCostAmount(Long.parseLong(sMoney));
+            otherInfo.setOtherCostAmount(Long.valueOf(sMoney));
             otherInfo.setOtherCostComment(table[i][2]);
             list5.add(otherInfo);
         }
@@ -453,16 +437,16 @@ public class OaEngineController {
                 .toArray(new OtherCostsInfo[size]);
         formInfo.setOtherCostsInfo(otherInfos);
         // 存储所有数据之和
-        formInfo.setSumTaxiFaresAmount((long) (Float.parseFloat(vars.get("sum1")) * 100));
-        formInfo.setSumOvertimeMealsAmount((long) (Float.parseFloat(vars.get("sum2")) * 100));
-        formInfo.setSumHospitalityAmount((long) (Float.parseFloat(vars.get("sum3")) * 100));
-        formInfo.setSumEmployeeRelationsFees((long) (Float.parseFloat(vars.get("sum4")) * 100));
-        formInfo.setSumOtherAmount((long) (Float.parseFloat(vars.get("sum5")) * 100));
+        formInfo.setSumTaxiFaresAmount((long) (Float.valueOf(vars.get("sum1")) * 100));
+        formInfo.setSumOvertimeMealsAmount((long) (Float.valueOf(vars.get("sum2")) * 100));
+        formInfo.setSumHospitalityAmount((long) (Float.valueOf(vars.get("sum3")) * 100));
+        formInfo.setSumEmployeeRelationsFees((long) (Float.valueOf(vars.get("sum4")) * 100));
+        formInfo.setSumOtherAmount((long) (Float.valueOf(vars.get("sum5")) * 100));
 
-        formInfo.setCommunicationCosts((long) (Float.parseFloat(vars.get("sum6")) * 100));
+        formInfo.setCommunicationCosts((long) (Float.valueOf(vars.get("sum6")) * 100));
         formInfo.setCommuCostsComment(vars.get("remark"));
 
-        formInfo.setMoneyAmount((long) (Float.parseFloat(vars.get("sum")) * 100));
+        formInfo.setMoneyAmount((long) (Float.valueOf(vars.get("sum")) * 100));
         sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         table = tableMap.get("table");
         len = table.length;
@@ -477,11 +461,11 @@ public class OaEngineController {
             formInfo.setBankNumber(table[i][7]);
             formInfo.setBankName(table[i][8]);
             formInfo.setIsBorrow(table[i][9]);
-            formInfo.setSerialNumber(table[i][10]);
+            formInfo.setBorrowSN(table[i][10]);
             if (isNull(table[i][11])) {
                 formInfo.setBorrowAmount(0l);
             } else {
-                formInfo.setBorrowAmount(Long.parseLong(table[i][11]));
+                formInfo.setBorrowAmount(Long.valueOf(table[i][11]));
             }
         }
         return true;
@@ -686,7 +670,7 @@ public class OaEngineController {
         FormInfoList formInfoList = null;
         try {
             formInfoList = ioaEngineService.historyList(
-                    processKey, "nuby.zhang", _startTime, _endTime, approve_user, pageNo, pageSize);
+                    processKey, "nuby.zhang", _startTime, _endTime, null, pageNo, pageSize);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
             String errorMsg = "ACL限制，获取员工信息失败";
@@ -707,7 +691,7 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_pass")
     @ResponseBody
     public BaseResult approvePass(HttpServletRequest request,
-                                   @RequestBody WebRequest webRequest) {
+                                  @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -720,19 +704,17 @@ public class OaEngineController {
         List<String> taskIdList = new ArrayList<String>();
         String formMsg[] = formIds.split(",");
         for (int i = 0; i < formMsg.length; i++) {
-            formIdList.add(Long.parseLong(formMsg[i]));
+            formIdList.add(Long.valueOf(formMsg[i]));
         }
         String taskMsg[] = taskIds.split(",");
         for (int i = 0; i < taskMsg.length; i++) {
             taskIdList.add(taskMsg[i]);
         }
         String msg = vars.get("reason");
-        System.out.println(formIdList.size());
-        System.out.println(taskIdList.size());
         userId = "nuby.zhang";
         List<Long> errorFormIds = ioaEngineService.batchPass("oa_common", userId, formIdList, taskIdList, msg);
         int size = errorFormIds.size();
-        if (size == 0){
+        if (size == 0) {
             return BaseResult.getSuccessResult("同意操作成功");
         }
         return BaseResult.getSuccessResult(errorFormIds.toArray());
@@ -748,7 +730,7 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_reject")
     @ResponseBody
     public BaseResult approveReject(HttpServletRequest request,
-                                  @RequestBody WebRequest webRequest) {
+                                    @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -763,7 +745,7 @@ public class OaEngineController {
         String msg = vars.get("reason");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.refuse("oa_common", "nuby.zhang", Long.parseLong(formMsg[i]), taskMsg[i], msg);
+                ioaEngineService.refuse("oa_common", "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -788,7 +770,7 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_back")
     @ResponseBody
     public BaseResult approveBack(HttpServletRequest request,
-                                    @RequestBody WebRequest webRequest) {
+                                  @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -803,7 +785,7 @@ public class OaEngineController {
         String msg = vars.get("reason");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.back("oa_common", "nuby.zhang", Long.parseLong(formMsg[i]), taskMsg[i], msg);
+                ioaEngineService.back("oa_common", "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -811,7 +793,7 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, errorMsg);
             } catch (ActivitiException e) {
                 e.printStackTrace();
-                String errorMsg = "工作流系统错误,请检查";
+                String errorMsg = "没有前置审批节点，无法回退，请选择拒绝";
                 logger.warn(errorMsg);
                 return BaseResult.getErrorResult(-3, errorMsg);
             }
@@ -829,7 +811,7 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_endorse")
     @ResponseBody
     public BaseResult approveEndorse(HttpServletRequest request,
-                                  @RequestBody WebRequest webRequest) {
+                                     @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -844,7 +826,7 @@ public class OaEngineController {
         String msg = vars.get("reason");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.endorse("oa_common", "nuby.zhang", Long.parseLong(formMsg[i]), taskMsg[i], msg, "");
+                ioaEngineService.endorse("oa_common", "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg, "");
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -861,11 +843,52 @@ public class OaEngineController {
 
     }
 
+    /**
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/approve_info")
+    @ResponseBody
+    public BaseResult getApproveInfo(HttpServletRequest request,
+                                     @RequestBody WebRequest webRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn("登陆用户为空，无法获取员工信息");
+            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+        }
+        Map<String, String> vars = webRequest.getVars();
+        String formId = vars.get("formId");
+        ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo("oa_common", formId, 1, 20);
+        long count = approveInfos.getCount();
+        if (count == 0) {
+            return BaseResult.getSuccessResult("");
+        }
+        List<ApprovalInfo> infos = approveInfos.getInfos();
+        int size = infos.size();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String[][] result = new String[size][3];
+        for (int i = 0; i < size; i++) {
+            ApprovalInfo approveInfo = infos.get(i);
+            String memo = approveInfo.getMemo();
+            if (isNull(memo)) {
+                memo = "同意";
+            }
+            String info[] = new String[]{
+                    approveInfo.getApproveUser(),
+                    sdf.format(approveInfo.getTs()),
+                    memo
+            };
+            result[i] = info;
+        }
+        return BaseResult.getSuccessResult(result);
+
+    }
+
     private ApproveResult getApproveTodoInfos(FormInfoList formInfoList) {
         List<FormInfo> formInfos = formInfoList.getFormInfos();
         ApproveResult approveResult = new ApproveResult();
         long count = formInfoList.getCount();
-        if(count == 0){
+        if (count == 0) {
             return approveResult;
         }
         List<String[]> infos = new ArrayList<String[]>();
@@ -891,7 +914,7 @@ public class OaEngineController {
         List<FormInfo> formInfos = formInfoList.getFormInfos();
         ApproveResult approveResult = new ApproveResult();
         long count = formInfoList.getCount();
-        if(count == 0){
+        if (count == 0) {
             return approveResult;
         }
         List<String[]> infos = new ArrayList<String[]>();
@@ -925,7 +948,8 @@ public class OaEngineController {
         List<Map<String, String[][]>> tableMapList = new ArrayList<Map<String, String[][]>>();
         for (int i = 0; i < size; i++) {
             FormInfo formInfo = formInfos.get(i);
-            String tableInfo[] = new String[]{formInfo.getSerialNumber(), depart,
+            String tableInfo[] = new String[]{String.valueOf(formInfo.getId()),
+                    formInfo.getSerialNumber(), depart,
                     formInfo.getApplyUser(), sdf.format(formInfo.getApplyDate()),
                     String.valueOf(formInfo.getMoneyAmount())};
             tableInfos.add(tableInfo);
@@ -1111,13 +1135,13 @@ public class OaEngineController {
         return eMoney;
     }
 
-    private int[] getPageNoAndSize(Map<String, String> vars){
+    private int[] getPageNoAndSize(Map<String, String> vars) {
         String sStart = vars.get("start");
         String sLen = vars.get("length");
         int start = sStart == null ? 0 : Integer.valueOf(sStart);
         int len = sLen == null ? 0 : Integer.valueOf(sLen);
         int pageSize = len;
-        int pageNo = start/len + 1;
+        int pageNo = start / len + 1;
         return new int[]{pageSize, pageNo};
     }
 

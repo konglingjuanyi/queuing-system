@@ -232,6 +232,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
 		ListInfo<TaskInfo> taskInfos = workflowManager.historyList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
 		List<TaskInfo> _taskInfos = taskInfos.getInfos();
+		System.out.println(_taskInfos.size());
 		FormInfoList res = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		FormInfo formInfo;
@@ -245,6 +246,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		res.setCount((int)taskInfos.getCount());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
+		res.setFormInfos(formInfos);
 		return res;
 	}
 
@@ -379,7 +381,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private void sendMail(String userId, String action, String owner, List<TaskInfo> infos, String memo){
 		if(owner == null) return;
 		String form = "oa@qunar.com";
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String now = sdf.format(new Date());
 		
 		String content = userId+" 于 ["+now+"]处理了《"+owner+"-日常报销》 ["+action+"]";

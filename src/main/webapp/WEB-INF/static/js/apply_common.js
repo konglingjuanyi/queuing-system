@@ -3,12 +3,17 @@
  */
 
 //显示表格数据
-function showInfo(url) {
-    var ex = document.getElementById("apply_table");
+function showInfo(url, tableName, rTableId, status) {
+    var ex = document.getElementById(tableName);
     if ($.fn.dataTable.fnIsDataTable(ex)) {
         $(ex).dataTable().fnDestroy();
     }
     var aoColumns = [{
+        "sTitle": "ID",
+        "sWidth": 200,
+        "sClass": "center",
+        "bVisible": false
+    }, {
         "sTitle": "员工编号",
         "sWidth": 200,
         "sClass": "center"
@@ -85,12 +90,10 @@ function showInfo(url) {
                 "url": url,
                 "data": JSON.stringify(params),
                 "success": function (resp) {
-                    console.log(resp);
                     var data = resp.data;
                     var iTotalRecords = data.count || 0;
                     var iTotalDisplayRecords = iTotalRecords;
                     var aaData = showApplyInfo(data);
-                    console.log(aaData);
                     var data = {
                         "aaData": aaData,
                         "iTotalRecords": (iTotalRecords || 0),
@@ -124,6 +127,8 @@ function showInfo(url) {
                 else {
                     e.data.oTable.$('tr.row_selected').removeClass('row_selected');
                     $(this).addClass('row_selected');
+                    var id = e.data.oTable.fnGetData(this)[0];
+                    showApplyTodoOrHistoryDetailsList(id, rTableId, status);
                 }
             });
         }
@@ -137,12 +142,13 @@ function showApplyInfo(data) {
     var varsList = data.varsList;
     var d_len = needData.length;
     for (var i = 0; i < d_len; i++) {
-        var money = parseFloat(needData[i][4]);
+        var money = parseFloat(needData[i][5]);
         money /= 100;
         var tempMap = JSON.stringify(tableMapList[i]);
         var tempVar = JSON.stringify(varsList[i]);
-        var map = $.parseStr("<a href='javascript:void(0);' onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
-        aaData.push([needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map]);
+        var map = $.parseStr("<a href='javascript:void(0);' " +
+        "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
+        aaData.push([needData[i][0], needData[i][1], needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map]);
     }
     return aaData;
 }
@@ -150,10 +156,12 @@ function showApplyInfo(data) {
 //显示编辑对话框
 function showEditDialog(tableMap, vars) {
     $('#edit-form').html(edit_form);
-    var fixedInfo = fixedTableInfo(tableMap, vars);
+    var fixedInfo = '<div style="text-align:center; vertical-align:middle;">';
+    fixedInfo += fixedTableInfo(tableMap, vars);
+    fixedInfo += '</div>';
     $('#edit_content').append(fixedInfo);
     $("#dialog-confirm").removeClass('hide').dialog({
-        width: 1300,
+        width: 1100,
         height: 1200,
         modal: true,
         draggable: true,
@@ -171,15 +179,12 @@ function fixedTableInfo(tableMap, vars) {
     var tableHeadList = ["出租车费明细(含汽车燃油费)", "通信费",
         "餐费明细（每人每餐报销不超过50元）",
         "招待费明细", "员工关系费明细", "其他费用"];
-
-    var tableForm = '';
+    //var tableForm = "<iframe style='height:1100px; width:1200px'></iframe>";
+    var tableForm = "";
     tableForm += table0BodyForm(tableMap["table"], vars); //这里应该先加table信息
     for (var i = 0; i < 6; i++) {
-        tableForm += '<div class="row">'
-        tableForm += '<div class="col-sm-12">';
         tableForm += tableHeadForm(tableHeadList[i]);
-        tableForm += $.parseStr('<table style="border-collapse:collapse;" border="0" cellpadding="2" cellspacing="1" ' +
-        'class="col-xs-9" id="%s">', tableList[i]);
+        tableForm += $.parseStr('<table frame="vsides" id="%s" style="width: 1067px;">', tableList[i]);
         var num1 = i;
         var num2 = i;
         if (i > 0) {
@@ -193,9 +198,9 @@ function fixedTableInfo(tableMap, vars) {
             tableForm += tableBodyForm(tableMap, tableList[i], num1);
         }
         tableForm += '</table>';
-        tableForm += tableSumForm(num2, vars);
-        tableForm += '</div>';
-        tableForm += '</div>';
+        if (tableList[i] != "table6") {
+            tableForm += tableSumForm(num2, vars);
+        }
     }
     tableForm += tableApproveBodyForm();
     $("#sum").val(vars["sum"]);
@@ -215,9 +220,9 @@ function tableZeroNameDic() {
 
 function tableHeadForm(headName) {
     var tableHead = '';
-    tableHead += '<div class="col-xs-9" style="border:solid 1px; background-color: #f0f0f0;text-align: center;">'
+    tableHead += '<div style="border:solid 1px; background-color: #f0f0f0;text-align: center;">';
     tableHead += $.parseStr('<span style="font-size:18px">%s</span>', headName);
-    tableHead += '</div>'
+    tableHead += '</div>';
     return tableHead;
 }
 
@@ -252,7 +257,7 @@ function tableBodyForm(tableMap, tableId, num) {
                     value = "";
                 }
                 bodyForm += '<td>';
-                bodyForm += $.parseStr('<input type="text" style="width: 100%" readonly="readonly" value="%s">', value);
+                bodyForm += $.parseStr('<input type="text" style="width: 100%;color:#000000" readonly="readonly" value="%s">', value);
                 bodyForm += '</td>';
             }
             bodyForm += '</tr>';
@@ -266,11 +271,11 @@ function table6BodyForm(vars) {
     form += '<tr>';
     form += '<td>金额</td>';
     form += '<td>';
-    form += $.parseStr('<input type="text" value="%s" id="sum6">', vars["sum6"]);
+    form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="sum6">', vars["sum6"]);
     form += '</td>';
     form += '<td>备注(话费实际发生月份)</td>';
     form += '<td>';
-    form += $.parseStr('<input type="text" value="%s" id="remark">', vars["remark"]);
+    form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="remark">', vars["remark"]);
     form += '</td>';
     form += '</tr>';
     return form;
@@ -278,10 +283,8 @@ function table6BodyForm(vars) {
 
 function table0BodyForm(table0, vars) {
     var form = '';
-    form += '<div class="row">';
-    form += '<div class="col-sm-12">';
     form += tableHeadForm("个人基本信息");
-    form += '<table style="border-collapse:collapse;" border="1" class="col-xs-9" id="table">';
+    form += '<table id="table" frame="vsides" rules="all" style="width: 1067px;">';
     var list1 = ["申请人", "人员编号", "申请日期"];
     var list2 = ["一级部门", "申请部门", "部门编号"];
     var list3 = ["是否直接向VP汇报", "银行卡", "开户银行"];
@@ -296,23 +299,19 @@ function table0BodyForm(table0, vars) {
             if (isNull(value)) {
                 value = "";
             }
-            form += $.parseStr('<td><input type="text" readonly="readonly" value="%s"></td>', value);
+            form += $.parseStr('<td><input type="text"  style="width: 100%;color:#000000" readonly="readonly" value="%s"></td>', value);
             k++;
         }
         form += '</tr>';
     }
     form += tableSumForm("", vars);
-    form += '</div>';
-    form += '</div>';
     return form;
 }
 
 function tableApproveBodyForm(table0, vars) {
     var form = '';
-    form += '<div class="row">';
-    form += '<div class="col-sm-12">';
     form += tableHeadForm("审批记录");
-    form += '<table style="border-collapse:collapse;" border="1" class="col-xs-9" id="table7">';
+    form += '<table id="table7" style="width: 1067px;" border="1">';
     var list1 = ["本部门主管意见", "部门总监意见"];
     var list2 = ["部门VP意见", "财务总监意见"];
     var list3 = ["CFO意见", "CEO意见"];
@@ -324,14 +323,12 @@ function tableApproveBodyForm(table0, vars) {
         form += '<tr>';
         for (var j = 0; j < 2; j++) {
             form += '<td>';
-            form += $.parseStr('<table><tr><td>%s</td><td><input type="text"></td><td><input type="text"></td></tr></table>', list[i][j]);
+            form += $.parseStr('<table><tr><td style="width: 100px;">%s</td><td><input type="text"></td><td><input type="text"></td></tr></table>', list[i][j]);
             form += '</td>';
         }
         form += '</tr>';
 
     }
-    form += '</div>';
-    form += '</div>';
     return form;
 }
 
@@ -339,15 +336,59 @@ function tableSumForm(num, vars) {
     var sumOne = "sum" + num;
     var sum = vars[sumOne];
     var form = '';
-    form += '<table style="border-collapse:collapse;" border="1" class="col-xs-9">';
+    form += '<table style="border-collapse:collapse;width: 1067px;" border="1">';
     form += '<tr>';
     form += '<td>金额总计</td>';
     form += '<td>';
-    form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly" style="width: 100%">',
+    form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',
         sum, sumOne);
-    form += '<td>';
+    form += '</td>';
     form += '<tr>';
     form += '</table>';
     return form;
 }
 
+function showApplyTodoOrHistoryDetailsList(id, tableId, status) {
+    if (isNull(id)) {
+        $("#" + tableId).html('');
+        return;
+    }
+    var params = {
+        "tableMap": {},
+        "flag": "",
+        "vars": {
+            "formId": id
+        }
+    };
+    $.ajax({
+        "contentType": "application/json; charset=utf-8",
+        "url": "approve_info",
+        "type": "POST",
+        "data": JSON.stringify(params),
+        success: function (resp) {
+            if (resp.errorCode == 0) {
+                if (resp.data.length != 0) {
+                    try {
+                        var details = resp.data;
+                        var html = '';
+                        html += __generateDetailHtml('当前审批状态', 'icon-eye-open', [status]);
+                        var len1 = details.length;
+                        for (var i = 0; i < len1; i++) {
+                            html += __generateDetailHtml('审批历史', 'icon-book', details[i]);
+                        }
+                        $("#" + tableId).html(html);
+                    } catch (e) {
+                    }
+                } else {
+                    $("#" + tableId).html('无详细信息');
+                }
+            } else {
+                $("#" + tableId).html(resp.errorMessage);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showCommonNoticeDialog('网络错误', 'icon-warning-sign',
+                generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+        }
+    })
+}

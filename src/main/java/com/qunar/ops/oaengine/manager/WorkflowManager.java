@@ -189,7 +189,6 @@ public class WorkflowManager {
 			}else{
 				info.setEndorse(true);
 			}
-
 			infos.getInfos().add(info);
 		}
 		return infos;
@@ -202,6 +201,7 @@ public class WorkflowManager {
 	 * @return List<TaskInfo> 当前任务信息
 	 */
 	public TaskResult pass(String taskId, String userId) throws ActivitiException{
+		identityService.setAuthenticatedUserId(userId);
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
 		if(task == null) {
 			logger.warn("任务没有找到{}", taskId);
