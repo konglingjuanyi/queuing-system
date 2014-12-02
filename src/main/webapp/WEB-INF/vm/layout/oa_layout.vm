@@ -93,15 +93,15 @@
 							</a>
                             <ul class="submenu" style="display:block">
                                 <li>
-                                    <a href="oa/my_apply_todo.html">
+                                    <a href="oa/apply_todo.html">
                                         <i class="icon-double-angle-right"></i>
-                                        待审批
+                                        正在审批的申请
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="oa/my_apply_history.html">
+                                    <a href="oa/apply_history.html">
                                         <i class="icon-double-angle-right"></i>
-                                        已审批
+                                        已经结束的申请
                                     </a>
                                 </li>
                                 <li>
@@ -115,13 +115,13 @@
                                 <li>
                                     <a href="oa/approve_todo.html">
                                         <i class="icon-double-angle-right"></i>
-                                        待审批
+                                        当前审批
                                     </a>
                                 </li>
                                 <li>
                                     <a href="oa/approve_history.html">
                                         <i class="icon-double-angle-right"></i>
-                                        已审批
+                                        历史审批
                                     </a>
                                 </li>
                                 <li>

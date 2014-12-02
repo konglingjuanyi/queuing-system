@@ -6,13 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.activiti.engine.ActivitiException;
-import org.activiti.engine.ActivitiIllegalArgumentException;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
@@ -182,14 +176,20 @@ public class WorkflowManager {
 			info.setTaskId(task.getId());
 			info.setTaskKey(task.getTaskDefinitionKey());
 			info.setTaskName(task.getName());
-			
-			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
+			System.out.println(task.getExecutionId());
+
+			Integer nrOfInstances = null;
+			try {
+				nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
+			}catch (ActivitiObjectNotFoundException e){
+				e.printStackTrace();
+				logger.warn(e.getMessage());
+			}
 			if(nrOfInstances == null || nrOfInstances <= 0){
 				info.setEndorse(false);
 			}else{
 				info.setEndorse(true);
 			}
-
 			infos.getInfos().add(info);
 		}
 		return infos;
@@ -244,11 +244,12 @@ public class WorkflowManager {
 	
 	/**
 	 * 审批通过
-	 * @param taskIds
+	 * @param taskId
 	 * @param userId
 	 * @return List<TaskInfo> 当前任务信息
 	 */
 	public TaskResult pass(String taskId, String userId) throws ActivitiException{
+		identityService.setAuthenticatedUserId(userId);
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
 		if(task == null) {
 			logger.warn("任务没有找到{}", taskId);

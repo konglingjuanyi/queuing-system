@@ -1,25 +1,16 @@
 package com.qunar.ops.oaengine.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
-import java.sql.Struct;
-import java.text.DecimalFormat;
-import java.text.Normalizer;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.qunar.ops.oaengine.exception.CompareModelException;
+import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.exception.RemoteAccessException;
+import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.result.*;
+import com.qunar.ops.oaengine.result.dailysubmit.*;
+import com.qunar.ops.oaengine.service.IOAEngineService;
+import com.qunar.ops.oaengine.service.MailSenderService;
 import org.activiti.engine.*;
-import org.activiti.engine.impl.juel.ObjectValueExpression;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -34,21 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.qunar.ops.oaengine.exception.CompareModelException;
-import com.qunar.ops.oaengine.exception.FormNotFoundException;
-import com.qunar.ops.oaengine.exception.RemoteAccessException;
-import com.qunar.ops.oaengine.manager.WorkflowManager;
-import com.qunar.ops.oaengine.service.IOAEngineService;
-import com.qunar.ops.oaengine.service.MailSenderService;
-import com.qunar.ops.oaengine.result.dailysubmit.EmployeeRelationsFeesInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
-import com.qunar.ops.oaengine.result.dailysubmit.HospitalityInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.OtherCostsInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.OvertimeMealsInfo;
-import com.qunar.ops.oaengine.result.dailysubmit.TaxiFaresInfo;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class OaEngineController {
@@ -69,6 +53,8 @@ public class OaEngineController {
     private MailSenderService mailSenderService;
     @Autowired
     private IOAEngineService ioaEngineService;
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @RequestMapping(value = "/oa/test.html")
     public void index(HttpServletRequest request) {
@@ -127,7 +113,7 @@ public class OaEngineController {
             e.printStackTrace();
             logger.error("sso 验证失败", e);
         }
-        return "redirect:/oa/my_apply_todo.html";
+        return "redirect:/oa/apply_todo.html";
     }
 
     /**
@@ -164,9 +150,9 @@ public class OaEngineController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "oa/my_apply_todo.html")
+    @RequestMapping(value = "oa/apply_todo.html")
     public ModelAndView myApplyTodo(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/my_apply_todo");
+        ModelAndView mav = new ModelAndView("oa/apply_todo");
         return mav;
     }
 
@@ -176,9 +162,9 @@ public class OaEngineController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "oa/my_apply_history.html")
+    @RequestMapping(value = "oa/apply_history.html")
     public ModelAndView myApplyHistory(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/my_apply_history");
+        ModelAndView mav = new ModelAndView("oa/apply_history");
         return mav;
     }
 
@@ -206,7 +192,12 @@ public class OaEngineController {
         return mav;
     }
 
-
+    /**
+     * 我的申请页面需要获取的基本信息
+     *
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "oa/employeeinfo")
     @ResponseBody
     public BaseResult webEmployeeInfo(HttpServletRequest request) {
@@ -223,7 +214,6 @@ public class OaEngineController {
             logger.warn("ACL限制，获取员工信息失败");
             return BaseResult.getErrorResult(-2, "ACL限制，获取员工信息失败");
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String result[] = new String[]{employeeInfo.getAdName(),
                 employeeInfo.getSn(),
                 sdf.format(new Date(System.currentTimeMillis())),
@@ -231,6 +221,13 @@ public class OaEngineController {
         return BaseResult.getSuccessResult(result);
     }
 
+    /**
+     * 获取工时
+     *
+     * @param request
+     * @param laborRequest
+     * @return
+     */
     @RequestMapping(value = "oa/laborhour")
     @ResponseBody
     public BaseResult webLaborHour(HttpServletRequest request,
@@ -241,7 +238,6 @@ public class OaEngineController {
             return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
         }
         String day = laborRequest.getWhichDay();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
             date = sdf.parse(day);
@@ -264,6 +260,13 @@ public class OaEngineController {
         return BaseResult.getSuccessResult(result);
     }
 
+    /**
+     * 报销页面传到后端信息,存至各个表
+     *
+     * @param request
+     * @param webRequest
+     * @return
+     */
     @RequestMapping(value = "oa/data")
     @ResponseBody
     public BaseResult webPostData(HttpServletRequest request,
@@ -324,7 +327,6 @@ public class OaEngineController {
                                       Map<String, String[][]> tableMap, Map<String, String> vars)
             throws ParseException {
         // 存储各个table的数据。
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String table[][] = tableMap.get("table1");
         int len = table.length;
         List<TaxiFaresInfo> list1 = new ArrayList<TaxiFaresInfo>();
@@ -341,9 +343,9 @@ public class OaEngineController {
             taxiInfo.setTaxiFaresUse(table[i][4]);
             taxiInfo.setTaxiFaresPeerPeople(table[i][5]);
             taxiInfo.setTaxiFaresWorkhour(new BigDecimal(table[i][6]));
-            Float money = Float.parseFloat(table[i][7]);
+            Float money = Float.valueOf(table[i][7]);
             String sMoney = String.valueOf((int) (money * 100));
-            taxiInfo.setTaxiFaresAmount(Long.parseLong(sMoney));
+            taxiInfo.setTaxiFaresAmount(Long.valueOf(sMoney));
             taxiInfo.setComment(table[i][8]);
             list1.add(taxiInfo);
         }
@@ -363,11 +365,11 @@ public class OaEngineController {
             overInfo.setOvertimeMealsDate(sdf.parse(table[i][0]));
             overInfo.setMealsAddr(table[i][1]);
             overInfo.setOvertimeMealsPeerPeople(table[i][2]);
-            overInfo.setMealsPersonNum(Long.parseLong(table[i][3]));
-            Float money = Float.parseFloat(table[i][4]);
+            overInfo.setMealsPersonNum(Long.valueOf(table[i][3]));
+            Float money = Float.valueOf(table[i][4]);
             String sMoney = String.valueOf((int) (money * 100));
-            overInfo.setOvertimeMealsAmount(Long.parseLong(sMoney));
-            overInfo.setPerMealsFee((long) (Float.parseFloat(table[i][5]) * 100));
+            overInfo.setOvertimeMealsAmount(Long.valueOf(sMoney));
+            overInfo.setPerMealsFee((long) (Float.valueOf(table[i][5]) * 100));
             overInfo.setInvoiceAmount(table[i][6]);
             overInfo.setOvertimeMealsWorkhours(new BigDecimal(table[i][7]));
             overInfo.setOvertimeMealsComment(table[i][8]);
@@ -392,9 +394,9 @@ public class OaEngineController {
             hosInfo.setCustomCompany(table[i][3]);
             hosInfo.setCustomName(table[i][4]);
             hosInfo.setHospitalityNum(table[i][5]);
-            Float money = Float.parseFloat(table[i][6]);
+            Float money = Float.valueOf(table[i][6]);
             String sMoney = String.valueOf((int) (money * 100));
-            hosInfo.setHospitalityAmount(Long.parseLong(sMoney));
+            hosInfo.setHospitalityAmount(Long.valueOf(sMoney));
             list3.add(hosInfo);
         }
         size = list3.size();
@@ -414,9 +416,9 @@ public class OaEngineController {
             employInfo.setEmRelationsAddress(table[i][1]);
             employInfo.setEmRelationsPeerPeople(table[i][2]);
             employInfo.setActDest(table[i][3]);
-            Float money = Float.parseFloat(table[i][4]);
+            Float money = Float.valueOf(table[i][4]);
             String sMoney = String.valueOf((int) (money * 100));
-            employInfo.setEmRelationsFees(Long.parseLong(sMoney));
+            employInfo.setEmRelationsFees(Long.valueOf(sMoney));
             employInfo.setEmRelationsFeesComment(table[i][5]);
             list4.add(employInfo);
 
@@ -435,9 +437,9 @@ public class OaEngineController {
             }
             OtherCostsInfo otherInfo = new OtherCostsInfo();
             otherInfo.setOtherCostProject(table[i][0]);
-            Float money = Float.parseFloat(table[i][1]);
+            Float money = Float.valueOf(table[i][1]);
             String sMoney = String.valueOf((int) (money * 100));
-            otherInfo.setOtherCostAmount(Long.parseLong(sMoney));
+            otherInfo.setOtherCostAmount(Long.valueOf(sMoney));
             otherInfo.setOtherCostComment(table[i][2]);
             list5.add(otherInfo);
         }
@@ -453,17 +455,16 @@ public class OaEngineController {
                 .toArray(new OtherCostsInfo[size]);
         formInfo.setOtherCostsInfo(otherInfos);
         // 存储所有数据之和
-        formInfo.setSumTaxiFaresAmount((long) (Float.parseFloat(vars.get("sum1")) * 100));
-        formInfo.setSumOvertimeMealsAmount((long) (Float.parseFloat(vars.get("sum2")) * 100));
-        formInfo.setSumHospitalityAmount((long) (Float.parseFloat(vars.get("sum3")) * 100));
-        formInfo.setSumEmployeeRelationsFees((long) (Float.parseFloat(vars.get("sum4")) * 100));
-        formInfo.setSumOtherAmount((long) (Float.parseFloat(vars.get("sum5")) * 100));
+        formInfo.setSumTaxiFaresAmount((long) (Float.valueOf(vars.get("sum1")) * 100));
+        formInfo.setSumOvertimeMealsAmount((long) (Float.valueOf(vars.get("sum2")) * 100));
+        formInfo.setSumHospitalityAmount((long) (Float.valueOf(vars.get("sum3")) * 100));
+        formInfo.setSumEmployeeRelationsFees((long) (Float.valueOf(vars.get("sum4")) * 100));
+        formInfo.setSumOtherAmount((long) (Float.valueOf(vars.get("sum5")) * 100));
 
-        formInfo.setCommunicationCosts((long) (Float.parseFloat(vars.get("sum6")) * 100));
+        formInfo.setCommunicationCosts((long) (Float.valueOf(vars.get("sum6")) * 100));
         formInfo.setCommuCostsComment(vars.get("remark"));
 
-        formInfo.setMoneyAmount((long) (Float.parseFloat(vars.get("sum")) * 100));
-        sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        formInfo.setMoneyAmount((long) (Float.valueOf(vars.get("sum")) * 100));
         table = tableMap.get("table");
         len = table.length;
         for (int i = 0; i < len; i++) {
@@ -477,16 +478,23 @@ public class OaEngineController {
             formInfo.setBankNumber(table[i][7]);
             formInfo.setBankName(table[i][8]);
             formInfo.setIsBorrow(table[i][9]);
-            formInfo.setSerialNumber(table[i][10]);
+            formInfo.setBorrowSN(table[i][10]);
             if (isNull(table[i][11])) {
                 formInfo.setBorrowAmount(0l);
             } else {
-                formInfo.setBorrowAmount(Long.parseLong(table[i][11]));
+                formInfo.setBorrowAmount(Long.valueOf(table[i][11]));
             }
         }
         return true;
     }
 
+    /**
+     * 正在审批中的申请
+     *
+     * @param request
+     * @param webRequest
+     * @return
+     */
     @RequestMapping(value = "oa/todo")
     @ResponseBody
     public BaseResult getAllMyApplyTodoList(HttpServletRequest request,
@@ -496,7 +504,6 @@ public class OaEngineController {
             logger.warn("登陆用户为空，无法获取员工信息");
             return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String processKey = "oa_common";
         Map<String, String> vars = webRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
@@ -528,7 +535,7 @@ public class OaEngineController {
                 processKey, userId, _startTime, _endTime, pageNo, pageSize);
         DataResult dataResult;
         try {
-            dataResult = getTableInfos(formInfoList, userId);
+            dataResult = getTableInfos(formInfoList, userId, 1);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
             String errorMsg = "ACL限制，获取员工信息失败";
@@ -538,6 +545,13 @@ public class OaEngineController {
         return BaseResult.getSuccessResult(dataResult);
     }
 
+    /**
+     * 已经结束的申请
+     *
+     * @param request
+     * @param webRequest
+     * @return
+     */
     @RequestMapping(value = "oa/history")
     @ResponseBody
     public BaseResult getAllMyApplyHistoryList(HttpServletRequest request,
@@ -547,7 +561,6 @@ public class OaEngineController {
             logger.warn("登陆用户为空，无法获取员工信息");
             return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Map<String, String> vars = webRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
@@ -579,7 +592,7 @@ public class OaEngineController {
                 processKey, userId, _startTime, _endTime, pageNo, pageSize);
         DataResult dataResult;
         try {
-            dataResult = getTableInfos(formInfoList, userId);
+            dataResult = getTableInfos(formInfoList, userId, 1);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
             String errorMsg = "ACL限制，获取员工信息失败";
@@ -589,6 +602,13 @@ public class OaEngineController {
         return BaseResult.getSuccessResult(dataResult);
     }
 
+    /**
+     * 待审批
+     *
+     * @param request
+     * @param webRequest
+     * @return
+     */
     @RequestMapping(value = "oa/approve_todo")
     @ResponseBody
     public BaseResult getAllApproveTodoList(HttpServletRequest request,
@@ -602,7 +622,6 @@ public class OaEngineController {
         String processKey = "oa_common";
         // Date startTime, Date endTime,
         // 默认一页显示50条数据
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Map<String, String> vars = webRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
@@ -638,13 +657,27 @@ public class OaEngineController {
             e.printStackTrace();
             String errorMsg = "ACL限制，获取员工信息失败";
             logger.warn(errorMsg);
-            ApproveResult approveResult = new ApproveResult();
-            return BaseResult.getSuccessResult(approveResult);
+            return BaseResult.getErrorResult(-2, errorMsg);
         }
-        ApproveResult approveResult = getApproveTodoInfos(formInfoList);
-        return BaseResult.getSuccessResult(approveResult);
+        DataResult dataResult;
+        try {
+            dataResult = getTableInfos(formInfoList, userId, 2);
+        } catch (RemoteAccessException e) {
+            e.printStackTrace();
+            String errorMsg = "ACL限制，获取员工信息失败";
+            logger.warn(errorMsg);
+            return BaseResult.getErrorResult(-2, errorMsg);
+        }
+        return BaseResult.getSuccessResult(dataResult);
     }
 
+    /**
+     * 已经审批结束
+     *
+     * @param request
+     * @param webRequest
+     * @return
+     */
     @RequestMapping(value = "oa/approve_history")
     @ResponseBody
     public BaseResult getAllApproveHistoryList(HttpServletRequest request,
@@ -655,7 +688,6 @@ public class OaEngineController {
             return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
         }
         String processKey = "oa_common";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Map<String, String> vars = webRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
@@ -683,6 +715,9 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
             }
         }
+        if (isNull(approve_user)){
+            approve_user = null;
+        }
         FormInfoList formInfoList = null;
         try {
             formInfoList = ioaEngineService.historyList(
@@ -694,8 +729,16 @@ public class OaEngineController {
             ApproveResult approveResult = new ApproveResult();
             return BaseResult.getSuccessResult(approveResult);
         }
-        ApproveResult approveResult = getApproveHistoryInfos(formInfoList);
-        return BaseResult.getSuccessResult(approveResult);
+        DataResult dataResult;
+        try {
+            dataResult = getTableInfos(formInfoList, userId, 3);
+        } catch (RemoteAccessException e) {
+            e.printStackTrace();
+            String errorMsg = "ACL限制，获取员工信息失败";
+            logger.warn(errorMsg);
+            return BaseResult.getErrorResult(-2, errorMsg);
+        }
+        return BaseResult.getSuccessResult(dataResult);
     }
 
     /**
@@ -707,7 +750,7 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_pass")
     @ResponseBody
     public BaseResult approvePass(HttpServletRequest request,
-                                   @RequestBody WebRequest webRequest) {
+                                  @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -720,19 +763,17 @@ public class OaEngineController {
         List<String> taskIdList = new ArrayList<String>();
         String formMsg[] = formIds.split(",");
         for (int i = 0; i < formMsg.length; i++) {
-            formIdList.add(Long.parseLong(formMsg[i]));
+            formIdList.add(Long.valueOf(formMsg[i]));
         }
         String taskMsg[] = taskIds.split(",");
         for (int i = 0; i < taskMsg.length; i++) {
             taskIdList.add(taskMsg[i]);
         }
         String msg = vars.get("reason");
-        System.out.println(formIdList.size());
-        System.out.println(taskIdList.size());
         userId = "nuby.zhang";
         List<Long> errorFormIds = ioaEngineService.batchPass("oa_common", userId, formIdList, taskIdList, msg);
         int size = errorFormIds.size();
-        if (size == 0){
+        if (size == 0) {
             return BaseResult.getSuccessResult("同意操作成功");
         }
         return BaseResult.getSuccessResult(errorFormIds.toArray());
@@ -748,7 +789,7 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_reject")
     @ResponseBody
     public BaseResult approveReject(HttpServletRequest request,
-                                  @RequestBody WebRequest webRequest) {
+                                    @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -763,7 +804,7 @@ public class OaEngineController {
         String msg = vars.get("reason");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.refuse("oa_common", "nuby.zhang", Long.parseLong(formMsg[i]), taskMsg[i], msg);
+                ioaEngineService.refuse("oa_common", "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -788,7 +829,7 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_back")
     @ResponseBody
     public BaseResult approveBack(HttpServletRequest request,
-                                    @RequestBody WebRequest webRequest) {
+                                  @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -803,7 +844,7 @@ public class OaEngineController {
         String msg = vars.get("reason");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.back("oa_common", "nuby.zhang", Long.parseLong(formMsg[i]), taskMsg[i], msg);
+                ioaEngineService.back("oa_common", "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -811,7 +852,7 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, errorMsg);
             } catch (ActivitiException e) {
                 e.printStackTrace();
-                String errorMsg = "工作流系统错误,请检查";
+                String errorMsg = "没有前置审批节点，无法回退，请选择拒绝";
                 logger.warn(errorMsg);
                 return BaseResult.getErrorResult(-3, errorMsg);
             }
@@ -829,7 +870,7 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_endorse")
     @ResponseBody
     public BaseResult approveEndorse(HttpServletRequest request,
-                                  @RequestBody WebRequest webRequest) {
+                                     @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -844,7 +885,7 @@ public class OaEngineController {
         String msg = vars.get("reason");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.endorse("oa_common", "nuby.zhang", Long.parseLong(formMsg[i]), taskMsg[i], msg, "");
+                ioaEngineService.endorse("oa_common", "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg, "");
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -861,16 +902,64 @@ public class OaEngineController {
 
     }
 
+    /**
+     * 获取审批各个节点的审批意见
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/approve_info")
+    @ResponseBody
+    public BaseResult getApproveInfo(HttpServletRequest request,
+                                     @RequestBody WebRequest webRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn("登陆用户为空，无法获取员工信息");
+            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+        }
+        Map<String, String> vars = webRequest.getVars();
+        String formId = vars.get("formId");
+        ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo("oa_common", formId, 1, 20);
+        long count = approveInfos.getCount();
+        if (count == 0) {
+            return BaseResult.getSuccessResult("");
+        }
+        List<ApprovalInfo> infos = approveInfos.getInfos();
+        int size = infos.size();
+        SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String[][] result = new String[size][3];
+        for (int i = 0; i < size; i++) {
+            ApprovalInfo approveInfo = infos.get(i);
+            String memo = approveInfo.getMemo();
+            if (isNull(memo)) {
+                memo = "同意";
+            }
+            String info[] = new String[]{
+                    approveInfo.getApproveUser(),
+                    tdf.format(approveInfo.getTs()),
+                    memo
+            };
+            result[i] = info;
+        }
+        return BaseResult.getSuccessResult(result);
+
+    }
+
+    /**
+     * 获取当前审批信息
+     *
+     * @param formInfoList
+     * @return
+     */
     private ApproveResult getApproveTodoInfos(FormInfoList formInfoList) {
         List<FormInfo> formInfos = formInfoList.getFormInfos();
         ApproveResult approveResult = new ApproveResult();
         long count = formInfoList.getCount();
-        if(count == 0){
+        if (count == 0) {
             return approveResult;
         }
         List<String[]> infos = new ArrayList<String[]>();
         int size = formInfos.size();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 0; i < size; i++) {
             FormInfo formInfo = formInfos.get(i);
             String[] tableInfo = new String[6];
@@ -887,16 +976,21 @@ public class OaEngineController {
         return approveResult;
     }
 
+    /**
+     * 获取审批历史信息
+     *
+     * @param formInfoList
+     * @return
+     */
     private ApproveResult getApproveHistoryInfos(FormInfoList formInfoList) {
         List<FormInfo> formInfos = formInfoList.getFormInfos();
         ApproveResult approveResult = new ApproveResult();
         long count = formInfoList.getCount();
-        if(count == 0){
+        if (count == 0) {
             return approveResult;
         }
         List<String[]> infos = new ArrayList<String[]>();
         int size = formInfos.size();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         for (int i = 0; i < size; i++) {
             FormInfo formInfo = formInfos.get(i);
             String[] tableInfo = new String[6];
@@ -913,21 +1007,26 @@ public class OaEngineController {
         return approveResult;
     }
 
-    private DataResult getTableInfos(FormInfoList formInfoList, String userId) throws RemoteAccessException {
+    /**
+     * 我的申请和历史申请表格信息
+     *
+     * @param formInfoList
+     * @param userId
+     * @return
+     * @throws RemoteAccessException
+     */
+    private DataResult getTableInfos(FormInfoList formInfoList, String userId, int id) throws RemoteAccessException {
         DataResult dataResult = new DataResult();
         List<FormInfo> formInfos = formInfoList.getFormInfos();
         int size = formInfos.size();
         List<String[]> tableInfos = new ArrayList<String[]>();
         EmployeeInfo employeeInfo = ioaEngineService.getEmployeeInfo(userId);
         String depart = getDepartMent(employeeInfo);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         List<Map<String, String>> varsList = new ArrayList<Map<String, String>>();
         List<Map<String, String[][]>> tableMapList = new ArrayList<Map<String, String[][]>>();
         for (int i = 0; i < size; i++) {
             FormInfo formInfo = formInfos.get(i);
-            String tableInfo[] = new String[]{formInfo.getSerialNumber(), depart,
-                    formInfo.getApplyUser(), sdf.format(formInfo.getApplyDate()),
-                    String.valueOf(formInfo.getMoneyAmount())};
+            String tableInfo[] = getEveryTableInfo(formInfo, depart, id);
             tableInfos.add(tableInfo);
             constructTableMap(formInfo, varsList, tableMapList);
         }
@@ -938,25 +1037,54 @@ public class OaEngineController {
         return dataResult;
     }
 
+    /**
+     * 统一返回中间不同处理
+     * @param formInfo
+     * @param depart
+     * @param id
+     * @return
+     */
+    private String[] getEveryTableInfo(FormInfo formInfo, String depart, int id) {
+        String tableInfo[] = {};
+        if (id == 1) {
+            tableInfo = new String[]{String.valueOf(formInfo.getId()),
+                    formInfo.getSerialNumber(), depart,
+                    formInfo.getApplyUser(), sdf.format(formInfo.getApplyDate()),
+                    String.valueOf(formInfo.getMoneyAmount())};
+        }else if (id == 2) {
+            tableInfo = new String[6];
+            tableInfo[0] = String.valueOf(formInfo.getId());
+            tableInfo[1] = formInfo.getApplyUser();
+            tableInfo[2] = formInfo.getApplyDep();
+            tableInfo[3] = sdf.format(formInfo.getApplyDate());
+            tableInfo[4] = String.valueOf(formInfo.getMoneyAmount());
+            tableInfo[5] = formInfo.getTaskId();
+        }else if (id == 3){
+            tableInfo = new String[6];
+            tableInfo[0] = String.valueOf(formInfo.getId());
+            tableInfo[1] = formInfo.getApplyUser();
+            tableInfo[2] = formInfo.getApplyDep();
+            tableInfo[3] = sdf.format(formInfo.getApplyDate());
+            tableInfo[4] = "不知道结束时间怎么定义";
+            tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
+        }
+        return tableInfo;
+    }
+
+    /**
+     * 构造历史页面需要展示的各种信息
+     *
+     * @param formInfo
+     * @param varsList
+     * @param tableMapList
+     */
     private void constructTableMap(FormInfo formInfo, List<Map<String, String>> varsList,
                                    List<Map<String, String[][]>> tableMapList) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
         Map<String, String[][]> tableMap = new HashMap<String, String[][]>();
-        String table[][] = new String[1][12];
-        table[0][0] = formInfo.getApplyUser();
-        table[0][1] = formInfo.getSerialNumber();
-        table[0][2] = sdf.format(formInfo.getApplyDate());
-        table[0][3] = formInfo.getFirstDep();
-        table[0][4] = formInfo.getApplyDep();
-        table[0][5] = formInfo.getDepNum();
-        table[0][6] = formInfo.getIsDirectVp();
-        table[0][7] = formInfo.getBankNumber();
-        table[0][8] = formInfo.getBankName();
-        table[0][9] = formInfo.getIsBorrow();
-        table[0][10] = formInfo.getBorrowSN();
-        table[0][11] = String.valueOf(formInfo.getBorrowAmount());
+        String table[][] = createTableFirstInfo(formInfo);
         tableMap.put("table", table);
+        table = createTableLastInfo(formInfo);
+        tableMap.put("table7", table);
         TaxiFaresInfo infos1[] = formInfo.getTaxiFaresInfo();
         int len = infos1.length;
         if (len == 0) {
@@ -1076,6 +1204,64 @@ public class OaEngineController {
         tableMapList.add(tableMap);
     }
 
+    /**
+     * 历史页面展示信息 第一个table
+     *
+     * @param formInfo
+     * @return
+     */
+    private String[][] createTableFirstInfo(FormInfo formInfo) {
+        String table[][] = new String[1][12];
+        String acTable[] = new String[12];
+        acTable[0] = formInfo.getApplyUser();
+        acTable[1] = formInfo.getSerialNumber();
+        acTable[2] = sdf.format(formInfo.getApplyDate());
+        acTable[3] = formInfo.getFirstDep();
+        acTable[4] = formInfo.getApplyDep();
+        acTable[5] = formInfo.getDepNum();
+        acTable[6] = formInfo.getIsDirectVp();
+        acTable[7] = formInfo.getBankNumber();
+        acTable[8] = formInfo.getBankName();
+        acTable[9] = formInfo.getIsBorrow();
+        acTable[10] = formInfo.getBorrowSN();
+        acTable[11] = String.valueOf(formInfo.getBorrowAmount());
+        table[0] = acTable;
+        return table;
+    }
+
+    /**
+     * 历史页面展示信息,最后一个table
+     *
+     * @param formInfo
+     * @return
+     */
+    private String[][] createTableLastInfo(FormInfo formInfo) {
+        String table[][] = new String[8][2];
+        table[0][0] = formInfo.getDepLeaderOpinion();
+        table[0][1] = dateToStr(formInfo.getDepLeaderDate());
+        table[1][0] = formInfo.getDepDirectorOpinion();
+        table[1][1] = dateToStr(formInfo.getDepDirectorDate());
+        table[2][0] = formInfo.getSupDepLeaderOpinion();
+        table[2][1] = dateToStr(formInfo.getSupDepLeaderDate());
+        table[3][0] = formInfo.getFinancialDirectorOption();
+        table[3][1] = dateToStr(formInfo.getFinancialDirectorDate());
+        table[4][0] = formInfo.getCeoOption();
+        table[4][1] = dateToStr(formInfo.getCeoDate());
+        table[5][0] = formInfo.getCeoOption1();
+        table[5][1] = dateToStr(formInfo.getCeoDate1());
+        table[6][0] = formInfo.getReimbursementTeamName();
+        table[6][1] = dateToStr(formInfo.getReimbursementTeamDate());
+        table[7][0] = formInfo.getCashierOpinion();
+        table[7][1] = dateToStr(formInfo.getCashierDate());
+        return table;
+    }
+
+    /**
+     * 获取部门信息,拼接成五级部门
+     *
+     * @param employeeInfo
+     * @return
+     */
     private String getDepartMent(EmployeeInfo employeeInfo) {
         String depart = employeeInfo.getDepartmentI();
         String other = employeeInfo.getDepartmentII();
@@ -1097,6 +1283,12 @@ public class OaEngineController {
         return depart;
     }
 
+    /**
+     * 判断一个字符串是否为空
+     *
+     * @param value
+     * @return
+     */
     private boolean isNull(String value) {
         if (value == null || "".equals(value)) {
             return true;
@@ -1104,6 +1296,12 @@ public class OaEngineController {
         return false;
     }
 
+    /**
+     * 将获取到的money转为人民币单位元
+     *
+     * @param money
+     * @return
+     */
     private String transformMoney(long money) {
         DecimalFormat ndf = new DecimalFormat("##0.00");
         double sMoney = (double) money / 100;
@@ -1111,14 +1309,35 @@ public class OaEngineController {
         return eMoney;
     }
 
-    private int[] getPageNoAndSize(Map<String, String> vars){
+    /**
+     * 获取当前是第几页以及每页的size
+     *
+     * @param vars
+     * @return
+     */
+    private int[] getPageNoAndSize(Map<String, String> vars) {
         String sStart = vars.get("start");
         String sLen = vars.get("length");
         int start = sStart == null ? 0 : Integer.valueOf(sStart);
         int len = sLen == null ? 0 : Integer.valueOf(sLen);
         int pageSize = len;
-        int pageNo = start/len + 1;
+        int pageNo = start / len + 1;
         return new int[]{pageSize, pageNo};
+    }
+
+    /**
+     * 日期转为字符串
+     *
+     * @param date
+     * @param sdf
+     * @return
+     */
+    private String dateToStr(Date date) {
+        String dateStr = "";
+        if (date != null) {
+            dateStr = sdf.format(date);
+        }
+        return dateStr;
     }
 
 }
