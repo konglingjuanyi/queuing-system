@@ -137,6 +137,15 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	// 开户银行
 	// private String bankName;
 	private String taskId;
+	private Date dealDate;
+
+	public Date getDealDate() {
+		return dealDate;
+	}
+
+	public void setDealDate(Date dealDate) {
+		this.dealDate = dealDate;
+	}
 
 	public String getTaskId() {
 		return taskId;
