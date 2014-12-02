@@ -323,170 +323,6 @@ public class OaEngineController {
         return BaseResult.getSuccessResult(String.valueOf(id));
     }
 
-    private boolean constructFormInfo(FormInfo formInfo,
-                                      Map<String, String[][]> tableMap, Map<String, String> vars)
-            throws ParseException {
-        // 存储各个table的数据。
-        String table[][] = tableMap.get("table1");
-        int len = table.length;
-        List<TaxiFaresInfo> list1 = new ArrayList<TaxiFaresInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][7])) {
-                continue;
-            }
-            TaxiFaresInfo taxiInfo = new TaxiFaresInfo();
-            taxiInfo.setTaxiFaresDate(sdf.parse(table[i][0]));
-            taxiInfo.setTaxiFaresAddr(table[i][1]);
-            taxiInfo.setTaxiFaresDest(table[i][2]);
-            taxiInfo.setTaxiFaresTime(table[i][3]);
-            taxiInfo.setTaxiFaresTimeNew(table[i][3]);
-            taxiInfo.setTaxiFaresUse(table[i][4]);
-            taxiInfo.setTaxiFaresPeerPeople(table[i][5]);
-            taxiInfo.setTaxiFaresWorkhour(new BigDecimal(table[i][6]));
-            Float money = Float.valueOf(table[i][7]);
-            String sMoney = String.valueOf((int) (money * 100));
-            taxiInfo.setTaxiFaresAmount(Long.valueOf(sMoney));
-            taxiInfo.setComment(table[i][8]);
-            list1.add(taxiInfo);
-        }
-        int size = list1.size();
-        TaxiFaresInfo[] taxiInfos = list1
-                .toArray(new TaxiFaresInfo[size]);
-        formInfo.setTaxiFaresInfo(taxiInfos);
-
-        table = tableMap.get("table2");
-        len = table.length;
-        List<OvertimeMealsInfo> list2 = new ArrayList<OvertimeMealsInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][5])) {
-                continue;
-            }
-            OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
-            overInfo.setOvertimeMealsDate(sdf.parse(table[i][0]));
-            overInfo.setMealsAddr(table[i][1]);
-            overInfo.setOvertimeMealsPeerPeople(table[i][2]);
-            overInfo.setMealsPersonNum(Long.valueOf(table[i][3]));
-            Float money = Float.valueOf(table[i][4]);
-            String sMoney = String.valueOf((int) (money * 100));
-            overInfo.setOvertimeMealsAmount(Long.valueOf(sMoney));
-            overInfo.setPerMealsFee((long) (Float.valueOf(table[i][5]) * 100));
-            overInfo.setInvoiceAmount(table[i][6]);
-            overInfo.setOvertimeMealsWorkhours(new BigDecimal(table[i][7]));
-            overInfo.setOvertimeMealsComment(table[i][8]);
-            list2.add(overInfo);
-        }
-        size = list2.size();
-        OvertimeMealsInfo[] overInfos = list2
-                .toArray(new OvertimeMealsInfo[size]);
-        formInfo.setOvertimeMealsInfo(overInfos);
-
-        table = tableMap.get("table3");
-        len = table.length;
-        List<HospitalityInfo> list3 = new ArrayList<HospitalityInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][6])) {
-                continue;
-            }
-            HospitalityInfo hosInfo = new HospitalityInfo();
-            hosInfo.setHospitalityDate(sdf.parse(table[i][0]));
-            hosInfo.setHospitalityAddr(table[i][1]);
-            hosInfo.setBusinessPurpose(table[i][2]);
-            hosInfo.setCustomCompany(table[i][3]);
-            hosInfo.setCustomName(table[i][4]);
-            hosInfo.setHospitalityNum(table[i][5]);
-            Float money = Float.valueOf(table[i][6]);
-            String sMoney = String.valueOf((int) (money * 100));
-            hosInfo.setHospitalityAmount(Long.valueOf(sMoney));
-            list3.add(hosInfo);
-        }
-        size = list3.size();
-        HospitalityInfo[] hosInfos = list3
-                .toArray(new HospitalityInfo[size]);
-        formInfo.setHospitalityInfo(hosInfos);
-
-        table = tableMap.get("table4");
-        len = table.length;
-        List<EmployeeRelationsFeesInfo> list4 = new ArrayList<EmployeeRelationsFeesInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][4])) {
-                continue;
-            }
-            EmployeeRelationsFeesInfo employInfo = new EmployeeRelationsFeesInfo();
-            employInfo.setEmRelationsDate(sdf.parse(table[i][0]));
-            employInfo.setEmRelationsAddress(table[i][1]);
-            employInfo.setEmRelationsPeerPeople(table[i][2]);
-            employInfo.setActDest(table[i][3]);
-            Float money = Float.valueOf(table[i][4]);
-            String sMoney = String.valueOf((int) (money * 100));
-            employInfo.setEmRelationsFees(Long.valueOf(sMoney));
-            employInfo.setEmRelationsFeesComment(table[i][5]);
-            list4.add(employInfo);
-
-        }
-        size = list4.size();
-        EmployeeRelationsFeesInfo[] employInfos = list4
-                .toArray(new EmployeeRelationsFeesInfo[size]);
-        formInfo.setEmployeeRelationsFeesInfo(employInfos);
-
-        table = tableMap.get("table5");
-        len = table.length;
-        List<OtherCostsInfo> list5 = new ArrayList<OtherCostsInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][2])) {
-                continue;
-            }
-            OtherCostsInfo otherInfo = new OtherCostsInfo();
-            otherInfo.setOtherCostProject(table[i][0]);
-            Float money = Float.valueOf(table[i][1]);
-            String sMoney = String.valueOf((int) (money * 100));
-            otherInfo.setOtherCostAmount(Long.valueOf(sMoney));
-            otherInfo.setOtherCostComment(table[i][2]);
-            list5.add(otherInfo);
-        }
-        size = list5.size();
-        // 如果全部数据都为空的话，就不存了。
-
-        if (list1.size() == 0 && list2.size() == 0 && list3.size() == 0
-                && list4.size() == 0 && list5.size() == 0) {
-            return false;
-        }
-
-        OtherCostsInfo[] otherInfos = list5
-                .toArray(new OtherCostsInfo[size]);
-        formInfo.setOtherCostsInfo(otherInfos);
-        // 存储所有数据之和
-        formInfo.setSumTaxiFaresAmount((long) (Float.valueOf(vars.get("sum1")) * 100));
-        formInfo.setSumOvertimeMealsAmount((long) (Float.valueOf(vars.get("sum2")) * 100));
-        formInfo.setSumHospitalityAmount((long) (Float.valueOf(vars.get("sum3")) * 100));
-        formInfo.setSumEmployeeRelationsFees((long) (Float.valueOf(vars.get("sum4")) * 100));
-        formInfo.setSumOtherAmount((long) (Float.valueOf(vars.get("sum5")) * 100));
-
-        formInfo.setCommunicationCosts((long) (Float.valueOf(vars.get("sum6")) * 100));
-        formInfo.setCommuCostsComment(vars.get("remark"));
-
-        formInfo.setMoneyAmount((long) (Float.valueOf(vars.get("sum")) * 100));
-        table = tableMap.get("table");
-        len = table.length;
-        for (int i = 0; i < len; i++) {
-            formInfo.setApplyUser(table[i][0]);
-            formInfo.setApplyDate((new Date(System.currentTimeMillis())));
-            formInfo.setSerialNumber(table[i][1]);
-            formInfo.setFirstDep(table[i][3]);
-            formInfo.setApplyDep(table[i][4]);
-            formInfo.setDepNum(table[i][5]);
-            formInfo.setIsDirectVp(table[i][6]);
-            formInfo.setBankNumber(table[i][7]);
-            formInfo.setBankName(table[i][8]);
-            formInfo.setIsBorrow(table[i][9]);
-            formInfo.setBorrowSN(table[i][10]);
-            if (isNull(table[i][11])) {
-                formInfo.setBorrowAmount(0l);
-            } else {
-                formInfo.setBorrowAmount(Long.valueOf(table[i][11]));
-            }
-        }
-        return true;
-    }
 
     /**
      * 正在审批中的申请
@@ -903,6 +739,37 @@ public class OaEngineController {
     }
 
     /**
+     * 催办动作
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/push_approve")
+    @ResponseBody
+    public BaseResult pushApprove(HttpServletRequest request,
+                                     @RequestBody WebRequest webRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn("登陆用户为空，无法获取员工信息");
+            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+        }
+        Map<String, String> vars = webRequest.getVars();
+        String formId = vars.get("formId");
+        ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo("oa_common", formId, 1, 20);
+        long count = approveInfos.getCount();
+        if (count == 0) {
+            return BaseResult.getSuccessResult("没有获取到审批候选人");
+        }
+        List<ApprovalInfo> infos = approveInfos.getInfos();
+        int size = infos.size();
+        ApprovalInfo approvalInfo = infos.get(size - 1);
+        Long approveId = approvalInfo.getId();
+        ioaEngineService.reminder("oa_common", userId, formId, String.valueOf(approveId), "催办");
+        return BaseResult.getSuccessResult("催办成功");
+
+    }
+
+    /**
      * 获取审批各个节点的审批意见
      *
      * @param request
@@ -944,6 +811,173 @@ public class OaEngineController {
         return BaseResult.getSuccessResult(result);
 
     }
+
+    private boolean constructFormInfo(FormInfo formInfo,
+                                      Map<String, String[][]> tableMap, Map<String, String> vars)
+            throws ParseException {
+        // 存储各个table的数据。
+        String table[][] = tableMap.get("table1");
+        int len = table.length;
+        List<TaxiFaresInfo> list1 = new ArrayList<TaxiFaresInfo>();
+        for (int i = 0; i < len; i++) {
+            if ("".equals(table[i][0]) || "".equals(table[i][7])) {
+                continue;
+            }
+            TaxiFaresInfo taxiInfo = new TaxiFaresInfo();
+            taxiInfo.setTaxiFaresDate(sdf.parse(table[i][0]));
+            taxiInfo.setTaxiFaresAddr(table[i][1]);
+            taxiInfo.setTaxiFaresDest(table[i][2]);
+            taxiInfo.setTaxiFaresTime(table[i][3]);
+            taxiInfo.setTaxiFaresTimeNew(table[i][3]);
+            taxiInfo.setTaxiFaresUse(table[i][4]);
+            taxiInfo.setTaxiFaresPeerPeople(table[i][5]);
+            taxiInfo.setTaxiFaresWorkhour(new BigDecimal(table[i][6]));
+            Float money = Float.valueOf(table[i][7]);
+            String sMoney = String.valueOf((int) (money * 100));
+            taxiInfo.setTaxiFaresAmount(Long.valueOf(sMoney));
+            taxiInfo.setComment(table[i][8]);
+            list1.add(taxiInfo);
+        }
+        int size = list1.size();
+        TaxiFaresInfo[] taxiInfos = list1
+                .toArray(new TaxiFaresInfo[size]);
+        formInfo.setTaxiFaresInfo(taxiInfos);
+
+        table = tableMap.get("table2");
+        len = table.length;
+        List<OvertimeMealsInfo> list2 = new ArrayList<OvertimeMealsInfo>();
+        for (int i = 0; i < len; i++) {
+            if ("".equals(table[i][0]) || "".equals(table[i][5])) {
+                continue;
+            }
+            OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
+            overInfo.setOvertimeMealsDate(sdf.parse(table[i][0]));
+            overInfo.setMealsAddr(table[i][1]);
+            overInfo.setOvertimeMealsPeerPeople(table[i][2]);
+            overInfo.setMealsPersonNum(Long.valueOf(table[i][3]));
+            Float money = Float.valueOf(table[i][4]);
+            String sMoney = String.valueOf((int) (money * 100));
+            overInfo.setOvertimeMealsAmount(Long.valueOf(sMoney));
+            overInfo.setPerMealsFee((long) (Float.valueOf(table[i][5]) * 100));
+            overInfo.setInvoiceAmount(table[i][6]);
+            overInfo.setOvertimeMealsWorkhours(new BigDecimal(table[i][7]));
+            overInfo.setOvertimeMealsComment(table[i][8]);
+            list2.add(overInfo);
+        }
+        size = list2.size();
+        OvertimeMealsInfo[] overInfos = list2
+                .toArray(new OvertimeMealsInfo[size]);
+        formInfo.setOvertimeMealsInfo(overInfos);
+
+        table = tableMap.get("table3");
+        len = table.length;
+        List<HospitalityInfo> list3 = new ArrayList<HospitalityInfo>();
+        for (int i = 0; i < len; i++) {
+            if ("".equals(table[i][0]) || "".equals(table[i][6])) {
+                continue;
+            }
+            HospitalityInfo hosInfo = new HospitalityInfo();
+            hosInfo.setHospitalityDate(sdf.parse(table[i][0]));
+            hosInfo.setHospitalityAddr(table[i][1]);
+            hosInfo.setBusinessPurpose(table[i][2]);
+            hosInfo.setCustomCompany(table[i][3]);
+            hosInfo.setCustomName(table[i][4]);
+            hosInfo.setHospitalityNum(table[i][5]);
+            Float money = Float.valueOf(table[i][6]);
+            String sMoney = String.valueOf((int) (money * 100));
+            hosInfo.setHospitalityAmount(Long.valueOf(sMoney));
+            list3.add(hosInfo);
+        }
+        size = list3.size();
+        HospitalityInfo[] hosInfos = list3
+                .toArray(new HospitalityInfo[size]);
+        formInfo.setHospitalityInfo(hosInfos);
+
+        table = tableMap.get("table4");
+        len = table.length;
+        List<EmployeeRelationsFeesInfo> list4 = new ArrayList<EmployeeRelationsFeesInfo>();
+        for (int i = 0; i < len; i++) {
+            if ("".equals(table[i][0]) || "".equals(table[i][4])) {
+                continue;
+            }
+            EmployeeRelationsFeesInfo employInfo = new EmployeeRelationsFeesInfo();
+            employInfo.setEmRelationsDate(sdf.parse(table[i][0]));
+            employInfo.setEmRelationsAddress(table[i][1]);
+            employInfo.setEmRelationsPeerPeople(table[i][2]);
+            employInfo.setActDest(table[i][3]);
+            Float money = Float.valueOf(table[i][4]);
+            String sMoney = String.valueOf((int) (money * 100));
+            employInfo.setEmRelationsFees(Long.valueOf(sMoney));
+            employInfo.setEmRelationsFeesComment(table[i][5]);
+            list4.add(employInfo);
+
+        }
+        size = list4.size();
+        EmployeeRelationsFeesInfo[] employInfos = list4
+                .toArray(new EmployeeRelationsFeesInfo[size]);
+        formInfo.setEmployeeRelationsFeesInfo(employInfos);
+
+        table = tableMap.get("table5");
+        len = table.length;
+        List<OtherCostsInfo> list5 = new ArrayList<OtherCostsInfo>();
+        for (int i = 0; i < len; i++) {
+            if ("".equals(table[i][0]) || "".equals(table[i][2])) {
+                continue;
+            }
+            OtherCostsInfo otherInfo = new OtherCostsInfo();
+            otherInfo.setOtherCostProject(table[i][0]);
+            Float money = Float.valueOf(table[i][1]);
+            String sMoney = String.valueOf((int) (money * 100));
+            otherInfo.setOtherCostAmount(Long.valueOf(sMoney));
+            otherInfo.setOtherCostComment(table[i][2]);
+            list5.add(otherInfo);
+        }
+        size = list5.size();
+        // 如果全部数据都为空的话，就不存了。
+
+        if (list1.size() == 0 && list2.size() == 0 && list3.size() == 0
+                && list4.size() == 0 && list5.size() == 0) {
+            return false;
+        }
+
+        OtherCostsInfo[] otherInfos = list5
+                .toArray(new OtherCostsInfo[size]);
+        formInfo.setOtherCostsInfo(otherInfos);
+        // 存储所有数据之和
+        formInfo.setSumTaxiFaresAmount((long) (Float.valueOf(vars.get("sum1")) * 100));
+        formInfo.setSumOvertimeMealsAmount((long) (Float.valueOf(vars.get("sum2")) * 100));
+        formInfo.setSumHospitalityAmount((long) (Float.valueOf(vars.get("sum3")) * 100));
+        formInfo.setSumEmployeeRelationsFees((long) (Float.valueOf(vars.get("sum4")) * 100));
+        formInfo.setSumOtherAmount((long) (Float.valueOf(vars.get("sum5")) * 100));
+
+        formInfo.setCommunicationCosts((long) (Float.valueOf(vars.get("sum6")) * 100));
+        formInfo.setCommuCostsComment(vars.get("remark"));
+
+        formInfo.setMoneyAmount((long) (Float.valueOf(vars.get("sum")) * 100));
+        table = tableMap.get("table");
+        len = table.length;
+        for (int i = 0; i < len; i++) {
+            formInfo.setApplyUser(table[i][0]);
+            formInfo.setApplyDate((new Date(System.currentTimeMillis())));
+            formInfo.setSerialNumber(table[i][1]);
+            formInfo.setFirstDep(table[i][3]);
+            formInfo.setApplyDep(table[i][4]);
+            formInfo.setDepNum(table[i][5]);
+            formInfo.setIsDirectVp(table[i][6]);
+            formInfo.setBankNumber(table[i][7]);
+            formInfo.setBankName(table[i][8]);
+            formInfo.setIsBorrow(table[i][9]);
+            formInfo.setBorrowSN(table[i][10]);
+            if (isNull(table[i][11])) {
+                formInfo.setBorrowAmount(0l);
+            } else {
+                formInfo.setBorrowAmount(Long.valueOf(table[i][11]));
+            }
+        }
+        return true;
+    }
+
+
 
     /**
      * 获取当前审批信息
@@ -1329,7 +1363,6 @@ public class OaEngineController {
      * 日期转为字符串
      *
      * @param date
-     * @param sdf
      * @return
      */
     private String dateToStr(Date date) {

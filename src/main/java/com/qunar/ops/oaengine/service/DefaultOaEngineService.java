@@ -170,8 +170,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 		ApprovalInfo info = logManager.getApprovalInfo(Long.valueOf(approveId));
 		String[] to = info.getNextCandidate().split(",");
 		String[] to_mail = new String[to.length];
+
 		for(int i = 0; i < to.length; i++){
 			to_mail[i] = to[i] + "@qunar.com";
+//			to_mail[i] = "zhenqing.wang@qunar.com";
+			System.out.println(to_mail[i]);
 		}
 		String title = userId + "请你尽快处理日常报销，附言：" + memo;
 		String content = title;
