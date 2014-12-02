@@ -554,7 +554,7 @@ public class OaEngineController {
         }
         FormInfoList formInfoList = null;
         try {
-            formInfoList = ioaEngineService.historyProcessInstList(
+            formInfoList = ioaEngineService.todoList(
                     processKey, "nuby.zhang", _startTime, _endTime, approve_user, pageNo, pageSize);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
@@ -1145,7 +1145,7 @@ public class OaEngineController {
             tableInfo[1] = formInfo.getApplyUser();
             tableInfo[2] = formInfo.getApplyDep();
             tableInfo[3] = sdf.format(formInfo.getApplyDate());
-            tableInfo[4] = "不知道结束时间怎么定义";
+            tableInfo[4] = sdf.format(formInfo.getDealDate());
             tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
         }
         return tableInfo;
