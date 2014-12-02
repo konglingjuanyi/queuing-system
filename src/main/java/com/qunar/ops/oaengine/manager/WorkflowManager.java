@@ -175,6 +175,7 @@ public class WorkflowManager {
 			info.setProcessInstanceId(task.getProcessInstanceId());
 			info.setTaskId(task.getId());
 			info.setTaskKey(task.getTaskDefinitionKey());
+			info.setEndTime(task.getEndTime());
 			info.setTaskName(task.getName());
 			System.out.println(task.getExecutionId());
 

@@ -244,6 +244,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			String proc_inst_id = taskInfo.getProcessInstanceId();
 			formInfo = form0114Manager.getFormInfo(proc_inst_id);
 			formInfo.setTaskId(taskInfo.getTaskId());
+			formInfo.setDealDate(taskInfo.getEndTime());
 			formInfos.add(formInfo);
 		}
 		res.setCount((int)taskInfos.getCount());
