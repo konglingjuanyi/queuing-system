@@ -572,7 +572,7 @@ public class Form0114Manager {
 			formInfo = new FormInfo();
 			BeanUtils.copyProperties(formmain0114Historys.get(i), formInfo);
 			
-			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			Map<String, Object> formson = getFormsonInfoHistory(formInfo.getId());
 			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
 					.get("overtimeMealsInfos"));
 			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
