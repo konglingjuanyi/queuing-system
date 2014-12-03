@@ -280,7 +280,7 @@ public class Form0114Manager {
 	 * @return
 	 * @throws FormNotFoundException 
 	 */
-	public FormInfo getFormInfo(String proc_inst_id) throws FormNotFoundException {
+	public FormInfo getFormInfoByInst(String proc_inst_id) throws FormNotFoundException {
 		FormInfo formInfo = new FormInfo();
 		Formmain0114Example example = new Formmain0114Example();
 		example.createCriteria().andProcInstIdEqualTo(proc_inst_id);
