@@ -19,9 +19,9 @@ function __generateDetailHtml(header, header_icon, data_list, with_hr) {
     html += '<div class="space-4"></div>';
     html += __generateLIHeader(header, header_icon);
     for (var i = 0; i < data_list.length; i++) {
-        if(isNull(data_list[i])){
+        if (isNull(data_list[i])) {
             html += '<div class="space-4"></div>';
-        }else{
+        } else {
             html += __generateLIData(data_list[i]);
         }
     }
@@ -54,7 +54,7 @@ function showEditDialog(tableMap, vars) {
 //close: function () {
 //    $('#edit-form').empty();
 //    $("#dialog-confirm").dialog('close');
-    //$(this).dialog('destroy');
+//$(this).dialog('destroy');
 //}
 function fixedTableInfo(tableMap, vars) {
     var tableList = ["table1", "table6", "table2", "table3", "table4", "table5"];
@@ -242,18 +242,23 @@ function tableSumForm(num, vars) {
     return form;
 }
 
-$.extend(true, $.fn.dataTable.defaults, {
-    "sPaginationType": "bootstrap",
-    "oLanguage": {
-        "sEmptyTable": "无数据",
-        "sProcessing": "正在获取数据，请稍后...",
-        "oPaginate.sFirst": "第一页",
-        "oPaginate.sLast": "最后一页",
-        "oPaginate.sNext": "下一页",
-        "oPaginate.sPrevious": "上一页",
-        "sInfo": "本页 _START_ - _END_ , 共 _TOTAL_ 条记录",
-        "sInfoEmpty": "本页 0 - 0 , 共 0 条记录",
-        "sSearch": "搜索: ",
-        "sLengthMenu": "共_MENU_记录"
-    }
+
+jQuery(function ($) {
+
+    $.extend(true, $.fn.dataTable.defaults, {
+        "sPaginationType": "bootstrap",
+        "oLanguage": {
+            "sEmptyTable": "无数据",
+            "sProcessing": "正在获取数据，请稍后...",
+            "oPaginate.sFirst": "第一页",
+            "oPaginate.sLast": "最后一页",
+            "oPaginate.sNext": "下一页",
+            "oPaginate.sPrevious": "上一页",
+            "sInfo": "本页 _START_ - _END_ , 共 _TOTAL_ 条记录",
+            "sInfoEmpty": "本页 0 - 0 , 共 0 条记录",
+            "sSearch": "搜索: ",
+            "sLengthMenu": "共_MENU_记录"
+        }
+    });
+
 });
