@@ -43,7 +43,7 @@ function showInfo(url, tableName, rTableId, status, num) {
         "sWidth": 200,
         "sClass": "center"
     };
-    if(num == 1){
+    if (num == 1) {
         aoColumns.push(col);
     }
     var wh = $(window).height();
@@ -98,16 +98,22 @@ function showInfo(url, tableName, rTableId, status, num) {
                 "url": url,
                 "data": JSON.stringify(params),
                 "success": function (resp) {
-                    var data = resp.data;
-                    var iTotalRecords = data.count || 0;
-                    var iTotalDisplayRecords = iTotalRecords;
-                    var aaData = showApplyInfo(data, num);
-                    var data = {
-                        "aaData": aaData,
-                        "iTotalRecords": (iTotalRecords || 0),
-                        "iTotalDisplayRecords": (iTotalDisplayRecords || 0)
-                    };
-                    fnCallback(data);
+                    console.log(resp);
+                    if (resp.errorCode == 0) {
+                        var data = resp.data;
+                        var iTotalRecords = data.count || 0;
+                        var iTotalDisplayRecords = iTotalRecords;
+                        var aaData = showApplyInfo(data, num);
+                        data = {
+                            "aaData": aaData,
+                            "iTotalRecords": (iTotalRecords || 0),
+                            "iTotalDisplayRecords": (iTotalDisplayRecords || 0)
+                        };
+                        fnCallback(data);
+                    } else {
+                        showCommonNoticeDialog('失败', 'icon-warning-sign',
+                            generateNoticeMsg(resp.errorMessage), 300);
+                    }
                 },
                 error: function () {
                     showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
@@ -159,10 +165,10 @@ function showApplyInfo(data, num) {
         "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
         var push = '<a href="javascript:void(0);" role="button" ' +
             'onclick="sendEmailToCandidate(\'' + needData[i][0] + '\')" class="green"><i class="icon-user">催办</i></a>';
-        if(num == 1){
+        if (num == 1) {
             aaData.push([needData[i][0], needData[i][1],
                 needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map, push]);
-        }else{
+        } else {
             aaData.push([needData[i][0], needData[i][1],
                 needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map]);
         }
@@ -195,11 +201,8 @@ function showApplyTodoOrHistoryDetailsList(id, tableId, status) {
                     try {
                         var details = resp.data;
                         var html = '';
-                        html += __generateDetailHtml('当前审批状态', 'icon-eye-open', [status]);
-                        var len1 = details.length;
-                        for (var i = 0; i < len1; i++) {
-                            html += __generateDetailHtml('审批历史', 'icon-book', details[i]);
-                        }
+                        html += __generateDetailHtml('当前审批状态', 'icon-eye-open', [status], true);
+                        html += __generateDetailHtml('审批历史', 'icon-book', details, true);
                         $("#" + tableId).html(html);
                     } catch (e) {
                     }
@@ -217,10 +220,9 @@ function showApplyTodoOrHistoryDetailsList(id, tableId, status) {
     })
 }
 
-function sendEmailToCandidate(id){
-    console.log(id);
+function sendEmailToCandidate(id) {
     var params = {};
-    params["vars"] = {"formId":id};
+    params["vars"] = {"formId": id};
     params["tableMap"] = {};
     params["flag"] = "";
     $.ajax({
@@ -233,7 +235,8 @@ function sendEmailToCandidate(id){
             showSuccessTips(resp.data);
         },
         error: function () {
-            showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+            showCommonNoticeDialog('网络错误', 'icon-bolt',
+                generateNoticeMsg('网络错误，请刷新后重试!'), 300);
         }
     });
 }

@@ -71,6 +71,8 @@
     </form>
 </div>
 
+<div id="common-notice-dialog" class="hide"></div>
+
 <script src="static/js/utils.js">
 </script>
 <script src="static/js/dialog_common.js">

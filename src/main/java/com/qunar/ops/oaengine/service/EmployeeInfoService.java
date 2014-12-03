@@ -66,7 +66,7 @@ public class EmployeeInfoService {
 		}
 		return eInfo;
 	}
-	
+
 	/**
 	 * 获取员工所在部门VP rtxId
 	 * @param userId

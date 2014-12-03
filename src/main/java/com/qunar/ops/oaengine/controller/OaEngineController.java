@@ -218,7 +218,7 @@ public class OaEngineController {
         }
         String result[] = new String[]{employeeInfo.getAdName(),
                 employeeInfo.getSn(),
-                sdf.format(new Date(System.currentTimeMillis())),
+                dateToStr(new Date(System.currentTimeMillis())),
                 employeeInfo.getDepartmentI(), employeeInfo.getDepartmentIV()};
         return BaseResult.getSuccessResult(result);
     }
@@ -401,7 +401,7 @@ public class OaEngineController {
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
-        
+
         String startTime = vars.get("startTime");
         String endTime = vars.get("endTime");
         Date _startTime = null;
@@ -484,10 +484,11 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
             }
         }
+        userId = vars.get("userId");
         FormInfoList formInfoList = null;
         try {
             formInfoList = ioaEngineService.todoList(
-                    processKey, "nuby.zhang", _startTime, _endTime, approve_user, pageNo, pageSize);
+                    processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
             String errorMsg = "ACL限制，获取员工信息失败";
@@ -549,19 +550,19 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
             }
         }
-        if (isNull(approve_user)){
+        if (isNull(approve_user)) {
             approve_user = null;
         }
+        userId = vars.get("userId");
         FormInfoList formInfoList = null;
         try {
-            formInfoList = ioaEngineService.todoList(
-                    processKey, "nuby.zhang", _startTime, _endTime, approve_user, pageNo, pageSize);
+            formInfoList = ioaEngineService.historyList(
+                    processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
-            String errorMsg = "ACL限制，获取员工信息失败";
+            String errorMsg = "表单未找到";
             logger.warn(errorMsg);
-            ApproveResult approveResult = new ApproveResult();
-            return BaseResult.getSuccessResult(approveResult);
+            return BaseResult.getErrorResult(-2, errorMsg);
         }
         DataResult dataResult;
         try {
@@ -603,9 +604,10 @@ public class OaEngineController {
         for (int i = 0; i < taskMsg.length; i++) {
             taskIdList.add(taskMsg[i]);
         }
-        String msg = vars.get("reason");
-        userId = "nuby.zhang";
-        List<Long> errorFormIds = ioaEngineService.batchPass(processKey, userId, formIdList, taskIdList, msg);
+//      其实这里就是附言
+        String memo = vars.get("memo");
+        userId = vars.get("userId");
+        List<Long> errorFormIds = ioaEngineService.batchPass(processKey, userId, formIdList, taskIdList, memo);
         int size = errorFormIds.size();
         if (size == 0) {
             return BaseResult.getSuccessResult("同意操作成功");
@@ -635,10 +637,12 @@ public class OaEngineController {
         String formMsg[] = formIds.split(",");
         int len = formMsg.length;
         String taskMsg[] = taskIds.split(",");
-        String msg = vars.get("reason");
+//      其实这里就是附言
+        String memo = vars.get("memo");
+        userId = vars.get("userId");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.refuse(processKey, "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
+                ioaEngineService.refuse(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], memo);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -675,10 +679,12 @@ public class OaEngineController {
         String formMsg[] = formIds.split(",");
         int len = formMsg.length;
         String taskMsg[] = taskIds.split(",");
-        String msg = vars.get("reason");
+//      其实这里就是附言
+        String memo = vars.get("memo");
+        userId = vars.get("userId");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.back(processKey, "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg);
+                ioaEngineService.back(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], memo);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -716,10 +722,13 @@ public class OaEngineController {
         String formMsg[] = formIds.split(",");
         int len = formMsg.length;
         String taskMsg[] = taskIds.split(",");
-        String msg = vars.get("reason");
+//      其实这里就是附言
+        String memo = vars.get("memo");
+        String assignees = vars.get("rtx_id");
+        userId = vars.get("userId");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.endorse(processKey, "nuby.zhang", Long.valueOf(formMsg[i]), taskMsg[i], msg, "");
+                ioaEngineService.endorse(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 String errorMsg = "任务没有找到,请检查";
@@ -745,7 +754,7 @@ public class OaEngineController {
     @RequestMapping(value = "/push_approve")
     @ResponseBody
     public BaseResult pushApprove(HttpServletRequest request,
-                                     @RequestBody WebRequest webRequest) {
+                                  @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -840,20 +849,17 @@ public class OaEngineController {
         List<ApprovalInfo> infos = approveInfos.getInfos();
         int size = infos.size();
         SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String[][] result = new String[size][3];
+        String[] result = new String[size * 5];
+        int k = 0;
         for (int i = 0; i < size; i++) {
             ApprovalInfo approveInfo = infos.get(i);
-            String memo = approveInfo.getMemo();
-            if (isNull(memo)) {
-                memo = "同意";
-            }
-            String info[] = new String[]{
-                    approveInfo.getApproveUser(),
-                    tdf.format(approveInfo.getTs()),
-                    memo
-            };
-            result[i] = info;
+            result[k++] = "审批人: " + approveInfo.getApproveUser();
+            result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
+            result[k++] = "审批结果: " + transformApproveEnToCh(approveInfo.getManagerType());
+            result[k++] = "附言: " + approveInfo.getMemo();
+            result[k++] = "";
         }
+
         return BaseResult.getSuccessResult(result);
 
     }
@@ -982,7 +988,9 @@ public class OaEngineController {
         // 如果全部数据都为空的话，就不存了。
 
         if (list1.size() == 0 && list2.size() == 0 && list3.size() == 0
-                && list4.size() == 0 && list5.size() == 0) {
+                && list4.size() == 0 && list5.size() == 0
+                && isNull(vars.get("remark")) && "0".equals(vars.get("sum6"))) {
+
             return false;
         }
 
@@ -1024,69 +1032,6 @@ public class OaEngineController {
     }
 
 
-
-    /**
-     * 获取当前审批信息
-     *
-     * @param formInfoList
-     * @return
-     */
-    private ApproveResult getApproveTodoInfos(FormInfoList formInfoList) {
-        List<FormInfo> formInfos = formInfoList.getFormInfos();
-        ApproveResult approveResult = new ApproveResult();
-        long count = formInfoList.getCount();
-        if (count == 0) {
-            return approveResult;
-        }
-        List<String[]> infos = new ArrayList<String[]>();
-        int size = formInfos.size();
-        for (int i = 0; i < size; i++) {
-            FormInfo formInfo = formInfos.get(i);
-            String[] tableInfo = new String[6];
-            tableInfo[0] = String.valueOf(formInfo.getId());
-            tableInfo[1] = formInfo.getApplyUser();
-            tableInfo[2] = formInfo.getApplyDep();
-            tableInfo[3] = sdf.format(formInfo.getApplyDate());
-            tableInfo[4] = String.valueOf(formInfo.getMoneyAmount());
-            tableInfo[5] = formInfo.getTaskId();
-            infos.add(tableInfo);
-        }
-        approveResult.setCount(count);
-        approveResult.setInfos(infos);
-        return approveResult;
-    }
-
-    /**
-     * 获取审批历史信息
-     *
-     * @param formInfoList
-     * @return
-     */
-    private ApproveResult getApproveHistoryInfos(FormInfoList formInfoList) {
-        List<FormInfo> formInfos = formInfoList.getFormInfos();
-        ApproveResult approveResult = new ApproveResult();
-        long count = formInfoList.getCount();
-        if (count == 0) {
-            return approveResult;
-        }
-        List<String[]> infos = new ArrayList<String[]>();
-        int size = formInfos.size();
-        for (int i = 0; i < size; i++) {
-            FormInfo formInfo = formInfos.get(i);
-            String[] tableInfo = new String[6];
-            tableInfo[0] = String.valueOf(formInfo.getId());
-            tableInfo[1] = formInfo.getApplyUser();
-            tableInfo[2] = formInfo.getApplyDep();
-            tableInfo[3] = sdf.format(formInfo.getApplyDate());
-            tableInfo[4] = "不知道结束时间怎么定义";
-            tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
-            infos.add(tableInfo);
-        }
-        approveResult.setCount(count);
-        approveResult.setInfos(infos);
-        return approveResult;
-    }
-
     /**
      * 我的申请和历史申请表格信息
      *
@@ -1119,6 +1064,7 @@ public class OaEngineController {
 
     /**
      * 统一返回中间不同处理
+     *
      * @param formInfo
      * @param depart
      * @param id
@@ -1129,23 +1075,23 @@ public class OaEngineController {
         if (id == 1) {
             tableInfo = new String[]{String.valueOf(formInfo.getId()),
                     formInfo.getSerialNumber(), depart,
-                    formInfo.getApplyUser(), sdf.format(formInfo.getApplyDate()),
+                    formInfo.getApplyUser(), dateToStr(formInfo.getApplyDate()),
                     String.valueOf(formInfo.getMoneyAmount())};
-        }else if (id == 2) {
+        } else if (id == 2) {
             tableInfo = new String[6];
             tableInfo[0] = String.valueOf(formInfo.getId());
             tableInfo[1] = formInfo.getApplyUser();
-            tableInfo[2] = formInfo.getApplyDep();
-            tableInfo[3] = sdf.format(formInfo.getApplyDate());
+            tableInfo[2] = depart;
+            tableInfo[3] = dateToStr(formInfo.getApplyDate());
             tableInfo[4] = String.valueOf(formInfo.getMoneyAmount());
             tableInfo[5] = formInfo.getTaskId();
-        }else if (id == 3){
+        } else if (id == 3) {
             tableInfo = new String[6];
             tableInfo[0] = String.valueOf(formInfo.getId());
             tableInfo[1] = formInfo.getApplyUser();
-            tableInfo[2] = formInfo.getApplyDep();
-            tableInfo[3] = sdf.format(formInfo.getApplyDate());
-            tableInfo[4] = sdf.format(formInfo.getDealDate());
+            tableInfo[2] = depart;
+            tableInfo[3] = dateToStr(formInfo.getApplyDate());
+            tableInfo[4] = dateToStr(formInfo.getDealDate());
             tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
         }
         return tableInfo;
@@ -1172,7 +1118,7 @@ public class OaEngineController {
         } else {
             table = new String[len][9];
             for (int i = 0; i < len; i++) {
-                table[i][0] = sdf.format(infos1[i].getTaxiFaresDate());
+                table[i][0] = dateToStr(infos1[i].getTaxiFaresDate());
                 table[i][1] = infos1[i].getTaxiFaresAddr();
                 table[i][2] = infos1[i].getTaxiFaresDest();
                 table[i][3] = infos1[i].getTaxiFaresTime();
@@ -1193,7 +1139,7 @@ public class OaEngineController {
         } else {
             table = new String[len][9];
             for (int i = 0; i < len; i++) {
-                table[i][0] = sdf.format(infos2[i].getOvertimeMealsDate());
+                table[i][0] = dateToStr(infos2[i].getOvertimeMealsDate());
                 table[i][1] = infos2[i].getMealsAddr();
                 table[i][2] = infos2[i].getOvertimeMealsPeerPeople();
                 table[i][3] = String.valueOf(infos2[i].getMealsPersonNum());
@@ -1215,7 +1161,7 @@ public class OaEngineController {
         } else {
             table = new String[len][7];
             for (int i = 0; i < len; i++) {
-                table[i][0] = sdf.format(infos3[i].getHospitalityDate());
+                table[i][0] = dateToStr(infos3[i].getHospitalityDate());
                 table[i][1] = infos3[i].getHospitalityAddr();
                 table[i][2] = infos3[i].getBusinessPurpose();
                 table[i][3] = infos3[i].getCustomCompany();
@@ -1234,7 +1180,7 @@ public class OaEngineController {
         } else {
             table = new String[len][6];
             for (int i = 0; i < len; i++) {
-                table[i][0] = sdf.format(infos4[i].getEmRelationsDate());
+                table[i][0] = dateToStr(infos4[i].getEmRelationsDate());
                 table[i][1] = infos4[i].getEmRelationsAddress();
                 table[i][2] = infos4[i].getEmRelationsPeerPeople();
                 table[i][3] = infos4[i].getActDest();
@@ -1295,7 +1241,7 @@ public class OaEngineController {
         String acTable[] = new String[12];
         acTable[0] = formInfo.getApplyUser();
         acTable[1] = formInfo.getSerialNumber();
-        acTable[2] = sdf.format(formInfo.getApplyDate());
+        acTable[2] = dateToStr(formInfo.getApplyDate());
         acTable[3] = formInfo.getFirstDep();
         acTable[4] = formInfo.getApplyDep();
         acTable[5] = formInfo.getDepNum();
@@ -1417,6 +1363,21 @@ public class OaEngineController {
             dateStr = sdf.format(date);
         }
         return dateStr;
+    }
+
+    private String transformApproveEnToCh(String approveEn) {
+        if ("pass".equals(approveEn)) {
+            return "同意";
+        } else if ("back".equals(approveEn)) {
+            return "退回";
+        } else if ("endorse".equals(approveEn)) {
+            return "加签";
+        } else if ("refuse".equals(approveEn)) {
+            return "拒绝";
+        } else if ("start".equals(approveEn)){
+            return "申请";
+        }
+        return "";
     }
 
 }

@@ -106,6 +106,8 @@
 <div id="back-msg-dialog" class="hide"></div>
 <div id="endorse-msg-dialog" class="hide"></div>
 
+<div id="common-notice-dialog" class="hide"></div>
+
 <script src="static/js/utils.js">
 </script>
 <script src="static/js/dialog_common.js">
@@ -137,12 +139,12 @@
                 'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
                 "bSortable": false, "sClass": "center"
             },
-            {"sTitle": 'ID', "sClass": "center"},
-            {"sTitle": '申请人', "sClass": "center"},
-            {"sTitle": '申请部门', "sWidth": "200px", "sClass": "center"},
-            {"sTitle": '申请时间', "sClass": "center"},
-            {"sTitle": '金额', "sClass": "center"},
-            {"sTitle": "报销详情", "sClass": "center"},
+            {"sTitle": 'ID', "sClass": "center" ,"sWidth": 100},
+            {"sTitle": '申请人', "sClass": "center" ,"sWidth": 200},
+            {"sTitle": '申请部门', "sWidth": 300, "sClass": "center"},
+            {"sTitle": '申请时间', "sClass": "center" ,"sWidth": 200},
+            {"sTitle": '金额', "sClass": "center" ,"sWidth": 150},
+            {"sTitle": "报销详情", "sClass": "center" ,"sWidth": 200},
             {"sTitle": 'taskId', "sClass": "center", "bVisible": true}];
 
         var wh = $(window).height();
@@ -188,6 +190,7 @@
                 if (approveUser != '') {
                     vars["approveUser"] = approveUser;
                 }
+                vars["userId"] = "zhenqing.wang";
                 var params = {};
                 params["vars"] = vars;
                 params["tableMap"] = {};
@@ -280,15 +283,14 @@
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#approve-msg-dialog").empty();
-            var form = createRejectMsgForm('Tips: 同意理由请不要超过100个字符');
+            var form = createOperateMsgForm('Tips: 同意理由请不要超过100个字符');
             $("#approve-msg-dialog").append(form);
             var dialog = $("#approve-msg-dialog").removeClass('hide').dialog({
                 modal: true,
                 width: dialog_width,
-                height: 200,
+                height: 250,
                 title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
                 '<li class="icon-user"></li> 同意理由</div>',
-//                title: '同意理由',
                 title_html: true,
                 closeOnEscape: false,
                 open: function (event, ui) {
@@ -309,8 +311,8 @@
                                     if (postData[i]['name'] == 'msg') {
                                         if (postData[i]['value'].length >= 100) {
                                             enableAccountApplicationDialogButton(true);
-                                            showCommonNoticeDialog('申请理由错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('申请理由不能超过100个字符'), 300);
+                                            showCommonNoticeDialog('同意理由错误', 'icon-warning-sign',
+                                                    generateNoticeMsg('同意理由不能超过100个字符'), 300);
                                             return;
                                         } else {
                                             msg = postData[i]['value'];
@@ -350,12 +352,12 @@
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#reject-msg-dialog").empty();
-            $("#reject-msg-dialog").append(createRejectMsgForm('Tips: 拒绝理由请不要超过100个字符'));
+            $("#reject-msg-dialog").append(createOperateMsgForm('Tips: 拒绝理由请不要超过100个字符'));
             var dialog = $("#reject-msg-dialog").removeClass('hide').dialog({
                 modal: true,
                 width: dialog_width,
-                height: 200,
-                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 驳回理由</div>',
+                height: 250,
+                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 拒绝理由</div>',
                 title_html: true,
                 closeOnEscape: false,
                 open: function (event, ui) {
@@ -378,8 +380,8 @@
                                     if (postData[i]['name'] == 'msg') {
                                         if (postData[i]['value'].length >= 100) {
                                             enableAccountApplicationDialogButton(true);
-                                            showCommonNoticeDialog('申请理由错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('申请理由不能超过100个字符'), 300);
+                                            showCommonNoticeDialog('拒绝理由错误', 'icon-warning-sign',
+                                                    generateNoticeMsg('拒绝理由不能超过100个字符'), 300);
                                             return;
                                         } else {
                                             msg = postData[i]['value'];
@@ -418,12 +420,12 @@
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#back-msg-dialog").empty();
-            $("#back-msg-dialog").append(createRejectMsgForm('Tips: 退回理由请不要超过100个字符'));
+            $("#back-msg-dialog").append(createOperateMsgForm('Tips: 退回理由请不要超过100个字符'));
             var dialog = $("#back-msg-dialog").removeClass('hide').dialog({
                 modal: true,
                 width: dialog_width,
-                height: 200,
-                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 驳回理由</div>',
+                height: 250,
+                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 退回理由</div>',
                 title_html: true,
                 closeOnEscape: false,
                 open: function (event, ui) {
@@ -485,11 +487,11 @@
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#endorse-msg-dialog").empty();
-            $("#endorse-msg-dialog").append(createRejectMsgForm('Tips: 请输入加签RTX_ID'));
+            $("#endorse-msg-dialog").append(createEndorseMsgForm('Tips: 请输入加签RTX_ID'));
             var dialog = $("#endorse-msg-dialog").removeClass('hide').dialog({
                 modal: true,
                 width: dialog_width,
-                height: 200,
+                height: 300,
                 title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 驳回理由</div>',
                 title_html: true,
                 closeOnEscape: false,
@@ -514,7 +516,7 @@
                                         if (postData[i]['value'].length >= 100) {
                                             enableAccountApplicationDialogButton(true);
                                             showCommonNoticeDialog('加签错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('RTX_ID不能超过100个字符'), 300);
+                                                    generateNoticeMsg('加签理由不能超过100个字符'), 300);
                                             return;
                                         } else {
                                             msg = postData[i]['value'];
@@ -522,7 +524,7 @@
                                         }
                                     }
                                 }
-                                approveProxy(oTable, url, msg, "加签");
+                                approveProxy(oTable, url, msg, "加签", $("#rtx_id").val());
                                 e.preventDefault(); //STOP default action
                                 $(this).dialog("close");
                             } catch (e) {
@@ -548,19 +550,15 @@
         }
     }
 
-    function approveProxy(oTable, url, msg, action) {
-        console.log("jinlaile");
+    function approveProxy(oTable, url, msg, action, rtx_id) {
 //            enableCurrentApproveToolbarButton(false);
         var formIds = new Array();
         var taskIds = new Array();
         $("input:checked", oTable.fnGetNodes()).each(function () {
             var row = $(this).parent().parent().parent();
             var nTds = $('td', row);
-            console.log(nTds);
             var formId = nTds[1].childNodes[0].data;
             var taskId = nTds[7].childNodes[0].data;
-            console.log(formId);
-            console.log(taskId);
             formIds += formId + ",";
             taskIds += taskId + ",";
         });
@@ -575,13 +573,9 @@
         var vars = {};
         vars["formIds"] = formIds;
         vars["taskIds"] = taskIds;
-        vars["reason"] = msg;
-        //params["userId"] = "nuby";
-        if (action == '通过') {
-            vars['approve'] = 1;
-        } else {
-            vars['approve'] = 0;
-        }
+        vars["memo"] = msg
+        vars["rtx_id"] = rtx_id;
+        vars["userId"] = "zhenqing.wang";
         params["vars"] = vars;
         params["tableMap"] = {};
         params["flag"] = "";
@@ -678,15 +672,31 @@
             }
         });
     }
-    //Tips: 拒绝理由请不要超过100个字符
-    function createRejectMsgForm(msg) {
+
+    function createOperateMsgForm(msg) {
         var tips = msg;
         var form = '<form style="width: 100%; background-color: white"> ';
         form += '<div>';
         form += $.parseStr('<textarea class="form-control" name="msg" style="height: 100px;" placeholder="%s"></textarea>', tips);
         form += '</div>';
         form += '</form>';
-        console.log(form);
+        return form;
+    }
+
+    //  加签需要填写rtx_id
+    function createEndorseMsgForm(msg) {
+        var tips = msg;
+        var form = '<form style="width: 100%; background-color: white"> ';
+
+        form += '<div class="form-group">';
+        form += '<label>加签给：</label>';
+        form += $.parseStr('<input class="form-control" id="rtx_id" placeholder="%s">', "请输入rtx_id, 不能为空");
+        form += '</div>';
+        form += '<div class="space-4"></div>';
+        form += '<div>';
+        form += $.parseStr('<textarea class="form-control" name="msg" style="height: 100px;" placeholder="%s"></textarea>', tips);
+        form += '</div>';
+        form += '</form>';
         return form;
     }
 
@@ -758,11 +768,8 @@
                         try {
                             var details = resp.data;
                             var html = '';
-                            html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"]);
-                            var len1 = details.length;
-                            for (var i = 0; i < len1; i++) {
-                                html += __generateDetailHtml('审批历史', 'icon-book', details[i]);
-                            }
+                            html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"], true);
+                            html += __generateDetailHtml('审批历史', 'icon-book', details, true);
                             console.log(html)
                             $("#todo-approve-details-list").html(html);
                         } catch (e) {
@@ -780,6 +787,30 @@
             }
         })
     }
-
+    //    function autoShowInfo(id, name) {
+    //        $('#rtx_id').autocomplete(
+    //                {
+    //                    source: function (request, response) {
+    //                        $.ajax({
+    //                            url: "/asset_info/auto/show",
+    //                            dataType: "json",
+    //                            type: "POST",
+    //                            data: {
+    //                                return_val: $('#rtx_id').val()
+    //                            },
+    //                            success: function (data) {
+    //                                response($.map(data, function (item) {
+    //                                    return item;
+    //                                }));
+    //                            }
+    //                        });
+    //                    },
+    //                    dataType: 'json',
+    //                    minChars: "2"
+    ////        select: function (e, ui) {
+    ////            location.href = "/user/" + ui.item.value;
+    ////        }
+    //                });
+    //    }
 
 </script>
