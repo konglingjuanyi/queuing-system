@@ -104,6 +104,16 @@ public interface IOAEngineService {
 	 * @throws FormNotFoundException 
 	 */
 	public FormInfo getFormInfo(String processKey, String userId, String formId) throws FormNotFoundException;
+
+	/**
+	 * 获取工单信息
+	 * @param processKey
+	 * @param userId
+	 * @param formId
+	 * @return 没有找到返回 null
+	 * @throws FormNotFoundException
+	 */
+	public FormInfo getHistoryFormInfo(String processKey, String userId, String formId) throws FormNotFoundException;
 	
 	/**
 	 * 删除、取消工单 

@@ -795,7 +795,7 @@ public class OaEngineController {
         String formId = vars.get("formId");
         FormInfo formInfo = null;
         try {
-            formInfo = ioaEngineService.getFormInfo(processKey, userId, formId);
+            formInfo = ioaEngineService.getHistoryFormInfo(processKey, userId, formId);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
             String errorMsg = "表单未找到, 请检查!";

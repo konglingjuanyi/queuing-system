@@ -134,8 +134,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	public FormInfo getFormInfo(String processKey, String userId, String formId) throws FormNotFoundException {
-		FormInfo formInfo = new FormInfo();
-		formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
+		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
+		return formInfo;
+	}
+
+	@Override
+	public FormInfo getHistoryFormInfo(String processKey, String userId, String formId) throws FormNotFoundException {
+		FormInfo formInfo = form0114Manager.getFormInfoByInstHistory(formId);
 		return formInfo;
 	}
 
