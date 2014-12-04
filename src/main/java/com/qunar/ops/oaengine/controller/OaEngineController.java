@@ -367,6 +367,8 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
             }
         }
+        System.out.println(_startTime);
+        System.out.println(_endTime);
         FormInfoList formInfoList = ioaEngineService.getUserApplyList(
                 processKey, userId, _startTime, _endTime, pageNo, pageSize);
         DataResult dataResult;
@@ -424,6 +426,8 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
             }
         }
+        System.out.println(_startTime);
+        System.out.println(_endTime);
         FormInfoList formInfoList = ioaEngineService.getUserApplyHisList(
                 processKey, userId, _startTime, _endTime, pageNo, pageSize);
         DataResult dataResult;
@@ -484,6 +488,8 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
             }
         }
+        System.out.println(_startTime);
+        System.out.println(_endTime);
         userId = vars.get("userId");
         FormInfoList formInfoList = null;
         try {
@@ -555,6 +561,8 @@ public class OaEngineController {
         }
         userId = vars.get("userId");
         FormInfoList formInfoList = null;
+        System.out.println(_startTime);
+        System.out.println(_endTime);
         try {
             formInfoList = ioaEngineService.historyList(
                     processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);

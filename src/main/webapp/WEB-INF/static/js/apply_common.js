@@ -61,7 +61,6 @@ function showInfo(url, tableName, rTableId, status, num) {
         "fnServerData": function (sSource, aDataSet, fnCallback) {
             var startDate = $.trim($('#date-from').val());
             var endDate = $.trim($('#date-to').val());
-            var approveUser = $.trim($('#approve-user').val());
             var start = 0;
             var length = 0;
             for (var i = 0; i < aDataSet.length; i++) {
@@ -80,9 +79,6 @@ function showInfo(url, tableName, rTableId, status, num) {
             }
             if (endDate != '') {
                 vars["endTime"] = endDate;
-            }
-            if (approveUser != '') {
-                vars["approveUser"] = approveUser;
             }
             var params = {};
             params["vars"] = vars;

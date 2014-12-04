@@ -46,16 +46,15 @@ function showEditDialog(tableMap, vars) {
         modal: true,
         draggable: true,
         resizable: false,
-        title: "报销页详情"
+        title: "报销页详情",
+        close: function () {
+            $('#edit-form').empty();
+            $("#dialog-confirm").dialog('close');
+            $(this).dialog('destroy');
+        }
     });
-
 }
 
-//close: function () {
-//    $('#edit-form').empty();
-//    $("#dialog-confirm").dialog('close');
-//$(this).dialog('destroy');
-//}
 function fixedTableInfo(tableMap, vars) {
     var tableList = ["table1", "table6", "table2", "table3", "table4", "table5"];
     var tableHeadList = ["出租车费明细(含汽车燃油费)", "通信费",
