@@ -11,17 +11,25 @@ function __generateLIHeader(header, icon) {
 }
 
 function __generateLIData(data) {
-    return $.parseStr('<li>%s</li>', data);
+    return $.parseStr('<li style="list-style-type:none;padding-left: 20px">%s</li>', data);
 }
 
-function __generateDetailHtml(header, header_icon, data_list) {
+function __generateDetailHtml(header, header_icon, data_list, with_hr) {
     var html = '';
     html += '<div class="space-4"></div>';
     html += __generateLIHeader(header, header_icon);
-    for(var i = 0; i < data_list.length; i++) {
-        html += __generateLIData(data_list[i]);
+    for (var i = 0; i < data_list.length; i++) {
+        if(isNull(data_list[i])){
+            html += '<div class="space-4"></div>';
+        }else{
+            html += __generateLIData(data_list[i]);
+        }
     }
     html += '</ul>';
+    html += '<div class="space-4"></div>';
+    if (with_hr) {
+        html += '<hr style="margin: 0 0 10px 0;">'
+    }
     return html;
 }
 
@@ -38,14 +46,16 @@ function showEditDialog(tableMap, vars) {
         modal: true,
         draggable: true,
         resizable: false,
-        title: "报销页详情",
-        close: function () {
-            $(this).dialog('destroy');
-            $('#edit-form').empty();
-        }
+        title: "报销页详情"
     });
+
 }
 
+//close: function () {
+//    $('#edit-form').empty();
+//    $("#dialog-confirm").dialog('close');
+    //$(this).dialog('destroy');
+//}
 function fixedTableInfo(tableMap, vars) {
     var tableList = ["table1", "table6", "table2", "table3", "table4", "table5"];
     var tableHeadList = ["出租车费明细(含汽车燃油费)", "通信费",
@@ -231,3 +241,19 @@ function tableSumForm(num, vars) {
     form += '</table>';
     return form;
 }
+
+$.extend(true, $.fn.dataTable.defaults, {
+    "sPaginationType": "bootstrap",
+    "oLanguage": {
+        "sEmptyTable": "无数据",
+        "sProcessing": "正在获取数据，请稍后...",
+        "oPaginate.sFirst": "第一页",
+        "oPaginate.sLast": "最后一页",
+        "oPaginate.sNext": "下一页",
+        "oPaginate.sPrevious": "上一页",
+        "sInfo": "本页 _START_ - _END_ , 共 _TOTAL_ 条记录",
+        "sInfoEmpty": "本页 0 - 0 , 共 0 条记录",
+        "sSearch": "搜索: ",
+        "sLengthMenu": "共_MENU_记录"
+    }
+});

@@ -3,20 +3,14 @@ package com.qunar.ops.oaengine.controller;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.activiti.bpmn.model.BpmnModel;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.engine.impl.context.Context;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -32,9 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -225,10 +217,12 @@ public class EngineAdminController {
 			@RequestParam("processDefinitionId") String processDefinitionId,
 			@RequestParam("resourceType") String resourceType,
 			HttpServletResponse response) throws Exception {
+		System.out.println(resourceType);
 		ProcessDefinition processDefinition = repositoryService
 				.createProcessDefinitionQuery()
 				.processDefinitionId(processDefinitionId).singleResult();
 		String resourceName = "";
+		System.out.println(processDefinitionId);
 		if (resourceType.equals("image")) {
 			resourceName = processDefinition.getDiagramResourceName();
 		} else if (resourceType.equals("xml")) {
