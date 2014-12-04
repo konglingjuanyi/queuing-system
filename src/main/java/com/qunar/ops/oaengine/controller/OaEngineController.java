@@ -367,8 +367,6 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
             }
         }
-        System.out.println(_startTime);
-        System.out.println(_endTime);
         FormInfoList formInfoList = ioaEngineService.getUserApplyList(
                 processKey, userId, _startTime, _endTime, pageNo, pageSize);
         DataResult dataResult;
@@ -426,8 +424,6 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
             }
         }
-        System.out.println(_startTime);
-        System.out.println(_endTime);
         FormInfoList formInfoList = ioaEngineService.getUserApplyHisList(
                 processKey, userId, _startTime, _endTime, pageNo, pageSize);
         DataResult dataResult;
@@ -453,7 +449,6 @@ public class OaEngineController {
     @ResponseBody
     public BaseResult getAllApproveTodoList(HttpServletRequest request,
                                             @RequestBody WebRequest webRequest) {
-        System.out.println("oa/approve_todo");
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn("登陆用户为空，无法获取员工信息");
@@ -488,9 +483,7 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
             }
         }
-        System.out.println(_startTime);
-        System.out.println(_endTime);
-        userId = vars.get("userId");
+//        userId = vars.get("userId");
         FormInfoList formInfoList = null;
         try {
             formInfoList = ioaEngineService.todoList(
@@ -559,10 +552,8 @@ public class OaEngineController {
         if (isNull(approve_user)) {
             approve_user = null;
         }
-        userId = vars.get("userId");
+//        userId = vars.get("userId");
         FormInfoList formInfoList = null;
-        System.out.println(_startTime);
-        System.out.println(_endTime);
         try {
             formInfoList = ioaEngineService.historyList(
                     processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);

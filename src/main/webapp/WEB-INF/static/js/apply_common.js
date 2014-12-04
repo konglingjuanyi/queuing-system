@@ -90,7 +90,6 @@ function showInfo(url, tableName, rTableId, status, num) {
                 "url": url,
                 "data": JSON.stringify(params),
                 "success": function (resp) {
-                    console.log(resp);
                     if (resp.errorCode == 0) {
                         var data = resp.data;
                         var iTotalRecords = data.count || 0;
@@ -226,7 +225,6 @@ function sendEmailToCandidate(id) {
         "data": JSON.stringify(params),
         "success": function (resp) {
             if (resp.errorCode == 0) {
-                console.log(resp);
                 showSuccessTips(resp.data);
             } else {
                 showCommonNoticeDialog('失败', 'icon-warning-sign',
@@ -252,7 +250,6 @@ function restartForm(id) {
         "data": JSON.stringify(params),
         "success": function (resp) {
             if (resp.errorCode == 0) {
-                console.log(resp);
                 showSuccessTips(resp.data);
             } else {
                 showCommonNoticeDialog('失败', 'icon-warning-sign',

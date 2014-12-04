@@ -157,7 +157,7 @@
                 if (approveUser != '') {
                     vars["approveUser"] = approveUser;
                 }
-                vars["userId"] = "zhen.pei";
+//                vars["userId"] = "zhenqing.wang";
                 var params = {};
                 params["vars"] = vars;
                 params["tableMap"] = {};
@@ -226,7 +226,6 @@
     }
 
     function showTableInfo(data) {
-        console.log(data);
         var aaData = [];
         var needData = data.tableInfos;
         var tableMapList = data.tableMapList;

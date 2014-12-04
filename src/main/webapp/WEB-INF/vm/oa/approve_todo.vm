@@ -145,7 +145,7 @@
             {"sTitle": '申请时间', "sClass": "center", "sWidth": 200},
             {"sTitle": '金额', "sClass": "center", "sWidth": 150},
             {"sTitle": "报销详情", "sClass": "center", "sWidth": 200},
-            {"sTitle": 'taskId', "sClass": "center", "bVisible": false}];
+            {"sTitle": '任务ID', "sClass": "center", "bVisible": true}];
 
         var wh = $(window).height();
         var sY = (wh - 100) + 'px';
@@ -190,7 +190,7 @@
                 if (approveUser != '') {
                     vars["approveUser"] = approveUser;
                 }
-                vars["userId"] = "bin.sun";
+//                vars["userId"] = "bin.sun";
                 var params = {};
                 params["vars"] = vars;
                 params["tableMap"] = {};
@@ -560,11 +560,10 @@
 //            enableCurrentApproveToolbarButton(false);
         var formIds = new Array();
         var taskIds = new Array();
-        console.log(oTable.fnGetData());
+        console.log(oTable.fnGetNodes());
         $("input:checked", oTable.fnGetNodes()).each(function () {
             var row = $(this).parent().parent().parent();
             var nTds = $('td', row);
-            console.log(nTds);
             var formId = nTds[1].childNodes[0].data;
             var taskId = nTds[7].childNodes[0].data;
             console.log(taskId);
@@ -588,14 +587,12 @@
         params["vars"] = vars;
         params["tableMap"] = {};
         params["flag"] = "";
-        console.log(params);
         $.ajax({
             contentType: "application/json; charset=utf-8",
             url: url,
             type: "post",
             data: JSON.stringify(params),
             success: function (resp) {
-                console.log(resp);
                 var title_html_str = '';
                 try {
                     if (resp.errorCode == 0) {
@@ -752,7 +749,6 @@
             }
             aaData.push(d_list);
         }
-        alert(aaData);
         return aaData;
     }
 
@@ -785,7 +781,6 @@
                             var html = '';
                             html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"], true);
                             html += __generateDetailHtml('审批历史', 'icon-book', details, true);
-                            console.log(html)
                             $("#todo-approve-details-list").html(html);
                         } catch (e) {
                         }
