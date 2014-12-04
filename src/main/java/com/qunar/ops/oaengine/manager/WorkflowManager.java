@@ -319,9 +319,12 @@ public class WorkflowManager {
 	 * @param reason
 	 */
 	public TaskResult cancel(String processKey, String oid, String userId, String reason) throws ActivitiException {
+//		HistoricProcessInstance pi = historyService
+//				.createHistoricProcessInstanceQuery()
+//				.processDefinitionKey(processKey).processInstanceBusinessKey(oid).startedBy(userId).unfinished().singleResult();
 		HistoricProcessInstance pi = historyService
 				.createHistoricProcessInstanceQuery()
-				.processDefinitionKey(processKey).processInstanceBusinessKey(oid).startedBy(userId).unfinished().singleResult();
+				.processDefinitionKey(processKey).processInstanceBusinessKey(oid).unfinished().singleResult();
 		if(pi == null) {
 			logger.warn("流程实例没有找到 oid={}", oid);
 			return null;
