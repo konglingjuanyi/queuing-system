@@ -332,7 +332,6 @@
                 if (resp.errorCode == 0) {
                     var data = resp.data;
                     var table = document.getElementById("table");
-                    console.log(table);
                     var k = 0;
                     for (var i = 0; i < 2; i++) {
                         for (var j = 1; j < 6; j += 2) {
@@ -562,6 +561,8 @@
                 if (resp.errorCode == 0) {
                     showCommonNoticeDialog('成功', 'icon-warning-sign',
                             generateNoticeMsg("创建报销申请成功！"), 300);
+                    console.log();
+                    window.location.href = '/oaengine/oa/apply_todo.html';
                 } else {
                     showCommonNoticeDialog('失败', 'icon-warning-sign',
                             generateNoticeMsg(resp.errorMessage), 300);

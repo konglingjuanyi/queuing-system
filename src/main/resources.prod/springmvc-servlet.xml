@@ -39,11 +39,6 @@
 		<property name="layoutUrl" value="layout/layout.vm" />
 		<property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml" />
 	</bean>
-	<mvc:resources location="/WEB-INF/assets/js/" mapping="/assets/js/**" />
-	<mvc:resources location="/WEB-INF/assets/css/" mapping="/assets/css/**" />
-	<mvc:resources location="/WEB-INF/assets/images/" mapping="/assets/images/**" />
-	<mvc:resources location="/WEB-INF/assets/img/" mapping="/assets/img/**" />
-	<mvc:resources location="/WEB-INF/assets/avatars/" mapping="/assets/avatars/**" />
 	<mvc:resources location="/WEB-INF/images/" mapping="/images/**" />
-	<mvc:resources location="/WEB-INF/static/" mapping="/approve/static/**" />
+	<mvc:resources location="/WEB-INF/static/" mapping="/static/**" />
 </beans>
