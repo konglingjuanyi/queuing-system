@@ -116,7 +116,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Transactional(rollbackFor=Exception.class)
 	public FormInfo updateFormInfo(String processKey, String userId,
 			String formId, FormInfo formInfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException, ManagerFormException{
-		FormInfo _formInfo = form0114Manager.getFormInfo(formId);
+		FormInfo _formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		String _userId = _formInfo.getStartMemberId();
 		if(!userId.equals(_userId)){
 			throw new ManagerFormException("不是你的申请，你无权修改", DefaultOaEngineService.class);
@@ -143,7 +143,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Transactional(rollbackFor=Exception.class)
 	public void deleteFormInfo(String processKey, String userId, String formId) throws FormNotFoundException, ManagerFormException{
 		//判断是否为申请人，草稿状态
-		FormInfo formInfo = form0114Manager.getFormInfo(formId);
+		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		String _userId = formInfo.getStartMemberId();
 		int finishedflag = formInfo.getFinishedflag();
 		if(userId.equals(_userId) && finishedflag == Constants.PROC_GRIFT){
@@ -219,7 +219,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		for(int i = 0; i < _taskInfos.size(); i++){
 			TaskInfo taskInfo = _taskInfos.get(i);
 			String proc_inst_id = taskInfo.getProcessInstanceId();
-			formInfo = form0114Manager.getFormInfo(proc_inst_id);
+			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfos.add(formInfo);
 		}
@@ -242,7 +242,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		for(int i = 0; i < _taskInfos.size(); i++){
 			TaskInfo taskInfo = _taskInfos.get(i);
 			String proc_inst_id = taskInfo.getProcessInstanceId();
-			formInfo = form0114Manager.getFormInfo(proc_inst_id);
+			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfo.setDealDate(taskInfo.getEndTime());
 			formInfos.add(formInfo);
@@ -265,7 +265,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		for(int i = 0; i < _infos.size(); i++){
 			ProcessInstanceInfo info = _infos.get(i);
 			String proc_inst_id = info.getProcessInstanceId();
-			formInfo = form0114Manager.getFormInfo(proc_inst_id);
+			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
 //			formInfo.setTaskId(info.getTaskId());
 			formInfos.add(formInfo);
 		}
