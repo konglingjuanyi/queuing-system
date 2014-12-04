@@ -253,12 +253,46 @@ public class Form0114Manager {
 				.selectByPrimaryKey(formId);
 
 		if(formmain0114 == null){
-			throw new FormNotFoundException(String.format("通过formId:%s，找到%s个form", formId, 0), Form0114Manager.class);
+			return getFormInfoHistory(formId);
+//			throw new FormNotFoundException(String.format("通过formId:%s，找到%s个form", formId, 0), Form0114Manager.class);
 		}
 		
 		BeanUtils.copyProperties(formmain0114, formInfo);
 
 		Map<String, Object> formson = getFormsonInfo(formId);
+		formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+				.get("overtimeMealsInfos"));
+		formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+				.get("hospitalityInfos"));
+		formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+				.get("otherCostsInfos"));
+		formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+				.get("employeeRelationsFeesInfos"));
+		formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+				.get("taxiFaresInfos"));
+
+		return formInfo;
+	}
+	
+	/**
+	 * 表单查询History
+	 * 
+	 * @param formId
+	 * @return
+	 * @throws FormNotFoundException 
+	 */
+	public FormInfo getFormInfoHistory(Long formId) throws FormNotFoundException {
+		FormInfo formInfo = new FormInfo();
+		Formmain0114History formmain0114History = formmain0114HistoryMapper
+				.selectByPrimaryKey(formId);
+
+		if(formmain0114History == null){
+			throw new FormNotFoundException(String.format("通过formId:%s，找到%s个form", formId, 0), Form0114Manager.class);
+		}
+		
+		BeanUtils.copyProperties(formmain0114History, formInfo);
+
+		Map<String, Object> formson = getFormsonInfoHistory(formId);
 		formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
 				.get("overtimeMealsInfos"));
 		formInfo.setHospitalityInfo((HospitalityInfo[]) formson
@@ -288,7 +322,7 @@ public class Form0114Manager {
 				.selectByExample(example);
 		if(formmain0114s.size() == 0){
 			//查找已完结的历史数据
-			return getFormInfoHistory(proc_inst_id);
+			return getFormInfoByInstHistory(proc_inst_id);
 //			throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114s.size()), Form0114Manager.class);
 		}
 		BeanUtils.copyProperties(formmain0114s.get(0), formInfo);
@@ -315,7 +349,7 @@ public class Form0114Manager {
 	 * @return
 	 * @throws FormNotFoundException 
 	 */
-	public FormInfo getFormInfoHistory(String proc_inst_id) throws FormNotFoundException {
+	public FormInfo getFormInfoByInstHistory(String proc_inst_id) throws FormNotFoundException {
 		FormInfo formInfo = new FormInfo();
 		Formmain0114HistoryExample example = new Formmain0114HistoryExample();
 		example.createCriteria().andProcInstIdEqualTo(proc_inst_id);
