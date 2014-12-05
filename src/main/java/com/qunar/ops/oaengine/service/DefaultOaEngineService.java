@@ -85,7 +85,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return formInfo.getId();
 	}
 	
-	private void _startProcess(String processKey, String userId, FormInfo formInfo) throws RemoteAccessException, FormNotFoundException{
+	private void _startProcess(String processKey, String userId, FormInfo formInfo) throws RemoteAccessException, FormNotFoundException, CompareModelException{
 		FormInfo info = formInfo;
 		Request request = new Request();
 		//request.setOid(formInfo.getOid());
@@ -109,6 +109,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 			
 			//修改状态同时回写进程ID
 			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING, processInstanceId);
+			
+			//设置启动时间
+			info.setStartDate(new Date());
+			form0114Manager.updateFormInfo(userId, info.getId(), info);
+			
 		}
 	}
 
@@ -140,7 +145,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	public FormInfo getHistoryFormInfo(String processKey, String userId, String formId) throws FormNotFoundException {
-		FormInfo formInfo = form0114Manager.getFormInfoByInstHistory(formId);
+		FormInfo formInfo = form0114Manager.getFormInfoHistory(Long.valueOf(formId));
 		return formInfo;
 	}
 
