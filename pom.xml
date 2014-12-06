@@ -75,6 +75,7 @@
         <groupId>junit</groupId>
         <artifactId>junit-dep</artifactId>
         <scope>test</scope>
+        <version>4.11</version>
       </dependency>
 		<!-- activiti -->
 		<dependency>

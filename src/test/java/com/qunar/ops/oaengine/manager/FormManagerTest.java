@@ -39,7 +39,7 @@ public class FormManagerTest {
 		FormInfo info = initFormInfo();
 		Long i = form0114manager.createFormInfo("yongnian.jiang", info);
 		
-		FormInfo formInfo = form0114manager.getFormInfo("jyn_test");
+		FormInfo formInfo = form0114manager.getFormInfo(1l);
 		formId = formInfo.getId();
 	}
 	
@@ -50,23 +50,23 @@ public class FormManagerTest {
 	
 	@Test
 	public void form_search_test() throws FormNotFoundException{
-		FormInfo formInfo = form0114manager.getFormInfo("jyn_test");
+		FormInfo formInfo = form0114manager.getFormInfo(1l);
 		Assert.assertEquals("姜永念测试", formInfo.getProcTitle());
 		Assert.assertEquals(formId, formInfo.getId());
 		
 		exception.expect(FormNotFoundException.class);
-		formInfo = form0114manager.getFormInfo("jyn_test1");
+		formInfo = form0114manager.getFormInfo(1l);
 	}
 	
 	@Test
 	public void form_update_test() throws FormNotFoundException, CompareModelException{
-		FormInfo formInfo = form0114manager.getFormInfo("jyn_test");
+		FormInfo formInfo = form0114manager.getFormInfo(1l);
 		Assert.assertEquals("source", formInfo.getAddress());
 		
 		formInfo.setAddress("update_address");
 		form0114manager.updateFormInfo("yongnian.jiang", formId, formInfo);
 		
-		formInfo = form0114manager.getFormInfo("jyn_test");
+		formInfo = form0114manager.getFormInfo(1l);
 		Assert.assertEquals("update_address", formInfo.getAddress());
 		
 	}
