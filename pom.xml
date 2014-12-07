@@ -26,6 +26,15 @@
 			<build>
 				<resources>
 					<resource>
+						<directory>src/main/java</directory>
+						<includes>
+							<include>**/*.properties</include>
+							<include>**/*.xml</include>
+						</includes>
+						<!-- 是否替换资源中的属性 -->
+						<filtering>false</filtering>
+					</resource>
+					<resource>
 						<directory>src/main/resources</directory>
 					</resource>
 				</resources>
@@ -35,6 +44,15 @@
 			<id>dev</id>
 			<build>
 				<resources>
+					<resource>
+						<directory>src/main/java</directory>
+						<includes>
+							<include>**/*.properties</include>
+							<include>**/*.xml</include>
+						</includes>
+						<!-- 是否替换资源中的属性 -->
+						<filtering>false</filtering>
+					</resource>
 					<resource>
 						<directory>src/main/resources.dev</directory>
 					</resource>
@@ -46,6 +64,15 @@
 			<build>
 				<resources>
 					<resource>
+						<directory>src/main/java</directory>
+						<includes>
+							<include>**/*.properties</include>
+							<include>**/*.xml</include>
+						</includes>
+						<!-- 是否替换资源中的属性 -->
+						<filtering>false</filtering>
+					</resource>
+					<resource>
 						<directory>src/main/resources.beta</directory>
 					</resource>
 				</resources>
@@ -55,6 +82,15 @@
 			<id>prod</id>
 			<build>
 				<resources>
+					<resource>
+						<directory>src/main/java</directory>
+						<includes>
+							<include>**/*.properties</include>
+							<include>**/*.xml</include>
+						</includes>
+						<!-- 是否替换资源中的属性 -->
+						<filtering>false</filtering>
+					</resource>
 					<resource>
 						<directory>src/main/resources.prod</directory>
 					</resource>
@@ -71,12 +107,12 @@
 	</properties>
 
 	<dependencies>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit-dep</artifactId>
-        <scope>test</scope>
-        <version>4.11</version>
-      </dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit-dep</artifactId>
+			<scope>test</scope>
+			<version>4.11</version>
+		</dependency>
 		<!-- activiti -->
 		<dependency>
 			<groupId>org.activiti</groupId>
