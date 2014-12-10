@@ -108,11 +108,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			logManager.appendApproveLog(userId, formInfo.getId(), "start", tr, "");
 			
 			//修改状态同时回写进程ID
-			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING, processInstanceId);
-			
-			//设置启动时间
-			info.setStartDate(new Date());
-			form0114Manager.updateFormInfo(userId, info.getId(), info);
+			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING, processInstanceId, true);
 			
 		}
 	}

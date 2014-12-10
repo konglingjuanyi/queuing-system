@@ -216,7 +216,7 @@ public class Form0114Manager {
 	 * @throws CompareModelException
 	 * @throws FormNotFoundException 
 	 */
-	public int updateFormFinishedFlag(String userId, Long formId, int finishedFlag, String proc_inst_id)
+	public long updateFormFinishedFlag(String userId, Long formId, int finishedFlag, String proc_inst_id, boolean needSetStartDate)
 			throws FormNotFoundException {
 		Formmain0114 formmain0114Old = formmain0114Mapper
 				.selectByPrimaryKey(formId);
@@ -232,12 +232,15 @@ public class Form0114Manager {
 		// 更新主表
 		Formmain0114 formmain0114New = formmain0114Old;
 		formmain0114New.setFinishedflag(finishedFlag);
+		if(needSetStartDate){
+			formmain0114New.setStartDate(new Date());
+		}
 		if(proc_inst_id != null){
 			formmain0114New.setProcInstId(proc_inst_id);
 		}
-		formmain0114Mapper.updateByPrimaryKey(formmain0114New);
-
-		return 0;
+		int res = formmain0114Mapper.updateByPrimaryKey(formmain0114New);
+		
+		return formId;
 	}
 	
 	/**
