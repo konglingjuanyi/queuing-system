@@ -161,7 +161,7 @@ function tableBodyForm(tableMap, tableId, num) {
         }
         bodyForm += '</tr>';
     } else {
-        for (var i = 0; i < tableLen; i++) {
+        for (i = 0; i < tableLen; i++) {
             bodyForm += '<tr>';
             for (var j = 0; j < headLen; j++) {
                 var value = tableInfo[i][j];

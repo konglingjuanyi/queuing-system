@@ -734,7 +734,7 @@
             var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
             var need_list = [checkbox, needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map, needData[i][5]];
             var d_list = [];
-            for(var i = 0; i < len; i++){
+            for(i = 0; i < len; i++){
                 d_list.push(need_list[i]);
             }
             aaData.push(d_list);
@@ -767,7 +767,7 @@
                         try {
                             var details = resp.data;
                             var html = '';
-                            html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"], true);
+                            html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批过程中"], true);
                             html += __generateDetailHtml('审批历史', 'icon-book', details, true);
                             $("#todo-approve-details-list").html(html);
                         } catch (e) {

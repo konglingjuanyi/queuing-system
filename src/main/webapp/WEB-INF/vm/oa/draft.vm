@@ -128,8 +128,6 @@
                 vars["length"] = length;
                 var params = {};
                 params["vars"] = vars;
-                params["tableMap"] = {};
-                params["flag"] = "";
                 $.ajax({
                     "contentType": "application/json; charset=utf-8",
                     "type": "POST",
@@ -188,19 +186,14 @@
     }
 
     function showDraftTableInfo(data) {
-        console.log(data);
         var aaData = [];
         var needData = data.tableInfos;
-        var tableMapList = data.tableMapList;
-        var varsList = data.varsList;
         var d_len = needData.length;
         for (var i = 0; i < d_len; i++) {
             var money = parseFloat(needData[i][5]);
             money /= 100;
-            var tempMap = JSON.stringify(tableMapList[i]);
-            var tempVar = JSON.stringify(varsList[i]);
             var map = $.parseStr("<a href='javascript:void(0);' " +
-            "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
+            "onclick='skipEditDraftInfo(%s);'><i class='icon-link'></i></a>", needData[i][0]);
 
             var push = "";
 
@@ -209,6 +202,11 @@
 
         }
         return aaData;
+    }
+
+    function skipEditDraftInfo(formId){
+//        window.location.href="/apply.html?formId=encodeURIComponent("+formId+")";
+        window.location.href="oa/apply.html?formId="+formId;
     }
 
 
