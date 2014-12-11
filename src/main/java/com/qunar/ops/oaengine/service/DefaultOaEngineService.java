@@ -172,19 +172,19 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public void reminder(String processKey, String userId, String formId, String approveId, String memo) {
+	public String reminder(String processKey, String userId, String formId, String approveId, String memo) {
 		ApprovalInfo info = logManager.getApprovalInfo(Long.valueOf(approveId));
-		String[] to = info.getNextCandidate().split(",");
+		String nextCandidates = info.getNextCandidate();
+		String[] to = nextCandidates.split(",");
 		String[] to_mail = new String[to.length];
 
 		for(int i = 0; i < to.length; i++){
 			to_mail[i] = to[i] + "@qunar.com";
 //			to_mail[i] = "zhenqing.wang@qunar.com";
-			System.out.println(to_mail[i]);
 		}
 		String title = userId + "请你尽快处理日常报销，附言：" + memo;
-		String content = title;
-		mailSenderService.sender("oa@qunar.com", to_mail, null, title, content);
+		mailSenderService.sender("oa@qunar.com", to_mail, null, title, title);
+		return nextCandidates;
 	}
 
 	@Override

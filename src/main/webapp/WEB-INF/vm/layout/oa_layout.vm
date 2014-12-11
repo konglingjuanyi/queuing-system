@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>报销系统-Admin</title>
+    <title>报销系统</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/oaengine/" />
@@ -75,7 +75,7 @@
         <div class="navbar-header pull-left">
 					<span class="navbar-brand">
 						<small>
-                            报销系统 Admin
+                            报销系统
                         </small>
 					</span>
         </div>
@@ -91,7 +91,12 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="oa/draft.html">
+                    <span class="menu-text"> 我的草稿 </span>
+                </a>
+            </li>
+            <li>
+                <a href="javascript:void(0)">
                     <span class="menu-text"> 我的申请 </span>
                 </a>
                 <ul class="submenu" style="display:block">
@@ -111,7 +116,7 @@
                 </ul>
             </li>
             <li>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <span class="menu-text"> 我的审批 </span>
                 </a>
                 <ul class="submenu" style="display:block">

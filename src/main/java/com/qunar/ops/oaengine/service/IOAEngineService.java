@@ -151,7 +151,7 @@ public interface IOAEngineService {
 	 * @param formId
 	 * @throws Exception
 	 */
-	public void reminder(String processKey, String userId, String formId, String approveId, String memo);
+	public String reminder(String processKey, String userId, String formId, String approveId, String memo);
 	
 	/**
 	 * 获取员工信息

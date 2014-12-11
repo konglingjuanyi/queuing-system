@@ -10,6 +10,7 @@ import com.qunar.ops.oaengine.result.*;
 import com.qunar.ops.oaengine.result.dailysubmit.*;
 import com.qunar.ops.oaengine.service.IOAEngineService;
 import com.qunar.ops.oaengine.service.MailSenderService;
+import com.qunar.ops.oaengine.util.OAEngineConst;
 import org.activiti.engine.*;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.http.HttpResponse;
@@ -205,16 +206,16 @@ public class OaEngineController {
     public BaseResult webEmployeeInfo(HttpServletRequest request) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         EmployeeInfo employeeInfo = new EmployeeInfo();
         try {
             employeeInfo = ioaEngineService.getEmployeeInfo(userId);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
-            logger.warn("ACL限制，获取员工信息失败");
-            return BaseResult.getErrorResult(-2, "ACL限制，获取员工信息失败");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         String result[] = new String[]{employeeInfo.getAdName(),
                 employeeInfo.getSn(),
@@ -236,8 +237,8 @@ public class OaEngineController {
                                    @RequestBody LaborRequest laborRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         String day = laborRequest.getWhichDay();
         Date date = null;
@@ -245,17 +246,15 @@ public class OaEngineController {
             date = sdf.parse(day);
         } catch (ParseException e1) {
             e1.printStackTrace();
-            String errMsg = "转换时间失败，请检查输入是否为yyyy-MM-dd样式";
-            logger.warn(errMsg);
-            return BaseResult.getErrorResult(-2, errMsg);
+            logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
         }
         float laborHour = 0;
         try {
             laborHour = ioaEngineService.getLaborHour(userId, date);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
-            String errorMsg = "ACL限制，获取员工信息失败";
-            logger.warn(errorMsg);
+            logger.error(e.getMessage());
             laborHour = 0;
         }
         String result[] = new String[]{String.valueOf(laborHour)};
@@ -275,8 +274,8 @@ public class OaEngineController {
                                   @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         Map<String, String[][]> tableMap = webRequest.getTableMap();
@@ -286,9 +285,8 @@ public class OaEngineController {
             createFlag = constructFormInfo(formInfo, tableMap, vars);
         } catch (ParseException e) {
             e.printStackTrace();
-            String errorMsg = "日期字段填写错误，请检查";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-2, errorMsg);
+            logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
         }
         if (!createFlag) {
             String errorMsg = "没有任何报销内容，请检查";
@@ -304,19 +302,16 @@ public class OaEngineController {
                         formInfo);
             } catch (RemoteAccessException e) {
                 e.printStackTrace();
-                String errorMsg = "ACL限制，获取员工信息失败";
-                logger.warn(errorMsg);
-                return BaseResult.getErrorResult(-1, errorMsg);
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
             } catch (CompareModelException e) {
                 e.printStackTrace();
-                String errorMsg = "日期字段填写错误，请检查";
-                logger.warn(errorMsg);
-                return BaseResult.getErrorResult(-1, errorMsg);
+                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
-                String errorMsg = "表单未找到，请检查！";
-                logger.warn(errorMsg);
-                return BaseResult.getErrorResult(-1, errorMsg);
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
             }
         } else {
             ioaEngineService.createForm(processKey, userId, formInfo);
@@ -338,8 +333,8 @@ public class OaEngineController {
                                             @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
@@ -354,7 +349,7 @@ public class OaEngineController {
             } catch (ParseException e) {
                 logger.warn(e.getMessage());
                 e.printStackTrace();
-                return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
+                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             }
         }
         Date _endTime = null;
@@ -364,7 +359,7 @@ public class OaEngineController {
             } catch (ParseException e) {
                 logger.warn(e.getMessage());
                 e.printStackTrace();
-                return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
+                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             }
         }
         FormInfoList formInfoList = ioaEngineService.getUserApplyList(
@@ -374,9 +369,8 @@ public class OaEngineController {
             dataResult = getTableInfos(formInfoList, userId, 1);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
-            String errorMsg = "ACL限制，获取员工信息失败";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-2, errorMsg);
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
         }
         return BaseResult.getSuccessResult(dataResult);
     }
@@ -394,8 +388,8 @@ public class OaEngineController {
                                                @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
@@ -411,7 +405,8 @@ public class OaEngineController {
             } catch (ParseException e) {
                 logger.warn(e.getMessage());
                 e.printStackTrace();
-                return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
+                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             }
         }
         Date _endTime = null;
@@ -421,7 +416,8 @@ public class OaEngineController {
             } catch (ParseException e) {
                 logger.warn(e.getMessage());
                 e.printStackTrace();
-                return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
+                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             }
         }
         FormInfoList formInfoList = ioaEngineService.getUserApplyHisList(
@@ -431,9 +427,8 @@ public class OaEngineController {
             dataResult = getTableInfos(formInfoList, userId, 1);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
-            String errorMsg = "ACL限制，获取员工信息失败";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-2, errorMsg);
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
         }
         return BaseResult.getSuccessResult(dataResult);
     }
@@ -451,8 +446,8 @@ public class OaEngineController {
                                             @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         // Date startTime, Date endTime,
         // 默认一页显示50条数据
@@ -470,7 +465,7 @@ public class OaEngineController {
             } catch (ParseException e) {
                 logger.warn(e.getMessage());
                 e.printStackTrace();
-                return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
+                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             }
         }
         Date _endTime = null;
@@ -480,7 +475,7 @@ public class OaEngineController {
             } catch (ParseException e) {
                 logger.warn(e.getMessage());
                 e.printStackTrace();
-                return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
+                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             }
         }
 //        userId = vars.get("userId");
@@ -490,18 +485,16 @@ public class OaEngineController {
                     processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
-            String errorMsg = "ACL限制，获取员工信息失败";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-2, errorMsg);
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
         }
         DataResult dataResult;
         try {
             dataResult = getTableInfos(formInfoList, userId, 2);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
-            String errorMsg = "ACL限制，获取员工信息失败";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-2, errorMsg);
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
         }
         return BaseResult.getSuccessResult(dataResult);
     }
@@ -519,8 +512,8 @@ public class OaEngineController {
                                                @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
@@ -536,7 +529,8 @@ public class OaEngineController {
             } catch (ParseException e) {
                 logger.warn(e.getMessage());
                 e.printStackTrace();
-                return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
+                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             }
         }
         Date _endTime = null;
@@ -546,7 +540,8 @@ public class OaEngineController {
             } catch (ParseException e) {
                 logger.warn(e.getMessage());
                 e.printStackTrace();
-                return BaseResult.getErrorResult(-3, "时间日期填写错误,转换失败");
+                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             }
         }
         if (isNull(approve_user)) {
@@ -559,18 +554,16 @@ public class OaEngineController {
                     processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
-            String errorMsg = "表单未找到";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-2, errorMsg);
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
         }
         DataResult dataResult;
         try {
             dataResult = getTableInfos(formInfoList, userId, 3);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
-            String errorMsg = "ACL限制，获取员工信息失败";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-2, errorMsg);
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
         }
         return BaseResult.getSuccessResult(dataResult);
     }
@@ -587,8 +580,8 @@ public class OaEngineController {
                                   @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         String formIds = vars.get("formIds");
@@ -605,7 +598,7 @@ public class OaEngineController {
         }
 //      其实这里就是附言
         String memo = vars.get("memo");
-        userId = vars.get("userId");
+//        userId = vars.get("userId");
         List<Long> errorFormIds = ioaEngineService.batchPass(processKey, userId, formIdList, taskIdList, memo);
         int size = errorFormIds.size();
         if (size == 0) {
@@ -627,8 +620,8 @@ public class OaEngineController {
                                     @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         String formIds = vars.get("formIds");
@@ -638,20 +631,18 @@ public class OaEngineController {
         String taskMsg[] = taskIds.split(",");
 //      其实这里就是附言
         String memo = vars.get("memo");
-        userId = vars.get("userId");
+//        userId = vars.get("userId");
         for (int i = 0; i < len; i++) {
             try {
                 ioaEngineService.refuse(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], memo);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
-                String errorMsg = "任务没有找到,请检查";
-                logger.warn(errorMsg);
-                return BaseResult.getErrorResult(-3, errorMsg);
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.TASK_NOT_FOUND_ERROR, OAEngineConst.TASK_NOT_FOUND_ERROR_MSG);
             } catch (ActivitiException e) {
                 e.printStackTrace();
-                String errorMsg = "工作流系统错误,请检查";
-                logger.warn(errorMsg);
-                return BaseResult.getErrorResult(-3, errorMsg);
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.ACTIVITI_ERROR, OAEngineConst.ACTIVITI_ERROR_MSG);
             }
         }
         return BaseResult.getSuccessResult("拒绝审批结束");
@@ -669,8 +660,8 @@ public class OaEngineController {
                                   @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         String formIds = vars.get("formIds");
@@ -680,20 +671,18 @@ public class OaEngineController {
         String taskMsg[] = taskIds.split(",");
 //      其实这里就是附言
         String memo = vars.get("memo");
-        userId = vars.get("userId");
+//        userId = vars.get("userId");
         for (int i = 0; i < len; i++) {
             try {
                 ioaEngineService.back(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], memo);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
-                String errorMsg = "任务没有找到,请检查";
-                logger.warn(errorMsg);
-                return BaseResult.getErrorResult(-3, errorMsg);
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.TASK_NOT_FOUND_ERROR, OAEngineConst.TASK_NOT_FOUND_ERROR_MSG);
             } catch (ActivitiException e) {
                 e.printStackTrace();
-                String errorMsg = "没有前置审批节点，无法回退，请选择拒绝";
-                logger.warn(errorMsg);
-                return BaseResult.getErrorResult(-3, errorMsg);
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.APPROVE_BACK_ERROR, OAEngineConst.APPROVE_BACK_ERROR_MSG);
             }
         }
         return BaseResult.getSuccessResult("回退审批结束");
@@ -712,8 +701,8 @@ public class OaEngineController {
                                      @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         String formIds = vars.get("formIds");
@@ -724,20 +713,18 @@ public class OaEngineController {
 //      其实这里就是附言
         String memo = vars.get("memo");
         String assignees = vars.get("rtx_id");
-        userId = vars.get("userId");
+//        userId = vars.get("userId");
         for (int i = 0; i < len; i++) {
             try {
                 ioaEngineService.endorse(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
-                String errorMsg = "任务没有找到,请检查";
-                logger.warn(errorMsg);
-                return BaseResult.getErrorResult(-3, errorMsg);
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.TASK_NOT_FOUND_ERROR, OAEngineConst.TASK_NOT_FOUND_ERROR_MSG);
             } catch (ActivitiException e) {
                 e.printStackTrace();
-                String errorMsg = "工作流系统错误,请检查";
-                logger.warn(errorMsg);
-                return BaseResult.getErrorResult(-3, errorMsg);
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.ACTIVITI_ERROR, OAEngineConst.ACTIVITI_ERROR_MSG);
             }
         }
         return BaseResult.getSuccessResult("加签结束");
@@ -756,8 +743,8 @@ public class OaEngineController {
                                   @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         String formId = vars.get("formId");
@@ -770,8 +757,9 @@ public class OaEngineController {
         int size = infos.size();
         ApprovalInfo approvalInfo = infos.get(size - 1);
         Long approveId = approvalInfo.getId();
-        ioaEngineService.reminder(processKey, userId, formId, String.valueOf(approveId), "催办");
-        return BaseResult.getSuccessResult("催办成功");
+        String candidates = ioaEngineService.reminder(processKey, userId, formId, String.valueOf(approveId), "催办");
+        String reMsg = "下个节点审批人列表如下: " + candidates + " 催办成功";
+        return BaseResult.getSuccessResult(reMsg);
 
     }
 
@@ -787,8 +775,8 @@ public class OaEngineController {
                                   @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         String formId = vars.get("formId");
@@ -797,27 +785,24 @@ public class OaEngineController {
             formInfo = ioaEngineService.getHistoryFormInfo(processKey, userId, formId);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
-            String errorMsg = "表单未找到, 请检查!";
-            return BaseResult.getErrorResult(-2, errorMsg);
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
         }
         try {
             ioaEngineService.createFormAndstart(processKey, userId,
                     formInfo);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
-            String errorMsg = "ACL限制，获取员工信息失败";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-1, errorMsg);
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
         } catch (CompareModelException e) {
             e.printStackTrace();
-            String errorMsg = "日期字段填写错误，请检查";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-1, errorMsg);
+            logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
-            String errorMsg = "表单未找到，请检查！";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-1, errorMsg);
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
         }
         return BaseResult.getSuccessResult("重新发起流程成功!");
 
@@ -835,8 +820,8 @@ public class OaEngineController {
                                      @RequestBody WebRequest webRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
-            logger.warn("登陆用户为空，无法获取员工信息");
-            return BaseResult.getErrorResult(-3, "登陆用户为空，无法获取员工信息");
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = webRequest.getVars();
         String formId = vars.get("formId");
@@ -1373,7 +1358,7 @@ public class OaEngineController {
             return "加签";
         } else if ("refuse".equals(approveEn)) {
             return "拒绝";
-        } else if ("start".equals(approveEn)){
+        } else if ("start".equals(approveEn)) {
             return "申请";
         }
         return "";
