@@ -4,17 +4,13 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * 
- * 我的申请页面数据
- * @author zhenqing.wang
+ * 获取每个表单的具体信息.
+ * vars包含每项费用,key-value形式.
+ * tableMap key为每个table的id,value为table二维数组.
  *
  */
-public class WebRequest implements Serializable{
+public class FormRequest implements Serializable{
 
-	/**
-	 * list包含每个表格的多条数据
-	 * vars主要是页面上唯一的数据
-	 */
 	private static final long serialVersionUID = 356235207021432802L;
 	private Map<String, String[][]> tableMap;
 	private Map<String, String> vars;

@@ -196,6 +196,18 @@ public class OaEngineController {
     }
 
     /**
+     * 我的草稿
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "oa/draft.html")
+    public ModelAndView myDraft(HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("oa/draft");
+        return mav;
+    }
+
+    /**
      * 我的申请页面需要获取的基本信息
      *
      * @param request
@@ -209,7 +221,7 @@ public class OaEngineController {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        EmployeeInfo employeeInfo = new EmployeeInfo();
+        EmployeeInfo employeeInfo;
         try {
             employeeInfo = ioaEngineService.getEmployeeInfo(userId);
         } catch (RemoteAccessException e) {
@@ -228,20 +240,21 @@ public class OaEngineController {
      * 获取工时
      *
      * @param request
-     * @param laborRequest
+     * @param commonRequest
      * @return
      */
-    @RequestMapping(value = "oa/laborhour")
+    @RequestMapping(value = "oa/labor")
     @ResponseBody
     public BaseResult webLaborHour(HttpServletRequest request,
-                                   @RequestBody LaborRequest laborRequest) {
+                                   @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        String day = laborRequest.getWhichDay();
-        Date date = null;
+        Map<String, String> vars = commonRequest.getVars();
+        String day = vars.get("day");
+        Date date;
         try {
             date = sdf.parse(day);
         } catch (ParseException e1) {
@@ -265,21 +278,21 @@ public class OaEngineController {
      * 报销页面传到后端信息,存至各个表
      *
      * @param request
-     * @param webRequest
+     * @param formRequest
      * @return
      */
     @RequestMapping(value = "oa/data")
     @ResponseBody
     public BaseResult webPostData(HttpServletRequest request,
-                                  @RequestBody WebRequest webRequest) {
+                                  @RequestBody FormRequest formRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
-        Map<String, String[][]> tableMap = webRequest.getTableMap();
-        boolean createFlag = true;
+        Map<String, String> vars = formRequest.getVars();
+        Map<String, String[][]> tableMap = formRequest.getTableMap();
+        boolean createFlag;
         FormInfo formInfo = new FormInfo();
         try {
             createFlag = constructFormInfo(formInfo, tableMap, vars);
@@ -293,7 +306,8 @@ public class OaEngineController {
             logger.warn(errorMsg);
             return BaseResult.getErrorResult(-1, errorMsg);
         }
-        boolean flag = webRequest.isFlag();
+//      这里的flag是判断是已经开始还是保存草稿
+        boolean flag = formRequest.isFlag();
 
         long id = 0;
         if (flag) {
@@ -324,19 +338,83 @@ public class OaEngineController {
      * 正在审批中的申请
      *
      * @param request
-     * @param webRequest
+     * @param commonRequest
      * @return
      */
-    @RequestMapping(value = "oa/todo")
+    @RequestMapping(value = "oa/draft")
     @ResponseBody
-    public BaseResult getAllMyApplyTodoList(HttpServletRequest request,
-                                            @RequestBody WebRequest webRequest) {
+    public BaseResult getAllDraftInfos(HttpServletRequest request,
+                                       @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
+        int noSize[] = getPageNoAndSize(vars);
+        int pageSize = noSize[0];
+        int pageNo = noSize[1];
+        FormInfoList formInfoList = ioaEngineService.getUserDraftList(
+                processKey, userId, pageNo, pageSize);
+        DataResult dataResult;
+        try {
+            dataResult = getAllTableInfos(formInfoList, userId, 1);
+        } catch (RemoteAccessException e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
+        }
+        return BaseResult.getSuccessResult(dataResult);
+    }
+
+    /**
+     * 获取报销详情
+     *
+     * @param request
+     * @param commonRequest
+     * @return
+     */
+    @RequestMapping(value = "oa/apply_info")
+    @ResponseBody
+    public BaseResult getDraftDetailInfo(HttpServletRequest request,
+                                         @RequestBody CommonRequest commonRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
+        }
+        Map<String, String> vars = commonRequest.getVars();
+        String formId = vars.get("formId");
+        FormInfo formInfo;
+        try {
+            formInfo = ioaEngineService.getFormInfo(
+                    processKey, userId, formId);
+        } catch (FormNotFoundException e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
+        }
+        FormRequest formRequest = getApplyDetailInfo(formInfo);
+        return BaseResult.getSuccessResult(formRequest);
+    }
+
+    /**
+     * 正在审批中的申请
+     *
+     * @param request
+     * @param commonRequest
+     * @return
+     */
+    @RequestMapping(value = "oa/todo")
+    @ResponseBody
+    public BaseResult getAllMyApplyTodoList(HttpServletRequest request,
+                                            @RequestBody CommonRequest commonRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
+        }
+        Map<String, String> vars = commonRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
@@ -366,7 +444,7 @@ public class OaEngineController {
                 processKey, userId, _startTime, _endTime, pageNo, pageSize);
         DataResult dataResult;
         try {
-            dataResult = getTableInfos(formInfoList, userId, 1);
+            dataResult = getAllTableInfos(formInfoList, userId, 1);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -379,19 +457,19 @@ public class OaEngineController {
      * 已经结束的申请
      *
      * @param request
-     * @param webRequest
+     * @param commonRequest
      * @return
      */
     @RequestMapping(value = "oa/history")
     @ResponseBody
     public BaseResult getAllMyApplyHistoryList(HttpServletRequest request,
-                                               @RequestBody WebRequest webRequest) {
+                                               @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
@@ -424,7 +502,7 @@ public class OaEngineController {
                 processKey, userId, _startTime, _endTime, pageNo, pageSize);
         DataResult dataResult;
         try {
-            dataResult = getTableInfos(formInfoList, userId, 1);
+            dataResult = getAllTableInfos(formInfoList, userId, 1);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -437,13 +515,13 @@ public class OaEngineController {
      * 待审批
      *
      * @param request
-     * @param webRequest
+     * @param commonRequest
      * @return
      */
     @RequestMapping(value = "oa/approve_todo")
     @ResponseBody
     public BaseResult getAllApproveTodoList(HttpServletRequest request,
-                                            @RequestBody WebRequest webRequest) {
+                                            @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -451,7 +529,7 @@ public class OaEngineController {
         }
         // Date startTime, Date endTime,
         // 默认一页显示50条数据
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
@@ -490,7 +568,7 @@ public class OaEngineController {
         }
         DataResult dataResult;
         try {
-            dataResult = getTableInfos(formInfoList, userId, 2);
+            dataResult = getAllTableInfos(formInfoList, userId, 2);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -503,19 +581,19 @@ public class OaEngineController {
      * 已经审批结束
      *
      * @param request
-     * @param webRequest
+     * @param commonRequest
      * @return
      */
     @RequestMapping(value = "oa/approve_history")
     @ResponseBody
     public BaseResult getAllApproveHistoryList(HttpServletRequest request,
-                                               @RequestBody WebRequest webRequest) {
+                                               @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
         int noSize[] = getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
@@ -559,7 +637,7 @@ public class OaEngineController {
         }
         DataResult dataResult;
         try {
-            dataResult = getTableInfos(formInfoList, userId, 3);
+            dataResult = getAllTableInfos(formInfoList, userId, 3);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -577,13 +655,13 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_pass")
     @ResponseBody
     public BaseResult approvePass(HttpServletRequest request,
-                                  @RequestBody WebRequest webRequest) {
+                                  @RequestBody CommonRequest commonRequestt) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequestt.getVars();
         String formIds = vars.get("formIds");
         String taskIds = vars.get("taskIds");
         List<Long> formIdList = new ArrayList<Long>();
@@ -617,13 +695,13 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_reject")
     @ResponseBody
     public BaseResult approveReject(HttpServletRequest request,
-                                    @RequestBody WebRequest webRequest) {
+                                    @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
         String formIds = vars.get("formIds");
         String taskIds = vars.get("taskIds");
         String formMsg[] = formIds.split(",");
@@ -657,13 +735,13 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_back")
     @ResponseBody
     public BaseResult approveBack(HttpServletRequest request,
-                                  @RequestBody WebRequest webRequest) {
+                                  @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
         String formIds = vars.get("formIds");
         String taskIds = vars.get("taskIds");
         String formMsg[] = formIds.split(",");
@@ -698,13 +776,13 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_endorse")
     @ResponseBody
     public BaseResult approveEndorse(HttpServletRequest request,
-                                     @RequestBody WebRequest webRequest) {
+                                     @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
         String formIds = vars.get("formIds");
         String taskIds = vars.get("taskIds");
         String formMsg[] = formIds.split(",");
@@ -740,13 +818,13 @@ public class OaEngineController {
     @RequestMapping(value = "/push_approve")
     @ResponseBody
     public BaseResult pushApprove(HttpServletRequest request,
-                                  @RequestBody WebRequest webRequest) {
+                                  @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
         String formId = vars.get("formId");
         ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 20);
         long count = approveInfos.getCount();
@@ -772,15 +850,15 @@ public class OaEngineController {
     @RequestMapping(value = "/restart_form")
     @ResponseBody
     public BaseResult restartForm(HttpServletRequest request,
-                                  @RequestBody WebRequest webRequest) {
+                                  @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
         String formId = vars.get("formId");
-        FormInfo formInfo = null;
+        FormInfo formInfo;
         try {
             formInfo = ioaEngineService.getHistoryFormInfo(processKey, userId, formId);
         } catch (FormNotFoundException e) {
@@ -817,13 +895,13 @@ public class OaEngineController {
     @RequestMapping(value = "/approve_info")
     @ResponseBody
     public BaseResult getApproveInfo(HttpServletRequest request,
-                                     @RequestBody WebRequest webRequest) {
+                                     @RequestBody CommonRequest commonRequest) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
-        Map<String, String> vars = webRequest.getVars();
+        Map<String, String> vars = commonRequest.getVars();
         String formId = vars.get("formId");
         ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 20);
         long count = approveInfos.getCount();
@@ -848,6 +926,14 @@ public class OaEngineController {
 
     }
 
+    /**
+     * 获取前端传过来的数据,构造成FormInfo,存入数据库
+     * @param formInfo
+     * @param tableMap
+     * @param vars
+     * @return
+     * @throws ParseException
+     */
     private boolean constructFormInfo(FormInfo formInfo,
                                       Map<String, String[][]> tableMap, Map<String, String> vars)
             throws ParseException {
@@ -1017,31 +1103,26 @@ public class OaEngineController {
 
 
     /**
-     * 我的申请和历史申请表格信息
+     * 获取所有datatable应该展示的内容
      *
      * @param formInfoList
      * @param userId
      * @return
      * @throws RemoteAccessException
      */
-    private DataResult getTableInfos(FormInfoList formInfoList, String userId, int id) throws RemoteAccessException {
+    private DataResult getAllTableInfos(FormInfoList formInfoList, String userId, int id) throws RemoteAccessException {
         DataResult dataResult = new DataResult();
         List<FormInfo> formInfos = formInfoList.getFormInfos();
         int size = formInfos.size();
         List<String[]> tableInfos = new ArrayList<String[]>();
         EmployeeInfo employeeInfo = ioaEngineService.getEmployeeInfo(userId);
         String depart = getDepartMent(employeeInfo);
-        List<Map<String, String>> varsList = new ArrayList<Map<String, String>>();
-        List<Map<String, String[][]>> tableMapList = new ArrayList<Map<String, String[][]>>();
         for (int i = 0; i < size; i++) {
             FormInfo formInfo = formInfos.get(i);
             String tableInfo[] = getEveryTableInfo(formInfo, depart, id);
             tableInfos.add(tableInfo);
-            constructTableMap(formInfo, varsList, tableMapList);
         }
-        dataResult.setCount((long) size);
-        dataResult.setTableMapList(tableMapList);
-        dataResult.setVarsList(varsList);
+        dataResult.setCount(size);
         dataResult.setTableInfos(tableInfos);
         return dataResult;
     }
@@ -1081,15 +1162,15 @@ public class OaEngineController {
         return tableInfo;
     }
 
+
     /**
      * 构造历史页面需要展示的各种信息
      *
      * @param formInfo
-     * @param varsList
-     * @param tableMapList
+     * @return FormRequest
      */
-    private void constructTableMap(FormInfo formInfo, List<Map<String, String>> varsList,
-                                   List<Map<String, String[][]>> tableMapList) {
+    private FormRequest getApplyDetailInfo(FormInfo formInfo) {
+        FormRequest formRequest = new FormRequest();
         Map<String, String[][]> tableMap = new HashMap<String, String[][]>();
         String table[][] = createTableFirstInfo(formInfo);
         tableMap.put("table", table);
@@ -1210,8 +1291,10 @@ public class OaEngineController {
         vars.put("sum6", moneySum6);
         vars.put("remark", formInfo.getCommuCostsComment());
 
-        varsList.add(vars);
-        tableMapList.add(tableMap);
+        formRequest.setTableMap(tableMap);
+        formRequest.setVars(vars);
+        formRequest.setFlag(false);
+        return formRequest;
     }
 
     /**
