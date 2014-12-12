@@ -454,6 +454,7 @@ public class Form0114Manager {
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		Formmain0114Example example = new Formmain0114Example();
 		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+		criteria.andFinishedflagNotEqualTo(Constants.PROC_GRIFT);
 		criteria.andStartMemberIdEqualTo(userId);
 		if(startTime != null){
 			criteria = criteria.andStartDateGreaterThanOrEqualTo(startTime);
