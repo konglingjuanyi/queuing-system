@@ -12,8 +12,11 @@
     }
 
 </style>
-<div class="col-xs-12">
-    <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
+
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
         <span class="input-icon input-icon-right">
             <input class="date" id="date-from" type="text" style="width: 186px" onclick="showTime()"
                    placeholder="申请日期..."/>
@@ -24,15 +27,13 @@
                    placeholder="申请日期..."/>
             <i class="icon-calendar green"></i>
         </span>
-        <button id="search"
-                style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
-                class="btn btn-minier btn-primary">
-            查询
-        </button>
+            <button id="search"
+                    style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                    class="btn btn-minier btn-primary">
+                查询
+            </button>
+        </div>
     </div>
-</div>
-
-<div class="row">
     <div class="col-xs-12">
         <div class="col-xs-9">
             <div class="widget-box">

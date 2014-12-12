@@ -75,7 +75,7 @@
             <table style="border-collapse:collapse;" border="1" class="col-xs-9">
                 <tr>
                     <td>报销金额总计</td>
-                    <td><input type="text" value="0" id="sum" readonly="readonly"></td>
+                    <td><input type="text" value="0.00" id="sum" readonly="readonly"></td>
                 </tr>
             </table>
         </div>
@@ -121,7 +121,7 @@
             <table style="border-collapse:collapse;" border="1" class="col-xs-9">
                 <tr>
                     <td>金额总计</td>
-                    <td><input type="text" value="0" id="sum1" readonly="readonly"></td>
+                    <td><input type="text" value="0.00" id="sum1" readonly="readonly"></td>
                 </tr>
             </table>
         </div>
@@ -135,7 +135,7 @@
                    id="table6">
                 <tr>
                     <td>金额</td>
-                    <td><input type="text" value="0" id="sum6" onblur="addMoney('table6')"></td>
+                    <td><input type="text" value="0.00" id="sum6" onblur="addMoney('table6')"></td>
                     <td>备注(话费实际发生月份)</td>
                     <td><input type="text" id="remark"></td>
                 </tr>
@@ -181,7 +181,7 @@
             <table style="border-collapse:collapse;" border="1" class="col-xs-9">
                 <tr>
                     <td>金额总计</td>
-                    <td><input type="text" value="0" id="sum2" readonly="readonly"></td>
+                    <td><input type="text" value="0.00" id="sum2" readonly="readonly"></td>
                 </tr>
             </table>
         </div>
@@ -223,7 +223,7 @@
             <table style="border-collapse:collapse;" border="1" class="col-xs-9">
                 <tr>
                     <td>金额总计</td>
-                    <td><input type="text" value="0" id="sum3" readonly="readonly"></td>
+                    <td><input type="text" value="0.00" id="sum3" readonly="readonly"></td>
                 </tr>
             </table>
         </div>
@@ -260,7 +260,7 @@
             <table style="border-collapse:collapse;" border="1" class="col-xs-9">
                 <tr>
                     <td>金额总计</td>
-                    <td><input type="text" value="0" id="sum4" readonly="readonly"></td>
+                    <td><input type="text" value="0.00" id="sum4" readonly="readonly"></td>
                 </tr>
             </table>
         </div>
@@ -289,7 +289,7 @@
             <table style="border-collapse:collapse;" border="1" class="col-xs-9">
                 <tr>
                     <td>金额总计</td>
-                    <td><input type="text" value="0" id="sum5" readonly="readonly"></td>
+                    <td><input type="text" value="0.00" id="sum5" readonly="readonly"></td>
                 </tr>
             </table>
         </div>
@@ -322,7 +322,35 @@
 <script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
 
+
     jQuery(function ($) {
+        var url = location.search;
+        if (url.indexOf('formId') != -1) {
+            var formId = url.split('=')[1];
+            console.log(formId);
+//            formId = decodeURIComponent(formId);
+            createEditApplyTable(formId);
+        } else {
+            createNewAddApplyTable();
+
+        }
+
+    });
+
+    function showTime() {
+        WdatePicker({dateFmt: 'yyyy-MM-dd'});
+    }
+
+    function showTimeAndLabor(tableId, curRow) {
+        WdatePicker({
+            dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d', onpicked: function () {
+                workHour(tableId, curRow)
+            }
+        });
+    }
+
+    //  新建表
+    function createNewAddApplyTable() {
         $.ajax({
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
@@ -351,19 +379,109 @@
                 showCommonNoticeDialog('网络错误', 'icon-bolt',
                         generateNoticeMsg('网络错误，请刷新后重试!'), 300);
             }
-        })
-    });
-
-    function showTime() {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
+        });
     }
 
-    function showTimeAndLabor(tableId, curRow) {
-        WdatePicker({
-            dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d', onpicked: function () {
-                workHour(tableId, curRow)
+
+    function createEditApplyTable(formId) {
+        var params = {
+            "vars": {
+                "formId": formId
+            }
+        };
+        $.ajax({
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            url: "oa/apply_info",
+            type: "POST",
+            data: JSON.stringify(params),
+            success: function (resp) {
+                if (resp.errorCode == 0) {
+                    var data = resp.data;
+                    var tableMap = data.tableMap;
+                    var vars = data.vars;
+                    console.log(data);
+                    getDataToEditDialog(tableMap, vars);
+
+                } else {
+                    showCommonNoticeDialog('失败', 'icon-warning-sign',
+                            generateNoticeMsg(resp.errorMessage), 300);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                showCommonNoticeDialog('网络错误', 'icon-bolt',
+                        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
             }
         });
+    }
+
+
+    function constructTable0Info(tableMap) {
+        var table0 = tableMap["table"];
+        var table = document.getElementById("table");
+        var k = 0;
+        for (var i = 0; i < 4; i++) {
+            for (var j = 1; j < 6; j += 2) {
+                var value = table0[0][k];
+                if (isNull(value)) {
+                    value = "";
+                }
+                table.rows[i].cells[j].childNodes[0].value = value;
+                k++;
+            }
+        }
+
+    }
+    function constructAllTableInfo(tableMap) {
+        var len = 6;
+        for (var i = 1; i < len; i++) {
+            var tableId = "table" + i;
+            var table = document.getElementById(tableId);
+            var tableInfo = tableMap[tableId];
+            var tableLen = tableInfo.length;
+            if (tableLen == 0) { //没有数据,不处理了.
+                continue;
+            }
+//          增加内容
+            var rowLen = table.rows.length;
+            var coLen = table.rows[0].cells.length;
+            for (var j = 0; j < tableLen; j++) {
+                var nRow = table.insertRow(rowLen);
+
+                for (var k = 0; k < coLen - 1; k++) {
+                    var value = tableInfo[j][k];
+                    if (isNull(value)) {
+                        value = "";
+                    }
+                    var cell = nRow.insertCell(k);
+                    cell.innerHTML = table.rows[rowLen - 1].cells[k].innerHTML;
+                    if(k == 0){
+                        console.log(cell.childNodes[0].childNodes);
+                        cell.childNodes[0].childNodes[1].value = value;
+                    }else{
+                        cell.childNodes[0].value = value;
+                    }
+                }
+                cell = nRow.insertCell(coLen - 1);
+                cell.innerHTML = "<div align='center' style='width:40px'><a href='javascript:;' " +
+                "onclick=\"deleteRow('" + tableId + "',this)\">删除</a></div>";
+                rowLen += 1;
+            }
+            table.deleteRow(1);//删掉第一行.
+        }
+    }
+    function getDataToEditDialog(tableMap, vars) {
+
+        constructTable0Info(tableMap);
+        constructAllTableInfo(tableMap)
+        for(var i = 1; i < 7; i++){
+            var sumOne = "sum"+i;
+            var sum = vars[sumOne];
+            $("#"+sumOne).val(sum);
+        }
+        $("#sum").val(vars["sum"]);
+        $("#remark").val(vars["remark"]);
+
     }
 
     function workHour(tableId, curRow) {
@@ -371,7 +489,9 @@
         var rowId = curRow.parentNode.parentNode.parentNode.rowIndex;
         var dateTime = table.rows[rowId].cells[0].childNodes[0].childNodes[1].value;
         var params = {
-            "whichDay": dateTime
+            "vars": {
+                "day": dateTime
+            }
         };
         $.ajax({
             contentType: "application/json; charset=utf-8",
@@ -417,6 +537,12 @@
     //删除指定行
     function deleteRow(tableId, curRow) {
         var table = document.getElementById(tableId);
+        var rowLen = table.rows.length;
+        if(rowLen == 2){
+            showCommonNoticeDialog('失败', 'icon-warning-sign',
+                    generateNoticeMsg("啊哦,就剩一行了,不能删除了!"), 300);
+            return;
+        }
         var rowId = curRow.parentNode.parentNode.parentNode.rowIndex;
         table.deleteRow(rowId);
         addMoney(tableId);
@@ -435,7 +561,7 @@
             var rowLen = table.rows.length;
             var coLen = table.rows[0].cells.length;
             var tableSum = 0;
-            for (var i = 1; i < rowLen; i++) {
+            for (i = 1; i < rowLen; i++) {
                 var innerSum = '';
                 if (tableId == "table2") {
                     innerSum = table.rows[i].cells[coLen - 4].childNodes[0].value;
@@ -561,7 +687,6 @@
                 if (resp.errorCode == 0) {
                     showCommonNoticeDialog('成功', 'icon-warning-sign',
                             generateNoticeMsg("创建报销申请成功！"), 300);
-                    console.log();
                     window.location.href = '/oaengine/oa/apply_todo.html';
                 } else {
                     showCommonNoticeDialog('失败', 'icon-warning-sign',

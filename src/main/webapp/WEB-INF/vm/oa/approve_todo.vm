@@ -15,7 +15,7 @@
 </style>
 <div class="row">
     <div class="col-xs-12">
-        <div class="col-xs-3">
+        <div class="col-xs-5">
             <div class="form-group dash-button-group" style="margin-bottom: 0px; float: left;">
                 <button id="approve_pass"
                         style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
@@ -39,7 +39,7 @@
                 </button>
             </div>
         </div>
-        <div class="col-xs-9">
+        <div class="col-xs-7">
             <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
         <span class="input-icon input-icon-right">
             <input class="date" id="date-from" type="text" style="width: 186px" onclick="showTime()"
@@ -62,8 +62,6 @@
             </div>
         </div>
     </div>
-</div>
-<div class="row">
     <div class="col-xs-12">
         <div class="col-xs-9">
             <div class="widget-box">
@@ -193,8 +191,6 @@
 //                vars["userId"] = "bin.sun";
                 var params = {};
                 params["vars"] = vars;
-                params["tableMap"] = {};
-                params["flag"] = "";
                 $.ajax({
                     "contentType": "application/json; charset=utf-8",
                     "type": "POST",
@@ -585,8 +581,6 @@
         vars["rtx_id"] = rtx_id;
         vars["userId"] = "bin.sun";
         params["vars"] = vars;
-        params["tableMap"] = {};
-        params["flag"] = "";
         $.ajax({
             contentType: "application/json; charset=utf-8",
             url: url,
@@ -731,20 +725,16 @@
     function showTableInfo(data, len) {
         var aaData = [];
         var needData = data.tableInfos;
-        var tableMapList = data.tableMapList;
-        var varsList = data.varsList;
         var d_len = needData.length;
         for (var i = 0; i < d_len; i++) {
             var money = parseFloat(needData[i][4]);
             money /= 100;
-            var tempMap = JSON.stringify(tableMapList[i]);
-            var tempVar = JSON.stringify(varsList[i]);
             var map = $.parseStr("<a href='javascript:void(0);' " +
-            "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
+            "onclick='showEditDialog(%s);'><i class='icon-link'></i></a>", needData[i][0]);
             var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
             var need_list = [checkbox, needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map, needData[i][5]];
             var d_list = [];
-            for(var i = 0; i < len; i++){
+            for(i = 0; i < len; i++){
                 d_list.push(need_list[i]);
             }
             aaData.push(d_list);
@@ -762,8 +752,6 @@
             return;
         }
         var params = {
-            "tableMap": {},
-            "flag": "",
             "vars": {
                 formId: id
             }
@@ -779,7 +767,7 @@
                         try {
                             var details = resp.data;
                             var html = '';
-                            html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"], true);
+                            html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批过程中"], true);
                             html += __generateDetailHtml('审批历史', 'icon-book', details, true);
                             $("#todo-approve-details-list").html(html);
                         } catch (e) {

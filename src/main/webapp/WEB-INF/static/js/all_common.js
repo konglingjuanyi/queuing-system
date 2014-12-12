@@ -34,7 +34,38 @@ function __generateDetailHtml(header, header_icon, data_list, with_hr) {
 }
 
 //显示编辑对话框
-function showEditDialog(tableMap, vars) {
+function showEditDialog(formId) {
+    var params = {
+        "vars": {
+            "formId": formId
+        }
+    };
+    $.ajax({
+        "contentType": "application/json; charset=utf-8",
+        "url": "oa/apply_info",
+        "type": "POST",
+        "data": JSON.stringify(params),
+        success: function (resp) {
+            if (resp.errorCode == 0) {
+                var data = resp.data;
+                var tableMap = data.tableMap;
+                var vars = data.vars;
+                constructEditDialogDatas(tableMap, vars);
+            } else {
+                showCommonNoticeDialog('失败', 'icon-warning-sign',
+                    generateNoticeMsg(resp.errorMessage), 300);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            showCommonNoticeDialog('网络错误', 'icon-warning-sign',
+                generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+        }
+    });
+
+}
+
+
+function constructEditDialogDatas(tableMap, vars) {
     $('#edit-form').html(edit_form);
     var fixedInfo = '<div style="text-align:center; vertical-align:middle;">';
     fixedInfo += fixedTableInfo(tableMap, vars);
@@ -130,7 +161,7 @@ function tableBodyForm(tableMap, tableId, num) {
         }
         bodyForm += '</tr>';
     } else {
-        for (var i = 0; i < tableLen; i++) {
+        for (i = 0; i < tableLen; i++) {
             bodyForm += '<tr>';
             for (var j = 0; j < headLen; j++) {
                 var value = tableInfo[i][j];

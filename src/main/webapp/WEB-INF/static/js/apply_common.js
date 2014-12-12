@@ -80,10 +80,7 @@ function showInfo(url, tableName, rTableId, status, num) {
             if (endDate != '') {
                 vars["endTime"] = endDate;
             }
-            var params = {};
-            params["vars"] = vars;
-            params["tableMap"] = {};
-            params["flag"] = "";
+            var params = {"vars": vars};
             $.ajax({
                 "contentType": "application/json; charset=utf-8",
                 "type": "POST",
@@ -144,16 +141,12 @@ function showInfo(url, tableName, rTableId, status, num) {
 function showApplyInfo(data, num) {
     var aaData = [];
     var needData = data.tableInfos;
-    var tableMapList = data.tableMapList;
-    var varsList = data.varsList;
     var d_len = needData.length;
     for (var i = 0; i < d_len; i++) {
         var money = parseFloat(needData[i][5]);
         money /= 100;
-        var tempMap = JSON.stringify(tableMapList[i]);
-        var tempVar = JSON.stringify(varsList[i]);
         var map = $.parseStr("<a href='javascript:void(0);' " +
-        "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", tempMap, tempVar);
+        "onclick='showEditDialog(%s);'><i class='icon-link'></i></a>", needData[i][0]);
 
         var push = "";
         if (num == 1) {
@@ -177,8 +170,6 @@ function showApplyTodoOrHistoryDetailsList(id, tableId, status) {
         return;
     }
     var params = {
-        "tableMap": {},
-        "flag": "",
         "vars": {
             "formId": id
         }
@@ -210,14 +201,15 @@ function showApplyTodoOrHistoryDetailsList(id, tableId, status) {
             showCommonNoticeDialog('网络错误', 'icon-warning-sign',
                 generateNoticeMsg('网络错误，请刷新后重试!'), 300);
         }
-    })
+    });
 }
 
 function sendEmailToCandidate(id) {
-    var params = {};
-    params["vars"] = {"formId": id};
-    params["tableMap"] = {};
-    params["flag"] = "";
+    var params = {
+        "vars": {
+            "formId": id
+        }
+    };
     $.ajax({
         "contentType": "application/json; charset=utf-8",
         "type": "POST",
@@ -239,10 +231,11 @@ function sendEmailToCandidate(id) {
 }
 
 function restartForm(id) {
-    var params = {};
-    params["vars"] = {"formId": id};
-    params["tableMap"] = {};
-    params["flag"] = "";
+    var params = {
+        "vars": {
+            "formId": id
+        }
+    };
     $.ajax({
         "contentType": "application/json; charset=utf-8",
         "type": "POST",
