@@ -495,7 +495,7 @@
         };
         $.ajax({
             contentType: "application/json; charset=utf-8",
-            url: "oa/laborhour",
+            url: "oa/labor",
             type: "POST",
             data: JSON.stringify(params),
             success: function (resp) {

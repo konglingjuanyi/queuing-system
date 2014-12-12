@@ -700,18 +700,7 @@
         return form;
     }
 
-    function toggleCheck(oTable) {
-        $('input', oTable.fnGetNodes()).unbind("click");
-        $('input', oTable.fnGetNodes()).on("click", function () {
-            $(this).prop('checked', this.checked);
-            $(this).attr('checked', this.checked);
-        });
-        $('#current-approve-table-select-all').unbind("click");
-        $('#current-approve-table-select-all').on("click", function () {
-            $('input', oTable.fnGetNodes()).prop('checked', this.checked);
-            $('input', oTable.fnGetNodes()).attr('checked', this.checked);
-        });
-    }
+
     function enableAccountApplicationDialogButton(enable) {
         if (enable) {
             $("#account-application-submit").removeAttr('disabled');
@@ -790,7 +779,7 @@
     //                {
     //                    source: function (request, response) {
     //                        $.ajax({
-    //                            url: "/asset_info/auto/show",
+    //                             url: "/asset_info/auto/show",
     //                            dataType: "json",
     //                            type: "POST",
     //                            data: {

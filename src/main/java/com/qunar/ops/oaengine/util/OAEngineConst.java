@@ -13,6 +13,8 @@ public class OAEngineConst {
     public static String FORM_NOT_FOUND_ERROR_MSG = "表单未找到，请检查！";
     public static int ACTIVITI_ERROR = 202;
     public static String ACTIVITI_ERROR_MSG = "工作流系统错误,请检查!";
+    public static int MANAGER_LOCK_ERROR = 203;
+    public static String MANAGER_LOCK_ERROR_MSG = "工单锁定（历史工单不允许删除、仅允许创建人删除）";
 
     public static int TASK_NOT_FOUND_ERROR = 301;
     public static String TASK_NOT_FOUND_ERROR_MSG = "任务不存在,请检查!";

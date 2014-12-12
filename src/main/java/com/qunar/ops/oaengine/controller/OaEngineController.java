@@ -4,12 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.exception.ManagerFormException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.result.*;
 import com.qunar.ops.oaengine.result.dailysubmit.*;
 import com.qunar.ops.oaengine.service.IOAEngineService;
 import com.qunar.ops.oaengine.service.MailSenderService;
+import com.qunar.ops.oaengine.util.OAControllerUtils;
 import com.qunar.ops.oaengine.util.OAEngineConst;
 import org.activiti.engine.*;
 import org.activiti.spring.ProcessEngineFactoryBean;
@@ -30,7 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -55,9 +56,9 @@ public class OaEngineController {
     @Autowired
     private IOAEngineService ioaEngineService;
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
     private String processKey = "oa_common";
+
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     @RequestMapping(value = "/oa/test.html")
     public void index(HttpServletRequest request) {
@@ -231,7 +232,7 @@ public class OaEngineController {
         }
         String result[] = new String[]{employeeInfo.getAdName(),
                 employeeInfo.getSn(),
-                dateToStr(new Date(System.currentTimeMillis())),
+                OAControllerUtils.dateToStr(new Date(System.currentTimeMillis())),
                 employeeInfo.getDepartmentI(), employeeInfo.getDepartmentIV()};
         return BaseResult.getSuccessResult(result);
     }
@@ -351,7 +352,7 @@ public class OaEngineController {
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = getPageNoAndSize(vars);
+        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
         FormInfoList formInfoList = ioaEngineService.getUserDraftList(
@@ -392,7 +393,7 @@ public class OaEngineController {
         } catch (FormNotFoundException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
         }
         FormRequest formRequest = getApplyDetailInfo(formInfo);
         return BaseResult.getSuccessResult(formRequest);
@@ -415,7 +416,7 @@ public class OaEngineController {
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = getPageNoAndSize(vars);
+        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
         String startTime = vars.get("startTime");
@@ -470,7 +471,7 @@ public class OaEngineController {
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = getPageNoAndSize(vars);
+        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
 
@@ -530,7 +531,7 @@ public class OaEngineController {
         // Date startTime, Date endTime,
         // 默认一页显示50条数据
         Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = getPageNoAndSize(vars);
+        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
         String startTime = vars.get("startTime");
@@ -564,7 +565,7 @@ public class OaEngineController {
         } catch (FormNotFoundException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
         }
         DataResult dataResult;
         try {
@@ -594,7 +595,7 @@ public class OaEngineController {
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
         }
         Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = getPageNoAndSize(vars);
+        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
         int pageSize = noSize[0];
         int pageNo = noSize[1];
         String startTime = vars.get("startTime");
@@ -622,7 +623,7 @@ public class OaEngineController {
                 return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
             }
         }
-        if (isNull(approve_user)) {
+        if (OAControllerUtils.isNull(approve_user)) {
             approve_user = null;
         }
 //        userId = vars.get("userId");
@@ -716,7 +717,7 @@ public class OaEngineController {
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.TASK_NOT_FOUND_ERROR, OAEngineConst.TASK_NOT_FOUND_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
             } catch (ActivitiException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());
@@ -756,7 +757,7 @@ public class OaEngineController {
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.TASK_NOT_FOUND_ERROR, OAEngineConst.TASK_NOT_FOUND_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
             } catch (ActivitiException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());
@@ -798,7 +799,7 @@ public class OaEngineController {
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.TASK_NOT_FOUND_ERROR, OAEngineConst.TASK_NOT_FOUND_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
             } catch (ActivitiException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());
@@ -887,6 +888,44 @@ public class OaEngineController {
     }
 
     /**
+     * 我的正在审批的申请,撤销或者删除
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/back_del")
+    @ResponseBody
+    public BaseResult applyBackorDel(HttpServletRequest request,
+                                     @RequestBody CommonRequest commonRequest) {
+        String userId = (String) request.getSession().getAttribute("USER_ID");
+        if (userId == null || userId.length() == 0) {
+            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
+        }
+        Map<String, String> vars = commonRequest.getVars();
+        String backDel = vars.get("backDel");
+        String formIds = vars.get("formIds");
+        String formMsg[] = formIds.split(",");
+        int len = formMsg.length;
+//        userId = vars.get("userId");
+        for (int i = 0; i < len; i++) {
+            try {
+                ioaEngineService.deleteFormInfo(processKey, userId, formMsg[i]);
+            } catch (FormNotFoundException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+            } catch (ManagerFormException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.MANAGER_LOCK_ERROR, OAEngineConst.MANAGER_LOCK_ERROR_MSG);
+            }
+        }
+        return BaseResult.getSuccessResult(backDel + "成功!");
+    }
+
+
+    /**
      * 获取审批各个节点的审批意见
      *
      * @param request
@@ -917,7 +956,7 @@ public class OaEngineController {
             ApprovalInfo approveInfo = infos.get(i);
             result[k++] = "审批人: " + approveInfo.getApproveUser();
             result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
-            result[k++] = "审批结果: " + transformApproveEnToCh(approveInfo.getManagerType());
+            result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
             result[k++] = "附言: " + approveInfo.getMemo();
             result[k++] = "";
         }
@@ -928,6 +967,7 @@ public class OaEngineController {
 
     /**
      * 获取前端传过来的数据,构造成FormInfo,存入数据库
+     *
      * @param formInfo
      * @param tableMap
      * @param vars
@@ -946,7 +986,7 @@ public class OaEngineController {
                 continue;
             }
             TaxiFaresInfo taxiInfo = new TaxiFaresInfo();
-            taxiInfo.setTaxiFaresDate(sdf.parse(table[i][0]));
+            taxiInfo.setTaxiFaresDate(OAControllerUtils.strToDate(table[i][0]));
             taxiInfo.setTaxiFaresAddr(table[i][1]);
             taxiInfo.setTaxiFaresDest(table[i][2]);
             taxiInfo.setTaxiFaresTime(table[i][3]);
@@ -954,9 +994,7 @@ public class OaEngineController {
             taxiInfo.setTaxiFaresUse(table[i][4]);
             taxiInfo.setTaxiFaresPeerPeople(table[i][5]);
             taxiInfo.setTaxiFaresWorkhour(new BigDecimal(table[i][6]));
-            Float money = Float.valueOf(table[i][7]);
-            String sMoney = String.valueOf((int) (money * 100));
-            taxiInfo.setTaxiFaresAmount(Long.valueOf(sMoney));
+            taxiInfo.setTaxiFaresAmount(OAControllerUtils.yuanMoneyToCent(table[i][7]));
             taxiInfo.setComment(table[i][8]);
             list1.add(taxiInfo);
         }
@@ -969,20 +1007,18 @@ public class OaEngineController {
         len = table.length;
         List<OvertimeMealsInfo> list2 = new ArrayList<OvertimeMealsInfo>();
         for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][5])) {
-                continue;
-            }
+//            if ("".equals(table[i][0]) || "".equals(table[i][5])) {
+//                continue;
+//            }
             OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
-            overInfo.setOvertimeMealsDate(sdf.parse(table[i][0]));
+            overInfo.setOvertimeMealsDate(OAControllerUtils.strToDate(table[i][0]));
             overInfo.setMealsAddr(table[i][1]);
             overInfo.setOvertimeMealsPeerPeople(table[i][2]);
-            overInfo.setMealsPersonNum(Long.valueOf(table[i][3]));
-            Float money = Float.valueOf(table[i][4]);
-            String sMoney = String.valueOf((int) (money * 100));
-            overInfo.setOvertimeMealsAmount(Long.valueOf(sMoney));
-            overInfo.setPerMealsFee((long) (Float.valueOf(table[i][5]) * 100));
+            overInfo.setMealsPersonNum(OAControllerUtils.strToLong(table[i][3]));
+            overInfo.setOvertimeMealsAmount(OAControllerUtils.yuanMoneyToCent(table[i][4]));
+            overInfo.setPerMealsFee(OAControllerUtils.yuanMoneyToCent(table[i][5]));
             overInfo.setInvoiceAmount(table[i][6]);
-            overInfo.setOvertimeMealsWorkhours(new BigDecimal(table[i][7]));
+            overInfo.setOvertimeMealsWorkhours(OAControllerUtils.workHourToDec(table[i][7]));
             overInfo.setOvertimeMealsComment(table[i][8]);
             list2.add(overInfo);
         }
@@ -995,19 +1031,17 @@ public class OaEngineController {
         len = table.length;
         List<HospitalityInfo> list3 = new ArrayList<HospitalityInfo>();
         for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][6])) {
-                continue;
-            }
+//            if ("".equals(table[i][0]) || "".equals(table[i][6])) {
+//                continue;
+//            }
             HospitalityInfo hosInfo = new HospitalityInfo();
-            hosInfo.setHospitalityDate(sdf.parse(table[i][0]));
+            hosInfo.setHospitalityDate(OAControllerUtils.strToDate(table[i][0]));
             hosInfo.setHospitalityAddr(table[i][1]);
             hosInfo.setBusinessPurpose(table[i][2]);
             hosInfo.setCustomCompany(table[i][3]);
             hosInfo.setCustomName(table[i][4]);
             hosInfo.setHospitalityNum(table[i][5]);
-            Float money = Float.valueOf(table[i][6]);
-            String sMoney = String.valueOf((int) (money * 100));
-            hosInfo.setHospitalityAmount(Long.valueOf(sMoney));
+            hosInfo.setHospitalityAmount(OAControllerUtils.yuanMoneyToCent(table[i][6]));
             list3.add(hosInfo);
         }
         size = list3.size();
@@ -1019,17 +1053,15 @@ public class OaEngineController {
         len = table.length;
         List<EmployeeRelationsFeesInfo> list4 = new ArrayList<EmployeeRelationsFeesInfo>();
         for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][4])) {
-                continue;
-            }
+//            if ("".equals(table[i][0]) || "".equals(table[i][4])) {
+//                continue;
+//            }
             EmployeeRelationsFeesInfo employInfo = new EmployeeRelationsFeesInfo();
-            employInfo.setEmRelationsDate(sdf.parse(table[i][0]));
+            employInfo.setEmRelationsDate(OAControllerUtils.strToDate(table[i][0]));
             employInfo.setEmRelationsAddress(table[i][1]);
             employInfo.setEmRelationsPeerPeople(table[i][2]);
             employInfo.setActDest(table[i][3]);
-            Float money = Float.valueOf(table[i][4]);
-            String sMoney = String.valueOf((int) (money * 100));
-            employInfo.setEmRelationsFees(Long.valueOf(sMoney));
+            employInfo.setEmRelationsFees(OAControllerUtils.yuanMoneyToCent(table[i][4]));
             employInfo.setEmRelationsFeesComment(table[i][5]);
             list4.add(employInfo);
 
@@ -1043,14 +1075,12 @@ public class OaEngineController {
         len = table.length;
         List<OtherCostsInfo> list5 = new ArrayList<OtherCostsInfo>();
         for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][2])) {
-                continue;
-            }
+//            if ("".equals(table[i][0]) || "".equals(table[i][2])) {
+//                continue;
+//            }
             OtherCostsInfo otherInfo = new OtherCostsInfo();
             otherInfo.setOtherCostProject(table[i][0]);
-            Float money = Float.valueOf(table[i][1]);
-            String sMoney = String.valueOf((int) (money * 100));
-            otherInfo.setOtherCostAmount(Long.valueOf(sMoney));
+            otherInfo.setOtherCostAmount(OAControllerUtils.yuanMoneyToCent(table[i][1]));
             otherInfo.setOtherCostComment(table[i][2]);
             list5.add(otherInfo);
         }
@@ -1059,7 +1089,7 @@ public class OaEngineController {
 
         if (list1.size() == 0 && list2.size() == 0 && list3.size() == 0
                 && list4.size() == 0 && list5.size() == 0
-                && isNull(vars.get("remark")) && "0".equals(vars.get("sum6"))) {
+                && OAControllerUtils.isNull(vars.get("remark")) && "0".equals(vars.get("sum6"))) {
 
             return false;
         }
@@ -1068,16 +1098,16 @@ public class OaEngineController {
                 .toArray(new OtherCostsInfo[size]);
         formInfo.setOtherCostsInfo(otherInfos);
         // 存储所有数据之和
-        formInfo.setSumTaxiFaresAmount((long) (Float.valueOf(vars.get("sum1")) * 100));
-        formInfo.setSumOvertimeMealsAmount((long) (Float.valueOf(vars.get("sum2")) * 100));
-        formInfo.setSumHospitalityAmount((long) (Float.valueOf(vars.get("sum3")) * 100));
-        formInfo.setSumEmployeeRelationsFees((long) (Float.valueOf(vars.get("sum4")) * 100));
-        formInfo.setSumOtherAmount((long) (Float.valueOf(vars.get("sum5")) * 100));
+        formInfo.setSumTaxiFaresAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum1")));
+        formInfo.setSumOvertimeMealsAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum2")));
+        formInfo.setSumHospitalityAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum3")));
+        formInfo.setSumEmployeeRelationsFees(OAControllerUtils.yuanMoneyToCent(vars.get("sum4")));
+        formInfo.setSumOtherAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum5")));
 
-        formInfo.setCommunicationCosts((long) (Float.valueOf(vars.get("sum6")) * 100));
+        formInfo.setCommunicationCosts(OAControllerUtils.yuanMoneyToCent(vars.get("sum6")));
         formInfo.setCommuCostsComment(vars.get("remark"));
 
-        formInfo.setMoneyAmount((long) (Float.valueOf(vars.get("sum")) * 100));
+        formInfo.setMoneyAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum")));
         table = tableMap.get("table");
         len = table.length;
         for (int i = 0; i < len; i++) {
@@ -1092,11 +1122,7 @@ public class OaEngineController {
             formInfo.setBankName(table[i][8]);
             formInfo.setIsBorrow(table[i][9]);
             formInfo.setBorrowSN(table[i][10]);
-            if (isNull(table[i][11])) {
-                formInfo.setBorrowAmount(0l);
-            } else {
-                formInfo.setBorrowAmount(Long.valueOf(table[i][11]));
-            }
+            formInfo.setBorrowAmount(OAControllerUtils.strToLong(table[i][11]));
         }
         return true;
     }
@@ -1140,14 +1166,14 @@ public class OaEngineController {
         if (id == 1) {
             tableInfo = new String[]{String.valueOf(formInfo.getId()),
                     formInfo.getSerialNumber(), depart,
-                    formInfo.getApplyUser(), dateToStr(formInfo.getApplyDate()),
+                    formInfo.getApplyUser(), OAControllerUtils.dateToStr(formInfo.getApplyDate()),
                     String.valueOf(formInfo.getMoneyAmount())};
         } else if (id == 2) {
             tableInfo = new String[6];
             tableInfo[0] = String.valueOf(formInfo.getId());
             tableInfo[1] = formInfo.getApplyUser();
             tableInfo[2] = depart;
-            tableInfo[3] = dateToStr(formInfo.getApplyDate());
+            tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
             tableInfo[4] = String.valueOf(formInfo.getMoneyAmount());
             tableInfo[5] = formInfo.getTaskId();
         } else if (id == 3) {
@@ -1155,8 +1181,8 @@ public class OaEngineController {
             tableInfo[0] = String.valueOf(formInfo.getId());
             tableInfo[1] = formInfo.getApplyUser();
             tableInfo[2] = depart;
-            tableInfo[3] = dateToStr(formInfo.getApplyDate());
-            tableInfo[4] = dateToStr(formInfo.getDealDate());
+            tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
+            tableInfo[4] = OAControllerUtils.dateToStr(formInfo.getDealDate());
             tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
         }
         return tableInfo;
@@ -1183,14 +1209,14 @@ public class OaEngineController {
         } else {
             table = new String[len][9];
             for (int i = 0; i < len; i++) {
-                table[i][0] = dateToStr(infos1[i].getTaxiFaresDate());
+                table[i][0] = OAControllerUtils.dateToStr(infos1[i].getTaxiFaresDate());
                 table[i][1] = infos1[i].getTaxiFaresAddr();
                 table[i][2] = infos1[i].getTaxiFaresDest();
                 table[i][3] = infos1[i].getTaxiFaresTime();
                 table[i][4] = infos1[i].getTaxiFaresUse();
                 table[i][5] = infos1[i].getTaxiFaresPeerPeople();
                 table[i][6] = String.valueOf(infos1[i].getTaxiFaresWorkhour());
-                String eMoney = transformMoney(infos1[i].getTaxiFaresAmount());
+                String eMoney = OAControllerUtils.centMoneyToYuan(infos1[i].getTaxiFaresAmount());
                 table[i][7] = eMoney;
                 table[i][8] = infos1[i].getComment();
             }
@@ -1204,16 +1230,16 @@ public class OaEngineController {
         } else {
             table = new String[len][9];
             for (int i = 0; i < len; i++) {
-                table[i][0] = dateToStr(infos2[i].getOvertimeMealsDate());
+                table[i][0] = OAControllerUtils.dateToStr(infos2[i].getOvertimeMealsDate());
                 table[i][1] = infos2[i].getMealsAddr();
                 table[i][2] = infos2[i].getOvertimeMealsPeerPeople();
                 table[i][3] = String.valueOf(infos2[i].getMealsPersonNum());
-                String money1 = transformMoney(infos2[i].getOvertimeMealsAmount());
+                String money1 = OAControllerUtils.centMoneyToYuan(infos2[i].getOvertimeMealsAmount());
                 table[i][4] = money1;
-                String money2 = transformMoney(infos2[i].getPerMealsFee());
+                String money2 = OAControllerUtils.centMoneyToYuan(infos2[i].getPerMealsFee());
                 table[i][5] = money2;
                 table[i][6] = String.valueOf(infos2[i].getInvoiceAmount());
-                table[i][7] = infos2[i].getOvertimeMealsWorkhours().toString();
+                table[i][7] = String.valueOf(infos2[i].getOvertimeMealsWorkhours());
                 table[i][8] = infos2[i].getOvertimeMealsComment();
             }
         }
@@ -1226,13 +1252,13 @@ public class OaEngineController {
         } else {
             table = new String[len][7];
             for (int i = 0; i < len; i++) {
-                table[i][0] = dateToStr(infos3[i].getHospitalityDate());
+                table[i][0] = OAControllerUtils.dateToStr(infos3[i].getHospitalityDate());
                 table[i][1] = infos3[i].getHospitalityAddr();
                 table[i][2] = infos3[i].getBusinessPurpose();
                 table[i][3] = infos3[i].getCustomCompany();
                 table[i][4] = infos3[i].getCustomName();
                 table[i][5] = infos3[i].getHospitalityNum();
-                String eMoney = transformMoney(infos3[i].getHospitalityAmount());
+                String eMoney = OAControllerUtils.centMoneyToYuan(infos3[i].getHospitalityAmount());
                 table[i][6] = eMoney;
             }
         }
@@ -1245,11 +1271,11 @@ public class OaEngineController {
         } else {
             table = new String[len][6];
             for (int i = 0; i < len; i++) {
-                table[i][0] = dateToStr(infos4[i].getEmRelationsDate());
+                table[i][0] = OAControllerUtils.dateToStr(infos4[i].getEmRelationsDate());
                 table[i][1] = infos4[i].getEmRelationsAddress();
                 table[i][2] = infos4[i].getEmRelationsPeerPeople();
                 table[i][3] = infos4[i].getActDest();
-                String eMoney = transformMoney(infos4[i].getEmRelationsFees());
+                String eMoney = OAControllerUtils.centMoneyToYuan(infos4[i].getEmRelationsFees());
                 table[i][4] = eMoney;
                 table[i][5] = infos4[i].getEmRelationsFeesComment();
             }
@@ -1264,7 +1290,7 @@ public class OaEngineController {
             table = new String[len][3];
             for (int i = 0; i < len; i++) {
                 table[i][0] = infos5[i].getOtherCostProject();
-                String eMoney = transformMoney(infos5[i].getOtherCostAmount());
+                String eMoney = OAControllerUtils.centMoneyToYuan(infos5[i].getOtherCostAmount());
                 table[i][1] = String.valueOf(eMoney);
                 table[i][2] = infos5[i].getOtherCostComment();
             }
@@ -1273,21 +1299,21 @@ public class OaEngineController {
 
         Map<String, String> vars = new HashMap<String, String>();
 
-        String moneySum1 = transformMoney(formInfo.getSumTaxiFaresAmount());
+        String moneySum1 = OAControllerUtils.centMoneyToYuan(formInfo.getSumTaxiFaresAmount());
         vars.put("sum1", moneySum1);
-        String moneySum2 = transformMoney(formInfo.getSumOvertimeMealsAmount());
+        String moneySum2 = OAControllerUtils.centMoneyToYuan(formInfo.getSumOvertimeMealsAmount());
         vars.put("sum2", moneySum2);
-        String moneySum3 = transformMoney(formInfo.getSumHospitalityAmount());
+        String moneySum3 = OAControllerUtils.centMoneyToYuan(formInfo.getSumHospitalityAmount());
         vars.put("sum3", moneySum3);
 
-        String moneySum4 = transformMoney(formInfo.getSumEmployeeRelationsFees());
+        String moneySum4 = OAControllerUtils.centMoneyToYuan(formInfo.getSumEmployeeRelationsFees());
         vars.put("sum4", moneySum4);
-        String moneySum5 = transformMoney(formInfo.getSumOtherAmount());
+        String moneySum5 = OAControllerUtils.centMoneyToYuan(formInfo.getSumOtherAmount());
         vars.put("sum5", moneySum5);
-        String moneySum = transformMoney(formInfo.getMoneyAmount());
+        String moneySum = OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount());
         vars.put("sum", moneySum);
 
-        String moneySum6 = transformMoney(formInfo.getCommunicationCosts());
+        String moneySum6 = OAControllerUtils.centMoneyToYuan(formInfo.getCommunicationCosts());
         vars.put("sum6", moneySum6);
         vars.put("remark", formInfo.getCommuCostsComment());
 
@@ -1308,7 +1334,7 @@ public class OaEngineController {
         String acTable[] = new String[12];
         acTable[0] = formInfo.getApplyUser();
         acTable[1] = formInfo.getSerialNumber();
-        acTable[2] = dateToStr(formInfo.getApplyDate());
+        acTable[2] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
         acTable[3] = formInfo.getFirstDep();
         acTable[4] = formInfo.getApplyDep();
         acTable[5] = formInfo.getDepNum();
@@ -1331,21 +1357,21 @@ public class OaEngineController {
     private String[][] createTableLastInfo(FormInfo formInfo) {
         String table[][] = new String[8][2];
         table[0][0] = formInfo.getDepLeaderOpinion();
-        table[0][1] = dateToStr(formInfo.getDepLeaderDate());
+        table[0][1] = OAControllerUtils.dateToStr(formInfo.getDepLeaderDate());
         table[1][0] = formInfo.getDepDirectorOpinion();
-        table[1][1] = dateToStr(formInfo.getDepDirectorDate());
+        table[1][1] = OAControllerUtils.dateToStr(formInfo.getDepDirectorDate());
         table[2][0] = formInfo.getSupDepLeaderOpinion();
-        table[2][1] = dateToStr(formInfo.getSupDepLeaderDate());
+        table[2][1] = OAControllerUtils.dateToStr(formInfo.getSupDepLeaderDate());
         table[3][0] = formInfo.getFinancialDirectorOption();
-        table[3][1] = dateToStr(formInfo.getFinancialDirectorDate());
+        table[3][1] = OAControllerUtils.dateToStr(formInfo.getFinancialDirectorDate());
         table[4][0] = formInfo.getCeoOption();
-        table[4][1] = dateToStr(formInfo.getCeoDate());
+        table[4][1] = OAControllerUtils.dateToStr(formInfo.getCeoDate());
         table[5][0] = formInfo.getCeoOption1();
-        table[5][1] = dateToStr(formInfo.getCeoDate1());
+        table[5][1] = OAControllerUtils.dateToStr(formInfo.getCeoDate1());
         table[6][0] = formInfo.getReimbursementTeamName();
-        table[6][1] = dateToStr(formInfo.getReimbursementTeamDate());
+        table[6][1] = OAControllerUtils.dateToStr(formInfo.getReimbursementTeamDate());
         table[7][0] = formInfo.getCashierOpinion();
-        table[7][1] = dateToStr(formInfo.getCashierDate());
+        table[7][1] = OAControllerUtils.dateToStr(formInfo.getCashierDate());
         return table;
     }
 
@@ -1358,93 +1384,23 @@ public class OaEngineController {
     private String getDepartMent(EmployeeInfo employeeInfo) {
         String depart = employeeInfo.getDepartmentI();
         String other = employeeInfo.getDepartmentII();
-        if (!isNull(other)) {
+        if (!OAControllerUtils.isNull(other)) {
             depart += "-" + other;
         }
         other = employeeInfo.getDepartmentIII();
-        if (!isNull(other)) {
+        if (!OAControllerUtils.isNull(other)) {
             depart += "-" + other;
         }
         other = employeeInfo.getDepartmentIV();
-        if (!isNull(other)) {
+        if (!OAControllerUtils.isNull(other)) {
             depart += "-" + other;
         }
         other = employeeInfo.getDepartmentV();
-        if (!isNull(other)) {
+        if (!OAControllerUtils.isNull(other)) {
             depart += "-" + other;
         }
         return depart;
     }
 
-    /**
-     * 判断一个字符串是否为空
-     *
-     * @param value
-     * @return
-     */
-    private boolean isNull(String value) {
-        if (value == null || "".equals(value)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * 将获取到的money转为人民币单位元
-     *
-     * @param money
-     * @return
-     */
-    private String transformMoney(long money) {
-        DecimalFormat ndf = new DecimalFormat("##0.00");
-        double sMoney = (double) money / 100;
-        String eMoney = ndf.format(sMoney);
-        return eMoney;
-    }
-
-    /**
-     * 获取当前是第几页以及每页的size
-     *
-     * @param vars
-     * @return
-     */
-    private int[] getPageNoAndSize(Map<String, String> vars) {
-        String sStart = vars.get("start");
-        String sLen = vars.get("length");
-        int start = sStart == null ? 0 : Integer.valueOf(sStart);
-        int len = sLen == null ? 0 : Integer.valueOf(sLen);
-        int pageSize = len;
-        int pageNo = start / len + 1;
-        return new int[]{pageSize, pageNo};
-    }
-
-    /**
-     * 日期转为字符串
-     *
-     * @param date
-     * @return
-     */
-    private String dateToStr(Date date) {
-        String dateStr = "";
-        if (date != null) {
-            dateStr = sdf.format(date);
-        }
-        return dateStr;
-    }
-
-    private String transformApproveEnToCh(String approveEn) {
-        if ("pass".equals(approveEn)) {
-            return "同意";
-        } else if ("back".equals(approveEn)) {
-            return "退回";
-        } else if ("endorse".equals(approveEn)) {
-            return "加签";
-        } else if ("refuse".equals(approveEn)) {
-            return "拒绝";
-        } else if ("start".equals(approveEn)) {
-            return "申请";
-        }
-        return "";
-    }
 
 }
