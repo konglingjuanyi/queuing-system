@@ -1,58 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>报销系统</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base href="/oaengine/" />
+    <meta name="description" content=""/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <base href="/oaengine/"/>
     <!-- basic styles -->
-    <link href="static/ace/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="static/ace/css/font-awesome.min.css" />
+    <link href="static/ace/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="static/ace/css/font-awesome.min.css"/>
     <!--[if IE 7]>
-	<link rel="stylesheet" href="static/ace/css/font-awesome-ie7.min.css" />
+    <link rel="stylesheet" href="static/ace/css/font-awesome-ie7.min.css"/>
     <![endif]-->
     <!-- page specific plugin styles -->
     <!-- fonts -->
     <!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />-->
     <!-- ace styles -->
-    <link rel="stylesheet" href="static/ace/css/ace.min.css" />
-    <link rel="stylesheet" href="static/ace/css/ace-rtl.min.css" />
-    <link rel="stylesheet" href="static/ace/css/ace-skins.min.css" />
-    <link rel="stylesheet" href="static/ace/css/dropzone.css" />
-    <link rel="stylesheet" href="static/ace/css/colorbox.css" />
-    <link rel="stylesheet" href="static/ace/css/jquery.qtip.min.css" />
-    <link rel="stylesheet" href="static/css/myplugin.css" />
+    <link rel="stylesheet" href="static/ace/css/ace.min.css"/>
+    <link rel="stylesheet" href="static/ace/css/ace-rtl.min.css"/>
+    <link rel="stylesheet" href="static/ace/css/ace-skins.min.css"/>
+    <link rel="stylesheet" href="static/ace/css/dropzone.css"/>
+    <link rel="stylesheet" href="static/ace/css/colorbox.css"/>
+    <link rel="stylesheet" href="static/ace/css/jquery.qtip.min.css"/>
+    <link rel="stylesheet" href="static/css/myplugin.css"/>
 
 
     <!--[if lte IE 8]>
-	<link rel="stylesheet" href="static/ace/css/ace-ie.min.css" />
+    <link rel="stylesheet" href="static/ace/css/ace-ie.min.css"/>
     <![endif]-->
     <!-- inline styles related to this page -->
     <!-- ace settings handler -->
     <script src="static/ace/js/ace-extra.min.js"></script>
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-	<script src="static/ace/js/html5shiv.js"></script>
-	<script src="static/ace/js/respond.min.js"></script>
+    <script src="static/ace/js/html5shiv.js"></script>
+    <script src="static/ace/js/respond.min.js"></script>
     <![endif]-->
 
     <script type="text/javascript">
-        window.jQuery || document.write("<script src='static/ace/js/jquery-2.0.3.min.js'>"+"<"+"/script>");
+        window.jQuery || document.write("<script src='static/ace/js/jquery-2.0.3.min.js'>" + "<" + "/script>");
     </script>
 
     <!--[if IE]>
-	<script type="text/javascript">
-		window.jQuery || document.write("<script src='static/ace/js/jquery-1.10.2.min.js'>"+"<"+"/script>");
-	</script>
+    <script type="text/javascript">
+        window.jQuery || document.write("<script src='static/ace/js/jquery-1.10.2.min.js'>" + "<" + "/script>");
+    </script>
     <![endif]-->
     <script type="text/javascript">
-        if("ontouchend" in document) document.write("<script src='static/ace/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+        if ("ontouchend" in document) document.write("<script src='static/ace/js/jquery.mobile.custom.min.js'>" + "<" + "/script>");
     </script>
     <script src="static/ace/js/typeahead-bs2.min.js"></script>
     <!-- page specific plugin scripts -->
     <script src="static/ace/js/jquery.colorbox-min.js"></script>
-    <link rel="stylesheet" href="static/ace/css/jquery-ui-1.10.3.full.min.css" />
+    <link rel="stylesheet" href="static/ace/css/jquery-ui-1.10.3.full.min.css"/>
     <script src="static/ace/js/jquery-ui-1.10.3.full.min.js"></script>
     <script src="static/ace/js/jquery.ui.touch-punch.min.js"></script>
     <script src="static/ace/js/jquery.qtip.min.js"></script>
@@ -69,7 +69,10 @@
 <body>
 <div class="navbar navbar-default" id="navbar">
     <script type="text/javascript">
-        try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+        try {
+            ace.settings.check('navbar', 'fixed')
+        } catch (e) {
+        }
     </script>
     <div class="navbar-container" id="navbar-container">
         <div class="navbar-header pull-left">
@@ -78,6 +81,9 @@
                             报销系统
                         </small>
 					</span>
+        </div>
+        <div class="navbar-header pull-right">
+					<select id="user"><option>请选择当前登陆用户名</option></select>
         </div>
     </div>
 </div>
@@ -141,24 +147,22 @@
         <div class="page-content">
             <div class="row">
                 <div class="col-xs-12">
-					$screen_content
+                    $screen_content
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
 <script type="text/javascript">
-    jQuery(function($){
+    jQuery(function ($) {
 
         try {
             $(".dropzone").dropzone({
                 paramName: "file", // The name that will be used to transfer the file
                 maxFilesize: 0.5, // MB
 
-                addRemoveLinks : true,
-                dictDefaultMessage :
-                        '<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
+                addRemoveLinks: true,
+                dictDefaultMessage: '<span class="bigger-150 bolder"><i class="icon-caret-right red"></i> Drop files</span> to upload \
 <span class="smaller-80 grey">(or click)</span> <br /> \
 <i class="upload-icon icon-cloud-upload blue icon-3x"></i>'
                 ,
@@ -167,12 +171,70 @@
                 //change the previewTemplate to use Bootstrap progress bars
                 previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-details\">\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n    <div class=\"dz-size\" data-dz-size></div>\n    <img data-dz-thumbnail />\n  </div>\n  <div class=\"progress progress-small progress-striped active\"><div class=\"progress-bar progress-bar-success\" data-dz-uploadprogress></div></div>\n  <div class=\"dz-success-mark\"><span></span></div>\n  <div class=\"dz-error-mark\"><span></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n</div>"
             });
-        } catch(e) {
+        } catch (e) {
             alert('Dropzone.js does not support older browsers!');
         }
 
-    });
+        var userList = ["zhenqing.wang", "bin.sun", "zhen.pei", "nuby.zhang", "weidong.jiang"];
+        for(var i = 0; i < userList.length; i++){
+            $("#user").append($.parseStr('<option value="%s">%s</option>', userList[i], userList[i]));
+        }
+        $('#user').change(function () {
+            var value = $("user").val();
+            var params = {};
+            var vars = {"user":value};
+            params["vars"] = vars;
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                url: "oa/user",
+                type: "post",
+                data: JSON.stringify(params),
+                success: function (resp) {
+                    if (resp.errorCode == 0) {
+                        showSuccessTips("切换用户名成功!");
+//                        window.location.reload();
+                    } else {
+                        showCommonNoticeDialog('失败', 'icon-warning-sign',
+                                generateNoticeMsg(resp.errorMessage), 300);
+                    }
+                },
+                "error": function (jqxhr, textstatus, errorthrown) {
+                    showResultDialog('网络错误', 'icon-warning-sign',
+                            generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                }
+            });
+        });
 
+    });
+    function showResultDialog(id, header, header_icon, msg, width) {
+        $("#"+id).append(msg);
+        var title_html_str = $.parseStr('<div class="dialog_title"><li class="%s"></li> %s</div>', header_icon, header);
+        var edit_dialog = $("#"+id).removeClass('hide').dialog({
+            modal: true,
+            width: width,
+            resizable: true,
+            title: title_html_str,
+            title_html: true,
+            closeOnEscape: false,
+            open: function(event, ui) {
+                $(".ui-dialog-titlebar-close").hide();
+            },
+            buttons: [
+                {
+                    text: "确定",
+                    "class" : "btn btn-primary btn-xs",
+                    click: function(){
+                        $("#"+id).empty();
+                        $("#"+id).dialog('destroy');
+                    }
+                }
+            ],
+            close: function() {
+                $("#"+id).empty();
+                $("#"+id).dialog('destroy');
+            }
+        });
+    }
 </script>
 
 </body>

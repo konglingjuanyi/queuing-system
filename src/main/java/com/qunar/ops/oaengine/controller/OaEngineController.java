@@ -60,6 +60,21 @@ public class OaEngineController {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+    /**
+     * 修改登陆的用户名
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "oa/user")
+    @ResponseBody
+    public BaseResult changeRootUser(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+        Map<String, String> vars = commonRequest.getVars();
+        String userId = vars.get("user");
+        request.getSession().setAttribute("USER_ID", userId);
+        return new BaseResult();
+    }
+
     @RequestMapping(value = "/oa/test.html")
     public void index(HttpServletRequest request) {
         // mailSenderService.sender("nuby.zhang@qunar.com", new
@@ -218,6 +233,7 @@ public class OaEngineController {
     @ResponseBody
     public BaseResult webEmployeeInfo(HttpServletRequest request) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
+        System.out.println(userId);
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);

@@ -123,7 +123,7 @@
 
         var aoColumns = [
             {
-                "sTitle": '<lable><input id="current-approve-table-select-all" ' +
+                "sTitle": '<lable><input id="current-checkbox-select-all" ' +
                 'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
                 "bSortable": false, "sClass": "center"
             }, {
@@ -268,8 +268,8 @@
                 });
             },
             fnInitComplete: function () {
-                $('#current-approve-table-select-all').prop('checked', false);
-                $('#current-approve-table-select-all').attr('checked', false);
+                $('#current-checkbox-select-all').prop('checked', false);
+                $('#current-checkbox-select-all').attr('checked', false);
                 toggleCheck(oTable);
             }
         })
@@ -280,7 +280,6 @@
         var needData = data.tableInfos;
         var d_len = needData.length;
         for (var i = 0; i < d_len; i++) {
-            console.log(needData[i]);
             var money = parseFloat(needData[i][5]);
             money /= 100;
             var map = $.parseStr("<a href='javascript:void(0);' " +
@@ -291,7 +290,6 @@
             'onclick="sendEmailToCandidate(\'' + needData[i][0] + '\')" class="green"><i class="icon-user">催办</i></a>';
             aaData.push([checkbox, needData[i][0], needData[i][1],
                 needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map, push]);
-            console.log(aaData);
         }
         return aaData;
     }
@@ -301,7 +299,7 @@
         var operStr = "退回";
         var msg = "报销撤销以后将存为草稿,是否撤销?";
         var title = "撤销操作";
-        if(num == 2) {
+        if (num == 2) {
             operStr = "删除";
             msg = "该操作不能恢复,是否进行删除操作?";
             title = "删除操作";
@@ -358,7 +356,8 @@
 
     }
 
-    function applyBackorDeltoDB(formIds, action){
+    function applyBackorDeltoDB(formIds, action) {
+        var id = "apply-result-dialog";
         var params = {};
         var vars = {};
         vars["formIds"] = formIds;
@@ -375,14 +374,14 @@
                     if (resp.errorCode == 0) {
                         title_html_str = '<div class="dialog_title"><li class="icon-info-sign"></li> 审批' + action + '</div>';
                         var succeed_html = '<b><li class="icon-check"></li> ' + action + '成功</b><br/>';
-                        $("#apply-result-dialog").append(generateNoticeMsg(succeed_html));
+                        $("#" + id).append(generateNoticeMsg(succeed_html));
                     } else {
                         title_html_str = '<div class="dialog_title"><li class="icon-exclamation-sign"></li>审批' + action + '</div>';
-                        $("#apply-result-dialog").append(generateNoticeMsg(resp.errorMessage));
+                        $("#" + id).append(generateNoticeMsg(resp.errorMessage));
                     }
                 } catch (e) {
                 }
-                var dialog = $("#apply-result-dialog").removeClass('hide').dialog({
+                var dialog = $("#" + id).removeClass('hide').dialog({
                     modal: true,
                     width: 400,
                     resizable: true,
@@ -394,14 +393,14 @@
                             text: "确定",
                             "class": "btn btn-primary btn-xs",
                             click: function () {
-                                $("#apply-result-dialog").empty();
-                                $("#apply-result-dialog").dialog('destroy');
+                                $("#" + id).empty();
+                                $("#" + id).dialog('destroy');
                             }
                         }
                     ],
                     close: function () {
-                        $("#apply-result-dialog").empty();
-                        $("#apply-result-dialog").dialog('destroy');
+                        $("#").empty();
+                        $("#" + id).dialog('destroy');
                     }
                 });
                 showApplyTodoInfo("oa/todo", "apply_todo", "todo-apply-details-list", "审批过程中");
