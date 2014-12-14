@@ -327,12 +327,11 @@
         var url = location.search;
         if (url.indexOf('formId') != -1) {
             var formId = url.split('=')[1];
-            console.log(formId);
 //            formId = decodeURIComponent(formId);
+//          这里需要更新form信息.
             createEditApplyTable(formId);
         } else {
             createNewAddApplyTable();
-
         }
 
     });
@@ -400,7 +399,6 @@
                     var data = resp.data;
                     var tableMap = data.tableMap;
                     var vars = data.vars;
-                    console.log(data);
                     getDataToEditDialog(tableMap, vars);
 
                 } else {
@@ -647,15 +645,14 @@
             tableMap[tableId] = list;
         }
         //table 基本信息
-        var table = document.getElementById("table");
-        var list = new Array();
+        table = document.getElementById("table");
+        list = new Array();
         list[0] = new Array();
-        var k = 0;
-        for (var i = 0; i < 4; i++) {
+        k = 0;
+        for (i = 0; i < 4; i++) {
             for (j = 1; j < 6; j += 2) {
                 if ((i == 2 || i == 3) && j == 1) {
                     var input = table.rows[i].cells[j].childNodes[1].childNodes;
-                    console.log(table.rows[i].cells[j].childNodes[1].childNodes[1]);
                     var input1 = input[1];
                     var input2 = input[4];
                     if (input1.checked) {

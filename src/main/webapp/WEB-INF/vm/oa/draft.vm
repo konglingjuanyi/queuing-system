@@ -17,6 +17,11 @@
     <div class="col-xs-12">
         <div class="col-xs-5">
             <div class="form-group dash-button-group" style="margin-bottom: 0px; float: left;">
+##                <button id="draft_send"
+##                        style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+##                        class="btn btn-minier btn-primary">
+##                    发送
+##                </button>
                 <button id="draft_edit"
                         style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
                         class="btn btn-minier btn-primary">
@@ -58,6 +63,7 @@
 <div id="draft-result-dialog" class="hide"></div>
 <div id="del-msg-dialog" class="hide"></div>
 <div id="back-msg-dialog" class="hide"></div>
+<div id="send-msg-dialog" class="hide"></div>
 
 <script src="static/js/utils.js">
 </script>
@@ -186,16 +192,22 @@
                 }
                 $("#draft_edit").unbind("click");
                 $("#draft_edit").on("click", function (e) {
-                    draftEdit(oTable, 1);
+                    draftEdit(oTable);
                 }).on("dblclick", function (e) {
                     e.preventDefault();
                 });
                 $("#draft_del").unbind("click");
                 $("#draft_del").on("click", function (e) {
-                    draftDel(oTable, 2);
+                    draftDel(oTable);
                 }).on("dblclick", function (e) {
                     e.preventDefault();
                 });
+//                $("#draft_send").unbind("click");
+//                $("#draft_send").on("click", function (e) {
+//                    draftSend(oTable);
+//                }).on("dblclick", function (e) {
+//                    e.preventDefault();
+//                });
 
                 oTable.$('tr.row_selected').removeClass('row_selected');
                 oTable.$("tr").unbind('click');
@@ -238,7 +250,7 @@
         return aaData;
     }
 
-    function draftDel(oTable, num) {
+    function draftDel(oTable) {
         console.log("删除");
         var operStr = "删除";
         var msg = "该操作不能恢复,是否进行删除操作?";
@@ -250,18 +262,18 @@
             var formId = nTds[1].childNodes[0].data;
             formIds += formId + ",";
         });
-        console.log(formIds);
+        var dialogId = "back-msg-dialog";
         if (formIds.length < 1) {
-            showResultDialog("back-msg-dialog", operStr, 'icon-lightbulb',
+            showResultDialog(dialogId, operStr, 'icon-lightbulb',
                     generateNoticeMsg("请选择要" + operStr + "的条目!"), 300);
             return;
         }
         try {
-            $("#back-msg-dialog").empty();
-            $("#back-msg-dialog").append(generateNoticeMsg(msg));
+            $("#" + dialogId).empty();
+            $("#" + dialogId).append(generateNoticeMsg(msg));
             var title_html = $.parseStr('<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
             '<li class="icon-user"></li> %s</div>', title);
-            var dialog = $("#back-msg-dialog").removeClass('hide').dialog({
+            var dialog = $("#" + dialogId).removeClass('hide').dialog({
                 modal: true,
                 width: 300,
                 title: title_html,
@@ -297,7 +309,66 @@
 
     }
 
-    function draftEdit(oTable, formId) {
+    function draftSend(oTable) {
+        var operStr = "发送";
+        var msg = "该操作不能恢复,是否进行删除操作?";
+        var title = "发送操作";
+        var formIds = "";
+        $("input:checked", oTable.fnGetNodes()).each(function () {
+            var row = $(this).parent().parent().parent();
+            var nTds = $('td', row);
+            var formId = nTds[1].childNodes[0].data;
+            formIds += formId + ",";
+        });
+        var dialogId = "back-msg-dialog";
+        if (formIds.length < 1) {
+            showResultDialog(dialogId, operStr, 'icon-lightbulb',
+                    generateNoticeMsg("请选择要" + operStr + "的条目!"), 300);
+            return;
+        }
+
+        try {
+            $("#" + dialogId).empty();
+            $("#" + dialogId).append(generateNoticeMsg(msg));
+            var title_html = $.parseStr('<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
+            '<li class="icon-user"></li> %s</div>', title);
+            var dialog = $("#" + dialogId).removeClass('hide').dialog({
+                modal: true,
+                width: 300,
+                title: title_html,
+                title_html: true,
+                closeOnEscape: false,
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                },
+                buttons: [
+                    {
+                        id: "draft-msg-submit",
+                        text: "提交",
+                        "class": "btn btn-primary btn-xs",
+                        click: function (e) {
+                            draftDelDataToDB(formIds, operStr);
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        id: "draft-msg-cancel",
+                        text: "取消",
+                        "class": "btn btn-xs",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+        } catch (e) {
+            showCommonNoticeDialog('网络错误', 'icon-warning-sign',
+                    generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+        }
+
+    }
+
+    function draftEdit(oTable) {
         var operStr = "编辑";
         var formIds = "";
         $("input:checked", oTable.fnGetNodes()).each(function () {
