@@ -153,10 +153,14 @@ public class Form0114Manager {
 	 * 
 	 * @param userId
 	 * @param formId
+	 * @throws FormNotFoundException 
 	 */
-	public void deleteFormInfo(String userId, Long formId) {
-		// 移动到历史记录表中
-		copyFormInfoToHistory(formId);
+	public void deleteFormInfo(String userId, Long formId) throws FormNotFoundException {
+		int finishedflag = getFormInfo(formId).getFinishedflag();
+		if(finishedflag != Constants.PROC_GRIFT){
+			// 移动到历史记录表中
+			copyFormInfoToHistory(formId);
+		}
 
 		// 删除记录
 		_deleteFormInfo(formId);
