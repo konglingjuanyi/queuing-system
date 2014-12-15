@@ -14,15 +14,14 @@ import java.util.TreeMap;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.apache.commons.lang.StringUtils;
 
 import com.qunar.ops.oaengine.exception.CompareModelException;
-import com.qunar.ops.oaengine.exception.ManagerFormException;
-import com.qunar.ops.oaengine.exception.ErrorParamterException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.exception.ManagerFormException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.DelegationManager;
 import com.qunar.ops.oaengine.manager.Form0114Manager;
@@ -33,6 +32,7 @@ import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.ListInfo;
+import com.qunar.ops.oaengine.result.ProcessInstanceInfo;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
 import com.qunar.ops.oaengine.result.TaskResult;
@@ -85,7 +85,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return formInfo.getId();
 	}
 	
-	private void _startProcess(String processKey, String userId, FormInfo formInfo) throws RemoteAccessException, FormNotFoundException{
+	private void _startProcess(String processKey, String userId, FormInfo formInfo) throws RemoteAccessException, FormNotFoundException, CompareModelException{
 		FormInfo info = formInfo;
 		Request request = new Request();
 		//request.setOid(formInfo.getOid());
@@ -108,7 +108,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 			logManager.appendApproveLog(userId, formInfo.getId(), "start", tr, "");
 			
 			//修改状态同时回写进程ID
-			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING, processInstanceId);
+			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING, processInstanceId, true);
+			
 		}
 	}
 
@@ -116,7 +117,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Transactional(rollbackFor=Exception.class)
 	public FormInfo updateFormInfo(String processKey, String userId,
 			String formId, FormInfo formInfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException, ManagerFormException{
-		FormInfo _formInfo = form0114Manager.getFormInfo(formId);
+		FormInfo _formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		String _userId = _formInfo.getStartMemberId();
 		if(!userId.equals(_userId)){
 			throw new ManagerFormException("不是你的申请，你无权修改", DefaultOaEngineService.class);
@@ -134,8 +135,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	public FormInfo getFormInfo(String processKey, String userId, String formId) throws FormNotFoundException {
-		FormInfo formInfo = new FormInfo();
-		formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
+		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
+		return formInfo;
+	}
+
+	@Override
+	public FormInfo getHistoryFormInfo(String processKey, String userId, String formId) throws FormNotFoundException {
+		FormInfo formInfo = form0114Manager.getFormInfoHistory(Long.valueOf(formId));
 		return formInfo;
 	}
 
@@ -143,7 +149,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Transactional(rollbackFor=Exception.class)
 	public void deleteFormInfo(String processKey, String userId, String formId) throws FormNotFoundException, ManagerFormException{
 		//判断是否为申请人，草稿状态
-		FormInfo formInfo = form0114Manager.getFormInfo(formId);
+		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		String _userId = formInfo.getStartMemberId();
 		int finishedflag = formInfo.getFinishedflag();
 		if(userId.equals(_userId) && finishedflag == Constants.PROC_GRIFT){
@@ -166,16 +172,19 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public void reminder(String processKey, String userId, String formId, String approveId, String memo) {
+	public String reminder(String processKey, String userId, String formId, String approveId, String memo) {
 		ApprovalInfo info = logManager.getApprovalInfo(Long.valueOf(approveId));
-		String[] to = info.getNextCandidate().split(",");
+		String nextCandidates = info.getNextCandidate();
+		String[] to = nextCandidates.split(",");
 		String[] to_mail = new String[to.length];
+
 		for(int i = 0; i < to.length; i++){
 			to_mail[i] = to[i] + "@qunar.com";
+//			to_mail[i] = "zhenqing.wang@qunar.com";
 		}
 		String title = userId + "请你尽快处理日常报销，附言：" + memo;
-		String content = title;
-		mailSenderService.sender("oa@qunar.com", to_mail, null, title, content);
+		mailSenderService.sender("oa@qunar.com", to_mail, null, title, title);
+		return nextCandidates;
 	}
 
 	@Override
@@ -216,7 +225,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		for(int i = 0; i < _taskInfos.size(); i++){
 			TaskInfo taskInfo = _taskInfos.get(i);
 			String proc_inst_id = taskInfo.getProcessInstanceId();
-			formInfo = form0114Manager.getFormInfo(proc_inst_id);
+			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfos.add(formInfo);
 		}
@@ -232,19 +241,44 @@ public class DefaultOaEngineService implements IOAEngineService {
 			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
 		ListInfo<TaskInfo> taskInfos = workflowManager.historyList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
 		List<TaskInfo> _taskInfos = taskInfos.getInfos();
+		System.out.println(_taskInfos.size());
 		FormInfoList res = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		FormInfo formInfo;
 		for(int i = 0; i < _taskInfos.size(); i++){
 			TaskInfo taskInfo = _taskInfos.get(i);
 			String proc_inst_id = taskInfo.getProcessInstanceId();
-			formInfo = form0114Manager.getFormInfo(proc_inst_id);
+			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
 			formInfo.setTaskId(taskInfo.getTaskId());
+			formInfo.setDealDate(taskInfo.getEndTime());
 			formInfos.add(formInfo);
 		}
 		res.setCount((int)taskInfos.getCount());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
+		res.setFormInfos(formInfos);
+		return res;
+	}
+	
+	@Override
+	public FormInfoList historyProcessInstList(String processKey, String userId,
+			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
+		ListInfo<ProcessInstanceInfo> infos = workflowManager.historyInstList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
+		List<ProcessInstanceInfo> _infos = infos.getInfos();
+		FormInfoList res = new FormInfoList();
+		List<FormInfo> formInfos = new ArrayList<FormInfo>();
+		FormInfo formInfo;
+		for(int i = 0; i < _infos.size(); i++){
+			ProcessInstanceInfo info = _infos.get(i);
+			String proc_inst_id = info.getProcessInstanceId();
+			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
+//			formInfo.setTaskId(info.getTaskId());
+			formInfos.add(formInfo);
+		}
+		res.setCount((int)infos.getCount());
+		res.setPageNo(pageNo);
+		res.setPageSize(pageSize);
+		res.setFormInfos(formInfos);
 		return res;
 	}
 
@@ -261,14 +295,14 @@ public class DefaultOaEngineService implements IOAEngineService {
 		Map<String, String> owner = new HashMap<String, String>();
 		Map<String, String> approver = new HashMap<String, String>();
 		String form = "oa@qunar.com";
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String now = sdf.format(new Date());
 		for(int i=0; i<taskIds.size(); i++){
 			String taskId = taskIds.get(i);
 			long formId = formIds.get(i);
 			try{
+				taskService.claim(taskId, userId);
 				TaskResult tr = this._pass(processKey, userId, formId, taskId, memo);
-				
 				String content = userId+" 于 ["+now+"]处理了《"+tr.getOwner()+"-日常报销》 [同意]";
 				if(memo != null) content += " 附言:"+memo;
 				owner.put(tr.getOwner(), content);
@@ -380,7 +414,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private void sendMail(String userId, String action, String owner, List<TaskInfo> infos, String memo){
 		if(owner == null) return;
 		String form = "oa@qunar.com";
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String now = sdf.format(new Date());
 		
 		String content = userId+" 于 ["+now+"]处理了《"+owner+"-日常报销》 ["+action+"]";

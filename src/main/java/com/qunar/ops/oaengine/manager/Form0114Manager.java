@@ -41,22 +41,27 @@ import com.qunar.ops.oaengine.model.Formmain0114HistoryExample;
 import com.qunar.ops.oaengine.model.Formson0115;
 import com.qunar.ops.oaengine.model.Formson0115Example;
 import com.qunar.ops.oaengine.model.Formson0115History;
+import com.qunar.ops.oaengine.model.Formson0115HistoryExample;
 import com.qunar.ops.oaengine.model.Formson0115Log;
 import com.qunar.ops.oaengine.model.Formson0116;
 import com.qunar.ops.oaengine.model.Formson0116Example;
 import com.qunar.ops.oaengine.model.Formson0116History;
+import com.qunar.ops.oaengine.model.Formson0116HistoryExample;
 import com.qunar.ops.oaengine.model.Formson0116Log;
 import com.qunar.ops.oaengine.model.Formson0117;
 import com.qunar.ops.oaengine.model.Formson0117Example;
 import com.qunar.ops.oaengine.model.Formson0117History;
+import com.qunar.ops.oaengine.model.Formson0117HistoryExample;
 import com.qunar.ops.oaengine.model.Formson0117Log;
 import com.qunar.ops.oaengine.model.Formson0118;
 import com.qunar.ops.oaengine.model.Formson0118Example;
 import com.qunar.ops.oaengine.model.Formson0118History;
+import com.qunar.ops.oaengine.model.Formson0118HistoryExample;
 import com.qunar.ops.oaengine.model.Formson0118Log;
 import com.qunar.ops.oaengine.model.Formson0119;
 import com.qunar.ops.oaengine.model.Formson0119Example;
 import com.qunar.ops.oaengine.model.Formson0119History;
+import com.qunar.ops.oaengine.model.Formson0119HistoryExample;
 import com.qunar.ops.oaengine.model.Formson0119Log;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.AlertInfo;
@@ -211,7 +216,7 @@ public class Form0114Manager {
 	 * @throws CompareModelException
 	 * @throws FormNotFoundException 
 	 */
-	public int updateFormFinishedFlag(String userId, Long formId, int finishedFlag, String proc_inst_id)
+	public long updateFormFinishedFlag(String userId, Long formId, int finishedFlag, String proc_inst_id, boolean needSetStartDate)
 			throws FormNotFoundException {
 		Formmain0114 formmain0114Old = formmain0114Mapper
 				.selectByPrimaryKey(formId);
@@ -227,12 +232,15 @@ public class Form0114Manager {
 		// 更新主表
 		Formmain0114 formmain0114New = formmain0114Old;
 		formmain0114New.setFinishedflag(finishedFlag);
+		if(needSetStartDate){
+			formmain0114New.setStartDate(new Date());
+		}
 		if(proc_inst_id != null){
 			formmain0114New.setProcInstId(proc_inst_id);
 		}
-		formmain0114Mapper.updateByPrimaryKey(formmain0114New);
-
-		return 0;
+		int res = formmain0114Mapper.updateByPrimaryKey(formmain0114New);
+		
+		return formId;
 	}
 	
 	/**
@@ -248,12 +256,46 @@ public class Form0114Manager {
 				.selectByPrimaryKey(formId);
 
 		if(formmain0114 == null){
-			throw new FormNotFoundException(String.format("通过formId:%s，找到%s个form", formId, 0), Form0114Manager.class);
+			return getFormInfoHistory(formId);
+//			throw new FormNotFoundException(String.format("通过formId:%s，找到%s个form", formId, 0), Form0114Manager.class);
 		}
 		
 		BeanUtils.copyProperties(formmain0114, formInfo);
 
 		Map<String, Object> formson = getFormsonInfo(formId);
+		formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+				.get("overtimeMealsInfos"));
+		formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+				.get("hospitalityInfos"));
+		formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+				.get("otherCostsInfos"));
+		formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+				.get("employeeRelationsFeesInfos"));
+		formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+				.get("taxiFaresInfos"));
+
+		return formInfo;
+	}
+	
+	/**
+	 * 表单查询History
+	 * 
+	 * @param formId
+	 * @return
+	 * @throws FormNotFoundException 
+	 */
+	public FormInfo getFormInfoHistory(Long formId) throws FormNotFoundException {
+		FormInfo formInfo = new FormInfo();
+		Formmain0114History formmain0114History = formmain0114HistoryMapper
+				.selectByPrimaryKey(formId);
+
+		if(formmain0114History == null){
+			throw new FormNotFoundException(String.format("通过formId:%s，找到%s个form", formId, 0), Form0114Manager.class);
+		}
+		
+		BeanUtils.copyProperties(formmain0114History, formInfo);
+
+		Map<String, Object> formson = getFormsonInfoHistory(formId);
 		formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
 				.get("overtimeMealsInfos"));
 		formInfo.setHospitalityInfo((HospitalityInfo[]) formson
@@ -275,18 +317,53 @@ public class Form0114Manager {
 	 * @return
 	 * @throws FormNotFoundException 
 	 */
-	public FormInfo getFormInfo(String proc_inst_id) throws FormNotFoundException {
+	public FormInfo getFormInfoByInst(String proc_inst_id) throws FormNotFoundException {
 		FormInfo formInfo = new FormInfo();
 		Formmain0114Example example = new Formmain0114Example();
 		example.createCriteria().andProcInstIdEqualTo(proc_inst_id);
 		List<Formmain0114> formmain0114s = formmain0114Mapper
 				.selectByExample(example);
 		if(formmain0114s.size() == 0){
-			throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114s.size()), Form0114Manager.class);
+			//查找已完结的历史数据
+			return getFormInfoByInstHistory(proc_inst_id);
+//			throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114s.size()), Form0114Manager.class);
 		}
 		BeanUtils.copyProperties(formmain0114s.get(0), formInfo);
 
 		Map<String, Object> formson = getFormsonInfo(formmain0114s.get(0).getId());
+		formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+				.get("overtimeMealsInfos"));
+		formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+				.get("hospitalityInfos"));
+		formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+				.get("otherCostsInfos"));
+		formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+				.get("employeeRelationsFeesInfos"));
+		formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+				.get("taxiFaresInfos"));
+
+		return formInfo;
+	}
+	
+	/**
+	 * 表单查询——已完结的历史记录
+	 * 
+	 * @param proc_inst_id
+	 * @return
+	 * @throws FormNotFoundException 
+	 */
+	public FormInfo getFormInfoByInstHistory(String proc_inst_id) throws FormNotFoundException {
+		FormInfo formInfo = new FormInfo();
+		Formmain0114HistoryExample example = new Formmain0114HistoryExample();
+		example.createCriteria().andProcInstIdEqualTo(proc_inst_id);
+		List<Formmain0114History> formmain0114Historys = formmain0114HistoryMapper
+				.selectByExample(example);
+		if(formmain0114Historys.size() == 0){
+			throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114Historys.size()), Form0114Manager.class);
+		}
+		BeanUtils.copyProperties(formmain0114Historys.get(0), formInfo);
+
+		Map<String, Object> formson = getFormsonInfoHistory(formmain0114Historys.get(0).getId());
 		formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
 				.get("overtimeMealsInfos"));
 		formInfo.setHospitalityInfo((HospitalityInfo[]) formson
@@ -377,6 +454,7 @@ public class Form0114Manager {
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		Formmain0114Example example = new Formmain0114Example();
 		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+		criteria.andFinishedflagNotEqualTo(Constants.PROC_GRIFT);
 		criteria.andStartMemberIdEqualTo(userId);
 		if(startTime != null){
 			criteria = criteria.andStartDateGreaterThanOrEqualTo(startTime);
@@ -498,7 +576,7 @@ public class Form0114Manager {
 			formInfo = new FormInfo();
 			BeanUtils.copyProperties(formmain0114Historys.get(i), formInfo);
 			
-			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			Map<String, Object> formson = getFormsonInfoHistory(formInfo.getId());
 			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
 					.get("overtimeMealsInfos"));
 			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
@@ -1100,6 +1178,72 @@ public class Form0114Manager {
 		for (int i = 0; i < formson0119s.size(); i++) {
 			taxiFaresInfos[i] = new TaxiFaresInfo();
 			BeanUtils.copyProperties(formson0119s.get(i), taxiFaresInfos[i]);
+		}
+		res.put("taxiFaresInfos", taxiFaresInfos);
+
+		return res;
+	}
+	
+	private Map<String, Object> getFormsonInfoHistory(Long formId) {
+		Map<String, Object> res = new HashMap<String, Object>();
+		Formson0115HistoryExample example115History = new Formson0115HistoryExample();
+		example115History.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0115History> formson0115Historys = formson0115HistoryMapper
+				.selectByExample(example115History);
+		OvertimeMealsInfo[] overtimeMealsInfos = new OvertimeMealsInfo[formson0115Historys
+				.size()];
+		for (int i = 0; i < formson0115Historys.size(); i++) {
+			overtimeMealsInfos[i] = new OvertimeMealsInfo();
+			BeanUtils
+					.copyProperties(formson0115Historys.get(i), overtimeMealsInfos[i]);
+		}
+		res.put("overtimeMealsInfos", overtimeMealsInfos);
+
+		Formson0116HistoryExample example116History = new Formson0116HistoryExample();
+		example116History.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0116History> formson0116Historys = formson0116HistoryMapper
+				.selectByExample(example116History);
+		HospitalityInfo[] hospitalityInfos = new HospitalityInfo[formson0116Historys
+				.size()];
+		for (int i = 0; i < formson0116Historys.size(); i++) {
+			hospitalityInfos[i] = new HospitalityInfo();
+			BeanUtils.copyProperties(formson0116Historys.get(i), hospitalityInfos[i]);
+		}
+		res.put("hospitalityInfos", hospitalityInfos);
+
+		Formson0117HistoryExample example117History = new Formson0117HistoryExample();
+		example117History.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0117History> formson0117Historys = formson0117HistoryMapper
+				.selectByExample(example117History);
+		OtherCostsInfo[] otherCostsInfos = new OtherCostsInfo[formson0117Historys
+				.size()];
+		for (int i = 0; i < formson0117Historys.size(); i++) {
+			otherCostsInfos[i] = new OtherCostsInfo();
+			BeanUtils.copyProperties(formson0117Historys.get(i), otherCostsInfos[i]);
+		}
+		res.put("otherCostsInfos", otherCostsInfos);
+
+		Formson0118HistoryExample example118History = new Formson0118HistoryExample();
+		example118History.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0118History> formson0118Historys = formson0118HistoryMapper
+				.selectByExample(example118History);
+		EmployeeRelationsFeesInfo[] employeeRelationsFeesInfos = new EmployeeRelationsFeesInfo[formson0118Historys
+				.size()];
+		for (int i = 0; i < formson0118Historys.size(); i++) {
+			employeeRelationsFeesInfos[i] = new EmployeeRelationsFeesInfo();
+			BeanUtils.copyProperties(formson0118Historys.get(i),
+					employeeRelationsFeesInfos[i]);
+		}
+		res.put("employeeRelationsFeesInfos", employeeRelationsFeesInfos);
+
+		Formson0119HistoryExample example119History = new Formson0119HistoryExample();
+		example119History.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0119History> formson0119Historys = formson0119HistoryMapper
+				.selectByExample(example119History);
+		TaxiFaresInfo[] taxiFaresInfos = new TaxiFaresInfo[formson0119Historys.size()];
+		for (int i = 0; i < formson0119Historys.size(); i++) {
+			taxiFaresInfos[i] = new TaxiFaresInfo();
+			BeanUtils.copyProperties(formson0119Historys.get(i), taxiFaresInfos[i]);
 		}
 		res.put("taxiFaresInfos", taxiFaresInfos);
 

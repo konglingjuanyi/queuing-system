@@ -104,6 +104,16 @@ public interface IOAEngineService {
 	 * @throws FormNotFoundException 
 	 */
 	public FormInfo getFormInfo(String processKey, String userId, String formId) throws FormNotFoundException;
+
+	/**
+	 * 获取工单信息
+	 * @param processKey
+	 * @param userId
+	 * @param formId
+	 * @return 没有找到返回 null
+	 * @throws FormNotFoundException
+	 */
+	public FormInfo getHistoryFormInfo(String processKey, String userId, String formId) throws FormNotFoundException;
 	
 	/**
 	 * 删除、取消工单 
@@ -141,7 +151,7 @@ public interface IOAEngineService {
 	 * @param formId
 	 * @throws Exception
 	 */
-	public void reminder(String processKey, String userId, String formId, String approveId, String memo);
+	public String reminder(String processKey, String userId, String formId, String approveId, String memo);
 	
 	/**
 	 * 获取员工信息
@@ -396,5 +406,21 @@ public interface IOAEngineService {
 	 * FE:页面判断组员是否存在
 	 */
 	public void removeMember(String groupKey, String memberUserId);
+
+	/**
+	 * 获取历史审批工单
+	 * @param processKey
+	 * @param userId
+	 * @param startTime
+	 * @param endTime
+	 * @param owner
+	 * @param pageNo
+	 * @param pageSize
+	 * @return
+	 * @throws FormNotFoundException
+	 */
+	public FormInfoList historyProcessInstList(String processKey, String userId,
+			Date startTime, Date endTime, String owner, int pageNo, int pageSize)
+			throws FormNotFoundException;
 
 }

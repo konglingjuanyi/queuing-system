@@ -612,32 +612,4 @@ function enableCurrentApproveToolbarButton(enable) {
     }
 }
 
-function showApproveResultDialog(header, header_icon, msg, width) {
-    $("#approve-result-dialog").append(msg);
-    title_html_str = String.format('<div class="dialog_title"><li class="{0}"></li> {1}</div>', header_icon, header);
-    var edit_dialog = $("#approve-result-dialog").removeClass('hide').dialog({
-        modal: true,
-        width: width,
-        resizable: true,
-        title: title_html_str,
-        title_html: true,
-        closeOnEscape: false,
-        open: function(event, ui) {
-            $(".ui-dialog-titlebar-close").hide();
-        },
-        buttons: [
-            {
-                text: "确定",
-                "class" : "btn btn-primary btn-xs",
-                click: function(){
-                    $("#approve-result-dialog").empty()
-                    $("#approve-result-dialog").dialog('destroy')
-                }
-            }
-        ],
-        close: function() {
-            $("#approve-result-dialog").empty()
-            $("#approve-result-dialog").dialog('destroy')
-        }
-    });
-}
+
