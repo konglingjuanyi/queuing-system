@@ -292,3 +292,46 @@ jQuery(function ($) {
     });
 
 });
+
+function toggleCheck(oTable) {
+    $('input', oTable.fnGetNodes()).unbind("click");
+    $('input', oTable.fnGetNodes()).on("click", function () {
+        $(this).prop('checked', this.checked);
+        $(this).attr('checked', this.checked);
+    });
+    $('#current-checkbox-select-all').unbind("click");
+    $('#current-checkbox-select-all').on("click", function () {
+        $('input', oTable.fnGetNodes()).prop('checked', this.checked);
+        $('input', oTable.fnGetNodes()).attr('checked', this.checked);
+    });
+}
+
+function showResultDialog(id, header, header_icon, msg, width) {
+    $("#"+id).append(msg);
+    var title_html_str = $.parseStr('<div class="dialog_title"><li class="%s"></li> %s</div>', header_icon, header);
+    var edit_dialog = $("#"+id).removeClass('hide').dialog({
+        modal: true,
+        width: width,
+        resizable: true,
+        title: title_html_str,
+        title_html: true,
+        closeOnEscape: false,
+        open: function(event, ui) {
+            $(".ui-dialog-titlebar-close").hide();
+        },
+        buttons: [
+            {
+                text: "确定",
+                "class" : "btn btn-primary btn-xs",
+                click: function(){
+                    $("#"+id).empty();
+                    $("#"+id).dialog('destroy');
+                }
+            }
+        ],
+        close: function() {
+            $("#"+id).empty();
+            $("#"+id).dialog('destroy');
+        }
+    });
+}

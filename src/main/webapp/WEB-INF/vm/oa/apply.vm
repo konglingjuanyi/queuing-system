@@ -456,7 +456,6 @@
                     var cell = nRow.insertCell(k);
                     cell.innerHTML = table.rows[rowLen - 1].cells[k].innerHTML;
                     if(k == 0){
-                        console.log(cell.childNodes[0].childNodes);
                         cell.childNodes[0].childNodes[1].value = value;
                     }else{
                         cell.childNodes[0].value = value;
@@ -495,7 +494,7 @@
         };
         $.ajax({
             contentType: "application/json; charset=utf-8",
-            url: "oa/laborhour",
+            url: "oa/labor",
             type: "POST",
             data: JSON.stringify(params),
             success: function (resp) {

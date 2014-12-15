@@ -16,7 +16,22 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
+        <div class="col-xs-5">
+            <div class="form-group dash-button-group" style="margin-bottom: 0px; float: left;">
+                <button id="apply_back"
+                        style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                        class="btn btn-minier btn-primary">
+                    撤销
+                </button>
+                <button id="apply_del"
+                        style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                        class="btn btn-minier btn-primary">
+                    删除
+                </button>
+            </div>
+        </div>
+        <div class="col-xs-7">
+            <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
         <span class="input-icon input-icon-right">
             <input class="date" id="date-from" type="text" style="width: 186px" onclick="showTime()"
                    placeholder="申请日期..."/>
@@ -27,11 +42,12 @@
                    placeholder="申请日期..."/>
             <i class="icon-calendar green"></i>
         </span>
-            <button id="search"
-                    style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
-                    class="btn btn-minier btn-primary">
-                查询
-            </button>
+                <button id="search"
+                        style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                        class="btn btn-minier btn-primary">
+                    查询
+                </button>
+            </div>
         </div>
     </div>
     <div class="col-xs-12">
@@ -70,6 +86,10 @@
 </div>
 
 <div id="common-notice-dialog" class="hide"></div>
+<div id="apply-result-dialog" class="hide"></div>
+<div id="back-msg-dialog" class="hide"></div>
+<div id="del-msg-dialog" class="hide"></div>
+
 
 <script src="static/js/utils.js">
 </script>
@@ -88,10 +108,310 @@
 
     jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
-        showInfo("oa/todo", "apply_todo", "todo-apply-details-list", "审批过程中", 1);
+        showApplyTodoInfo("oa/todo", "apply_todo", "todo-apply-details-list", "审批过程中");
     });
     function showTime() {
         WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
     }
+
+    //显示表格数据
+    function showApplyTodoInfo(url, tableName, rTableId, status) {
+        var ex = document.getElementById(tableName);
+        if ($.fn.dataTable.fnIsDataTable(ex)) {
+            $(ex).dataTable().fnDestroy();
+        }
+
+        var aoColumns = [
+            {
+                "sTitle": '<lable><input id="current-checkbox-select-all" ' +
+                'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
+                "bSortable": false, "sClass": "center"
+            }, {
+                "sTitle": "ID",
+                "sWidth": 100,
+                "sClass": "center",
+                "bVisible": true
+            }, {
+                "sTitle": "员工编号",
+                "sWidth": 150,
+                "sClass": "center"
+            }, {
+                "sTitle": "部门",
+                "sWidth": 300,
+                "sClass": "center"
+            }, {
+                "sTitle": "姓名",
+                "sWidth": 150,
+                "sClass": "center"
+            }, {
+                "sTitle": "申请日期",
+                "sWidth": 200,
+                "sClass": "center"
+            }, {
+                "sTitle": "报销金额",
+                "sWidth": 150,
+                "sClass": "center"
+            }, {
+                "sTitle": "报销详情",
+                "sWidth": 150,
+                "sClass": "center"
+            }, {
+                "sTitle": "动作",
+                "sWidth": 200,
+                "sClass": "center"
+            }];
+        var wh = $(window).height();
+        var sY = (wh - 100) + 'px';
+        var oTable = $(ex).dataTable({
+            "bFilter": false,
+            "bAutoWidth": true,
+            "bProcessing": false,
+            "bServerSide": true,
+            "sDom": 't<"row"<"col-sm-12"i>>',
+            "bSort": false,
+            "bScrollCollapse": true,
+            "iDisplayLength": 20,
+            "iDisplayStart": 0,
+            "aoColumns": aoColumns,
+            "sAjaxSource": "",
+            "bScrollInfinite": true,
+            "sScrollY": sY,
+            "fnServerData": function (sSource, aDataSet, fnCallback) {
+                var startDate = $.trim($('#date-from').val());
+                var endDate = $.trim($('#date-to').val());
+                var start = 0;
+                var length = 0;
+                for (var i = 0; i < aDataSet.length; i++) {
+                    if (aDataSet[i].name == 'iDisplayStart') {
+                        start = aDataSet[i].value;
+                    }
+                    if (aDataSet[i].name == 'iDisplayLength') {
+                        length = aDataSet[i].value;
+                    }
+                }
+                var vars = {};
+                vars["start"] = start;
+                vars["length"] = length;
+                if (startDate != '') {
+                    vars["startTime"] = startDate;
+                }
+                if (endDate != '') {
+                    vars["endTime"] = endDate;
+                }
+                var params = {"vars": vars};
+                $.ajax({
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "POST",
+                    "url": url,
+                    "data": JSON.stringify(params),
+                    "success": function (resp) {
+                        if (resp.errorCode == 0) {
+                            var data = resp.data;
+                            var iTotalRecords = data.count || 0;
+                            var iTotalDisplayRecords = iTotalRecords;
+                            var aaData = constructTodoTableInfo(data);
+                            data = {
+                                "aaData": aaData,
+                                "iTotalRecords": (iTotalRecords || 0),
+                                "iTotalDisplayRecords": (iTotalDisplayRecords || 0)
+                            };
+                            fnCallback(data);
+                        } else {
+                            showCommonNoticeDialog('失败', 'icon-warning-sign',
+                                    generateNoticeMsg(resp.errorMessage), 300);
+                        }
+                    },
+                    error: function () {
+                        showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                    }
+                });
+            },
+            "fnDrawCallback": function () {
+                if (!oTable) {
+                    return;
+                }
+
+                $("#search").unbind("click");
+                $("#search").on("click", function (e) {
+                    showApplyTodoInfo(url, tableName, rTableId, status);
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+
+                $("#apply_back").unbind("click");
+                $("#apply_back").on("click", function (e) {
+                    applyBackorDel(oTable, 1);
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+                $("#apply_del").unbind("click");
+                $("#apply_del").on("click", function (e) {
+                    applyBackorDel(oTable, 2);
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+
+                oTable.$('tr.row_selected').removeClass('row_selected');
+                oTable.$("tr").unbind('click');
+                oTable.$("tr").click({
+                    oTable: oTable
+                }, function (e) {
+                    if ($(this).hasClass('row_selected')) {
+                        $(this).removeClass('row_selected');
+                    }
+                    else {
+                        e.data.oTable.$('tr.row_selected').removeClass('row_selected');
+                        $(this).addClass('row_selected');
+                        var id = e.data.oTable.fnGetData(this)[1];
+                        showApplyTodoOrHistoryDetailsList(id, rTableId, status);
+                    }
+                });
+            },
+            fnInitComplete: function () {
+                $('#current-checkbox-select-all').prop('checked', false);
+                $('#current-checkbox-select-all').attr('checked', false);
+                toggleCheck(oTable);
+            }
+        })
+    }
+
+    function constructTodoTableInfo(data) {
+        var aaData = [];
+        var needData = data.tableInfos;
+        var d_len = needData.length;
+        for (var i = 0; i < d_len; i++) {
+            var money = parseFloat(needData[i][5]);
+            money /= 100;
+            var map = $.parseStr("<a href='javascript:void(0);' " +
+            "onclick='showEditDialog(%s);'><i class='icon-link'></i></a>", needData[i][0]);
+            var push = "";
+            var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
+            push = '<a href="javascript:void(0);" role="button" ' +
+            'onclick="sendEmailToCandidate(\'' + needData[i][0] + '\')" class="green"><i class="icon-user">催办</i></a>';
+            aaData.push([checkbox, needData[i][0], needData[i][1],
+                needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map, push]);
+        }
+        return aaData;
+    }
+
+
+    function applyBackorDel(oTable, num) {
+        var operStr = "退回";
+        var msg = "报销撤销以后将存为草稿,是否撤销?";
+        var title = "撤销操作";
+        if (num == 2) {
+            operStr = "删除";
+            msg = "该操作不能恢复,是否进行删除操作?";
+            title = "删除操作";
+        }
+        var formIds = "";
+        $("input:checked", oTable.fnGetNodes()).each(function () {
+            var row = $(this).parent().parent().parent();
+            var nTds = $('td', row);
+            var formId = nTds[1].childNodes[0].data;
+            formIds += formId + ",";
+        });
+        if (formIds.length < 1) {
+            showResultDialog("apply-result-dialog", operStr, 'icon-lightbulb',
+                    generateNoticeMsg("请选择要" + operStr + "的条目!"), 300);
+            return;
+        }
+        try {
+            $("#back-msg-dialog").empty();
+            $("#back-msg-dialog").append(generateNoticeMsg(msg));
+            var title_html = $.parseStr('<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
+            '<li class="icon-user"></li> %s</div>', title);
+            var dialog = $("#back-msg-dialog").removeClass('hide').dialog({
+                modal: true,
+                width: 300,
+                title: title_html,
+                title_html: true,
+                closeOnEscape: false,
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                },
+                buttons: [
+                    {
+                        id: "apply-msg-submit",
+                        text: "提交",
+                        "class": "btn btn-primary btn-xs",
+                        click: function (e) {
+                            applyBackorDeltoDB(formIds, operStr);
+                        }
+                    },
+                    {
+                        id: "apply-msg-cancel",
+                        text: "取消",
+                        "class": "btn btn-xs",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+        } catch (e) {
+            showCommonNoticeDialog('网络错误', 'icon-warning-sign',
+                    generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+        }
+
+    }
+
+    function applyBackorDeltoDB(formIds, action) {
+        var id = "apply-result-dialog";
+        var params = {};
+        var vars = {};
+        vars["formIds"] = formIds;
+        vars["backDel"] = action;
+        params["vars"] = vars;
+        $.ajax({
+            contentType: "application/json; charset=utf-8",
+            url: "back_del",
+            type: "post",
+            data: JSON.stringify(params),
+            success: function (resp) {
+                var title_html_str = '';
+                try {
+                    if (resp.errorCode == 0) {
+                        title_html_str = '<div class="dialog_title"><li class="icon-info-sign"></li> 审批' + action + '</div>';
+                        var succeed_html = '<b><li class="icon-check"></li> ' + action + '成功</b><br/>';
+                        $("#" + id).append(generateNoticeMsg(succeed_html));
+                    } else {
+                        title_html_str = '<div class="dialog_title"><li class="icon-exclamation-sign"></li>审批' + action + '</div>';
+                        $("#" + id).append(generateNoticeMsg(resp.errorMessage));
+                    }
+                } catch (e) {
+                }
+                var dialog = $("#" + id).removeClass('hide').dialog({
+                    modal: true,
+                    width: 400,
+                    resizable: true,
+                    title: title_html_str,
+                    title_html: true,
+                    closeOnEscape: false,
+                    buttons: [
+                        {
+                            text: "确定",
+                            "class": "btn btn-primary btn-xs",
+                            click: function () {
+                                $("#" + id).empty();
+                                $("#" + id).dialog('destroy');
+                            }
+                        }
+                    ],
+                    close: function () {
+                        $("#").empty();
+                        $("#" + id).dialog('destroy');
+                    }
+                });
+                showApplyTodoInfo("oa/todo", "apply_todo", "todo-apply-details-list", "审批过程中");
+            },
+            "error": function (jqxhr, textstatus, errorthrown) {
+                enableCurrentApproveToolbarButton(true);
+                showResultDialog('网络错误', 'icon-warning-sign',
+                        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+            }
+        });
+    }
+
 
 </script>
