@@ -55,6 +55,7 @@
                     <td>银行开户行</td>
                     <td><input type="text" readonly="readonly"></td>
                 </tr>
+                <!--
                 <tr>
                     <td>是否有借款</td>
                     <td>
@@ -71,6 +72,7 @@
                     <td><input type="text" readonly="readonly"></td>
                 </tr>
                 <tr>
+                -->
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-9">
                 <tr>
@@ -455,7 +457,7 @@
                     }
                     var cell = nRow.insertCell(k);
                     cell.innerHTML = table.rows[rowLen - 1].cells[k].innerHTML;
-                    if(k == 0){
+                    if(k == 0 && i < 5){
                         console.log(cell.childNodes[0].childNodes);
                         cell.childNodes[0].childNodes[1].value = value;
                     }else{
