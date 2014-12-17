@@ -114,7 +114,7 @@ function fixedTableInfo(tableMap, vars) {
             tableForm += tableSumForm(num2, vars);
         }
     }
-    tableForm += tableApproveBodyForm(tableMap["table7"]);
+    //tableForm += tableApproveBodyForm(tableMap["table7"]);
     $("#sum").val(vars["sum"]);
     return tableForm;
 }
@@ -299,8 +299,8 @@ function toggleCheck(oTable) {
         $(this).prop('checked', this.checked);
         $(this).attr('checked', this.checked);
     });
-    $('#current-approve-table-select-all').unbind("click");
-    $('#current-approve-table-select-all').on("click", function () {
+    $('#current-checkbox-select-all').unbind("click");
+    $('#current-checkbox-select-all').on("click", function () {
         $('input', oTable.fnGetNodes()).prop('checked', this.checked);
         $('input', oTable.fnGetNodes()).attr('checked', this.checked);
     });

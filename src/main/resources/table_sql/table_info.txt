@@ -97,6 +97,7 @@ field0040	就餐地点	varchar(255)	DEFAULT	NULL
 sort	排序	int	DEFAULT	NULL
 field0077	发票金额	varchar(255)	DEFAULT	NULL
 field0094	加班餐费工时	decimal(20,2)	DEFAULT	NULL
+ratify		核定金额	bigint	DEFAULT	NULL
 
 ----------------------招待费---------------------------
 id	主键唯一ID	bigint		
@@ -109,6 +110,7 @@ field0045	业务目的	varchar(255)	DEFAULT	NULL
 field0046	招待费参加人数	varchar(255)	DEFAULT	NULL
 field0047	客户姓名	varchar(255)	DEFAULT	NULL
 sort	排序	int	DEFAULT	NULL
+ratify		核定金额	bigint	DEFAULT	NULL
 
 ----------------------其他费用---------------------------
 id	主键唯一ID	bigint		
@@ -117,6 +119,7 @@ field0048	其他费用备注	varchar(255)	DEFAULT	NULL
 field0049	其他费用金额	bigint	DEFAULT	NULL
 field0050	其他费用项目	varchar(255)	DEFAULT	NULL
 sort	排序	int	DEFAULT	NULL
+ratify		核定金额	bigint	DEFAULT	NULL
 
 ----------------------员工关系费---------------------------
 id	主键唯一ID	bigint		
@@ -127,7 +130,8 @@ field0053	员工关系日期	date	DEFAULT	NULL
 field0054	活动目的	varchar(255)	DEFAULT	NULL
 field0055	员工关系费同行人	varchar(255)	DEFAULT	NULL
 sort	排序	int	DEFAULT	NULL
-field0089	员工关系费备注	text		
+field0089	员工关系费备注	text	
+ratify		核定金额	bigint	DEFAULT	NULL	
 
 ----------------------出租车费---------------------------
 id	主键唯一ID	bigint		
@@ -143,6 +147,7 @@ sort	排序	int	DEFAULT	NULL
 field0088	出租车费具体时间新	varchar(255)	DEFAULT	NULL
 field0095	出租车费工时	decimal(202)	DEFAULT	NULL
 field0098	备注	varchar(255)	DEFAULT	NULL
+ratify		核定金额	bigint	DEFAULT	NULL
 
 ----------------------表单修改历史日志表---------------------------
 id	主键唯一ID	bigint			

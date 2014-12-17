@@ -24,117 +24,189 @@ import com.qunar.ops.oaengine.result.EmployeeInfo;
 
 @Component
 public class EmployeeInfoService {
-	
+
 	@Value("${backyard.apihost}")
 	String backyardUrl;
-	
+
 	/**
 	 * 获取员工信息
+	 * 
 	 * @param userId
 	 * @return
 	 * @throws RemoteAccessException
 	 */
-	public EmployeeInfo getEmployee(String userId) throws RemoteAccessException{
+	public EmployeeInfo getEmployee(String userId) throws RemoteAccessException {
 		EmployeeInfo eInfo = new EmployeeInfo();
 		String apiUrl = backyardUrl + "?require=info&rtx_id=" + userId;
 		JSONObject json = invokeGetApi(apiUrl);
 		System.out.println(json);
 		if (json.containsKey("err_id")) {
-			throw new RemoteAccessException(json.getString("msg"), EmployeeInfoService.class);
+			throw new RemoteAccessException(json.getString("msg"),
+					EmployeeInfoService.class);
 		} else {
 			JSONObject data = json.getJSONObject("data");
-//			EmployeeInfo eInfo = JSONObject.toJavaObject(data, EmployeeInfo.class);
-			eInfo.setUserId((String)data.get("username"));
-			eInfo.setUserMail((String)data.get("email"));
-			eInfo.setManager(((String)data.get("manager")));
-			eInfo.setManagerMail(((String)data.get("manager_email")));
-			eInfo.setSn((String)data.get("sn"));
-			eInfo.setAdName((String)data.get("ad_cn"));
-			eInfo.setDepartmentI((String)data.get("dept_level1"));
-			eInfo.setDepartmentII((String)data.get("dept_level2"));
-			eInfo.setDepartmentIII((String)data.get("dept_level3"));
-			eInfo.setDepartmentIV((String)data.get("dept_level4"));
-			eInfo.setDepartmentV((String)data.get("dept_level5"));
-			
-			//VP INFO
-			eInfo.setVp((String)data.get("vp"));
-			eInfo.setVpMail((String)data.get("vp_mail"));
-			
-			//银行卡号qunar.it暂时没有，看是否直接调用coreHr的API。
-//			eInfo.setBankCardNo((String)data.get(""));
-//			eInfo.setBankName((String)data.get(""));
+			// EmployeeInfo eInfo = JSONObject.toJavaObject(data,
+			// EmployeeInfo.class);
+			eInfo.setUserId((String) data.get("username"));
+			eInfo.setUserMail((String) data.get("email"));
+			eInfo.setManager(((String) data.get("manager")));
+			eInfo.setManagerMail(((String) data.get("manager_email")));
+			eInfo.setSn((String) data.get("sn"));
+			eInfo.setAdName((String) data.get("ad_cn"));
+			eInfo.setDepartmentI((String) data.get("dept_level1"));
+			eInfo.setDepartmentII((String) data.get("dept_level2"));
+			eInfo.setDepartmentIII((String) data.get("dept_level3"));
+			eInfo.setDepartmentIV((String) data.get("dept_level4"));
+			eInfo.setDepartmentV((String) data.get("dept_level5"));
+
+			// VP INFO
+			eInfo.setVp((String) data.get("vp"));
+			eInfo.setVpMail((String) data.get("vp_mail"));
+
+			// 银行卡号qunar.it暂时没有，看是否直接调用coreHr的API。
+			// eInfo.setBankCardNo((String)data.get(""));
+			// eInfo.setBankName((String)data.get(""));
 		}
 		return eInfo;
 	}
 
 	/**
 	 * 获取员工所在部门VP rtxId
+	 * 
 	 * @param userId
 	 * @return 没有找到返回空list
 	 * @throws RemoteAccessException
 	 */
-	public List<String> findVP(String userId) throws RemoteAccessException{
-		
+	public List<String> findVP(String userId) throws RemoteAccessException {
+
 		List<String> users = new ArrayList<String>();
-		users.add("nuby.zhang");
+		String apiUrl = backyardUrl + "?require=info&rtx_id=" + userId;
+		JSONObject json = invokeGetApi(apiUrl);
+		System.out.println(json);
+		if (json.containsKey("err_id")) {
+			throw new RemoteAccessException(json.getString("msg"),
+					EmployeeInfoService.class);
+		} else {
+			JSONObject data = json.getJSONObject("data");
+			Object vp = data.get("vp_mail");
+			if (vp != null) {
+				String user = (String) vp;
+				users.add(user.split("@")[0]);
+			}
+		}
 		return users;
 	}
-	
+
 	/**
 	 * 获取员工直接主管， 如果没有指定上级主管获取部门VP，如果VP没找到返回空list
+	 * 
 	 * @param userId
 	 * @return 没有找到返回空list
 	 * @throws RemoteAccessException
 	 */
-	public List<String> findManager(String userId) throws RemoteAccessException{
+	public List<String> findManager(String userId) throws RemoteAccessException {
 		List<String> users = new ArrayList<String>();
-		users.add("nuby.zhang");
+		String apiUrl = backyardUrl + "?require=info&rtx_id=" + userId;
+		JSONObject json = invokeGetApi(apiUrl);
+		System.out.println(json);
+		if (json.containsKey("err_id")) {
+			throw new RemoteAccessException(json.getString("msg"),
+					EmployeeInfoService.class);
+		} else {
+			JSONObject data = json.getJSONObject("data");
+			Object u = data.get("manager_email");
+			if (u == null) {
+				u = data.get("vp_email");
+			}
+			if (u != null) {
+				String user = (String) u;
+				users.add(user.split("@")[0]);
+			}
+		}
 		return users;
 	}
-	
+
 	/**
-	 * 获取员工上上级主管；
-	 * 如果员工上上级主管是VP，返回上级主管；
-	 * 如果以上条件均没有获取到，返回VP，如果VP没找到返回空list
+	 * 获取员工上上级主管； 如果员工上上级主管是VP，返回上级主管； 如果以上条件均没有获取到，返回VP，如果VP没找到返回空list
+	 * 
 	 * @param userId
 	 * @return
 	 * @throws RemoteAccessException
 	 */
-	public List<String> findDirector(String userId) throws RemoteAccessException{
+	public List<String> findDirector(String userId)
+			throws RemoteAccessException {
 		List<String> users = new ArrayList<String>();
-		users.add("nuby.zhang");
+		String apiUrl = backyardUrl + "?require=info&rtx_id=" + userId;
+		JSONObject json = invokeGetApi(apiUrl);
+		if (json.containsKey("err_id")) {
+			throw new RemoteAccessException(json.getString("msg"),
+					EmployeeInfoService.class);
+		}
+		JSONObject data = json.getJSONObject("data");
+		Object u = data.get("manager_email");
+		if (u == null) {
+			return users;
+		}
+		String user = (String) u;
+		userId = user.split("@")[0];
+		apiUrl = backyardUrl + "?require=info&rtx_id=" + userId;
+		json = invokeGetApi(apiUrl);
+		if (json.containsKey("err_id")) {
+			throw new RemoteAccessException(json.getString("msg"), EmployeeInfoService.class);
+		}
+		data = json.getJSONObject("data");
+		Object u2 = (String)data.get("manager_email");
+		Object vp = (String)data.get("vp_mail");
+		user = null;
+		if(u2 == null && vp == null){
+			user = (String) u;
+		}else if(u2 == null && vp != null){
+			user = (String) u;
+		}else if(u2.equals(vp)){
+			user = (String) u;
+		}else{
+			user =(String) u2;
+		}
+		if(user != null){
+			users.add(user.split("@")[0]);
+		}
 		return users;
 	}
-	
+
 	/**
 	 * 获取工时
+	 * 
 	 * @param userId
 	 * @param day
 	 * @return
-	 * @throws RemoteAccessException 
+	 * @throws RemoteAccessException
 	 */
-	public float getLaborHour(String userId, Date day) throws RemoteAccessException{
+	public float getLaborHour(String userId, Date day)
+			throws RemoteAccessException {
 		float hours = 0.00f;
-		String apiUrl = backyardUrl + "?require=workhours&rtx_id=" + userId + "&date=" + new SimpleDateFormat("yyyy-MM-dd").format(day);
+		String apiUrl = backyardUrl + "?require=workhours&rtx_id=" + userId
+				+ "&date=" + new SimpleDateFormat("yyyy-MM-dd").format(day);
 		JSONObject json = invokeGetApi(apiUrl);
 		System.out.println(json);
 		if (json.containsKey("err_id") && !json.getInteger("err_id").equals(0)) {
-			throw new RemoteAccessException(json.getString("msg"), EmployeeInfoService.class);
+			throw new RemoteAccessException(json.getString("msg"),
+					EmployeeInfoService.class);
 		} else {
 			JSONObject data = json.getJSONObject("data");
-//			EmployeeInfo eInfo = JSONObject.toJavaObject(data, EmployeeInfo.class);
+			// EmployeeInfo eInfo = JSONObject.toJavaObject(data,
+			// EmployeeInfo.class);
 			hours = data.getFloatValue("hours");
 		}
 		return hours;
 	}
-	
+
 	/**
 	 * 
 	 * @param apiUrl
-	 * @return	JSONObject对象，内容为返回结果
+	 * @return JSONObject对象，内容为返回结果
 	 * @throws RemoteAccessException
 	 */
-	private JSONObject invokeGetApi(String apiUrl) throws RemoteAccessException{
+	private JSONObject invokeGetApi(String apiUrl) throws RemoteAccessException {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
 			HttpGet httpget = new HttpGet(apiUrl);
@@ -156,25 +228,30 @@ public class EmployeeInfoService {
 			};
 			String responseBody = httpclient.execute(httpget, responseHandler);
 			JSONObject json = JSONObject.parseObject(responseBody);
-			if(json == null){
-				throw new RemoteAccessException("responseBody is null", EmployeeInfoService.class);
+			if (json == null) {
+				throw new RemoteAccessException("responseBody is null",
+						EmployeeInfoService.class);
 			}
 			return json;
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new RemoteAccessException(e.getMessage(), EmployeeInfoService.class);
+			throw new RemoteAccessException(e.getMessage(),
+					EmployeeInfoService.class);
 		} finally {
 			try {
 				httpclient.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-				throw new RemoteAccessException(e.getMessage(), EmployeeInfoService.class);
+				throw new RemoteAccessException(e.getMessage(),
+						EmployeeInfoService.class);
 			}
 		}
 	}
 
 	public static void main(String[] args) throws RemoteAccessException {
-		EmployeeInfoService s = new ClassPathXmlApplicationContext(new String[]{"spring.xml"}).getBean(EmployeeInfoService.class);
+		EmployeeInfoService s = new ClassPathXmlApplicationContext(
+				new String[] { "spring.xml" })
+				.getBean(EmployeeInfoService.class);
 		System.out.println(s.getEmployee("yongnian.jiang").getAdName());
 		System.out.println(s.getLaborHour("yongnian.jiang", new Date()));
 	}

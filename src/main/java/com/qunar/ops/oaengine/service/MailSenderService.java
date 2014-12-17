@@ -37,6 +37,8 @@ public class MailSenderService {
 	String auth;
 	@Value("${mail.smtp.starttls.enable}")
 	String starttls;
+	@Value("${debug}")
+	String debug;
 	@Autowired
 	private RabbitTemplate amqpTemplate;
 	
@@ -87,6 +89,7 @@ public class MailSenderService {
 
 	public void sender(String from, String[] to, String[] cc, String title, String content){
 		try {
+			if("true".equals(this.debug)) return;
 			QMail mail = new QMail();
 			mail.setCc(cc);
 			mail.setContent(content);

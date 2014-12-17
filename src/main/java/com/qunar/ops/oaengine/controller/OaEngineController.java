@@ -13,6 +13,7 @@ import com.qunar.ops.oaengine.service.IOAEngineService;
 import com.qunar.ops.oaengine.service.MailSenderService;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
 import com.qunar.ops.oaengine.util.OAEngineConst;
+
 import org.activiti.engine.*;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.http.HttpResponse;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
@@ -59,6 +61,21 @@ public class OaEngineController {
     private String processKey = "oa_common";
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+    /**
+     * 修改登陆的用户名
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "oa/user")
+    @ResponseBody
+    public BaseResult changeRootUser(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+        Map<String, String> vars = commonRequest.getVars();
+        String userId = vars.get("user");
+        request.getSession().setAttribute("USER_ID", userId);
+        return new BaseResult();
+    }
 
     @RequestMapping(value = "/oa/test.html")
     public void index(HttpServletRequest request) {
@@ -218,6 +235,7 @@ public class OaEngineController {
     @ResponseBody
     public BaseResult webEmployeeInfo(HttpServletRequest request) {
         String userId = (String) request.getSession().getAttribute("USER_ID");
+        System.out.println(userId);
         if (userId == null || userId.length() == 0) {
             logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
             return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -313,8 +331,12 @@ public class OaEngineController {
         long id = 0;
         if (flag) {
             try {
-                ioaEngineService.createFormAndstart(processKey, userId,
+            	if(formInfo.getId() != null){
+            		ioaEngineService.updateFormInfo(processKey, userId, ""+formInfo.getId(), formInfo, true);
+            	}else{
+            		ioaEngineService.createFormAndstart(processKey, userId,
                         formInfo);
+            	}
             } catch (RemoteAccessException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());
@@ -327,9 +349,35 @@ public class OaEngineController {
                 e.printStackTrace();
                 logger.error(e.getMessage());
                 return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-            }
+            } catch (ManagerFormException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(OAEngineConst.MANAGER_LOCK_ERROR, OAEngineConst.MANAGER_LOCK_ERROR_MSG);
+			}
         } else {
-            ioaEngineService.createForm(processKey, userId, formInfo);
+        	if(formInfo.getId() != null){
+        		try {
+					ioaEngineService.updateFormInfo(processKey, userId, ""+formInfo.getId(), formInfo, false);
+				} catch (CompareModelException e) {
+					e.printStackTrace();
+	                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+	                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				} catch (FormNotFoundException e) {
+					e.printStackTrace();
+	                logger.error(e.getMessage());
+	                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+				} catch (RemoteAccessException e) {
+					e.printStackTrace();
+	                logger.error(e.getMessage());
+	                return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
+				} catch (ManagerFormException e) {
+					e.printStackTrace();
+					logger.error(e.getMessage());
+					return BaseResult.getErrorResult(OAEngineConst.MANAGER_LOCK_ERROR, OAEngineConst.MANAGER_LOCK_ERROR_MSG);
+				}
+        	}else{
+        		ioaEngineService.createForm(processKey, userId, formInfo);
+        	}
         }
         return BaseResult.getSuccessResult(String.valueOf(id));
     }
@@ -503,7 +551,7 @@ public class OaEngineController {
                 processKey, userId, _startTime, _endTime, pageNo, pageSize);
         DataResult dataResult;
         try {
-            dataResult = getAllTableInfos(formInfoList, userId, 1);
+            dataResult = getAllTableInfos(formInfoList, userId, 4);
         } catch (RemoteAccessException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -629,7 +677,7 @@ public class OaEngineController {
 //        userId = vars.get("userId");
         FormInfoList formInfoList = null;
         try {
-            formInfoList = ioaEngineService.historyList(
+            formInfoList = ioaEngineService.historyProcessInstList(
                     processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);
         } catch (FormNotFoundException e) {
             e.printStackTrace();
@@ -910,20 +958,32 @@ public class OaEngineController {
 //        userId = vars.get("userId");
         for (int i = 0; i < len; i++) {
             try {
-                ioaEngineService.deleteFormInfo(processKey, userId, formMsg[i]);
+            	if("delete".equals(backDel)){
+            		ioaEngineService.deleteFormInfo(processKey, userId, formMsg[i]);
+            	}else if("cancel".equals(backDel)){
+            		ioaEngineService.cancelFormInfo(processKey, userId, formMsg[i]);
+            	}
+            	
             } catch (FormNotFoundException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, e.getMessage());
             } catch (ManagerFormException e) {
                 e.printStackTrace();
                 logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.MANAGER_LOCK_ERROR, OAEngineConst.MANAGER_LOCK_ERROR_MSG);
+                return BaseResult.getErrorResult(OAEngineConst.MANAGER_LOCK_ERROR, e.getMessage());
+            } catch (ActivitiException e) {
+                e.printStackTrace();
+                logger.error(e.getMessage());
+                return BaseResult.getErrorResult(OAEngineConst.ACTIVITI_ERROR, e.getMessage());
             }
         }
-        return BaseResult.getSuccessResult(backDel + "成功!");
+        if("delete".equals(backDel)){
+        	return BaseResult.getSuccessResult("删除成功!");
+        }else{
+        	return BaseResult.getSuccessResult("撤销成功!");
+        }
     }
-
 
     /**
      * 获取审批各个节点的审批意见
@@ -949,16 +1009,24 @@ public class OaEngineController {
         }
         List<ApprovalInfo> infos = approveInfos.getInfos();
         int size = infos.size();
-        SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String[] result = new String[size * 5];
+        SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String[] result = new String[size * 6];
         int k = 0;
         for (int i = 0; i < size; i++) {
             ApprovalInfo approveInfo = infos.get(i);
-            result[k++] = "审批人: " + approveInfo.getApproveUser();
-            result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
-            result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
-            result[k++] = "附言: " + approveInfo.getMemo();
-            result[k++] = "";
+            String type = OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
+            if("申请".equals(type)){
+	            result[k++] = "申请人: " + approveInfo.getApproveUser();
+	            result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
+	            result[k++] = ""; 	
+            }else{
+            	result[k++] = "审批节点: " + approveInfo.getTaskName();
+	            result[k++] = "审批人: " + approveInfo.getApproveUser();
+	            result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
+	            result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
+	            result[k++] = "附言: " + approveInfo.getMemo();
+	            result[k++] = "";
+            }
         }
 
         return BaseResult.getSuccessResult(result);
@@ -982,7 +1050,7 @@ public class OaEngineController {
         int len = table.length;
         List<TaxiFaresInfo> list1 = new ArrayList<TaxiFaresInfo>();
         for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][7])) {
+            if ("".equals(table[i][0]) || "".equals(table[i][7]) || "0".equals(table[i][7])) {
                 continue;
             }
             TaxiFaresInfo taxiInfo = new TaxiFaresInfo();
@@ -1007,9 +1075,9 @@ public class OaEngineController {
         len = table.length;
         List<OvertimeMealsInfo> list2 = new ArrayList<OvertimeMealsInfo>();
         for (int i = 0; i < len; i++) {
-//            if ("".equals(table[i][0]) || "".equals(table[i][5])) {
-//                continue;
-//            }
+            if ("".equals(table[i][0]) || "".equals(table[i][5]) || "0".equals(table[i][5])) {
+                continue;
+            }
             OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
             overInfo.setOvertimeMealsDate(OAControllerUtils.strToDate(table[i][0]));
             overInfo.setMealsAddr(table[i][1]);
@@ -1031,9 +1099,9 @@ public class OaEngineController {
         len = table.length;
         List<HospitalityInfo> list3 = new ArrayList<HospitalityInfo>();
         for (int i = 0; i < len; i++) {
-//            if ("".equals(table[i][0]) || "".equals(table[i][6])) {
-//                continue;
-//            }
+            if ("".equals(table[i][0]) || "".equals(table[i][6])) {
+                continue;
+            }
             HospitalityInfo hosInfo = new HospitalityInfo();
             hosInfo.setHospitalityDate(OAControllerUtils.strToDate(table[i][0]));
             hosInfo.setHospitalityAddr(table[i][1]);
@@ -1053,9 +1121,9 @@ public class OaEngineController {
         len = table.length;
         List<EmployeeRelationsFeesInfo> list4 = new ArrayList<EmployeeRelationsFeesInfo>();
         for (int i = 0; i < len; i++) {
-//            if ("".equals(table[i][0]) || "".equals(table[i][4])) {
-//                continue;
-//            }
+            if ("".equals(table[i][0]) || "".equals(table[i][4])) {
+                continue;
+            }
             EmployeeRelationsFeesInfo employInfo = new EmployeeRelationsFeesInfo();
             employInfo.setEmRelationsDate(OAControllerUtils.strToDate(table[i][0]));
             employInfo.setEmRelationsAddress(table[i][1]);
@@ -1075,9 +1143,9 @@ public class OaEngineController {
         len = table.length;
         List<OtherCostsInfo> list5 = new ArrayList<OtherCostsInfo>();
         for (int i = 0; i < len; i++) {
-//            if ("".equals(table[i][0]) || "".equals(table[i][2])) {
-//                continue;
-//            }
+            if ("".equals(table[i][0]) || "".equals(table[i][2])) {
+                continue;
+            }
             OtherCostsInfo otherInfo = new OtherCostsInfo();
             otherInfo.setOtherCostProject(table[i][0]);
             otherInfo.setOtherCostAmount(OAControllerUtils.yuanMoneyToCent(table[i][1]));
@@ -1108,6 +1176,9 @@ public class OaEngineController {
         formInfo.setCommuCostsComment(vars.get("remark"));
 
         formInfo.setMoneyAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum")));
+        if(vars.get("formId") != null){
+        	formInfo.setId(Long.parseLong(vars.get("formId")));
+        }
         table = tableMap.get("table");
         len = table.length;
         for (int i = 0; i < len; i++) {
@@ -1120,9 +1191,9 @@ public class OaEngineController {
             formInfo.setIsDirectVp(table[i][6]);
             formInfo.setBankNumber(table[i][7]);
             formInfo.setBankName(table[i][8]);
-            formInfo.setIsBorrow(table[i][9]);
-            formInfo.setBorrowSN(table[i][10]);
-            formInfo.setBorrowAmount(OAControllerUtils.strToLong(table[i][11]));
+            //formInfo.setIsBorrow(table[i][9]);
+            //formInfo.setBorrowSN(table[i][10]);
+            //formInfo.setBorrowAmount(OAControllerUtils.strToLong(table[i][11]));
         }
         return true;
     }
@@ -1166,7 +1237,7 @@ public class OaEngineController {
         if (id == 1) {
             tableInfo = new String[]{String.valueOf(formInfo.getId()),
                     formInfo.getSerialNumber(), depart,
-                    formInfo.getApplyUser(), OAControllerUtils.dateToStr(formInfo.getApplyDate()),
+                    formInfo.getApplyUser(), OAControllerUtils.dateToStr(formInfo.getField0005()),
                     String.valueOf(formInfo.getMoneyAmount())};
         } else if (id == 2) {
             tableInfo = new String[6];
@@ -1184,6 +1255,11 @@ public class OaEngineController {
             tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
             tableInfo[4] = OAControllerUtils.dateToStr(formInfo.getDealDate());
             tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
+        } else if (id == 4) {
+            tableInfo = new String[]{String.valueOf(formInfo.getOid()),
+                    formInfo.getSerialNumber(), depart,
+                    formInfo.getApplyUser(), OAControllerUtils.dateToStr(formInfo.getApplyDate()),
+                    String.valueOf(formInfo.getMoneyAmount())};
         }
         return tableInfo;
     }

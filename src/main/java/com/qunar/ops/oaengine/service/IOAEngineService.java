@@ -116,17 +116,30 @@ public interface IOAEngineService {
 	public FormInfo getHistoryFormInfo(String processKey, String userId, String formId) throws FormNotFoundException;
 	
 	/**
-	 * 删除、取消工单 
+	 * 删除
 	 * @param processKey
 	 * @param userId
 	 * @param formId
 	 * @return
 	 * @throws FormNotFoundException 
 	 * @throws ManagerFormException 
-	 * @throws 工单没有找到；工单锁定（历史工单不允许删除、仅允许创建人删除）； 系统错误
+	 * @throws 工单没有找到；工单锁定（仅允许创建人删除）； 系统错误
 	 * 需要记录操作历史
 	 */
 	public void deleteFormInfo(String processKey, String userId, String formId) throws FormNotFoundException, ManagerFormException;
+	
+	/**
+	 * 取消工单 
+	 * @param processKey
+	 * @param userId
+	 * @param formId
+	 * @return
+	 * @throws FormNotFoundException 
+	 * @throws ManagerFormException 
+	 * @throws 工单没有找到；工单锁定（仅允许创建人删除）； 系统错误
+	 * 需要记录操作历史
+	 */
+	public void cancelFormInfo(String processKey, String userId, String formId) throws FormNotFoundException, ManagerFormException, ActivitiException;
 	
 	/**
 	 * 获取修改日志列表

@@ -133,7 +133,7 @@
         }
         var aoColumns = [
             {
-                "sTitle": '<lable><input id="current-approve-table-select-all" ' +
+                "sTitle": '<lable><input id="current-checkbox-select-all" ' +
                 'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
                 "bSortable": false, "sClass": "center"
             },
@@ -142,8 +142,7 @@
             {"sTitle": '申请部门', "sWidth": 300, "sClass": "center"},
             {"sTitle": '申请时间', "sClass": "center", "sWidth": 200},
             {"sTitle": '金额', "sClass": "center", "sWidth": 150},
-            {"sTitle": "报销详情", "sClass": "center", "sWidth": 150},
-            {"sTitle": '任务ID', "sClass": "center", "sWidth": 150, "bVisible": true}];
+            {"sTitle": "报销详情", "sClass": "center", "sWidth": 150}];
 
         var wh = $(window).height();
         var sY = (wh - 100) + 'px';
@@ -273,8 +272,8 @@
                 });
             },
             fnInitComplete: function () {
-                $('#current-approve-table-select-all').prop('checked', false);
-                $('#current-approve-table-select-all').attr('checked', false);
+                $('#current-checkbox-select-all').prop('checked', false);
+                $('#current-checkbox-select-all').attr('checked', false);
                 toggleCheck(oTable);
             }
         })
@@ -561,7 +560,7 @@
             var row = $(this).parent().parent().parent();
             var nTds = $('td', row);
             var formId = nTds[1].childNodes[0].data;
-            var taskId = nTds[7].childNodes[0].data;
+            var taskId = $(this).val();//nTds[7].childNodes[0].data;
             console.log(taskId);
             formIds += formId + ",";
             taskIds += taskId + ",";
@@ -720,11 +719,11 @@
             money /= 100;
             var map = $.parseStr("<a href='javascript:void(0);' " +
             "onclick='showEditDialog(%s);'><i class='icon-link'></i></a>", needData[i][0]);
-            var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
-            var need_list = [checkbox, needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map, needData[i][5]];
+            var checkbox = '<label><input value="'+needData[i][5]+'" type="checkbox" class="ace"> <span class="lbl"></span></label>';
+            var need_list = [checkbox, needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map];
             var d_list = [];
-            for(i = 0; i < len; i++){
-                d_list.push(need_list[i]);
+            for(j = 0; j < len; j++){
+                d_list.push(need_list[j]);
             }
             aaData.push(d_list);
         }
@@ -732,7 +731,7 @@
     }
 
     function showTime() {
-        WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+        WdatePicker({dateFmt: 'yyyy-MM-dd'});
     }
 
     function showApproveTodoDetailsList(id) {

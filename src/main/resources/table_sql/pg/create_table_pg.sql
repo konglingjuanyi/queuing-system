@@ -228,6 +228,7 @@ CREATE TABLE formmain_0114_history(
   field0093 varchar(255) DEFAULT NULL,
   field0096 varchar(255) DEFAULT NULL,
   field0097 varchar(255) DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -252,6 +253,7 @@ CREATE TABLE formson_0115 (
   sort int DEFAULT NULL,
   field0077 varchar(255) DEFAULT NULL,
   field0094 decimal(20,2) DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -273,6 +275,7 @@ CREATE TABLE formson_0116 (
   field0046 varchar(255) DEFAULT NULL,
   field0047 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -290,6 +293,7 @@ CREATE TABLE formson_0117 (
   field0049 bigint DEFAULT NULL,
   field0050 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -310,6 +314,7 @@ CREATE TABLE formson_0118 (
   field0055 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
   field0089 text,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -334,6 +339,7 @@ CREATE TABLE formson_0119 (
   field0088 varchar(255) DEFAULT NULL,
   field0095 decimal(20,2) DEFAULT NULL,
   field0098 varchar(255) DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -358,6 +364,7 @@ CREATE TABLE formson_0115_history(
   sort int DEFAULT NULL,
   field0077 varchar(255) DEFAULT NULL,
   field0094 decimal(20,2) DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -379,6 +386,7 @@ CREATE TABLE formson_0116_history (
   field0046 varchar(255) DEFAULT NULL,
   field0047 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -396,6 +404,7 @@ CREATE TABLE formson_0117_history (
   field0049 bigint DEFAULT NULL,
   field0050 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -416,6 +425,7 @@ CREATE TABLE formson_0118_history (
   field0055 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
   field0089 text,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -440,6 +450,7 @@ CREATE TABLE formson_0119_history (
   field0088 varchar(255) DEFAULT NULL,
   field0095 decimal(20,2) DEFAULT NULL,
   field0098 varchar(255) DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -464,6 +475,7 @@ CREATE TABLE formson_0115_log(
   sort int DEFAULT NULL,
   field0077 varchar(255) DEFAULT NULL,
   field0094 decimal(20,2) DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   ts timestamp with time zone DEFAULT NULL,
   dob date,
   PRIMARY KEY (id)
@@ -487,6 +499,7 @@ CREATE TABLE formson_0116_log(
   field0046 varchar(255) DEFAULT NULL,
   field0047 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   ts timestamp with time zone DEFAULT NULL,
   dob date,
   PRIMARY KEY (id)
@@ -506,6 +519,7 @@ CREATE TABLE formson_0117_log(
   field0049 bigint DEFAULT NULL,
   field0050 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   ts timestamp with time zone DEFAULT NULL,
   dob date,
   PRIMARY KEY (id)
@@ -528,6 +542,7 @@ CREATE TABLE formson_0118_log(
   field0055 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
   field0089 text,
+  ratify bigint DEFAULT NULL,
   ts timestamp with time zone DEFAULT NULL,
   dob date,
   PRIMARY KEY (id)
@@ -554,6 +569,7 @@ CREATE TABLE formson_0119_log(
   field0088 varchar(255) DEFAULT NULL,
   field0095 decimal(20,2) DEFAULT NULL,
   field0098 varchar(255) DEFAULT NULL,
+  ratify bigint DEFAULT NULL,
   ts timestamp with time zone DEFAULT NULL,
   dob date,
   PRIMARY KEY (id)

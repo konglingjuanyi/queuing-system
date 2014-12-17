@@ -23,11 +23,6 @@
                         class="btn btn-minier btn-primary">
                     撤销
                 </button>
-                <button id="apply_del"
-                        style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
-                        class="btn btn-minier btn-primary">
-                    删除
-                </button>
             </div>
         </div>
         <div class="col-xs-7">
@@ -111,7 +106,7 @@
         showApplyTodoInfo("oa/todo", "apply_todo", "todo-apply-details-list", "审批过程中");
     });
     function showTime() {
-        WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+        WdatePicker({dateFmt: 'yyyy-MM-dd'});
     }
 
     //显示表格数据
@@ -123,7 +118,7 @@
 
         var aoColumns = [
             {
-                "sTitle": '<lable><input id="current-approve-table-select-all" ' +
+                "sTitle": '<lable><input id="current-checkbox-select-all" ' +
                 'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
                 "bSortable": false, "sClass": "center"
             }, {
@@ -244,12 +239,6 @@
                 }).on("dblclick", function (e) {
                     e.preventDefault();
                 });
-                $("#apply_del").unbind("click");
-                $("#apply_del").on("click", function (e) {
-                    applyBackorDel(oTable, 2);
-                }).on("dblclick", function (e) {
-                    e.preventDefault();
-                });
 
                 oTable.$('tr.row_selected').removeClass('row_selected');
                 oTable.$("tr").unbind('click');
@@ -268,8 +257,8 @@
                 });
             },
             fnInitComplete: function () {
-                $('#current-approve-table-select-all').prop('checked', false);
-                $('#current-approve-table-select-all').attr('checked', false);
+                $('#current-checkbox-select-all').prop('checked', false);
+                $('#current-checkbox-select-all').attr('checked', false);
                 toggleCheck(oTable);
             }
         })
@@ -280,7 +269,6 @@
         var needData = data.tableInfos;
         var d_len = needData.length;
         for (var i = 0; i < d_len; i++) {
-            console.log(needData[i]);
             var money = parseFloat(needData[i][5]);
             money /= 100;
             var map = $.parseStr("<a href='javascript:void(0);' " +
@@ -291,21 +279,15 @@
             'onclick="sendEmailToCandidate(\'' + needData[i][0] + '\')" class="green"><i class="icon-user">催办</i></a>';
             aaData.push([checkbox, needData[i][0], needData[i][1],
                 needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map, push]);
-            console.log(aaData);
         }
         return aaData;
     }
 
 
     function applyBackorDel(oTable, num) {
-        var operStr = "退回";
+        var operStr = "cancel";
         var msg = "报销撤销以后将存为草稿,是否撤销?";
         var title = "撤销操作";
-        if(num == 2) {
-            operStr = "删除";
-            msg = "该操作不能恢复,是否进行删除操作?";
-            title = "删除操作";
-        }
         var formIds = "";
         $("input:checked", oTable.fnGetNodes()).each(function () {
             var row = $(this).parent().parent().parent();
@@ -315,7 +297,7 @@
         });
         if (formIds.length < 1) {
             showResultDialog("apply-result-dialog", operStr, 'icon-lightbulb',
-                    generateNoticeMsg("请选择要" + operStr + "的条目!"), 300);
+                    generateNoticeMsg("请选择要撤销的条目!"), 300);
             return;
         }
         try {
@@ -339,6 +321,7 @@
                         "class": "btn btn-primary btn-xs",
                         click: function (e) {
                             applyBackorDeltoDB(formIds, operStr);
+                            $(this).dialog("close");
                         }
                     },
                     {
@@ -358,7 +341,8 @@
 
     }
 
-    function applyBackorDeltoDB(formIds, action){
+    function applyBackorDeltoDB(formIds, action) {
+        var id = "apply-result-dialog";
         var params = {};
         var vars = {};
         vars["formIds"] = formIds;
@@ -373,16 +357,16 @@
                 var title_html_str = '';
                 try {
                     if (resp.errorCode == 0) {
-                        title_html_str = '<div class="dialog_title"><li class="icon-info-sign"></li> 审批' + action + '</div>';
-                        var succeed_html = '<b><li class="icon-check"></li> ' + action + '成功</b><br/>';
-                        $("#apply-result-dialog").append(generateNoticeMsg(succeed_html));
+                        title_html_str = '<div class="dialog_title"><li class="icon-info-sign"></li> 审批撤销</div>';
+                        var succeed_html = '<b><li class="icon-check"></li> 撤销成功</b><br/>';
+                        $("#" + id).append(generateNoticeMsg(succeed_html));
                     } else {
-                        title_html_str = '<div class="dialog_title"><li class="icon-exclamation-sign"></li>审批' + action + '</div>';
-                        $("#apply-result-dialog").append(generateNoticeMsg(resp.errorMessage));
+                        title_html_str = '<div class="dialog_title"><li class="icon-exclamation-sign"></li>审批撤销</div>';
+                        $("#" + id).append(generateNoticeMsg(resp.errorMessage));
                     }
                 } catch (e) {
                 }
-                var dialog = $("#apply-result-dialog").removeClass('hide').dialog({
+                var dialog = $("#" + id).removeClass('hide').dialog({
                     modal: true,
                     width: 400,
                     resizable: true,
@@ -394,14 +378,14 @@
                             text: "确定",
                             "class": "btn btn-primary btn-xs",
                             click: function () {
-                                $("#apply-result-dialog").empty();
-                                $("#apply-result-dialog").dialog('destroy');
+                                $("#" + id).empty();
+                                $("#" + id).dialog('destroy');
                             }
                         }
                     ],
                     close: function () {
-                        $("#apply-result-dialog").empty();
-                        $("#apply-result-dialog").dialog('destroy');
+                        $("#").empty();
+                        $("#" + id).dialog('destroy');
                     }
                 });
                 showApplyTodoInfo("oa/todo", "apply_todo", "todo-apply-details-list", "审批过程中");

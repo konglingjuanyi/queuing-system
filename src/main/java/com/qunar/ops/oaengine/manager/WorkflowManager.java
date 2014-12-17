@@ -211,7 +211,10 @@ public class WorkflowManager {
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
 		
-		HistoricProcessInstanceQuery query = this.historyService.createHistoricProcessInstanceQuery().processDefinitionKey(processKey).involvedUser(userId);
+		HistoricProcessInstanceQuery query = this.historyService
+				.createHistoricProcessInstanceQuery()
+				.processDefinitionKey(processKey)
+				.involvedUser(userId).variableValueNotEquals("owner", userId);
 		if(startTime != null){
 			query.startedAfter(startTime);
 		}
@@ -319,9 +322,6 @@ public class WorkflowManager {
 	 * @param reason
 	 */
 	public TaskResult cancel(String processKey, String oid, String userId, String reason) throws ActivitiException {
-//		HistoricProcessInstance pi = historyService
-//				.createHistoricProcessInstanceQuery()
-//				.processDefinitionKey(processKey).processInstanceBusinessKey(oid).startedBy(userId).unfinished().singleResult();
 		HistoricProcessInstance pi = historyService
 				.createHistoricProcessInstanceQuery()
 				.processDefinitionKey(processKey).processInstanceBusinessKey(oid).unfinished().singleResult();
@@ -332,6 +332,24 @@ public class WorkflowManager {
 		String owner = (String)pi.getProcessVariables().get("owner");
 		this.runtimeService.deleteProcessInstance(pi.getId(), reason);
 		return new TaskResult(owner, null, null);
+	}
+	
+	/**
+	 * 取消申请
+	 * @param processKey
+	 * @param taskId
+	 * @param userId
+	 * @param reason
+	 */
+	public TaskResult refuse(String processKey, String taskId, String userId, String reason) throws ActivitiException {
+		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
+		if(task == null) {
+			logger.warn("任务没有找到{}", taskId);
+			return null;
+		}
+		String owner = getOwner(task.getProcessInstanceId());
+		this.runtimeService.deleteProcessInstance(task.getProcessInstanceId(), reason);
+		return new TaskResult(owner, task, null);
 	}
 	
 	/**

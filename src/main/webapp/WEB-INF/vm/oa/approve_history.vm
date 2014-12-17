@@ -235,7 +235,7 @@
     }
 
     function showTime() {
-        WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+        WdatePicker({dateFmt: 'yyyy-MM-dd'});
     }
 
     function showApproveHistoryDetailsList(id) {
@@ -244,12 +244,11 @@
             return;
         }
         var params = {
-            "tableMap": {},
-            "flag": "",
             "vars": {
                 formId: id
             }
         };
+        //alert(JSON.stringify(params));
         $.ajax({
             "contentType": "application/json; charset=utf-8",
             "url": "approve_info",
@@ -261,7 +260,7 @@
                         try {
                             var details = resp.data;
                             var html = '';
-                            html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"], true);
+                            //html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"], true);
                             html += __generateDetailHtml('审批历史', 'icon-book', details, true);
                             $("#history-approve-details-list").html(html);
                         } catch (e) {

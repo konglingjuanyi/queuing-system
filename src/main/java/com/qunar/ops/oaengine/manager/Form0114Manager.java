@@ -153,10 +153,14 @@ public class Form0114Manager {
 	 * 
 	 * @param userId
 	 * @param formId
+	 * @throws FormNotFoundException 
 	 */
-	public void deleteFormInfo(String userId, Long formId) {
-		// 移动到历史记录表中
-		copyFormInfoToHistory(formId);
+	public void deleteFormInfo(String userId, Long formId) throws FormNotFoundException {
+		int finishedflag = getFormInfo(formId).getFinishedflag();
+		if(finishedflag != Constants.PROC_GRIFT){
+			// 移动到历史记录表中
+			copyFormInfoToHistory(formId);
+		}
 
 		// 删除记录
 		_deleteFormInfo(formId);
@@ -286,13 +290,14 @@ public class Form0114Manager {
 	 */
 	public FormInfo getFormInfoHistory(Long formId) throws FormNotFoundException {
 		FormInfo formInfo = new FormInfo();
-		Formmain0114History formmain0114History = formmain0114HistoryMapper
-				.selectByPrimaryKey(formId);
+		Formmain0114HistoryExample e = new Formmain0114HistoryExample();
+		e.createCriteria().andOidEqualTo(""+formId);
+		List<Formmain0114History> list = formmain0114HistoryMapper.selectByExample(e);
 
-		if(formmain0114History == null){
+		if(list.size() == 0){
 			throw new FormNotFoundException(String.format("通过formId:%s，找到%s个form", formId, 0), Form0114Manager.class);
 		}
-		
+		Formmain0114History formmain0114History = list.get(0);
 		BeanUtils.copyProperties(formmain0114History, formInfo);
 
 		Map<String, Object> formson = getFormsonInfoHistory(formId);
@@ -325,7 +330,9 @@ public class Form0114Manager {
 				.selectByExample(example);
 		if(formmain0114s.size() == 0){
 			//查找已完结的历史数据
-			return getFormInfoByInstHistory(proc_inst_id);
+			FormInfo fi = getFormInfoByInstHistory(proc_inst_id);
+			fi.setId(Long.valueOf(fi.getOid()));
+			return fi;
 //			throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114s.size()), Form0114Manager.class);
 		}
 		BeanUtils.copyProperties(formmain0114s.get(0), formInfo);
@@ -359,7 +366,8 @@ public class Form0114Manager {
 		List<Formmain0114History> formmain0114Historys = formmain0114HistoryMapper
 				.selectByExample(example);
 		if(formmain0114Historys.size() == 0){
-			throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114Historys.size()), Form0114Manager.class);
+			return null;
+			//throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114Historys.size()), Form0114Manager.class);
 		}
 		BeanUtils.copyProperties(formmain0114Historys.get(0), formInfo);
 
@@ -404,7 +412,7 @@ public class Form0114Manager {
 
 		example.setOffset((pageNo - 1) * pageSize);
 		example.setLimit(pageSize);
-		example.setOrderByClause("start_date desc");
+		example.setOrderByClause("field0005 desc");
 		List<Formmain0114> formmain0114s = formmain0114Mapper.selectByExample(example);
 		FormInfo formInfo;
 		for(int i = 0; i < formmain0114s.size(); i++){
@@ -604,6 +612,77 @@ public class Form0114Manager {
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		return null;
 	}
+	
+	public void cloneFormInfo(Long formId) {
+		// 主表的数据到历史
+		Formmain0114 formmain0114 = formmain0114Mapper.selectByPrimaryKey(formId);
+		Formmain0114 formmain0114clone = new Formmain0114();
+		BeanUtils.copyProperties(formmain0114, formmain0114clone);
+		formmain0114clone.setFinishedflag(Constants.PROC_GRIFT);
+		formmain0114Mapper.insert(formmain0114clone);
+
+		// 子表数据到历史表中
+		cloneFormsInfo(formId);
+	}
+
+	private void cloneFormsInfo(Long formId) {
+		// 子表中的数据到历史
+		Formson0115Example example115 = new Formson0115Example();
+		example115.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0115> formson0115s = formson0115Mapper
+				.selectByExample(example115);
+		Formson0115 formson0115;
+		for (int i = 0; i < formson0115s.size(); i++) {
+			formson0115 = new Formson0115();
+			BeanUtils.copyProperties(formson0115s.get(i), formson0115);
+			formson0115Mapper.insert(formson0115);
+		}
+
+		Formson0116Example example116 = new Formson0116Example();
+		example116.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0116> formson0116s = formson0116Mapper
+				.selectByExample(example116);
+		Formson0116 formson0116;
+		for (int i = 0; i < formson0116s.size(); i++) {
+			formson0116 = new Formson0116();
+			BeanUtils.copyProperties(formson0116s.get(i), formson0116);
+			formson0116Mapper.insert(formson0116);
+		}
+
+		Formson0117Example example117 = new Formson0117Example();
+		example117.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0117> formson0117s = formson0117Mapper
+				.selectByExample(example117);
+		Formson0117 formson0117;
+		for (int i = 0; i < formson0117s.size(); i++) {
+			formson0117 = new Formson0117();
+			BeanUtils.copyProperties(formson0117s.get(i), formson0117);
+			formson0117Mapper.insert(formson0117);
+		}
+
+		Formson0118Example example118 = new Formson0118Example();
+		example118.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0118> formson0118s = formson0118Mapper
+				.selectByExample(example118);
+		Formson0118 formson0118;
+		for (int i = 0; i < formson0118s.size(); i++) {
+			formson0118 = new Formson0118();
+			BeanUtils.copyProperties(formson0118s.get(i), formson0118);
+			formson0118Mapper.insert(formson0118);
+		}
+
+		Formson0119Example example119 = new Formson0119Example();
+		example119.createCriteria().andFormmain0114idEqualTo(formId);
+		List<Formson0119> formson0119s = formson0119Mapper
+				.selectByExample(example119);
+		Formson0119 formson0119;
+		for (int i = 0; i < formson0119s.size(); i++) {
+			formson0119 = new Formson0119();
+			BeanUtils.copyProperties(formson0119s.get(i), formson0119);
+			formson0119Mapper.insert(formson0119);
+		}
+	}
+
 	
 	// --------------------------日志相关----------------------------
 	/**
@@ -1023,6 +1102,7 @@ public class Form0114Manager {
 				.selectByPrimaryKey(formId);
 		Formmain0114History formmain0114History = new Formmain0114History();
 		BeanUtils.copyProperties(formmain0114, formmain0114History);
+		formmain0114History.setOid(""+formId);
 		formmain0114HistoryMapper.insert(formmain0114History);
 
 		// 子表数据到历史表中
@@ -1087,7 +1167,7 @@ public class Form0114Manager {
 		}
 	}
 
-	private void _deleteFormInfo(Long formId) {
+	public void _deleteFormInfo(Long formId) {
 		// 删除主表的记录
 		formmain0114Mapper.deleteByPrimaryKey(formId);
 

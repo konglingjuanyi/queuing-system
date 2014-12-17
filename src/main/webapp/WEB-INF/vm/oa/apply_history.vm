@@ -92,7 +92,7 @@
         showApplyHistoryInfo("oa/history", "apply_history", "history-apply-details-list", "审批完成", 2);
     });
     function showTime() {
-        WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+        WdatePicker({dateFmt: 'yyyy-MM-dd'});
     }
 
     //显示表格数据
@@ -137,10 +137,6 @@
         }, {
             "sTitle": "报销详情",
             "sWidth": 150,
-            "sClass": "center"
-        }, {
-            "sTitle": "动作",
-            "sWidth": 200,
             "sClass": "center"
         }];
         var aoColumns = aoColumns2;
@@ -256,7 +252,7 @@
             var push = '<a href="javascript:void(0);" role="button" ' +
                     'onclick="restartForm(\'' + needData[i][0] + '\')" class="green"><i class="icon-user">重新发起</i></a>';
             aaData.push([needData[i][0], needData[i][1],
-                needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map, push]);
+                needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map]);
         }
         return aaData;
     }

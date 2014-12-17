@@ -27,7 +27,7 @@ public class ModelUtils {
 		}
 	}
 	
-	public static <T> List<Map<String, Object>> compareModel(Class c, T oldObject, T newObject) throws CompareModelException {
+	public static <T> List<Map<String, Object>> compareModel(Class c, T newObject, T oldObject) throws CompareModelException {
 		List<Map<String, Object>> res = new ArrayList<Map<String,Object>>();
 		try{
 			Map<String, Object> map;
@@ -35,6 +35,9 @@ public class ModelUtils {
 			for(int i = 0; i < fields.length; i++){
 				fields[i].setAccessible(true);
 				if(fields[i].get(oldObject) == null && fields[i].get(newObject) == null){
+					continue;
+				}else if(fields[i].get(oldObject) != null && fields[i].get(newObject) == null){
+					fields[i].set(newObject, fields[i].get(oldObject));
 					continue;
 				}else if(fields[i].get(oldObject) != null && fields[i].get(newObject) != null){
 					if(!fields[i].get(oldObject).equals(fields[i].get(newObject))){
