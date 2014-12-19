@@ -1,0 +1,84 @@
+#set($layout = "layout/layout.vm")
+<h3 class="header smaller lighter blue">组定义列表</h3>
+<table width="100%" class="table table-striped table-bordered table-hover">
+		<thead>
+			<tr>
+				<th style="width:20%">名称</th>
+				<th style="width:10%">Key</th>
+				<th style="width:60%">成员</th>
+			</tr>
+		</thead>
+		<tbody>
+			#foreach($info in $list)
+				<tr>
+					<td>$info.groupName</td>
+					<td>$info.groupKey</td>
+					<td>
+						#foreach($member in $info.members)
+							$member.memberUserId <a href='javascript:onDelete("$info.groupKey", "$member.memberUserId")'>[删除]</a><br>
+						#end
+						<hr/>
+						<input type='text' value='' id='$info.groupKey'><button onclick="addMember('$info.groupKey')">新增</button>
+					</td>
+				</tr>
+			#end
+		</tbody>
+	</table>
+<script src="static/My97DatePicker/WdatePicker.js"></script>
+<script language=JavaScript>
+function onDelete(groupKey, memberId){
+	if (confirm("确认删除！")) {
+		var params = {
+            "vars": {
+                "groupKey": groupKey,
+                "memberId": memberId
+            }
+        };
+		$.ajax({
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            url: "admin/group/remove_member",
+            type: "POST",
+            data: JSON.stringify(params),
+            success: function (resp) {
+                if (resp.errorCode == 0) {
+                	alert("删除成功");
+                	location.reload(true);
+                } else {
+                    alert(resp.errorMessage);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('网络错误，请刷新后重试!');
+            }
+        });
+	}
+}
+function addMember(groupKey){
+		memberId = $("#"+groupKey).val();
+		var params = {
+            "vars": {
+                "groupKey": groupKey,
+                "memberId": memberId
+            }
+        };
+		$.ajax({
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            url: "admin/group/add_member",
+            type: "POST",
+            data: JSON.stringify(params),
+            success: function (resp) {
+                if (resp.errorCode == 0) {
+                	alert("添加成功");
+                	location.reload(true);
+                } else {
+                    alert(resp.errorMessage);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert('网络错误，请刷新后重试!');
+            }
+        });
+}
+</script>

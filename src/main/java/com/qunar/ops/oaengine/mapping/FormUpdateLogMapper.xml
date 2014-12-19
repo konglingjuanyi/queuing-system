@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.ops.oaengine.dao.FormUpdateLogMapper" >
+  <resultMap id="BaseResultMap" type="com.qunar.ops.oaengine.model.FormUpdateLog" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="form_id" property="formId" jdbcType="BIGINT" />
+    <result column="form_item" property="formItem" jdbcType="VARCHAR" />
+    <result column="new_value" property="newValue" jdbcType="VARCHAR" />
+    <result column="old_value" property="oldValue" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="ts" property="ts" jdbcType="TIMESTAMP" />
+    <result column="dob" property="dob" jdbcType="DATE" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, form_id, form_item, new_value, old_value, create_user, ts, dob
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.oaengine.model.FormUpdateLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from form_update_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit >= 0" >
+      limit ${limit} offset ${offset}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from form_update_log
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from form_update_log
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qunar.ops.oaengine.model.FormUpdateLogExample" >
+    delete from form_update_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qunar.ops.oaengine.model.FormUpdateLog" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      select currval('form_update_log_id_seq')
+    </selectKey>
+    insert into form_update_log (form_id, form_item, new_value, 
+      old_value, create_user, ts, 
+      dob)
+    values (#{formId,jdbcType=BIGINT}, #{formItem,jdbcType=VARCHAR}, #{newValue,jdbcType=VARCHAR}, 
+      #{oldValue,jdbcType=VARCHAR}, #{createUser,jdbcType=VARCHAR}, #{ts,jdbcType=TIMESTAMP}, 
+      #{dob,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.FormUpdateLog" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      select currval('form_update_log_id_seq')
+    </selectKey>
+    insert into form_update_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="formId != null" >
+        form_id,
+      </if>
+      <if test="formItem != null" >
+        form_item,
+      </if>
+      <if test="newValue != null" >
+        new_value,
+      </if>
+      <if test="oldValue != null" >
+        old_value,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="ts != null" >
+        ts,
+      </if>
+      <if test="dob != null" >
+        dob,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="formId != null" >
+        #{formId,jdbcType=BIGINT},
+      </if>
+      <if test="formItem != null" >
+        #{formItem,jdbcType=VARCHAR},
+      </if>
+      <if test="newValue != null" >
+        #{newValue,jdbcType=VARCHAR},
+      </if>
+      <if test="oldValue != null" >
+        #{oldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="ts != null" >
+        #{ts,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dob != null" >
+        #{dob,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qunar.ops.oaengine.model.FormUpdateLogExample" resultType="java.lang.Integer" >
+    select count(*) from form_update_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update form_update_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.formId != null" >
+        form_id = #{record.formId,jdbcType=BIGINT},
+      </if>
+      <if test="record.formItem != null" >
+        form_item = #{record.formItem,jdbcType=VARCHAR},
+      </if>
+      <if test="record.newValue != null" >
+        new_value = #{record.newValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oldValue != null" >
+        old_value = #{record.oldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ts != null" >
+        ts = #{record.ts,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.dob != null" >
+        dob = #{record.dob,jdbcType=DATE},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update form_update_log
+    set id = #{record.id,jdbcType=BIGINT},
+      form_id = #{record.formId,jdbcType=BIGINT},
+      form_item = #{record.formItem,jdbcType=VARCHAR},
+      new_value = #{record.newValue,jdbcType=VARCHAR},
+      old_value = #{record.oldValue,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      ts = #{record.ts,jdbcType=TIMESTAMP},
+      dob = #{record.dob,jdbcType=DATE}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.oaengine.model.FormUpdateLog" >
+    update form_update_log
+    <set >
+      <if test="formId != null" >
+        form_id = #{formId,jdbcType=BIGINT},
+      </if>
+      <if test="formItem != null" >
+        form_item = #{formItem,jdbcType=VARCHAR},
+      </if>
+      <if test="newValue != null" >
+        new_value = #{newValue,jdbcType=VARCHAR},
+      </if>
+      <if test="oldValue != null" >
+        old_value = #{oldValue,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="ts != null" >
+        ts = #{ts,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dob != null" >
+        dob = #{dob,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.oaengine.model.FormUpdateLog" >
+    update form_update_log
+    set form_id = #{formId,jdbcType=BIGINT},
+      form_item = #{formItem,jdbcType=VARCHAR},
+      new_value = #{newValue,jdbcType=VARCHAR},
+      old_value = #{oldValue,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      ts = #{ts,jdbcType=TIMESTAMP},
+      dob = #{dob,jdbcType=DATE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
