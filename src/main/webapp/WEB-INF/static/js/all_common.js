@@ -121,11 +121,11 @@ function fixedTableInfo(tableMap, vars) {
 
 //  每个表的第一行中文字符。
 function tableZeroNameDic() {
-    var table1Name = ["日期", "起点", "终点", "具体时间", "用途", "同行人(姓名)", "工时", "金额", "备注"];
-    var table2Name = ["日期", "就餐地点", "同行人（姓名）", "就餐人数", "实报金额", "人均餐费", "发票金额", "工时", "备注"];
-    var table3Name = ["日期", "地点", "业务目的", "客户单位", "客户姓名", "参加人数", "金额"];
-    var table4Name = ["日期", "地点", "同行人（姓名）", "活动目的", "金额", "备注"];
-    var table5Name = ["费用项目", "金额", "备注"];
+    var table1Name = ["日期", "起点", "终点", "具体时间", "用途", "同行人(姓名)", "工时", "金额", "核定金额", "备注"];
+    var table2Name = ["日期", "就餐地点", "同行人（姓名）", "就餐人数", "实报金额", "人均餐费", "发票金额", "工时", "核定金额", "备注"];
+    var table3Name = ["日期", "地点", "业务目的", "客户单位", "客户姓名", "参加人数", "金额", "核定金额", "备注"];
+    var table4Name = ["日期", "地点", "同行人（姓名）", "活动目的", "金额", "核定金额", "备注"];
+    var table5Name = ["费用项目", "金额", "核定金额", "备注"];
     var tableNames = [table1Name, table2Name, table3Name, table4Name, table5Name];
     return tableNames;
 }
@@ -186,6 +186,10 @@ function table6BodyForm(vars) {
     form += '<td>';
     form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="sum6">', vars["sum6"]);
     form += '</td>';
+    form += '<td>核定金额</td>';
+    form += '<td>';
+    form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="sum6">', vars["sum6"]);
+    form += '</td>';
     form += '<td>备注(话费实际发生月份)</td>';
     form += '<td>';
     form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="remark">', vars["remark"]);
@@ -201,10 +205,10 @@ function table0BodyForm(table0, vars) {
     var list1 = ["申请人", "人员编号", "申请日期"];
     var list2 = ["一级部门", "申请部门", "部门编号"];
     var list3 = ["是否直接向VP汇报", "银行卡", "开户银行"];
-    var list4 = ["是否有借款", "借款单流水号", "借款金额"];
-    var list = [list1, list2, list3, list4];
+    //var list4 = ["是否有借款", "借款单流水号", "借款金额"];
+    var list = [list1, list2, list3];
     var k = 0;
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < list.length; i++) {
         form += '<tr>';
         for (var j = 0; j < 3; j++) {
             form += $.parseStr('<td>%s</td>', list[i][j]);
@@ -259,6 +263,8 @@ function tableApproveBodyForm(table7) {
 function tableSumForm(num, vars) {
     var sumOne = "sum" + num;
     var sum = vars[sumOne];
+    var ratifyOne = "ratify" + num;
+    var ratify = vars[ratifyOne];
     var form = '';
     form += '<table style="border-collapse:collapse;width: 1067px;" border="1">';
     form += '<tr>';
@@ -266,8 +272,14 @@ function tableSumForm(num, vars) {
     form += '<td>';
     form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',
         sum, sumOne);
-    form += '</td>';
+    form += '</td></tr>';
     form += '<tr>';
+	form += '<tr>';
+	form += '<td>核定金额总计</td>';
+	form += '<td>';
+	form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',
+	    		ratify, ratifyOne);
+	form += '</td></tr>';
     form += '</table>';
     return form;
 }

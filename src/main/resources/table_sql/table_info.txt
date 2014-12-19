@@ -81,7 +81,8 @@ field0092		报销审核组日期		date DEFAULT NULL
 field0093		地址			varchar(255) DEFAULT NULL
 field0096		是否直接向VP汇报	varchar(255) DEFAULT NULL
 field0097		开户银行		varchar(255) DEFAULT NULL
-
+field0099		通信费财务核实金额		bigint DEFAULT NULL
+field0100		五级部门		varchar(255) DEFAULT NULL
 
 ----------------------日常费用报销子表---------------------------
 ----------------------加班餐费---------------------------
@@ -111,6 +112,7 @@ field0046	招待费参加人数	varchar(255)	DEFAULT	NULL
 field0047	客户姓名	varchar(255)	DEFAULT	NULL
 sort	排序	int	DEFAULT	NULL
 ratify		核定金额	bigint	DEFAULT	NULL
+memo	招待费备注	text
 
 ----------------------其他费用---------------------------
 id	主键唯一ID	bigint		
@@ -172,3 +174,4 @@ next_candidate	下一节点审批候选人	text
 ts	审批时间	timestamp	with	time	zone
 dob	审批日期	date			
 
+max:99

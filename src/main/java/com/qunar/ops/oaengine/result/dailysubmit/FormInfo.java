@@ -137,7 +137,25 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	// 开户银行
 	// private String bankName;
 	private String taskId;
+	private String taskKey;
 	private Date dealDate;
+	private boolean isRatify;
+	
+	public void setCommunicationNotifyAmount(Long v){
+		super.setField0099(v);
+	}
+	
+	public Long getCommunicationNotifyAmount(){
+		return super.getField0099();
+	}
+	
+	public void setFivethDep(String v){
+		super.setField0100(v);
+	}
+	
+	public String getFivethDep(){
+		return super.getField0100();
+	}
 
 	public Date getDealDate() {
 		return dealDate;
@@ -153,6 +171,22 @@ public class FormInfo extends Formmain0114 implements Serializable {
 
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
+	}
+	
+	public String getTaskKey() {
+		return taskKey;
+	}
+
+	public void setTaskKey(String taskKey) {
+		this.taskKey = taskKey;
+	}
+	
+	public boolean isRatify(){
+		return this.isRatify;
+	}
+	
+	public void setIsRatify(boolean ratify){
+		this.isRatify = ratify;
 	}
 	// 加班餐费
 	private OvertimeMealsInfo[] overtimeMealsInfo;
@@ -708,5 +742,13 @@ public class FormInfo extends Formmain0114 implements Serializable {
 
 	public void setBankName(String bankName) {
 		super.setField0097(bankName);
+	}
+	
+	public Long getRatifyAmount(){
+		return super.getField0069();
+	}
+	
+	public void setRatifyAmount(Long ratifyAmount){
+		super.setField0069(ratifyAmount);
 	}
 }

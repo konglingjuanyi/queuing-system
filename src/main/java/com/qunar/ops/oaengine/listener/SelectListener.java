@@ -34,7 +34,7 @@ public class SelectListener implements TaskListener  {
 	private GroupManager groupManager;
 
 	@Override
-	public void notify(DelegateTask delegateTask) {
+	public void notify(DelegateTask delegateTask) throws ActivitiException{
 		List<String> candidates = new ArrayList<String>();
 		//候选人优先级：手工指定->流程设定->根据规则从骆驼帮获取
 		Map<String, Object> vars = delegateTask.getExecution().getVariables();
@@ -51,7 +51,9 @@ public class SelectListener implements TaskListener  {
 			}
 		}else if(!delegateTask.getCandidates().isEmpty()){//流程指定
 			for(IdentityLink _candidate : delegateTask.getCandidates()){
-				candidates.add(_candidate.getUserId());
+				if(_candidate.getUserId() != null){
+					candidates.add(_candidate.getUserId());
+				}
 				String groupId = _candidate.getGroupId();
 				if(groupId != null && groupId.length() > 0){
 					for(GroupInfo info : this.groupManager.getGroup(groupId)){

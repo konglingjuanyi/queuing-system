@@ -295,11 +295,12 @@ public interface IOAEngineService {
 	 * @param taskId
 	 * @throws InvocationTargetException 
 	 * @throws IllegalAccessException 
+	 * @throws CompareModelException 
 	 * @throws 工单没有找到；任务没有找到；系统错误
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public void pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException;
+	public void pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException;
 	
 	/**
 	 * 通过 - 批量操作

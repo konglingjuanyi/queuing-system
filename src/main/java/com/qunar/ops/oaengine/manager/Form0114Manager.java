@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -77,6 +79,8 @@ import com.qunar.ops.oaengine.util.ModelUtils;
 
 @Component
 public class Form0114Manager {
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public static final int OVERTIMEMEALS_INFO = 115;
 	public static final int HOSPITALITY_INFO = 116;
@@ -331,6 +335,7 @@ public class Form0114Manager {
 		if(formmain0114s.size() == 0){
 			//查找已完结的历史数据
 			FormInfo fi = getFormInfoByInstHistory(proc_inst_id);
+			if(fi == null) return null;
 			fi.setId(Long.valueOf(fi.getOid()));
 			return fi;
 //			throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114s.size()), Form0114Manager.class);
@@ -682,6 +687,26 @@ public class Form0114Manager {
 			formson0119Mapper.insert(formson0119);
 		}
 	}
+	
+	/**
+	 * 记录关键操作人，时间
+	 * @param userId
+	 * @param taskKey
+	 * @param formId
+	 * @throws FormNotFoundException 
+	 * @throws CompareModelException 
+	 */
+	public void recordKeyOperation(String userId, String type, Long formId) throws FormNotFoundException, CompareModelException{
+		FormInfo info = this.getFormInfo(formId);
+		if("check".equals(type)){
+			info.setFinancialSign(userId);
+			info.setFinancialDate(new Date());
+		}else if("cashier".equals(type)){
+			info.setCashierSign(userId);
+			info.setCashierDate(new Date());
+		}
+		this.updateFormInfo(userId, formId, info);
+	}
 
 	
 	// --------------------------日志相关----------------------------
@@ -739,7 +764,7 @@ public class Form0114Manager {
 				// 插入新数据
 				formson0115Mapper.insert(overtimeMealsInfos[i]);
 				// 同时复制到日志表中
-				addFormsonLog(overtimeMealsInfosOld[i], OVERTIMEMEALS_INFO);
+				addFormsonLog(overtimeMealsInfos[i], OVERTIMEMEALS_INFO);
 			}
 		}
 		for (int i = 0; i < overtimeMealsInfosOld.length; i++) {
@@ -783,7 +808,7 @@ public class Form0114Manager {
 				// 插入新数据
 				formson0116Mapper.insert(hospitalityInfos[i]);
 				// 同时复制到日志表中
-				addFormsonLog(hospitalityInfosOld[i], HOSPITALITY_INFO);
+				addFormsonLog(hospitalityInfos[i], HOSPITALITY_INFO);
 			}
 		}
 		for (int i = 0; i < hospitalityInfosOld.length; i++) {
@@ -797,7 +822,7 @@ public class Form0114Manager {
 				// 更新数据
 				// 判断是否有修改
 				List<Map<String, Object>> res = ModelUtils.compareModel(
-						OvertimeMealsInfo.class,
+						HospitalityInfo.class,
 						idsNew.get(hospitalityInfosOld[i].getId()),
 						hospitalityInfosOld[i]);
 				if (res.size() > 0) {
@@ -827,7 +852,7 @@ public class Form0114Manager {
 				// 插入新数据
 				formson0117Mapper.insert(otherCostsInfos[i]);
 				// 同时复制到日志表中
-				addFormsonLog(otherCostsInfosOld[i], OTHERCOSTS_INFO);
+				addFormsonLog(otherCostsInfos[i], OTHERCOSTS_INFO);
 			}
 		}
 		for (int i = 0; i < otherCostsInfosOld.length; i++) {
@@ -841,7 +866,7 @@ public class Form0114Manager {
 				// 更新数据
 				// 判断是否有修改
 				List<Map<String, Object>> res = ModelUtils.compareModel(
-						OvertimeMealsInfo.class,
+						OtherCostsInfo.class,
 						idsNew.get(otherCostsInfosOld[i].getId()),
 						otherCostsInfosOld[i]);
 				if (res.size() > 0) {
@@ -873,7 +898,7 @@ public class Form0114Manager {
 				// 插入新数据
 				formson0118Mapper.insert(employeeRelationsFeesInfos[i]);
 				// 同时复制到日志表中
-				addFormsonLog(employeeRelationsFeesInfosOld[i],
+				addFormsonLog(employeeRelationsFeesInfos[i],
 						EMPLOYEERELATIONSFEES_INFO);
 			}
 		}
@@ -890,7 +915,7 @@ public class Form0114Manager {
 				// 更新数据
 				// 判断是否有修改
 				List<Map<String, Object>> res = ModelUtils.compareModel(
-						OvertimeMealsInfo.class,
+						EmployeeRelationsFeesInfo.class,
 						idsNew.get(employeeRelationsFeesInfosOld[i].getId()),
 						employeeRelationsFeesInfosOld[i]);
 				if (res.size() > 0) {
@@ -921,7 +946,7 @@ public class Form0114Manager {
 				// 插入新数据
 				formson0119Mapper.insert(taxiFaresInfos[i]);
 				// 同时复制到日志表中
-				addFormsonLog(taxiFaresInfosOld[i], TAXIFARES_INFO);
+				addFormsonLog(taxiFaresInfos[i], TAXIFARES_INFO);
 			}
 		}
 		for (int i = 0; i < taxiFaresInfosOld.length; i++) {
@@ -935,7 +960,7 @@ public class Form0114Manager {
 				// 更新数据
 				// 判断是否有修改
 				List<Map<String, Object>> res = ModelUtils.compareModel(
-						OvertimeMealsInfo.class,
+						TaxiFaresInfo.class,
 						idsNew.get(taxiFaresInfosOld[i].getId()),
 						taxiFaresInfosOld[i]);
 				if (res.size() > 0) {

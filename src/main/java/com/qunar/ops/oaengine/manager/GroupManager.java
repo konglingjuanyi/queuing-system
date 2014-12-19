@@ -82,6 +82,20 @@ public class GroupManager {
 		return infos;
 	}
 	
+	public boolean inGroups(String[] groupKeys, String userId){
+		GroupMemberExample ge = new GroupMemberExample();
+		ge.createCriteria().andMemberUserIdEqualTo(userId);
+		List<GroupMember> list = this.groupMemberMapper.selectByExample(ge);
+		for(GroupMember member : list){
+			for(int i=0; i<groupKeys.length; i++){
+				if(groupKeys[i].equals(member.getGroupKey())){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public class GroupInfo extends Group{
 		private List<GroupMember> members;
 		

@@ -187,7 +187,6 @@
                 if (approveUser != '') {
                     vars["approveUser"] = approveUser;
                 }
-//                vars["userId"] = "bin.sun";
                 var params = {};
                 params["vars"] = vars;
                 $.ajax({
@@ -384,6 +383,10 @@
                                             showCommonNoticeDialog('拒绝理由错误', 'icon-warning-sign',
                                                     generateNoticeMsg('拒绝理由不能超过100个字符'), 300);
                                             return;
+                                        } else if (postData[i]['value'].length == 0) {
+                                            showCommonNoticeDialog('拒绝理由错误', 'icon-warning-sign',
+                                                    generateNoticeMsg('拒绝理由不能为空'), 300);
+                                            return;
                                         } else {
                                             msg = postData[i]['value'];
                                             break;
@@ -451,6 +454,10 @@
                                             showCommonNoticeDialog('退回理由错误', 'icon-warning-sign',
                                                     generateNoticeMsg('退回理由不能超过100个字符'), 300);
                                             return;
+                                        } else if (postData[i]['value'].length == 100) {
+                                            showCommonNoticeDialog('退回理由错误', 'icon-warning-sign',
+                                                    generateNoticeMsg('退回理由不能为空'), 300);
+                                            return;
                                         } else {
                                             msg = postData[i]['value'];
                                             break;
@@ -512,12 +519,21 @@
 
                                 var postData = this_form.serializeArray();
                                 var msg = "";
+                                if( $("#rtx_id").val() == ''){
+                                	showCommonNoticeDialog('加签错误', 'icon-warning-sign',
+                                                    generateNoticeMsg('加签对象不能为空'), 300);
+                                    return;
+                                }
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
                                         if (postData[i]['value'].length >= 100) {
                                             enableAccountApplicationDialogButton(true);
                                             showCommonNoticeDialog('加签错误', 'icon-warning-sign',
                                                     generateNoticeMsg('加签理由不能超过100个字符'), 300);
+                                            return;
+                                        } else if (postData[i]['value'].length == 0) {
+                                            showCommonNoticeDialog('加签错误', 'icon-warning-sign',
+                                                    generateNoticeMsg('加签理由不能为空'), 300);
                                             return;
                                         } else {
                                             msg = postData[i]['value'];
@@ -576,9 +592,8 @@
         var vars = {};
         vars["formIds"] = formIds;
         vars["taskIds"] = taskIds;
-        vars["memo"] = msg
+        vars["memo"] = msg;
         vars["rtx_id"] = rtx_id;
-        vars["userId"] = "bin.sun";
         params["vars"] = vars;
         $.ajax({
             contentType: "application/json; charset=utf-8",
@@ -717,8 +732,15 @@
         for (var i = 0; i < d_len; i++) {
             var money = parseFloat(needData[i][4]);
             money /= 100;
-            var map = $.parseStr("<a href='javascript:void(0);' " +
-            "onclick='showEditDialog(%s);'><i class='icon-link'></i></a>", needData[i][0]);
+            var map = "";
+            if(needData[i][6] == 'false'){
+            	map = $.parseStr("<a href='javascript:void(0);' " +
+            	"onclick='showEditDialog(%s, %s);'><i class='icon-link'></i></a>", needData[i][0]);
+            }
+            if(needData[i][6] == 'true'){
+            	map = $.parseStr("<a href='javascript:void(0);' " +
+            	"onclick='edit(%s, %s);'><i class='icon-link'></i></a>", needData[i][0], needData[i][5]);
+            }
             var checkbox = '<label><input value="'+needData[i][5]+'" type="checkbox" class="ace"> <span class="lbl"></span></label>';
             var need_list = [checkbox, needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map];
             var d_list = [];
@@ -728,6 +750,10 @@
             aaData.push(d_list);
         }
         return aaData;
+    }
+    
+    function edit(formId, taskId) {
+        window.location.href = "oa/apply_ratify.html?formId=" + formId + "&taskId=" + taskId;
     }
 
     function showTime() {

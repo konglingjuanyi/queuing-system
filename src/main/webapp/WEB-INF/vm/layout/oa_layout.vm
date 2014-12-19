@@ -141,6 +141,19 @@
                     <li>
                 </ul>
             </li>
+            <li>
+                <a href="javascript:void(0);">
+                    <span class="menu-text"> 设置 </span>
+                </a>
+                <ul class="submenu" style="display:block">
+                    <li>
+                        <a href="oa/setting/delegation.html">
+                            <i class="icon-double-angle-right"></i>
+                           	设置代理人
+                        </a>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </div>
     <div class="main-content">

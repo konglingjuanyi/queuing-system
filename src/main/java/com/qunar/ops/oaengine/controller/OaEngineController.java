@@ -6,7 +6,10 @@ import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.ManagerFormException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
+import com.qunar.ops.oaengine.manager.DelegationManager;
+import com.qunar.ops.oaengine.manager.GroupManager;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
+import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.*;
 import com.qunar.ops.oaengine.result.dailysubmit.*;
 import com.qunar.ops.oaengine.service.IOAEngineService;
@@ -40,1443 +43,1867 @@ import java.util.*;
 
 @Controller
 public class OaEngineController {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private RuntimeService runtimeService;
-    @Autowired
-    protected TaskService taskService;
-    @Autowired
-    protected HistoryService historyService;
-    @Autowired
-    protected RepositoryService repositoryService;
-    @Autowired
-    protected WorkflowManager manager;
-    @Autowired
-    protected ProcessEngineFactoryBean processEngine;
-    @Autowired
-    private MailSenderService mailSenderService;
-    @Autowired
-    private IOAEngineService ioaEngineService;
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private RuntimeService runtimeService;
+	@Autowired
+	protected TaskService taskService;
+	@Autowired
+	protected HistoryService historyService;
+	@Autowired
+	protected RepositoryService repositoryService;
+	@Autowired
+	protected WorkflowManager manager;
+	@Autowired
+	protected ProcessEngineFactoryBean processEngine;
+	@Autowired
+	private MailSenderService mailSenderService;
+	@Autowired
+	private IOAEngineService ioaEngineService;
+	@Autowired
+	private GroupManager groupManager;
+	@Autowired
+	private DelegationManager delegationManager;
+	
+	private String processKey = "oa_common";
 
-    private String processKey = "oa_common";
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	/**
+	 * 修改登陆的用户名
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/user")
+	@ResponseBody
+	public BaseResult changeRootUser(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		String userId = vars.get("user");
+		request.getSession().setAttribute("USER_ID", userId);
+		return new BaseResult();
+	}
 
-    /**
-     * 修改登陆的用户名
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "oa/user")
-    @ResponseBody
-    public BaseResult changeRootUser(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
-        Map<String, String> vars = commonRequest.getVars();
-        String userId = vars.get("user");
-        request.getSession().setAttribute("USER_ID", userId);
-        return new BaseResult();
-    }
+	@RequestMapping(value = "/oa/test.html")
+	public void index(HttpServletRequest request) {
+		// mailSenderService.sender("nuby.zhang@qunar.com", new
+		// String[]{"nuby.zhang@qunar.com"}, new
+		// String[]{"nuby.zhang@qunar.com"}, "", "");
+		Request req = new Request();
+		req.setAmountMoney(200l);
+		req.setDepartment("技术部");
+		req.setDepartmentII("OPS");
+		req.setOid("001");
+		req.setReport2vp(true);
+		req.setTbMoney(100l);
+		// Object[] startWorkflow = this.manager.startWorkflow(processKey,
+		// "nuby.zhang", req);
+		// ListInfo<TaskInfo> todoList = this.manager.todoList("test", "nuby",
+		// 0, 10);
+		TaskResult pass = this.manager.pass("5913", "nuby.zhang");
+		// this.manager.endorse("5", "nuby", "nuby,abc");
+		// List<TaskInfo> back = this.manager.back("nuby", "50962", "xxx");
+		// this.manager.cancel("test", "001", "nuby.zhang", "reason");
+		System.out.println("====");
+	}
 
-    @RequestMapping(value = "/oa/test.html")
-    public void index(HttpServletRequest request) {
-        // mailSenderService.sender("nuby.zhang@qunar.com", new
-        // String[]{"nuby.zhang@qunar.com"}, new
-        // String[]{"nuby.zhang@qunar.com"}, "", "");
-        Request req = new Request();
-        req.setAmountMoney(200l);
-        req.setDepartment("技术部");
-        req.setDepartmentII("OPS");
-        req.setOid("001");
-        req.setReport2vp(true);
-        req.setTbMoney(100l);
-        // Object[] startWorkflow = this.manager.startWorkflow(processKey,
-        // "nuby.zhang", req);
-        // ListInfo<TaskInfo> todoList = this.manager.todoList("test", "nuby",
-        // 0, 10);
-        TaskResult pass = this.manager.pass("5913", "nuby.zhang");
-        // this.manager.endorse("5", "nuby", "nuby,abc");
-        // List<TaskInfo> back = this.manager.back("nuby", "50962", "xxx");
-        // this.manager.cancel("test", "001", "nuby.zhang", "reason");
-        System.out.println("====");
-    }
+	/**
+	 * login
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/oa/login")
+	public String login(HttpServletRequest request) {
+		HttpClient client = HttpClientBuilder.create().build();
+		String token = request.getParameter("token");
+		HttpGet method = new HttpGet(
+				"http://qsso.corp.qunar.com/api/verifytoken.php?token=" + token);
+		try {
+			HttpResponse response = client.execute(method);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			StringBuffer result = new StringBuffer();
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+			JSONObject parseObject = JSON.parseObject(result.toString());
+			String ret = parseObject.getString("ret");
+			if (ret.equals("true")) {
+				String userId = parseObject.getJSONObject("data").getString(
+						"userId");
+				request.getSession().setAttribute("USER_ID", userId);
+			} else {
+				return "redirect:/oa/index.html";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("sso 验证失败", e);
+		}
+		return "redirect:/oa/apply_todo.html";
+	}
 
-    /**
-     * login
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/oa/login")
-    public String login(HttpServletRequest request) {
-        HttpClient client = HttpClientBuilder.create().build();
-        String token = request.getParameter("token");
-        HttpGet method = new HttpGet(
-                "http://qsso.corp.qunar.com/api/verifytoken.php?token=" + token);
-        try {
-            HttpResponse response = client.execute(method);
-            BufferedReader rd = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent()));
-            StringBuffer result = new StringBuffer();
-            String line = "";
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
-            }
-            JSONObject parseObject = JSON.parseObject(result.toString());
-            String ret = parseObject.getString("ret");
-            if (ret.equals("true")) {
-                String userId = parseObject.getJSONObject("data").getString(
-                        "userId");
-                request.getSession().setAttribute("USER_ID", userId);
-            } else {
-                return "redirect:/oa/index.html";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error("sso 验证失败", e);
-        }
-        return "redirect:/oa/apply_todo.html";
-    }
+	/**
+	 * index
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/oa/index.html")
+	public ModelAndView welcom(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId != null) {
+			return addApply(request);
+		}
+		ModelAndView mav = new ModelAndView("/oa/index");
+		return mav;
+	}
 
-    /**
-     * index
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/oa/index.html")
-    public ModelAndView welcom(HttpServletRequest request) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId != null) {
-            return addApply(request);
-        }
-        ModelAndView mav = new ModelAndView("/oa/index");
-        return mav;
-    }
+	/**
+	 * 我的申请报销页面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/apply.html")
+	public ModelAndView addApply(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("oa/apply");
+		return mav;
+	}
 
-    /**
-     * 我的申请报销页面
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "oa/apply.html")
-    public ModelAndView addApply(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/apply");
-        return mav;
-    }
+	/**
+	 * 核定页面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/apply_ratify.html")
+	public ModelAndView addApplyRatify(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("oa/apply_ratify");
+		mav.addObject("formId", request.getParameter("formId"));
+		mav.addObject("taskId", request.getParameter("taskId"));
+		return mav;
+	}
 
-    /**
-     * 我的申请，已经在流程中的页面
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "oa/apply_todo.html")
-    public ModelAndView myApplyTodo(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/apply_todo");
-        return mav;
-    }
+	/**
+	 * 我的申请，已经在流程中的页面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/apply_todo.html")
+	public ModelAndView myApplyTodo(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("oa/apply_todo");
+		return mav;
+	}
 
-    /**
-     * 我的申请，已经审批结束的页面
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "oa/apply_history.html")
-    public ModelAndView myApplyHistory(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/apply_history");
-        return mav;
-    }
+	/**
+	 * 我的申请，已经审批结束的页面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/apply_history.html")
+	public ModelAndView myApplyHistory(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("oa/apply_history");
+		return mav;
+	}
 
-    /**
-     * 待审批
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "oa/approve_todo.html")
-    public ModelAndView approveTodo(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/approve_todo");
-        return mav;
-    }
+	/**
+	 * 待审批
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/approve_todo.html")
+	public ModelAndView approveTodo(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("oa/approve_todo");
+		return mav;
+	}
 
-    /**
-     * 已审批
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "oa/approve_history.html")
-    public ModelAndView approveHistory(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/approve_history");
-        return mav;
-    }
+	/**
+	 * 已审批
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/approve_history.html")
+	public ModelAndView approveHistory(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("oa/approve_history");
+		return mav;
+	}
 
-    /**
-     * 我的草稿
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "oa/draft.html")
-    public ModelAndView myDraft(HttpServletRequest request) {
-        ModelAndView mav = new ModelAndView("oa/draft");
-        return mav;
-    }
+	/**
+	 * 我的草稿
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/draft.html")
+	public ModelAndView myDraft(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("oa/draft");
+		return mav;
+	}
+	
+	/**
+	 * 设置代理人
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/setting/delegation.html")
+	public ModelAndView delegation(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		List<Delegation> users = delegationManager.findDelegationByMaster(userId);
+		ModelAndView mav = new ModelAndView("oa/delegation");
+		mav.addObject("users", users);
+		return mav;
+	}
+	
+	/**
+	 * 增加代理人
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/setting/add_delegation")
+	@ResponseBody
+	public BaseResult AddDelegation(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String delegation = vars.get("delegation");
+		if(delegation != null){
+			List<String> list = new ArrayList<String>();
+			list.add(delegation);
+			this.ioaEngineService.appendCandidate(processKey, userId, list);
+			//this.delegationManager.appendDelegation(userId, list);
+		}
+		return BaseResult.getSuccessResult(null);
+	}
+	
+	/**
+	 * 删除代理人
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/setting/remove_delegation")
+	@ResponseBody
+	public BaseResult RemoveDelegation(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String delegation = vars.get("delegation");
+		if(delegation != null){
+			List<String> list = new ArrayList<String>();
+			list.add(delegation);
+			this.delegationManager.deleteDelegation(userId, list);
+		}
+		return BaseResult.getSuccessResult(null);
+	}
 
-    /**
-     * 我的申请页面需要获取的基本信息
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "oa/employeeinfo")
-    @ResponseBody
-    public BaseResult webEmployeeInfo(HttpServletRequest request) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        System.out.println(userId);
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        EmployeeInfo employeeInfo;
-        try {
-            employeeInfo = ioaEngineService.getEmployeeInfo(userId);
-        } catch (RemoteAccessException e) {
-            e.printStackTrace();
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        String result[] = new String[]{employeeInfo.getAdName(),
-                employeeInfo.getSn(),
-                OAControllerUtils.dateToStr(new Date(System.currentTimeMillis())),
-                employeeInfo.getDepartmentI(), employeeInfo.getDepartmentIV()};
-        return BaseResult.getSuccessResult(result);
-    }
+	/**
+	 * 我的申请页面需要获取的基本信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/employeeinfo")
+	@ResponseBody
+	public BaseResult webEmployeeInfo(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		EmployeeInfo employeeInfo;
+		try {
+			employeeInfo = ioaEngineService.getEmployeeInfo(userId);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		String result[] = new String[] {
+				employeeInfo.getAdName(),
+				employeeInfo.getSn(),
+				OAControllerUtils
+						.dateToStr(new Date(System.currentTimeMillis())),
+				employeeInfo.getDepartmentI(), employeeInfo.getDepartmentIV() };
+		return BaseResult.getSuccessResult(result);
+	}
 
-    /**
-     * 获取工时
-     *
-     * @param request
-     * @param commonRequest
-     * @return
-     */
-    @RequestMapping(value = "oa/labor")
-    @ResponseBody
-    public BaseResult webLaborHour(HttpServletRequest request,
-                                   @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        String day = vars.get("day");
-        Date date;
-        try {
-            date = sdf.parse(day);
-        } catch (ParseException e1) {
-            e1.printStackTrace();
-            logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-        }
-        float laborHour = 0;
-        try {
-            laborHour = ioaEngineService.getLaborHour(userId, date);
-        } catch (RemoteAccessException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            laborHour = 0;
-        }
-        String result[] = new String[]{String.valueOf(laborHour)};
-        return BaseResult.getSuccessResult(result);
-    }
+	/**
+	 * 获取工时
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/labor")
+	@ResponseBody
+	public BaseResult webLaborHour(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String day = vars.get("day");
+		Date date;
+		try {
+			date = sdf.parse(day);
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+			logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR,
+					OAEngineConst.DATE_FORMAT_ERROR_MSG);
+		}
+		float laborHour = 0;
+		try {
+			laborHour = ioaEngineService.getLaborHour(userId, date);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			laborHour = 0;
+		}
+		String result[] = new String[] { String.valueOf(laborHour) };
+		return BaseResult.getSuccessResult(result);
+	}
 
-    /**
-     * 报销页面传到后端信息,存至各个表
-     *
-     * @param request
-     * @param formRequest
-     * @return
-     */
-    @RequestMapping(value = "oa/data")
-    @ResponseBody
-    public BaseResult webPostData(HttpServletRequest request,
-                                  @RequestBody FormRequest formRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = formRequest.getVars();
-        Map<String, String[][]> tableMap = formRequest.getTableMap();
-        boolean createFlag;
-        FormInfo formInfo = new FormInfo();
-        try {
-            createFlag = constructFormInfo(formInfo, tableMap, vars);
-        } catch (ParseException e) {
-            e.printStackTrace();
-            logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-        }
-        if (!createFlag) {
-            String errorMsg = "没有任何报销内容，请检查";
-            logger.warn(errorMsg);
-            return BaseResult.getErrorResult(-1, errorMsg);
-        }
-//      这里的flag是判断是已经开始还是保存草稿
-        boolean flag = formRequest.isFlag();
+	/**
+	 * 报销页面传到后端信息,存至各个表
+	 * 
+	 * @param request
+	 * @param formRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/ratify")
+	@ResponseBody
+	public BaseResult Ratify(HttpServletRequest request,
+			@RequestBody FormRequest formRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = formRequest.getVars();
+		Map<String, String[][]> tableMap = formRequest.getTableMap();
+		boolean isRatify = true;
+		boolean createFlag;
+		FormInfo formInfo = new FormInfo();
+		try {
+			createFlag = constructFormInfo(formInfo, tableMap, vars, isRatify);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR,
+					OAEngineConst.DATE_FORMAT_ERROR_MSG);
+		}
+		if (!createFlag) {
+			String errorMsg = "没有任何报销内容，请检查";
+			logger.warn(errorMsg);
+			return BaseResult.getErrorResult(-1, errorMsg);
+		}
+		try {
+			ioaEngineService.updateFormInfo(processKey, userId,
+					"" + formInfo.getId(), formInfo, true);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+					OAEngineConst.ACL_LIMIT_ERROR_MSG);
+		} catch (CompareModelException e) {
+			e.printStackTrace();
+			logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR,
+					OAEngineConst.DATE_FORMAT_ERROR_MSG);
+		} catch (FormNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(
+					OAEngineConst.FORM_NOT_FOUND_ERROR,
+					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+		} catch (ManagerFormException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.MANAGER_LOCK_ERROR,
+					OAEngineConst.MANAGER_LOCK_ERROR_MSG);
+		}
+		return BaseResult.getSuccessResult("0");
+	}
 
-        long id = 0;
-        if (flag) {
-            try {
-            	if(formInfo.getId() != null){
-            		ioaEngineService.updateFormInfo(processKey, userId, ""+formInfo.getId(), formInfo, true);
-            	}else{
-            		ioaEngineService.createFormAndstart(processKey, userId,
-                        formInfo);
-            	}
-            } catch (RemoteAccessException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
-            } catch (CompareModelException e) {
-                e.printStackTrace();
-                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            } catch (FormNotFoundException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-            } catch (ManagerFormException e) {
+	/**
+	 * 报销页面传到后端信息,存至各个表
+	 * 
+	 * @param request
+	 * @param formRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/data")
+	@ResponseBody
+	public BaseResult webPostData(HttpServletRequest request,
+			@RequestBody FormRequest formRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = formRequest.getVars();
+		Map<String, String[][]> tableMap = formRequest.getTableMap();
+		boolean isRatify = false;
+		boolean createFlag;
+		FormInfo formInfo = new FormInfo();
+		try {
+			createFlag = constructFormInfo(formInfo, tableMap, vars, isRatify);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR,
+					OAEngineConst.DATE_FORMAT_ERROR_MSG);
+		}
+		if (!createFlag) {
+			String errorMsg = "没有任何报销内容，请检查";
+			logger.warn(errorMsg);
+			return BaseResult.getErrorResult(-1, errorMsg);
+		}
+		// 这里的flag是判断是已经开始还是保存草稿
+		boolean flag = formRequest.isFlag();
+
+		long id = 0;
+		if (formInfo.getId() == null) {
+			try {
+				EmployeeInfo info = this.ioaEngineService
+						.getEmployeeInfo(userId);
+				if (info != null) {
+					formInfo.setFirstDep(info.getDepartmentI());
+					formInfo.setSecDep(info.getDepartmentII());
+					formInfo.setThridDep(info.getDepartmentIII());
+					formInfo.setFourthDep(info.getDepartmentIV());
+					formInfo.setFivethDep(info.getDepartmentV());
+				}
+			} catch (RemoteAccessException e) {
+				e.printStackTrace();
+				logger.warn(e.getMessage());
+			}
+		}
+		if (flag) {
+			try {
+				if (formInfo.getId() != null) {
+					ioaEngineService.updateFormInfo(processKey, userId, ""
+							+ formInfo.getId(), formInfo, true);
+				} else {
+					ioaEngineService.createFormAndstart(processKey, userId,
+							formInfo);
+				}
+			} catch (RemoteAccessException e) {
 				e.printStackTrace();
 				logger.error(e.getMessage());
-				return BaseResult.getErrorResult(OAEngineConst.MANAGER_LOCK_ERROR, OAEngineConst.MANAGER_LOCK_ERROR_MSG);
+				return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+						OAEngineConst.ACL_LIMIT_ERROR_MSG);
+			} catch (CompareModelException e) {
+				e.printStackTrace();
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			} catch (FormNotFoundException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(
+						OAEngineConst.FORM_NOT_FOUND_ERROR,
+						OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+			} catch (ManagerFormException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(
+						OAEngineConst.MANAGER_LOCK_ERROR,
+						OAEngineConst.MANAGER_LOCK_ERROR_MSG);
 			}
-        } else {
-        	if(formInfo.getId() != null){
-        		try {
-					ioaEngineService.updateFormInfo(processKey, userId, ""+formInfo.getId(), formInfo, false);
+		} else {
+			if (formInfo.getId() != null) {
+				try {
+					ioaEngineService.updateFormInfo(processKey, userId, ""
+							+ formInfo.getId(), formInfo, false);
 				} catch (CompareModelException e) {
 					e.printStackTrace();
-	                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-	                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
+					logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+					return BaseResult.getErrorResult(
+							OAEngineConst.DATE_FORMAT_ERROR,
+							OAEngineConst.DATE_FORMAT_ERROR_MSG);
 				} catch (FormNotFoundException e) {
 					e.printStackTrace();
-	                logger.error(e.getMessage());
-	                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+					logger.error(e.getMessage());
+					return BaseResult.getErrorResult(
+							OAEngineConst.FORM_NOT_FOUND_ERROR,
+							OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
 				} catch (RemoteAccessException e) {
 					e.printStackTrace();
-	                logger.error(e.getMessage());
-	                return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
+					logger.error(e.getMessage());
+					return BaseResult.getErrorResult(
+							OAEngineConst.ACL_LIMIT_ERROR,
+							OAEngineConst.ACL_LIMIT_ERROR_MSG);
 				} catch (ManagerFormException e) {
 					e.printStackTrace();
 					logger.error(e.getMessage());
-					return BaseResult.getErrorResult(OAEngineConst.MANAGER_LOCK_ERROR, OAEngineConst.MANAGER_LOCK_ERROR_MSG);
+					return BaseResult.getErrorResult(
+							OAEngineConst.MANAGER_LOCK_ERROR,
+							OAEngineConst.MANAGER_LOCK_ERROR_MSG);
 				}
-        	}else{
-        		ioaEngineService.createForm(processKey, userId, formInfo);
-        	}
-        }
-        return BaseResult.getSuccessResult(String.valueOf(id));
-    }
+			} else {
+				ioaEngineService.createForm(processKey, userId, formInfo);
+			}
+		}
+		return BaseResult.getSuccessResult(String.valueOf(id));
+	}
 
+	/**
+	 * 正在审批中的申请
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/draft")
+	@ResponseBody
+	public BaseResult getAllDraftInfos(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
+		int pageSize = noSize[0];
+		int pageNo = noSize[1];
+		FormInfoList formInfoList = ioaEngineService.getUserDraftList(
+				processKey, userId, pageNo, pageSize);
+		DataResult dataResult;
+		try {
+			dataResult = getAllTableInfos(formInfoList, userId, 1);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+					OAEngineConst.ACL_LIMIT_ERROR_MSG);
+		}
+		return BaseResult.getSuccessResult(dataResult);
+	}
 
-    /**
-     * 正在审批中的申请
-     *
-     * @param request
-     * @param commonRequest
-     * @return
-     */
-    @RequestMapping(value = "oa/draft")
-    @ResponseBody
-    public BaseResult getAllDraftInfos(HttpServletRequest request,
-                                       @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
-        int pageSize = noSize[0];
-        int pageNo = noSize[1];
-        FormInfoList formInfoList = ioaEngineService.getUserDraftList(
-                processKey, userId, pageNo, pageSize);
-        DataResult dataResult;
-        try {
-            dataResult = getAllTableInfos(formInfoList, userId, 1);
-        } catch (RemoteAccessException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
-        }
-        return BaseResult.getSuccessResult(dataResult);
-    }
+	/**
+	 * 获取报销详情
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/apply_info")
+	@ResponseBody
+	public BaseResult getDraftDetailInfo(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String formId = vars.get("formId");
+		FormInfo formInfo;
+		try {
+			formInfo = ioaEngineService.getFormInfo(processKey, userId, formId);
+		} catch (FormNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(
+					OAEngineConst.FORM_NOT_FOUND_ERROR,
+					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+		}
+		FormRequest formRequest = getApplyDetailInfo(formInfo);
+		return BaseResult.getSuccessResult(formRequest);
+	}
 
-    /**
-     * 获取报销详情
-     *
-     * @param request
-     * @param commonRequest
-     * @return
-     */
-    @RequestMapping(value = "oa/apply_info")
-    @ResponseBody
-    public BaseResult getDraftDetailInfo(HttpServletRequest request,
-                                         @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        String formId = vars.get("formId");
-        FormInfo formInfo;
-        try {
-            formInfo = ioaEngineService.getFormInfo(
-                    processKey, userId, formId);
-        } catch (FormNotFoundException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-        }
-        FormRequest formRequest = getApplyDetailInfo(formInfo);
-        return BaseResult.getSuccessResult(formRequest);
-    }
+	/**
+	 * 正在审批中的申请
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/todo")
+	@ResponseBody
+	public BaseResult getAllMyApplyTodoList(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
+		int pageSize = noSize[0];
+		int pageNo = noSize[1];
+		String startTime = vars.get("startTime");
+		String endTime = vars.get("endTime");
+		Date _startTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		Date _endTime = null;
+		if (endTime != null) {
+			try {
+				_endTime = sdf.parse(endTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		FormInfoList formInfoList = ioaEngineService.getUserApplyList(
+				processKey, userId, _startTime, _endTime, pageNo, pageSize);
+		DataResult dataResult;
+		try {
+			dataResult = getAllTableInfos(formInfoList, userId, 1);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+					OAEngineConst.ACL_LIMIT_ERROR_MSG);
+		}
+		return BaseResult.getSuccessResult(dataResult);
+	}
 
-    /**
-     * 正在审批中的申请
-     *
-     * @param request
-     * @param commonRequest
-     * @return
-     */
-    @RequestMapping(value = "oa/todo")
-    @ResponseBody
-    public BaseResult getAllMyApplyTodoList(HttpServletRequest request,
-                                            @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
-        int pageSize = noSize[0];
-        int pageNo = noSize[1];
-        String startTime = vars.get("startTime");
-        String endTime = vars.get("endTime");
-        Date _startTime = null;
-        if (startTime != null) {
-            try {
-                _startTime = sdf.parse(startTime);
-            } catch (ParseException e) {
-                logger.warn(e.getMessage());
-                e.printStackTrace();
-                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            }
-        }
-        Date _endTime = null;
-        if (endTime != null) {
-            try {
-                _endTime = sdf.parse(endTime);
-            } catch (ParseException e) {
-                logger.warn(e.getMessage());
-                e.printStackTrace();
-                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            }
-        }
-        FormInfoList formInfoList = ioaEngineService.getUserApplyList(
-                processKey, userId, _startTime, _endTime, pageNo, pageSize);
-        DataResult dataResult;
-        try {
-            dataResult = getAllTableInfos(formInfoList, userId, 1);
-        } catch (RemoteAccessException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
-        }
-        return BaseResult.getSuccessResult(dataResult);
-    }
+	/**
+	 * 已经结束的申请
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/history")
+	@ResponseBody
+	public BaseResult getAllMyApplyHistoryList(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
+		int pageSize = noSize[0];
+		int pageNo = noSize[1];
 
-    /**
-     * 已经结束的申请
-     *
-     * @param request
-     * @param commonRequest
-     * @return
-     */
-    @RequestMapping(value = "oa/history")
-    @ResponseBody
-    public BaseResult getAllMyApplyHistoryList(HttpServletRequest request,
-                                               @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
-        int pageSize = noSize[0];
-        int pageNo = noSize[1];
+		String startTime = vars.get("startTime");
+		String endTime = vars.get("endTime");
+		Date _startTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		Date _endTime = null;
+		if (endTime != null) {
+			try {
+				_endTime = sdf.parse(endTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		FormInfoList formInfoList = ioaEngineService.getUserApplyHisList(
+				processKey, userId, _startTime, _endTime, pageNo, pageSize);
+		DataResult dataResult;
+		try {
+			dataResult = getAllTableInfos(formInfoList, userId, 4);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+					OAEngineConst.ACL_LIMIT_ERROR_MSG);
+		}
+		return BaseResult.getSuccessResult(dataResult);
+	}
 
-        String startTime = vars.get("startTime");
-        String endTime = vars.get("endTime");
-        Date _startTime = null;
-        if (startTime != null) {
-            try {
-                _startTime = sdf.parse(startTime);
-            } catch (ParseException e) {
-                logger.warn(e.getMessage());
-                e.printStackTrace();
-                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            }
-        }
-        Date _endTime = null;
-        if (endTime != null) {
-            try {
-                _endTime = sdf.parse(endTime);
-            } catch (ParseException e) {
-                logger.warn(e.getMessage());
-                e.printStackTrace();
-                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            }
-        }
-        FormInfoList formInfoList = ioaEngineService.getUserApplyHisList(
-                processKey, userId, _startTime, _endTime, pageNo, pageSize);
-        DataResult dataResult;
-        try {
-            dataResult = getAllTableInfos(formInfoList, userId, 4);
-        } catch (RemoteAccessException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
-        }
-        return BaseResult.getSuccessResult(dataResult);
-    }
+	/**
+	 * 待审批
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/approve_todo")
+	@ResponseBody
+	public BaseResult getAllApproveTodoList(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		// Date startTime, Date endTime,
+		// 默认一页显示50条数据
+		Map<String, String> vars = commonRequest.getVars();
+		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
+		int pageSize = noSize[0];
+		int pageNo = noSize[1];
+		String startTime = vars.get("startTime");
+		String endTime = vars.get("endTime");
+		String approve_user = vars.get("approveUser");
+		Date _startTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		Date _endTime = null;
+		if (endTime != null) {
+			try {
+				_endTime = sdf.parse(endTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		// userId = vars.get("userId");
+		FormInfoList formInfoList = null;
+		try {
+			formInfoList = ioaEngineService.todoList(processKey, userId,
+					_startTime, _endTime, approve_user, pageNo, pageSize);
+		} catch (FormNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(
+					OAEngineConst.FORM_NOT_FOUND_ERROR,
+					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+		}
+		DataResult dataResult;
+		try {
+			dataResult = getAllTableInfos(formInfoList, userId, 2);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+					OAEngineConst.ACL_LIMIT_ERROR_MSG);
+		}
+		return BaseResult.getSuccessResult(dataResult);
+	}
 
-    /**
-     * 待审批
-     *
-     * @param request
-     * @param commonRequest
-     * @return
-     */
-    @RequestMapping(value = "oa/approve_todo")
-    @ResponseBody
-    public BaseResult getAllApproveTodoList(HttpServletRequest request,
-                                            @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        // Date startTime, Date endTime,
-        // 默认一页显示50条数据
-        Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
-        int pageSize = noSize[0];
-        int pageNo = noSize[1];
-        String startTime = vars.get("startTime");
-        String endTime = vars.get("endTime");
-        String approve_user = vars.get("approveUser");
-        Date _startTime = null;
-        if (startTime != null) {
-            try {
-                _startTime = sdf.parse(startTime);
-            } catch (ParseException e) {
-                logger.warn(e.getMessage());
-                e.printStackTrace();
-                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            }
-        }
-        Date _endTime = null;
-        if (endTime != null) {
-            try {
-                _endTime = sdf.parse(endTime);
-            } catch (ParseException e) {
-                logger.warn(e.getMessage());
-                e.printStackTrace();
-                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            }
-        }
-//        userId = vars.get("userId");
-        FormInfoList formInfoList = null;
-        try {
-            formInfoList = ioaEngineService.todoList(
-                    processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);
-        } catch (FormNotFoundException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-        }
-        DataResult dataResult;
-        try {
-            dataResult = getAllTableInfos(formInfoList, userId, 2);
-        } catch (RemoteAccessException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
-        }
-        return BaseResult.getSuccessResult(dataResult);
-    }
+	/**
+	 * 已经审批结束
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/approve_history")
+	@ResponseBody
+	public BaseResult getAllApproveHistoryList(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
+		int pageSize = noSize[0];
+		int pageNo = noSize[1];
+		String startTime = vars.get("startTime");
+		String endTime = vars.get("endTime");
+		String approve_user = vars.get("approveUser");
+		Date _startTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		Date _endTime = null;
+		if (endTime != null) {
+			try {
+				_endTime = sdf.parse(endTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (OAControllerUtils.isNull(approve_user)) {
+			approve_user = null;
+		}
+		// userId = vars.get("userId");
+		FormInfoList formInfoList = null;
+		try {
+			formInfoList = ioaEngineService.historyProcessInstList(processKey,
+					userId, _startTime, _endTime, approve_user, pageNo,
+					pageSize);
+		} catch (FormNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(
+					OAEngineConst.FORM_NOT_FOUND_ERROR,
+					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+		}
+		DataResult dataResult;
+		try {
+			dataResult = getAllTableInfos(formInfoList, userId, 3);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+					OAEngineConst.ACL_LIMIT_ERROR_MSG);
+		}
+		return BaseResult.getSuccessResult(dataResult);
+	}
 
-    /**
-     * 已经审批结束
-     *
-     * @param request
-     * @param commonRequest
-     * @return
-     */
-    @RequestMapping(value = "oa/approve_history")
-    @ResponseBody
-    public BaseResult getAllApproveHistoryList(HttpServletRequest request,
-                                               @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
-        int pageSize = noSize[0];
-        int pageNo = noSize[1];
-        String startTime = vars.get("startTime");
-        String endTime = vars.get("endTime");
-        String approve_user = vars.get("approveUser");
-        Date _startTime = null;
-        if (startTime != null) {
-            try {
-                _startTime = sdf.parse(startTime);
-            } catch (ParseException e) {
-                logger.warn(e.getMessage());
-                e.printStackTrace();
-                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            }
-        }
-        Date _endTime = null;
-        if (endTime != null) {
-            try {
-                _endTime = sdf.parse(endTime);
-            } catch (ParseException e) {
-                logger.warn(e.getMessage());
-                e.printStackTrace();
-                logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-                return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            }
-        }
-        if (OAControllerUtils.isNull(approve_user)) {
-            approve_user = null;
-        }
-//        userId = vars.get("userId");
-        FormInfoList formInfoList = null;
-        try {
-            formInfoList = ioaEngineService.historyProcessInstList(
-                    processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);
-        } catch (FormNotFoundException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-        }
-        DataResult dataResult;
-        try {
-            dataResult = getAllTableInfos(formInfoList, userId, 3);
-        } catch (RemoteAccessException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
-        }
-        return BaseResult.getSuccessResult(dataResult);
-    }
+	/**
+	 * 批量完成任务
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/approve_pass")
+	@ResponseBody
+	public BaseResult approvePass(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequestt) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequestt.getVars();
+		String formIds = vars.get("formIds");
+		String taskIds = vars.get("taskIds");
+		List<Long> formIdList = new ArrayList<Long>();
+		List<String> taskIdList = new ArrayList<String>();
+		String formMsg[] = formIds.split(",");
+		for (int i = 0; i < formMsg.length; i++) {
+			formIdList.add(Long.valueOf(formMsg[i]));
+		}
+		String taskMsg[] = taskIds.split(",");
+		for (int i = 0; i < taskMsg.length; i++) {
+			taskIdList.add(taskMsg[i]);
+		}
+		// 其实这里就是附言
+		String memo = vars.get("memo");
+		// userId = vars.get("userId");
+		List<Long> errorFormIds = ioaEngineService.batchPass(processKey,
+				userId, formIdList, taskIdList, memo);
+		int size = errorFormIds.size();
+		if (size == 0) {
+			return BaseResult.getSuccessResult("同意操作成功");
+		}
+		return BaseResult.getSuccessResult(errorFormIds.toArray());
+		
 
-    /**
-     * 批量完成任务
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/approve_pass")
-    @ResponseBody
-    public BaseResult approvePass(HttpServletRequest request,
-                                  @RequestBody CommonRequest commonRequestt) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequestt.getVars();
-        String formIds = vars.get("formIds");
-        String taskIds = vars.get("taskIds");
-        List<Long> formIdList = new ArrayList<Long>();
-        List<String> taskIdList = new ArrayList<String>();
-        String formMsg[] = formIds.split(",");
-        for (int i = 0; i < formMsg.length; i++) {
-            formIdList.add(Long.valueOf(formMsg[i]));
-        }
-        String taskMsg[] = taskIds.split(",");
-        for (int i = 0; i < taskMsg.length; i++) {
-            taskIdList.add(taskMsg[i]);
-        }
-//      其实这里就是附言
-        String memo = vars.get("memo");
-//        userId = vars.get("userId");
-        List<Long> errorFormIds = ioaEngineService.batchPass(processKey, userId, formIdList, taskIdList, memo);
-        int size = errorFormIds.size();
-        if (size == 0) {
-            return BaseResult.getSuccessResult("同意操作成功");
-        }
-        return BaseResult.getSuccessResult(errorFormIds.toArray());
+	}
 
-    }
+	/**
+	 * 批量拒绝任务
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/approve_reject")
+	@ResponseBody
+	public BaseResult approveReject(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String formIds = vars.get("formIds");
+		String taskIds = vars.get("taskIds");
+		String formMsg[] = formIds.split(",");
+		int len = formMsg.length;
+		String taskMsg[] = taskIds.split(",");
+		// 其实这里就是附言
+		String memo = vars.get("memo");
+		// userId = vars.get("userId");
+		for (int i = 0; i < len; i++) {
+			try {
+				ioaEngineService.refuse(processKey, userId,
+						Long.valueOf(formMsg[i]), taskMsg[i], memo);
+			} catch (FormNotFoundException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(
+						OAEngineConst.FORM_NOT_FOUND_ERROR,
+						OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+			} catch (ActivitiException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(OAEngineConst.ACTIVITI_ERROR,
+						OAEngineConst.ACTIVITI_ERROR_MSG);
+			}
+		}
+		return BaseResult.getSuccessResult("拒绝审批结束");
+	}
 
-    /**
-     * 批量拒绝任务
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/approve_reject")
-    @ResponseBody
-    public BaseResult approveReject(HttpServletRequest request,
-                                    @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        String formIds = vars.get("formIds");
-        String taskIds = vars.get("taskIds");
-        String formMsg[] = formIds.split(",");
-        int len = formMsg.length;
-        String taskMsg[] = taskIds.split(",");
-//      其实这里就是附言
-        String memo = vars.get("memo");
-//        userId = vars.get("userId");
-        for (int i = 0; i < len; i++) {
-            try {
-                ioaEngineService.refuse(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], memo);
-            } catch (FormNotFoundException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-            } catch (ActivitiException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.ACTIVITI_ERROR, OAEngineConst.ACTIVITI_ERROR_MSG);
-            }
-        }
-        return BaseResult.getSuccessResult("拒绝审批结束");
-    }
+	/**
+	 * 批量退回任务
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/approve_back")
+	@ResponseBody
+	public BaseResult approveBack(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String formIds = vars.get("formIds");
+		String taskIds = vars.get("taskIds");
+		String formMsg[] = formIds.split(",");
+		int len = formMsg.length;
+		String taskMsg[] = taskIds.split(",");
+		// 其实这里就是附言
+		String memo = vars.get("memo");
+		// userId = vars.get("userId");
+		for (int i = 0; i < len; i++) {
+			try {
+				ioaEngineService.back(processKey, userId,
+						Long.valueOf(formMsg[i]), taskMsg[i], memo);
+			} catch (FormNotFoundException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(
+						OAEngineConst.FORM_NOT_FOUND_ERROR,
+						OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+			} catch (ActivitiException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(
+						OAEngineConst.APPROVE_BACK_ERROR,
+						OAEngineConst.APPROVE_BACK_ERROR_MSG);
+			}
+		}
+		return BaseResult.getSuccessResult("回退审批结束");
 
-    /**
-     * 批量退回任务
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/approve_back")
-    @ResponseBody
-    public BaseResult approveBack(HttpServletRequest request,
-                                  @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        String formIds = vars.get("formIds");
-        String taskIds = vars.get("taskIds");
-        String formMsg[] = formIds.split(",");
-        int len = formMsg.length;
-        String taskMsg[] = taskIds.split(",");
-//      其实这里就是附言
-        String memo = vars.get("memo");
-//        userId = vars.get("userId");
-        for (int i = 0; i < len; i++) {
-            try {
-                ioaEngineService.back(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], memo);
-            } catch (FormNotFoundException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-            } catch (ActivitiException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.APPROVE_BACK_ERROR, OAEngineConst.APPROVE_BACK_ERROR_MSG);
-            }
-        }
-        return BaseResult.getSuccessResult("回退审批结束");
+	}
 
-    }
+	/**
+	 * 批量加签任务
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/approve_endorse")
+	@ResponseBody
+	public BaseResult approveEndorse(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String formIds = vars.get("formIds");
+		String taskIds = vars.get("taskIds");
+		String formMsg[] = formIds.split(",");
+		int len = formMsg.length;
+		String taskMsg[] = taskIds.split(",");
+		// 其实这里就是附言
+		String memo = vars.get("memo");
+		String assignees = vars.get("rtx_id");
+		// userId = vars.get("userId");
+		for (int i = 0; i < len; i++) {
+			try {
+				ioaEngineService.endorse(processKey, userId,
+						Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
+			} catch (FormNotFoundException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(
+						OAEngineConst.FORM_NOT_FOUND_ERROR,
+						OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+			} catch (ActivitiException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(OAEngineConst.ACTIVITI_ERROR,
+						OAEngineConst.ACTIVITI_ERROR_MSG);
+			}
+		}
+		return BaseResult.getSuccessResult("加签结束");
 
-    /**
-     * 批量加签任务
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/approve_endorse")
-    @ResponseBody
-    public BaseResult approveEndorse(HttpServletRequest request,
-                                     @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        String formIds = vars.get("formIds");
-        String taskIds = vars.get("taskIds");
-        String formMsg[] = formIds.split(",");
-        int len = formMsg.length;
-        String taskMsg[] = taskIds.split(",");
-//      其实这里就是附言
-        String memo = vars.get("memo");
-        String assignees = vars.get("rtx_id");
-//        userId = vars.get("userId");
-        for (int i = 0; i < len; i++) {
-            try {
-                ioaEngineService.endorse(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
-            } catch (FormNotFoundException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-            } catch (ActivitiException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.ACTIVITI_ERROR, OAEngineConst.ACTIVITI_ERROR_MSG);
-            }
-        }
-        return BaseResult.getSuccessResult("加签结束");
+	}
 
-    }
+	/**
+	 * 催办动作
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/push_approve")
+	@ResponseBody
+	public BaseResult pushApprove(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String formId = vars.get("formId");
+		ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(
+				processKey, formId, 1, 20);
+		long count = approveInfos.getCount();
+		if (count == 0) {
+			return BaseResult.getSuccessResult("没有获取到审批候选人");
+		}
+		List<ApprovalInfo> infos = approveInfos.getInfos();
+		int size = infos.size();
+		ApprovalInfo approvalInfo = infos.get(size - 1);
+		Long approveId = approvalInfo.getId();
+		String candidates = ioaEngineService.reminder(processKey, userId,
+				formId, String.valueOf(approveId), "催办");
+		String reMsg = "下个节点审批人列表如下: " + candidates + " 催办成功";
+		return BaseResult.getSuccessResult(reMsg);
 
-    /**
-     * 催办动作
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/push_approve")
-    @ResponseBody
-    public BaseResult pushApprove(HttpServletRequest request,
-                                  @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        String formId = vars.get("formId");
-        ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 20);
-        long count = approveInfos.getCount();
-        if (count == 0) {
-            return BaseResult.getSuccessResult("没有获取到审批候选人");
-        }
-        List<ApprovalInfo> infos = approveInfos.getInfos();
-        int size = infos.size();
-        ApprovalInfo approvalInfo = infos.get(size - 1);
-        Long approveId = approvalInfo.getId();
-        String candidates = ioaEngineService.reminder(processKey, userId, formId, String.valueOf(approveId), "催办");
-        String reMsg = "下个节点审批人列表如下: " + candidates + " 催办成功";
-        return BaseResult.getSuccessResult(reMsg);
+	}
 
-    }
+	/**
+	 * 重新发起
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/restart_form")
+	@ResponseBody
+	public BaseResult restartForm(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String formId = vars.get("formId");
+		FormInfo formInfo;
+		try {
+			formInfo = ioaEngineService.getHistoryFormInfo(processKey, userId,
+					formId);
+		} catch (FormNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(
+					OAEngineConst.FORM_NOT_FOUND_ERROR,
+					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+		}
+		try {
+			ioaEngineService.createFormAndstart(processKey, userId, formInfo);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+					OAEngineConst.ACL_LIMIT_ERROR_MSG);
+		} catch (CompareModelException e) {
+			e.printStackTrace();
+			logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR,
+					OAEngineConst.DATE_FORMAT_ERROR_MSG);
+		} catch (FormNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(
+					OAEngineConst.FORM_NOT_FOUND_ERROR,
+					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+		}
+		return BaseResult.getSuccessResult("重新发起流程成功!");
 
-    /**
-     * 重新发起
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/restart_form")
-    @ResponseBody
-    public BaseResult restartForm(HttpServletRequest request,
-                                  @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        String formId = vars.get("formId");
-        FormInfo formInfo;
-        try {
-            formInfo = ioaEngineService.getHistoryFormInfo(processKey, userId, formId);
-        } catch (FormNotFoundException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-        }
-        try {
-            ioaEngineService.createFormAndstart(processKey, userId,
-                    formInfo);
-        } catch (RemoteAccessException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR, OAEngineConst.ACL_LIMIT_ERROR_MSG);
-        } catch (CompareModelException e) {
-            e.printStackTrace();
-            logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR, OAEngineConst.DATE_FORMAT_ERROR_MSG);
-        } catch (FormNotFoundException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
-            return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-        }
-        return BaseResult.getSuccessResult("重新发起流程成功!");
+	}
 
-    }
+	/**
+	 * 我的正在审批的申请,撤销或者删除
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/back_del")
+	@ResponseBody
+	public BaseResult applyBackorDel(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String backDel = vars.get("backDel");
+		String formIds = vars.get("formIds");
+		String formMsg[] = formIds.split(",");
+		int len = formMsg.length;
+		// userId = vars.get("userId");
+		for (int i = 0; i < len; i++) {
+			try {
+				if ("delete".equals(backDel)) {
+					ioaEngineService.deleteFormInfo(processKey, userId,
+							formMsg[i]);
+				} else if ("cancel".equals(backDel)) {
+					ioaEngineService.cancelFormInfo(processKey, userId,
+							formMsg[i]);
+				}
 
-    /**
-     * 我的正在审批的申请,撤销或者删除
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/back_del")
-    @ResponseBody
-    public BaseResult applyBackorDel(HttpServletRequest request,
-                                     @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        String backDel = vars.get("backDel");
-        String formIds = vars.get("formIds");
-        String formMsg[] = formIds.split(",");
-        int len = formMsg.length;
-//        userId = vars.get("userId");
-        for (int i = 0; i < len; i++) {
-            try {
-            	if("delete".equals(backDel)){
-            		ioaEngineService.deleteFormInfo(processKey, userId, formMsg[i]);
-            	}else if("cancel".equals(backDel)){
-            		ioaEngineService.cancelFormInfo(processKey, userId, formMsg[i]);
-            	}
-            	
-            } catch (FormNotFoundException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, e.getMessage());
-            } catch (ManagerFormException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.MANAGER_LOCK_ERROR, e.getMessage());
-            } catch (ActivitiException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return BaseResult.getErrorResult(OAEngineConst.ACTIVITI_ERROR, e.getMessage());
-            }
-        }
-        if("delete".equals(backDel)){
-        	return BaseResult.getSuccessResult("删除成功!");
-        }else{
-        	return BaseResult.getSuccessResult("撤销成功!");
-        }
-    }
+			} catch (FormNotFoundException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(
+						OAEngineConst.FORM_NOT_FOUND_ERROR, e.getMessage());
+			} catch (ManagerFormException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(
+						OAEngineConst.MANAGER_LOCK_ERROR, e.getMessage());
+			} catch (ActivitiException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				return BaseResult.getErrorResult(OAEngineConst.ACTIVITI_ERROR,
+						e.getMessage());
+			}
+		}
+		if ("delete".equals(backDel)) {
+			return BaseResult.getSuccessResult("删除成功!");
+		} else {
+			return BaseResult.getSuccessResult("撤销成功!");
+		}
+	}
 
-    /**
-     * 获取审批各个节点的审批意见
-     *
-     * @param request
-     * @return
-     */
-    @RequestMapping(value = "/approve_info")
-    @ResponseBody
-    public BaseResult getApproveInfo(HttpServletRequest request,
-                                     @RequestBody CommonRequest commonRequest) {
-        String userId = (String) request.getSession().getAttribute("USER_ID");
-        if (userId == null || userId.length() == 0) {
-            logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-            return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
-        }
-        Map<String, String> vars = commonRequest.getVars();
-        String formId = vars.get("formId");
-        ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 20);
-        long count = approveInfos.getCount();
-        if (count == 0) {
-            return BaseResult.getSuccessResult("");
-        }
-        List<ApprovalInfo> infos = approveInfos.getInfos();
-        int size = infos.size();
-        SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String[] result = new String[size * 6];
-        int k = 0;
-        for (int i = 0; i < size; i++) {
-            ApprovalInfo approveInfo = infos.get(i);
-            String type = OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
-            if("申请".equals(type)){
-	            result[k++] = "申请人: " + approveInfo.getApproveUser();
-	            result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
-	            result[k++] = ""; 	
-            }else{
-            	result[k++] = "审批节点: " + approveInfo.getTaskName();
-	            result[k++] = "审批人: " + approveInfo.getApproveUser();
-	            result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
-	            result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
-	            result[k++] = "附言: " + approveInfo.getMemo();
-	            result[k++] = "";
-            }
-        }
+	/**
+	 * 获取审批各个节点的审批意见
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/approve_info")
+	@ResponseBody
+	public BaseResult getApproveInfo(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String formId = vars.get("formId");
+		ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(
+				processKey, formId, 1, 20);
+		long count = approveInfos.getCount();
+		if (count == 0) {
+			return BaseResult.getSuccessResult("");
+		}
+		List<ApprovalInfo> infos = approveInfos.getInfos();
+		int size = infos.size();
+		SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String[] result = new String[size * 6];
+		int k = 0;
+		for (int i = 0; i < size; i++) {
+			ApprovalInfo approveInfo = infos.get(i);
+			String type = OAControllerUtils.transformApproveEnToCh(approveInfo
+					.getManagerType());
+			if ("申请".equals(type)) {
+				result[k++] = "申请人: " + approveInfo.getApproveUser();
+				result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
+				result[k++] = "";
+			} else {
+				result[k++] = "审批节点: " + approveInfo.getTaskName();
+				result[k++] = "审批人: " + approveInfo.getApproveUser();
+				result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
+				result[k++] = "审批结果: "
+						+ OAControllerUtils.transformApproveEnToCh(approveInfo
+								.getManagerType());
+				result[k++] = "附言: " + approveInfo.getMemo();
+				result[k++] = "";
+			}
+		}
 
-        return BaseResult.getSuccessResult(result);
+		return BaseResult.getSuccessResult(result);
 
-    }
+	}
 
-    /**
-     * 获取前端传过来的数据,构造成FormInfo,存入数据库
-     *
-     * @param formInfo
-     * @param tableMap
-     * @param vars
-     * @return
-     * @throws ParseException
-     */
-    private boolean constructFormInfo(FormInfo formInfo,
-                                      Map<String, String[][]> tableMap, Map<String, String> vars)
-            throws ParseException {
-        // 存储各个table的数据。
-        String table[][] = tableMap.get("table1");
-        int len = table.length;
-        List<TaxiFaresInfo> list1 = new ArrayList<TaxiFaresInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][7]) || "0".equals(table[i][7])) {
-                continue;
-            }
-            TaxiFaresInfo taxiInfo = new TaxiFaresInfo();
-            taxiInfo.setTaxiFaresDate(OAControllerUtils.strToDate(table[i][0]));
-            taxiInfo.setTaxiFaresAddr(table[i][1]);
-            taxiInfo.setTaxiFaresDest(table[i][2]);
-            taxiInfo.setTaxiFaresTime(table[i][3]);
-            taxiInfo.setTaxiFaresTimeNew(table[i][3]);
-            taxiInfo.setTaxiFaresUse(table[i][4]);
-            taxiInfo.setTaxiFaresPeerPeople(table[i][5]);
-            taxiInfo.setTaxiFaresWorkhour(new BigDecimal(table[i][6]));
-            taxiInfo.setTaxiFaresAmount(OAControllerUtils.yuanMoneyToCent(table[i][7]));
-            taxiInfo.setComment(table[i][8]);
-            list1.add(taxiInfo);
-        }
-        int size = list1.size();
-        TaxiFaresInfo[] taxiInfos = list1
-                .toArray(new TaxiFaresInfo[size]);
-        formInfo.setTaxiFaresInfo(taxiInfos);
+	/**
+	 * 获取前端传过来的数据,构造成FormInfo,存入数据库
+	 * 
+	 * @param formInfo
+	 * @param tableMap
+	 * @param vars
+	 * @return
+	 * @throws ParseException
+	 */
+	private boolean constructFormInfo(FormInfo formInfo,
+			Map<String, String[][]> tableMap, Map<String, String> vars,
+			boolean ratify) throws ParseException {
+		if (vars.get("formId") != null) {
+			formInfo.setId(Long.parseLong(vars.get("formId")));
+		}
+		// 存储各个table的数据。
+		String table[][] = tableMap.get("table1");
+		int len = table.length;
+		List<TaxiFaresInfo> list1 = new ArrayList<TaxiFaresInfo>();
+		long taxiSum = 0;
+		long taxiRatify = 0;
+		for (int i = 0; i < len; i++) {
+			if ("".equals(table[i][0]) || "".equals(table[i][7])
+					|| "0".equals(table[i][7])) {
+				continue;
+			}
+			TaxiFaresInfo taxiInfo = new TaxiFaresInfo();
+			taxiInfo.setFormmain0114id(formInfo.getId());
+			taxiInfo.setTaxiFaresDate(OAControllerUtils.strToDate(table[i][0]));
+			taxiInfo.setTaxiFaresAddr(table[i][1]);
+			taxiInfo.setTaxiFaresDest(table[i][2]);
+			taxiInfo.setTaxiFaresTime(table[i][3]);
+			taxiInfo.setTaxiFaresTimeNew(table[i][3]);
+			taxiInfo.setTaxiFaresUse(table[i][4]);
+			taxiInfo.setTaxiFaresPeerPeople(table[i][5]);
+			taxiInfo.setTaxiFaresWorkhour(new BigDecimal(table[i][6]));
+			taxiInfo.setTaxiFaresAmount(OAControllerUtils.yuanMoneyToCent(table[i][7]));
+			if (ratify) {
+				taxiInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][8]));
+			} else {
+				taxiInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][7]));
+			}
+			taxiInfo.setComment(table[i][9]);
+			if (table[i][10].length() > 0) {
+				taxiInfo.setId(Long.valueOf(table[i][10]));
+			}
+			
+			taxiSum += taxiInfo.getTaxiFaresAmount();
+			taxiRatify += taxiInfo.getRatify();
+			list1.add(taxiInfo);
+		}
+		int size = list1.size();
+		TaxiFaresInfo[] taxiInfos = list1.toArray(new TaxiFaresInfo[size]);
+		formInfo.setTaxiFaresInfo(taxiInfos);
 
-        table = tableMap.get("table2");
-        len = table.length;
-        List<OvertimeMealsInfo> list2 = new ArrayList<OvertimeMealsInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][5]) || "0".equals(table[i][5])) {
-                continue;
-            }
-            OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
-            overInfo.setOvertimeMealsDate(OAControllerUtils.strToDate(table[i][0]));
-            overInfo.setMealsAddr(table[i][1]);
-            overInfo.setOvertimeMealsPeerPeople(table[i][2]);
-            overInfo.setMealsPersonNum(OAControllerUtils.strToLong(table[i][3]));
-            overInfo.setOvertimeMealsAmount(OAControllerUtils.yuanMoneyToCent(table[i][4]));
-            overInfo.setPerMealsFee(OAControllerUtils.yuanMoneyToCent(table[i][5]));
-            overInfo.setInvoiceAmount(table[i][6]);
-            overInfo.setOvertimeMealsWorkhours(OAControllerUtils.workHourToDec(table[i][7]));
-            overInfo.setOvertimeMealsComment(table[i][8]);
-            list2.add(overInfo);
-        }
-        size = list2.size();
-        OvertimeMealsInfo[] overInfos = list2
-                .toArray(new OvertimeMealsInfo[size]);
-        formInfo.setOvertimeMealsInfo(overInfos);
+		table = tableMap.get("table2");
+		len = table.length;
+		List<OvertimeMealsInfo> list2 = new ArrayList<OvertimeMealsInfo>();
+		long overSum = 0;
+		long overRatify = 0;
+		for (int i = 0; i < len; i++) {
+			if ("".equals(table[i][0]) || "".equals(table[i][5])
+					|| "0".equals(table[i][5])) {
+				continue;
+			}
+			OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
+			overInfo.setFormmain0114id(formInfo.getId());
+			overInfo.setOvertimeMealsDate(OAControllerUtils
+					.strToDate(table[i][0]));
+			overInfo.setMealsAddr(table[i][1]);
+			overInfo.setOvertimeMealsPeerPeople(table[i][2]);
+			overInfo.setMealsPersonNum(OAControllerUtils.strToLong(table[i][3]));
+			overInfo.setOvertimeMealsAmount(OAControllerUtils
+					.yuanMoneyToCent(table[i][4]));
+			overInfo.setPerMealsFee(OAControllerUtils
+					.yuanMoneyToCent(table[i][5]));
+			overInfo.setInvoiceAmount(table[i][6]);
+			overInfo.setOvertimeMealsWorkhours(OAControllerUtils
+					.workHourToDec(table[i][7]));
+			if (ratify) {
+				overInfo.setRatify(OAControllerUtils
+						.yuanMoneyToCent(table[i][8]));
+			} else {
+				overInfo.setRatify(OAControllerUtils
+						.yuanMoneyToCent(table[i][4]));
+			}
+			overInfo.setOvertimeMealsComment(table[i][9]);
+			if (table[i][10].length() > 0) {
+				overInfo.setId(Long.valueOf(table[i][10]));
+			}
+			overSum += overInfo.getOvertimeMealsAmount();
+			overRatify += overInfo.getRatify();
+			list2.add(overInfo);
+		}
+		size = list2.size();
+		OvertimeMealsInfo[] overInfos = list2
+				.toArray(new OvertimeMealsInfo[size]);
+		formInfo.setOvertimeMealsInfo(overInfos);
 
-        table = tableMap.get("table3");
-        len = table.length;
-        List<HospitalityInfo> list3 = new ArrayList<HospitalityInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][6])) {
-                continue;
-            }
-            HospitalityInfo hosInfo = new HospitalityInfo();
-            hosInfo.setHospitalityDate(OAControllerUtils.strToDate(table[i][0]));
-            hosInfo.setHospitalityAddr(table[i][1]);
-            hosInfo.setBusinessPurpose(table[i][2]);
-            hosInfo.setCustomCompany(table[i][3]);
-            hosInfo.setCustomName(table[i][4]);
-            hosInfo.setHospitalityNum(table[i][5]);
-            hosInfo.setHospitalityAmount(OAControllerUtils.yuanMoneyToCent(table[i][6]));
-            list3.add(hosInfo);
-        }
-        size = list3.size();
-        HospitalityInfo[] hosInfos = list3
-                .toArray(new HospitalityInfo[size]);
-        formInfo.setHospitalityInfo(hosInfos);
+		table = tableMap.get("table3");
+		len = table.length;
+		List<HospitalityInfo> list3 = new ArrayList<HospitalityInfo>();
+		long hosSum = 0;
+		long hosRatify = 0;
+		for (int i = 0; i < len; i++) {
+			if ("".equals(table[i][0]) || "".equals(table[i][6])) {
+				continue;
+			}
+			HospitalityInfo hosInfo = new HospitalityInfo();
+			hosInfo.setFormmain0114id(formInfo.getId());
+			hosInfo.setHospitalityDate(OAControllerUtils.strToDate(table[i][0]));
+			hosInfo.setHospitalityAddr(table[i][1]);
+			hosInfo.setBusinessPurpose(table[i][2]);
+			hosInfo.setCustomCompany(table[i][3]);
+			hosInfo.setCustomName(table[i][4]);
+			hosInfo.setHospitalityNum(table[i][5]);
+			hosInfo.setHospitalityAmount(OAControllerUtils
+					.yuanMoneyToCent(table[i][6]));
+			if (ratify) {
+				hosInfo.setRatify(OAControllerUtils
+						.yuanMoneyToCent(table[i][7]));
+			} else {
+				hosInfo.setRatify(OAControllerUtils
+						.yuanMoneyToCent(table[i][6]));
+			}
+			hosInfo.setMemo(table[i][8]);
+			if (table[i][9].length() > 0) {
+				hosInfo.setId(Long.valueOf(table[i][9]));
+			}
+			hosSum += hosInfo.getHospitalityAmount();
+			hosRatify += hosInfo.getRatify();
+			list3.add(hosInfo);
+		}
+		size = list3.size();
+		HospitalityInfo[] hosInfos = list3.toArray(new HospitalityInfo[size]);
+		formInfo.setHospitalityInfo(hosInfos);
 
-        table = tableMap.get("table4");
-        len = table.length;
-        List<EmployeeRelationsFeesInfo> list4 = new ArrayList<EmployeeRelationsFeesInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][4])) {
-                continue;
-            }
-            EmployeeRelationsFeesInfo employInfo = new EmployeeRelationsFeesInfo();
-            employInfo.setEmRelationsDate(OAControllerUtils.strToDate(table[i][0]));
-            employInfo.setEmRelationsAddress(table[i][1]);
-            employInfo.setEmRelationsPeerPeople(table[i][2]);
-            employInfo.setActDest(table[i][3]);
-            employInfo.setEmRelationsFees(OAControllerUtils.yuanMoneyToCent(table[i][4]));
-            employInfo.setEmRelationsFeesComment(table[i][5]);
-            list4.add(employInfo);
+		table = tableMap.get("table4");
+		len = table.length;
+		List<EmployeeRelationsFeesInfo> list4 = new ArrayList<EmployeeRelationsFeesInfo>();
+		long employSum = 0;
+		long employRatify = 0;
+		for (int i = 0; i < len; i++) {
+			if ("".equals(table[i][0]) || "".equals(table[i][4])) {
+				continue;
+			}
+			EmployeeRelationsFeesInfo employInfo = new EmployeeRelationsFeesInfo();
+			employInfo.setFormmain0114id(formInfo.getId());
+			employInfo.setEmRelationsDate(OAControllerUtils
+					.strToDate(table[i][0]));
+			employInfo.setEmRelationsAddress(table[i][1]);
+			employInfo.setEmRelationsPeerPeople(table[i][2]);
+			employInfo.setActDest(table[i][3]);
+			employInfo.setEmRelationsFees(OAControllerUtils
+					.yuanMoneyToCent(table[i][4]));
+			if (ratify) {
+				employInfo.setRatify(OAControllerUtils
+						.yuanMoneyToCent(table[i][5]));
+			} else {
+				employInfo.setRatify(OAControllerUtils
+						.yuanMoneyToCent(table[i][4]));
+			}
+			employInfo.setEmRelationsFeesComment(table[i][6]);
+			if (table[i][7].length() > 0) {
+				employInfo.setId(Long.valueOf(table[i][7]));
+			}
+			employSum += employInfo.getEmRelationsFees();
+			employRatify += employInfo.getRatify();
+			list4.add(employInfo);
 
-        }
-        size = list4.size();
-        EmployeeRelationsFeesInfo[] employInfos = list4
-                .toArray(new EmployeeRelationsFeesInfo[size]);
-        formInfo.setEmployeeRelationsFeesInfo(employInfos);
+		}
+		size = list4.size();
+		EmployeeRelationsFeesInfo[] employInfos = list4
+				.toArray(new EmployeeRelationsFeesInfo[size]);
+		formInfo.setEmployeeRelationsFeesInfo(employInfos);
 
-        table = tableMap.get("table5");
-        len = table.length;
-        List<OtherCostsInfo> list5 = new ArrayList<OtherCostsInfo>();
-        for (int i = 0; i < len; i++) {
-            if ("".equals(table[i][0]) || "".equals(table[i][2])) {
-                continue;
-            }
-            OtherCostsInfo otherInfo = new OtherCostsInfo();
-            otherInfo.setOtherCostProject(table[i][0]);
-            otherInfo.setOtherCostAmount(OAControllerUtils.yuanMoneyToCent(table[i][1]));
-            otherInfo.setOtherCostComment(table[i][2]);
-            list5.add(otherInfo);
-        }
-        size = list5.size();
-        // 如果全部数据都为空的话，就不存了。
+		table = tableMap.get("table5");
+		len = table.length;
+		List<OtherCostsInfo> list5 = new ArrayList<OtherCostsInfo>();
+		long otherSum = 0;
+		long otherRatify = 0;
+		for (int i = 0; i < len; i++) {
+			if ("".equals(table[i][0]) || "".equals(table[i][1])) {
+				continue;
+			}
+			OtherCostsInfo otherInfo = new OtherCostsInfo();
+			otherInfo.setFormmain0114id(formInfo.getId());
+			otherInfo.setOtherCostProject(table[i][0]);
+			otherInfo.setOtherCostAmount(OAControllerUtils
+					.yuanMoneyToCent(table[i][1]));
+			if (ratify) {
+				otherInfo.setRatify(OAControllerUtils
+						.yuanMoneyToCent(table[i][2]));
+			} else {
+				otherInfo.setRatify(OAControllerUtils
+						.yuanMoneyToCent(table[i][1]));
+			}
+			otherInfo.setOtherCostComment(table[i][3]);
+			if (table[i][4].length() > 0) {
+				otherInfo.setId(Long.valueOf(table[i][4]));
+			}
+			otherSum += otherInfo.getOtherCostAmount();
+			otherRatify += otherInfo.getRatify();
+			list5.add(otherInfo);
+		}
+		size = list5.size();
+		// 如果全部数据都为空的话，就不存了。
 
-        if (list1.size() == 0 && list2.size() == 0 && list3.size() == 0
-                && list4.size() == 0 && list5.size() == 0
-                && OAControllerUtils.isNull(vars.get("remark")) && "0".equals(vars.get("sum6"))) {
+		if (list1.size() == 0 && list2.size() == 0 && list3.size() == 0
+				&& list4.size() == 0 && list5.size() == 0
+				&& OAControllerUtils.isNull(vars.get("remark")) && (
+						OAControllerUtils.isNull(vars.get("sum6"))
+						|| "".equals(vars.get("sum6"))
+						|| Float.parseFloat(vars.get("sum6")) == 0
+					)) {
 
-            return false;
-        }
+			return false;
+		}
 
-        OtherCostsInfo[] otherInfos = list5
-                .toArray(new OtherCostsInfo[size]);
-        formInfo.setOtherCostsInfo(otherInfos);
-        // 存储所有数据之和
-        formInfo.setSumTaxiFaresAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum1")));
-        formInfo.setSumOvertimeMealsAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum2")));
-        formInfo.setSumHospitalityAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum3")));
-        formInfo.setSumEmployeeRelationsFees(OAControllerUtils.yuanMoneyToCent(vars.get("sum4")));
-        formInfo.setSumOtherAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum5")));
+		OtherCostsInfo[] otherInfos = list5.toArray(new OtherCostsInfo[size]);
+		formInfo.setOtherCostsInfo(otherInfos);
+		// 存储所有数据之和
+		formInfo.setSumTaxiFaresAmount(taxiSum);
+		formInfo.setSumOvertimeMealsAmount(overSum);
+		formInfo.setSumHospitalityAmount(hosSum);
+		formInfo.setSumEmployeeRelationsFees(employSum);
+		formInfo.setSumOtherAmount(otherSum);
+		formInfo.setCommunicationCosts(OAControllerUtils.yuanMoneyToCent(vars.get("sum6")));
+		formInfo.setCommuCostsComment(vars.get("remark"));
+		long amount = taxiSum + overSum + hosSum + employSum + otherSum + OAControllerUtils.yuanMoneyToCent(vars.get("sum6"));
+		formInfo.setMoneyAmount(amount);
 
-        formInfo.setCommunicationCosts(OAControllerUtils.yuanMoneyToCent(vars.get("sum6")));
-        formInfo.setCommuCostsComment(vars.get("remark"));
+		formInfo.setCommunicationNotifyAmount(OAControllerUtils.yuanMoneyToCent(vars.get("ratify6")));
+		formInfo.setTaxiFaresNotifyAmount(taxiRatify);
+		formInfo.setOvertimeMealsNotifyAmount(overRatify);
+		formInfo.setHospitalityNotifyAmount(hosRatify);
+		formInfo.setEmRelationsFeesNotify(employRatify);
+		formInfo.setOtherNotifyAmount(otherRatify);
+		long ratifyAmount = taxiRatify + overRatify + hosRatify + employRatify + otherRatify + OAControllerUtils.yuanMoneyToCent(vars.get("ratify6"));
+		formInfo.setSumFinancialNotify(ratifyAmount);
 
-        formInfo.setMoneyAmount(OAControllerUtils.yuanMoneyToCent(vars.get("sum")));
-        if(vars.get("formId") != null){
-        	formInfo.setId(Long.parseLong(vars.get("formId")));
-        }
-        table = tableMap.get("table");
-        len = table.length;
-        for (int i = 0; i < len; i++) {
-            formInfo.setApplyUser(table[i][0]);
-            formInfo.setApplyDate((new Date(System.currentTimeMillis())));
-            formInfo.setSerialNumber(table[i][1]);
-            formInfo.setFirstDep(table[i][3]);
-            formInfo.setApplyDep(table[i][4]);
-            formInfo.setDepNum(table[i][5]);
-            formInfo.setIsDirectVp(table[i][6]);
-            formInfo.setBankNumber(table[i][7]);
-            formInfo.setBankName(table[i][8]);
-            //formInfo.setIsBorrow(table[i][9]);
-            //formInfo.setBorrowSN(table[i][10]);
-            //formInfo.setBorrowAmount(OAControllerUtils.strToLong(table[i][11]));
-        }
-        return true;
-    }
+		table = tableMap.get("table");
+		len = table.length;
+		for (int i = 0; i < len; i++) {
+			formInfo.setApplyUser(table[i][0]);
+			formInfo.setApplyDate((new Date(System.currentTimeMillis())));
+			formInfo.setSerialNumber(table[i][1]);
+			formInfo.setFirstDep(table[i][3]);
+			formInfo.setApplyDep(table[i][4]);
+			formInfo.setDepNum(table[i][5]);
+			formInfo.setIsDirectVp(table[i][6]);
+			formInfo.setBankNumber(table[i][7]);
+			formInfo.setBankName(table[i][8]);
+			// formInfo.setIsBorrow(table[i][9]);
+			// formInfo.setBorrowSN(table[i][10]);
+			// formInfo.setBorrowAmount(OAControllerUtils.strToLong(table[i][11]));
+		}
+		return true;
+	}
 
+	/**
+	 * 获取所有datatable应该展示的内容
+	 * 
+	 * @param formInfoList
+	 * @param userId
+	 * @return
+	 * @throws RemoteAccessException
+	 */
+	private DataResult getAllTableInfos(FormInfoList formInfoList,
+			String userId, int id) throws RemoteAccessException {
+		DataResult dataResult = new DataResult();
+		List<FormInfo> formInfos = formInfoList.getFormInfos();
+		int size = formInfos.size();
+		List<String[]> tableInfos = new ArrayList<String[]>();
+		//EmployeeInfo employeeInfo = ioaEngineService.getEmployeeInfo(userId);
+		//String depart = getDepartMent(employeeInfo);
+		Boolean ratify = null;
+		for (int i = 0; i < size; i++) {
+			FormInfo formInfo = formInfos.get(i);
+			String tk = formInfo.getTaskKey();
+			if ("fin_check".equals(tk) || "fin_check_mdd".equals(tk)) {
+				if (ratify == null) {
+					ratify = this.groupManager.inGroups(new String[] {
+							"fin_check", "fin_check_mdd" }, userId);
+				}
+				formInfo.setIsRatify(ratify);
+			}
+			String tableInfo[] = getEveryTableInfo(formInfo, id);
+			tableInfos.add(tableInfo);
+		}
+		dataResult.setCount(size);
+		dataResult.setTableInfos(tableInfos);
+		return dataResult;
+	}
 
-    /**
-     * 获取所有datatable应该展示的内容
-     *
-     * @param formInfoList
-     * @param userId
-     * @return
-     * @throws RemoteAccessException
-     */
-    private DataResult getAllTableInfos(FormInfoList formInfoList, String userId, int id) throws RemoteAccessException {
-        DataResult dataResult = new DataResult();
-        List<FormInfo> formInfos = formInfoList.getFormInfos();
-        int size = formInfos.size();
-        List<String[]> tableInfos = new ArrayList<String[]>();
-        EmployeeInfo employeeInfo = ioaEngineService.getEmployeeInfo(userId);
-        String depart = getDepartMent(employeeInfo);
-        for (int i = 0; i < size; i++) {
-            FormInfo formInfo = formInfos.get(i);
-            String tableInfo[] = getEveryTableInfo(formInfo, depart, id);
-            tableInfos.add(tableInfo);
-        }
-        dataResult.setCount(size);
-        dataResult.setTableInfos(tableInfos);
-        return dataResult;
-    }
+	/**
+	 * 统一返回中间不同处理
+	 * 
+	 * @param formInfo
+	 * @param depart
+	 * @param id
+	 * @return
+	 */
+	private String[] getEveryTableInfo(FormInfo formInfo, int id) {
+		String tableInfo[] = {};
+		if (id == 1) {
+			tableInfo = new String[] { String.valueOf(formInfo.getId()),
+					formInfo.getSerialNumber(), formInfo.getApplyDep(),
+					formInfo.getApplyUser(),
+					OAControllerUtils.dateToStr(formInfo.getField0005()),
+					String.valueOf(formInfo.getMoneyAmount()) };
+		} else if (id == 2) {
+			tableInfo = new String[7];
+			tableInfo[0] = String.valueOf(formInfo.getId());
+			tableInfo[1] = formInfo.getApplyUser();
+			tableInfo[2] = formInfo.getApplyDep();
+			tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
+			tableInfo[4] = String.valueOf(formInfo.getMoneyAmount());
+			tableInfo[5] = formInfo.getTaskId();
+			tableInfo[6] = formInfo.isRatify() ? "true" : "false";
+		} else if (id == 3) {
+			tableInfo = new String[6];
+			tableInfo[0] = String.valueOf(formInfo.getId());
+			tableInfo[1] = formInfo.getApplyUser();
+			tableInfo[2] = formInfo.getApplyDep();
+			tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
+			tableInfo[4] = OAControllerUtils.dateToStr(formInfo.getDealDate());
+			tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
+		} else if (id == 4) {
+			tableInfo = new String[] { String.valueOf(formInfo.getOid()),
+					formInfo.getSerialNumber(), formInfo.getApplyDep(),
+					formInfo.getApplyUser(),
+					OAControllerUtils.dateToStr(formInfo.getApplyDate()),
+					String.valueOf(formInfo.getMoneyAmount()) };
+		}
+		return tableInfo;
+	}
 
-    /**
-     * 统一返回中间不同处理
-     *
-     * @param formInfo
-     * @param depart
-     * @param id
-     * @return
-     */
-    private String[] getEveryTableInfo(FormInfo formInfo, String depart, int id) {
-        String tableInfo[] = {};
-        if (id == 1) {
-            tableInfo = new String[]{String.valueOf(formInfo.getId()),
-                    formInfo.getSerialNumber(), depart,
-                    formInfo.getApplyUser(), OAControllerUtils.dateToStr(formInfo.getField0005()),
-                    String.valueOf(formInfo.getMoneyAmount())};
-        } else if (id == 2) {
-            tableInfo = new String[6];
-            tableInfo[0] = String.valueOf(formInfo.getId());
-            tableInfo[1] = formInfo.getApplyUser();
-            tableInfo[2] = depart;
-            tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
-            tableInfo[4] = String.valueOf(formInfo.getMoneyAmount());
-            tableInfo[5] = formInfo.getTaskId();
-        } else if (id == 3) {
-            tableInfo = new String[6];
-            tableInfo[0] = String.valueOf(formInfo.getId());
-            tableInfo[1] = formInfo.getApplyUser();
-            tableInfo[2] = depart;
-            tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
-            tableInfo[4] = OAControllerUtils.dateToStr(formInfo.getDealDate());
-            tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
-        } else if (id == 4) {
-            tableInfo = new String[]{String.valueOf(formInfo.getOid()),
-                    formInfo.getSerialNumber(), depart,
-                    formInfo.getApplyUser(), OAControllerUtils.dateToStr(formInfo.getApplyDate()),
-                    String.valueOf(formInfo.getMoneyAmount())};
-        }
-        return tableInfo;
-    }
+	/**
+	 * 构造历史页面需要展示的各种信息
+	 * 
+	 * @param formInfo
+	 * @return FormRequest
+	 */
+	private FormRequest getApplyDetailInfo(FormInfo formInfo) {
+		FormRequest formRequest = new FormRequest();
+		Map<String, String[][]> tableMap = new HashMap<String, String[][]>();
+		String table[][] = createTableFirstInfo(formInfo);
+		tableMap.put("table", table);
+		table = createTableLastInfo(formInfo);
+		tableMap.put("table7", table);
+		TaxiFaresInfo infos1[] = formInfo.getTaxiFaresInfo();
+		int len = infos1.length;
+		if (len == 0) {
+			table = new String[0][0];
+		} else {
+			table = new String[len][101];
+			for (int i = 0; i < len; i++) {
+				table[i][100] = String.valueOf(infos1[i].getId());
+				table[i][0] = OAControllerUtils.dateToStr(infos1[i]
+						.getTaxiFaresDate());
+				table[i][1] = infos1[i].getTaxiFaresAddr();
+				table[i][2] = infos1[i].getTaxiFaresDest();
+				table[i][3] = infos1[i].getTaxiFaresTime();
+				table[i][4] = infos1[i].getTaxiFaresUse();
+				table[i][5] = infos1[i].getTaxiFaresPeerPeople();
+				table[i][6] = String.valueOf(infos1[i].getTaxiFaresWorkhour());
+				String eMoney = OAControllerUtils.centMoneyToYuan(infos1[i]
+						.getTaxiFaresAmount());
+				table[i][7] = eMoney;
+				table[i][8] = OAControllerUtils.centMoneyToYuan(infos1[i]
+						.getRatify());
+				table[i][9] = infos1[i].getComment();
+			}
+		}
+		tableMap.put("table1", table);
 
+		OvertimeMealsInfo infos2[] = formInfo.getOvertimeMealsInfo();
+		len = infos2.length;
+		if (len == 0) {
+			table = new String[0][0];
+		} else {
+			table = new String[len][101];
+			for (int i = 0; i < len; i++) {
+				table[i][100] = String.valueOf(infos2[i].getId());
+				table[i][0] = OAControllerUtils.dateToStr(infos2[i]
+						.getOvertimeMealsDate());
+				table[i][1] = infos2[i].getMealsAddr();
+				table[i][2] = infos2[i].getOvertimeMealsPeerPeople();
+				table[i][3] = String.valueOf(infos2[i].getMealsPersonNum());
+				String money1 = OAControllerUtils.centMoneyToYuan(infos2[i]
+						.getOvertimeMealsAmount());
+				table[i][4] = money1;
+				String money2 = OAControllerUtils.centMoneyToYuan(infos2[i]
+						.getPerMealsFee());
+				table[i][5] = money2;
+				table[i][6] = String.valueOf(infos2[i].getInvoiceAmount());
+				table[i][7] = String.valueOf(infos2[i]
+						.getOvertimeMealsWorkhours());
+				table[i][8] = OAControllerUtils.centMoneyToYuan(infos2[i]
+						.getRatify());
+				table[i][9] = infos2[i].getOvertimeMealsComment();
+			}
+		}
+		tableMap.put("table2", table);
 
-    /**
-     * 构造历史页面需要展示的各种信息
-     *
-     * @param formInfo
-     * @return FormRequest
-     */
-    private FormRequest getApplyDetailInfo(FormInfo formInfo) {
-        FormRequest formRequest = new FormRequest();
-        Map<String, String[][]> tableMap = new HashMap<String, String[][]>();
-        String table[][] = createTableFirstInfo(formInfo);
-        tableMap.put("table", table);
-        table = createTableLastInfo(formInfo);
-        tableMap.put("table7", table);
-        TaxiFaresInfo infos1[] = formInfo.getTaxiFaresInfo();
-        int len = infos1.length;
-        if (len == 0) {
-            table = new String[0][0];
-        } else {
-            table = new String[len][9];
-            for (int i = 0; i < len; i++) {
-                table[i][0] = OAControllerUtils.dateToStr(infos1[i].getTaxiFaresDate());
-                table[i][1] = infos1[i].getTaxiFaresAddr();
-                table[i][2] = infos1[i].getTaxiFaresDest();
-                table[i][3] = infos1[i].getTaxiFaresTime();
-                table[i][4] = infos1[i].getTaxiFaresUse();
-                table[i][5] = infos1[i].getTaxiFaresPeerPeople();
-                table[i][6] = String.valueOf(infos1[i].getTaxiFaresWorkhour());
-                String eMoney = OAControllerUtils.centMoneyToYuan(infos1[i].getTaxiFaresAmount());
-                table[i][7] = eMoney;
-                table[i][8] = infos1[i].getComment();
-            }
-        }
-        tableMap.put("table1", table);
+		HospitalityInfo infos3[] = formInfo.getHospitalityInfo();
+		len = infos3.length;
+		if (len == 0) {
+			table = new String[0][0];
+		} else {
+			table = new String[len][101];
+			for (int i = 0; i < len; i++) {
+				table[i][100] = String.valueOf(infos3[i].getId());
+				table[i][0] = OAControllerUtils.dateToStr(infos3[i]
+						.getHospitalityDate());
+				table[i][1] = infos3[i].getHospitalityAddr();
+				table[i][2] = infos3[i].getBusinessPurpose();
+				table[i][3] = infos3[i].getCustomCompany();
+				table[i][4] = infos3[i].getCustomName();
+				table[i][5] = infos3[i].getHospitalityNum();
+				String eMoney = OAControllerUtils.centMoneyToYuan(infos3[i]
+						.getHospitalityAmount());
+				table[i][6] = eMoney;
+				table[i][7] = OAControllerUtils.centMoneyToYuan(infos3[i]
+						.getRatify());
+				table[i][8] = infos3[i].getMemo();
+			}
+		}
+		tableMap.put("table3", table);
 
-        OvertimeMealsInfo infos2[] = formInfo.getOvertimeMealsInfo();
-        len = infos2.length;
-        if (len == 0) {
-            table = new String[0][0];
-        } else {
-            table = new String[len][9];
-            for (int i = 0; i < len; i++) {
-                table[i][0] = OAControllerUtils.dateToStr(infos2[i].getOvertimeMealsDate());
-                table[i][1] = infos2[i].getMealsAddr();
-                table[i][2] = infos2[i].getOvertimeMealsPeerPeople();
-                table[i][3] = String.valueOf(infos2[i].getMealsPersonNum());
-                String money1 = OAControllerUtils.centMoneyToYuan(infos2[i].getOvertimeMealsAmount());
-                table[i][4] = money1;
-                String money2 = OAControllerUtils.centMoneyToYuan(infos2[i].getPerMealsFee());
-                table[i][5] = money2;
-                table[i][6] = String.valueOf(infos2[i].getInvoiceAmount());
-                table[i][7] = String.valueOf(infos2[i].getOvertimeMealsWorkhours());
-                table[i][8] = infos2[i].getOvertimeMealsComment();
-            }
-        }
-        tableMap.put("table2", table);
+		EmployeeRelationsFeesInfo infos4[] = formInfo
+				.getEmployeeRelationsFeesInfo();
+		len = infos4.length;
+		if (len == 0) {
+			table = new String[0][0];
+		} else {
+			table = new String[len][101];
+			for (int i = 0; i < len; i++) {
+				table[i][100] = String.valueOf(infos4[i].getId());
+				table[i][0] = OAControllerUtils.dateToStr(infos4[i]
+						.getEmRelationsDate());
+				table[i][1] = infos4[i].getEmRelationsAddress();
+				table[i][2] = infos4[i].getEmRelationsPeerPeople();
+				table[i][3] = infos4[i].getActDest();
+				String eMoney = OAControllerUtils.centMoneyToYuan(infos4[i]
+						.getEmRelationsFees());
+				table[i][4] = eMoney;
+				table[i][5] = OAControllerUtils.centMoneyToYuan(infos4[i]
+						.getRatify());
+				table[i][6] = infos4[i].getEmRelationsFeesComment();
+			}
+		}
+		tableMap.put("table4", table);
 
-        HospitalityInfo infos3[] = formInfo.getHospitalityInfo();
-        len = infos3.length;
-        if (len == 0) {
-            table = new String[0][0];
-        } else {
-            table = new String[len][7];
-            for (int i = 0; i < len; i++) {
-                table[i][0] = OAControllerUtils.dateToStr(infos3[i].getHospitalityDate());
-                table[i][1] = infos3[i].getHospitalityAddr();
-                table[i][2] = infos3[i].getBusinessPurpose();
-                table[i][3] = infos3[i].getCustomCompany();
-                table[i][4] = infos3[i].getCustomName();
-                table[i][5] = infos3[i].getHospitalityNum();
-                String eMoney = OAControllerUtils.centMoneyToYuan(infos3[i].getHospitalityAmount());
-                table[i][6] = eMoney;
-            }
-        }
-        tableMap.put("table3", table);
+		OtherCostsInfo infos5[] = formInfo.getOtherCostsInfo();
+		len = infos5.length;
+		if (len == 0) {
+			table = new String[0][0];
+		} else {
+			table = new String[len][101];
+			for (int i = 0; i < len; i++) {
+				table[i][100] = String.valueOf(infos5[i].getId());
+				table[i][0] = infos5[i].getOtherCostProject();
+				String eMoney = OAControllerUtils.centMoneyToYuan(infos5[i]
+						.getOtherCostAmount());
+				table[i][1] = String.valueOf(eMoney);
+				table[i][2] = OAControllerUtils.centMoneyToYuan(infos5[i]
+						.getRatify());
+				table[i][3] = infos5[i].getOtherCostComment();
+			}
+		}
+		tableMap.put("table5", table);
 
-        EmployeeRelationsFeesInfo infos4[] = formInfo.getEmployeeRelationsFeesInfo();
-        len = infos4.length;
-        if (len == 0) {
-            table = new String[0][0];
-        } else {
-            table = new String[len][6];
-            for (int i = 0; i < len; i++) {
-                table[i][0] = OAControllerUtils.dateToStr(infos4[i].getEmRelationsDate());
-                table[i][1] = infos4[i].getEmRelationsAddress();
-                table[i][2] = infos4[i].getEmRelationsPeerPeople();
-                table[i][3] = infos4[i].getActDest();
-                String eMoney = OAControllerUtils.centMoneyToYuan(infos4[i].getEmRelationsFees());
-                table[i][4] = eMoney;
-                table[i][5] = infos4[i].getEmRelationsFeesComment();
-            }
-        }
-        tableMap.put("table4", table);
+		Map<String, String> vars = new HashMap<String, String>();
 
-        OtherCostsInfo infos5[] = formInfo.getOtherCostsInfo();
-        len = infos5.length;
-        if (len == 0) {
-            table = new String[0][0];
-        } else {
-            table = new String[len][3];
-            for (int i = 0; i < len; i++) {
-                table[i][0] = infos5[i].getOtherCostProject();
-                String eMoney = OAControllerUtils.centMoneyToYuan(infos5[i].getOtherCostAmount());
-                table[i][1] = String.valueOf(eMoney);
-                table[i][2] = infos5[i].getOtherCostComment();
-            }
-        }
-        tableMap.put("table5", table);
+		String moneySum1 = OAControllerUtils.centMoneyToYuan(formInfo
+				.getSumTaxiFaresAmount());
+		vars.put("sum1", moneySum1);
+		String moneySum2 = OAControllerUtils.centMoneyToYuan(formInfo
+				.getSumOvertimeMealsAmount());
+		vars.put("sum2", moneySum2);
+		String moneySum3 = OAControllerUtils.centMoneyToYuan(formInfo
+				.getSumHospitalityAmount());
+		vars.put("sum3", moneySum3);
+		String moneySum4 = OAControllerUtils.centMoneyToYuan(formInfo
+				.getSumEmployeeRelationsFees());
+		vars.put("sum4", moneySum4);
+		String moneySum5 = OAControllerUtils.centMoneyToYuan(formInfo
+				.getSumOtherAmount());
+		vars.put("sum5", moneySum5);
+		String moneySum = OAControllerUtils.centMoneyToYuan(formInfo
+				.getMoneyAmount());
+		vars.put("sum", moneySum);
+		String moneySum6 = OAControllerUtils.centMoneyToYuan(formInfo
+				.getCommunicationCosts());
+		vars.put("sum6", moneySum6);
+		vars.put("remark", formInfo.getCommuCostsComment());
 
-        Map<String, String> vars = new HashMap<String, String>();
+		String m = OAControllerUtils.centMoneyToYuan(formInfo
+				.getTaxiFaresNotifyAmount());
+		vars.put("ratify1", m);
+		m = OAControllerUtils.centMoneyToYuan(formInfo
+				.getOvertimeMealsNotifyAmount());
+		vars.put("ratify2", m);
+		m = OAControllerUtils.centMoneyToYuan(formInfo
+				.getHospitalityNotifyAmount());
+		vars.put("ratify3", m);
+		m = OAControllerUtils.centMoneyToYuan(formInfo
+				.getEmRelationsFeesNotify());
+		vars.put("ratify4", m);
+		m = OAControllerUtils.centMoneyToYuan(formInfo.getOtherNotifyAmount());
+		vars.put("ratify5", m);
+		m = OAControllerUtils.centMoneyToYuan(formInfo
+				.getCommunicationNotifyAmount());
+		vars.put("ratify6", m);
+		String ratify = OAControllerUtils.centMoneyToYuan(formInfo
+				.getSumFinancialNotify());
+		vars.put("ratify", ratify);
+		formRequest.setTableMap(tableMap);
+		formRequest.setVars(vars);
+		formRequest.setFlag(false);
+		return formRequest;
 
-        String moneySum1 = OAControllerUtils.centMoneyToYuan(formInfo.getSumTaxiFaresAmount());
-        vars.put("sum1", moneySum1);
-        String moneySum2 = OAControllerUtils.centMoneyToYuan(formInfo.getSumOvertimeMealsAmount());
-        vars.put("sum2", moneySum2);
-        String moneySum3 = OAControllerUtils.centMoneyToYuan(formInfo.getSumHospitalityAmount());
-        vars.put("sum3", moneySum3);
+	}
 
-        String moneySum4 = OAControllerUtils.centMoneyToYuan(formInfo.getSumEmployeeRelationsFees());
-        vars.put("sum4", moneySum4);
-        String moneySum5 = OAControllerUtils.centMoneyToYuan(formInfo.getSumOtherAmount());
-        vars.put("sum5", moneySum5);
-        String moneySum = OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount());
-        vars.put("sum", moneySum);
+	/**
+	 * 历史页面展示信息 第一个table
+	 * 
+	 * @param formInfo
+	 * @return
+	 */
+	private String[][] createTableFirstInfo(FormInfo formInfo) {
+		String table[][] = new String[1][12];
+		String acTable[] = new String[12];
+		acTable[0] = formInfo.getApplyUser();
+		acTable[1] = formInfo.getSerialNumber();
+		acTable[2] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
+		acTable[3] = formInfo.getFirstDep();
+		acTable[4] = formInfo.getApplyDep();
+		acTable[5] = formInfo.getDepNum();
+		acTable[6] = formInfo.getIsDirectVp();
+		acTable[7] = formInfo.getBankNumber();
+		acTable[8] = formInfo.getBankName();
+		acTable[9] = formInfo.getIsBorrow();
+		acTable[10] = formInfo.getBorrowSN();
+		acTable[11] = String.valueOf(formInfo.getBorrowAmount());
+		table[0] = acTable;
+		return table;
+	}
 
-        String moneySum6 = OAControllerUtils.centMoneyToYuan(formInfo.getCommunicationCosts());
-        vars.put("sum6", moneySum6);
-        vars.put("remark", formInfo.getCommuCostsComment());
+	/**
+	 * 历史页面展示信息,最后一个table
+	 * 
+	 * @param formInfo
+	 * @return
+	 */
+	private String[][] createTableLastInfo(FormInfo formInfo) {
+		String table[][] = new String[8][2];
+		table[0][0] = formInfo.getDepLeaderOpinion();
+		table[0][1] = OAControllerUtils.dateToStr(formInfo.getDepLeaderDate());
+		table[1][0] = formInfo.getDepDirectorOpinion();
+		table[1][1] = OAControllerUtils
+				.dateToStr(formInfo.getDepDirectorDate());
+		table[2][0] = formInfo.getSupDepLeaderOpinion();
+		table[2][1] = OAControllerUtils.dateToStr(formInfo
+				.getSupDepLeaderDate());
+		table[3][0] = formInfo.getFinancialDirectorOption();
+		table[3][1] = OAControllerUtils.dateToStr(formInfo
+				.getFinancialDirectorDate());
+		table[4][0] = formInfo.getCeoOption();
+		table[4][1] = OAControllerUtils.dateToStr(formInfo.getCeoDate());
+		table[5][0] = formInfo.getCeoOption1();
+		table[5][1] = OAControllerUtils.dateToStr(formInfo.getCeoDate1());
+		table[6][0] = formInfo.getReimbursementTeamName();
+		table[6][1] = OAControllerUtils.dateToStr(formInfo
+				.getReimbursementTeamDate());
+		table[7][0] = formInfo.getCashierOpinion();
+		table[7][1] = OAControllerUtils.dateToStr(formInfo.getCashierDate());
+		return table;
+	}
 
-        formRequest.setTableMap(tableMap);
-        formRequest.setVars(vars);
-        formRequest.setFlag(false);
-        return formRequest;
-    }
-
-    /**
-     * 历史页面展示信息 第一个table
-     *
-     * @param formInfo
-     * @return
-     */
-    private String[][] createTableFirstInfo(FormInfo formInfo) {
-        String table[][] = new String[1][12];
-        String acTable[] = new String[12];
-        acTable[0] = formInfo.getApplyUser();
-        acTable[1] = formInfo.getSerialNumber();
-        acTable[2] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
-        acTable[3] = formInfo.getFirstDep();
-        acTable[4] = formInfo.getApplyDep();
-        acTable[5] = formInfo.getDepNum();
-        acTable[6] = formInfo.getIsDirectVp();
-        acTable[7] = formInfo.getBankNumber();
-        acTable[8] = formInfo.getBankName();
-        acTable[9] = formInfo.getIsBorrow();
-        acTable[10] = formInfo.getBorrowSN();
-        acTable[11] = String.valueOf(formInfo.getBorrowAmount());
-        table[0] = acTable;
-        return table;
-    }
-
-    /**
-     * 历史页面展示信息,最后一个table
-     *
-     * @param formInfo
-     * @return
-     */
-    private String[][] createTableLastInfo(FormInfo formInfo) {
-        String table[][] = new String[8][2];
-        table[0][0] = formInfo.getDepLeaderOpinion();
-        table[0][1] = OAControllerUtils.dateToStr(formInfo.getDepLeaderDate());
-        table[1][0] = formInfo.getDepDirectorOpinion();
-        table[1][1] = OAControllerUtils.dateToStr(formInfo.getDepDirectorDate());
-        table[2][0] = formInfo.getSupDepLeaderOpinion();
-        table[2][1] = OAControllerUtils.dateToStr(formInfo.getSupDepLeaderDate());
-        table[3][0] = formInfo.getFinancialDirectorOption();
-        table[3][1] = OAControllerUtils.dateToStr(formInfo.getFinancialDirectorDate());
-        table[4][0] = formInfo.getCeoOption();
-        table[4][1] = OAControllerUtils.dateToStr(formInfo.getCeoDate());
-        table[5][0] = formInfo.getCeoOption1();
-        table[5][1] = OAControllerUtils.dateToStr(formInfo.getCeoDate1());
-        table[6][0] = formInfo.getReimbursementTeamName();
-        table[6][1] = OAControllerUtils.dateToStr(formInfo.getReimbursementTeamDate());
-        table[7][0] = formInfo.getCashierOpinion();
-        table[7][1] = OAControllerUtils.dateToStr(formInfo.getCashierDate());
-        return table;
-    }
-
-    /**
-     * 获取部门信息,拼接成五级部门
-     *
-     * @param employeeInfo
-     * @return
-     */
-    private String getDepartMent(EmployeeInfo employeeInfo) {
-        String depart = employeeInfo.getDepartmentI();
-        String other = employeeInfo.getDepartmentII();
-        if (!OAControllerUtils.isNull(other)) {
-            depart += "-" + other;
-        }
-        other = employeeInfo.getDepartmentIII();
-        if (!OAControllerUtils.isNull(other)) {
-            depart += "-" + other;
-        }
-        other = employeeInfo.getDepartmentIV();
-        if (!OAControllerUtils.isNull(other)) {
-            depart += "-" + other;
-        }
-        other = employeeInfo.getDepartmentV();
-        if (!OAControllerUtils.isNull(other)) {
-            depart += "-" + other;
-        }
-        return depart;
-    }
-
+	/**
+	 * 获取部门信息,拼接成五级部门
+	 * 
+	 * @param employeeInfo
+	 * @return
+	 */
+	private String getDepartMent(EmployeeInfo employeeInfo) {
+		String depart = employeeInfo.getDepartmentI();
+		String other = employeeInfo.getDepartmentII();
+		if (!OAControllerUtils.isNull(other)) {
+			depart += "-" + other;
+		}
+		other = employeeInfo.getDepartmentIII();
+		if (!OAControllerUtils.isNull(other)) {
+			depart += "-" + other;
+		}
+		other = employeeInfo.getDepartmentIV();
+		if (!OAControllerUtils.isNull(other)) {
+			depart += "-" + other;
+		}
+		other = employeeInfo.getDepartmentV();
+		if (!OAControllerUtils.isNull(other)) {
+			depart += "-" + other;
+		}
+		return depart;
+	}
 
 }

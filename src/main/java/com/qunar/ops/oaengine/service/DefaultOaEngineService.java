@@ -125,7 +125,10 @@ public class DefaultOaEngineService implements IOAEngineService {
 		FormInfo _formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		String _userId = _formInfo.getStartMemberId();
 		if(!userId.equals(_userId)){
-			throw new ManagerFormException("不是你的申请，你无权修改", DefaultOaEngineService.class);
+			boolean ratify = this.groupManager.inGroups(new String[]{"fin_check", "fin_check_mdd"}, userId);
+			if(!ratify){
+				throw new ManagerFormException("不是你的申请，你无权修改", DefaultOaEngineService.class);
+			}
 		}
 		FormInfo res = form0114Manager.updateFormInfo(userId, Long.valueOf(formId), formInfo);
 		
@@ -251,7 +254,9 @@ public class DefaultOaEngineService implements IOAEngineService {
 			TaskInfo taskInfo = _taskInfos.get(i);
 			String proc_inst_id = taskInfo.getProcessInstanceId();
 			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
+			if(formInfo == null) continue;
 			formInfo.setTaskId(taskInfo.getTaskId());
+			formInfo.setTaskKey(taskInfo.getTaskKey());
 			formInfos.add(formInfo);
 		}
 		res.setCount((int)taskInfos.getCount());
@@ -312,7 +317,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException {
+	public void pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
 		TaskResult tr = this._pass(processKey, userId, formId, taskId, memo);
 		this.sendMail(userId, "同意", tr.getOwner(), tr.getNextTasks(), memo);
 	}
@@ -357,12 +362,15 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return errorFormIds;
 	}
 	
-	private TaskResult _pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException {
+	private TaskResult _pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
 		TaskResult tr = this.workflowManager.pass(taskId, userId);
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, formId, "pass", tr, memo);
 		if(tr.isFinished()){
+			this.form0114Manager.recordKeyOperation(userId, "cashier", formId);
 			this.form0114Manager.deleteFormInfo(userId, formId);
+		}else if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
+			this.form0114Manager.recordKeyOperation(userId, "check", formId);
 		}
 		return tr;
 	}

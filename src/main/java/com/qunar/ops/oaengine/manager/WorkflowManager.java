@@ -90,7 +90,7 @@ public class WorkflowManager {
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
 		
-		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateUser(userId);
+		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
 		if(startTime != null){
 			query.taskCreatedAfter(startTime);
 		}

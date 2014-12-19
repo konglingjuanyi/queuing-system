@@ -140,6 +140,8 @@ CREATE TABLE formmain_0114 (
   field0093 varchar(255) DEFAULT NULL,
   field0096 varchar(255) DEFAULT NULL,
   field0097 varchar(255) DEFAULT NULL,
+  field0099 bigint DEFAULT NULL,
+  field0100 varchar(255) DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -228,7 +230,8 @@ CREATE TABLE formmain_0114_history(
   field0093 varchar(255) DEFAULT NULL,
   field0096 varchar(255) DEFAULT NULL,
   field0097 varchar(255) DEFAULT NULL,
-  ratify bigint DEFAULT NULL,
+  field0099 bigint DEFAULT NULL,
+  field0100 varchar(255) DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -276,6 +279,7 @@ CREATE TABLE formson_0116 (
   field0047 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
   ratify bigint DEFAULT NULL,
+  memo text,
   PRIMARY KEY (id)
 );
 
@@ -387,6 +391,7 @@ CREATE TABLE formson_0116_history (
   field0047 varchar(255) DEFAULT NULL,
   sort int DEFAULT NULL,
   ratify bigint DEFAULT NULL,
+   memo text,
   PRIMARY KEY (id)
 );
 

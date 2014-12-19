@@ -12,26 +12,35 @@ public class HospitalityInfo extends Formson0116 implements Serializable {
 	private static final long serialVersionUID = 8933545444370281313L;
 
 	// 招待费日期
-	// private Date hospitalityDate;
+	private Date hospitalityDate;
 	// 招待费地点
-	// private String hospitalityAddr;
+	private String hospitalityAddr;
 	// 招待费金额
-	// private Long hospitalityAmount;
+	private Long hospitalityAmount;
 	// 客户单位
-	// private String customCompany;
+	private String customCompany;
 	// 业务目的
-	// private String businessPurpose;
+	private String businessPurpose;
 	// 招待费参加人数
-	// private String hospitalityNum;
+	private String hospitalityNum;
 	// 客户姓名
-	// private String customName;
-
+	private String customName;
+	
+	private String memo;
+	private Long ratify;
+	public Long getRatify(){
+		return super.getRatify();
+	}
+	public void setRatify(Long v){
+		super.setRatify(v);
+	}
 	public Date getHospitalityDate() {
 		return super.getField0041();
 	}
 
 	public void setHospitalityDate(Date hospitalityDate) {
 		super.setField0041(hospitalityDate);
+		this.hospitalityDate = hospitalityDate;
 	}
 
 	public String getHospitalityAddr() {
@@ -40,6 +49,7 @@ public class HospitalityInfo extends Formson0116 implements Serializable {
 
 	public void setHospitalityAddr(String hospitalityAddr) {
 		super.setField0042(hospitalityAddr);
+		this.hospitalityAddr = hospitalityAddr;
 	}
 
 	public Long getHospitalityAmount() {
@@ -48,6 +58,7 @@ public class HospitalityInfo extends Formson0116 implements Serializable {
 
 	public void setHospitalityAmount(Long hospitalityAmount) {
 		super.setField0043(hospitalityAmount);
+		this.hospitalityAmount = hospitalityAmount;
 	}
 
 	public String getCustomCompany() {
@@ -56,6 +67,7 @@ public class HospitalityInfo extends Formson0116 implements Serializable {
 
 	public void setCustomCompany(String customCompany) {
 		super.setField0044(customCompany);
+		this.customCompany = customCompany;
 	}
 
 	public String getBusinessPurpose() {
@@ -64,6 +76,7 @@ public class HospitalityInfo extends Formson0116 implements Serializable {
 
 	public void setBusinessPurpose(String businessPurpose) {
 		super.setField0045(businessPurpose);
+		this.businessPurpose = businessPurpose;
 	}
 
 	public String getHospitalityNum() {
@@ -72,6 +85,7 @@ public class HospitalityInfo extends Formson0116 implements Serializable {
 
 	public void setHospitalityNum(String hospitalityNum) {
 		super.setField0046(hospitalityNum);
+		this.hospitalityNum = hospitalityNum;
 	}
 
 	public String getCustomName() {
@@ -80,5 +94,15 @@ public class HospitalityInfo extends Formson0116 implements Serializable {
 
 	public void setCustomName(String customName) {
 		super.setField0047(customName);
+		this.customName = customName;
+	}
+	
+	public String getMemo() {
+		return super.getMemo();
+	}
+
+	public void setMemo(String memo) {
+		super.setMemo(memo);
+		this.memo = memo;
 	}
 }

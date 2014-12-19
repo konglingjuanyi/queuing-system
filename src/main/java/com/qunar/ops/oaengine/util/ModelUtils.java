@@ -1,6 +1,7 @@
 package com.qunar.ops.oaengine.util;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,32 +28,49 @@ public class ModelUtils {
 		}
 	}
 	
-	public static <T> List<Map<String, Object>> compareModel(Class c, T newObject, T oldObject) throws CompareModelException {
+	public static <T> List<Map<String, Object>> compareModel(Class<?> c, T newObject, T oldObject) throws CompareModelException {
 		List<Map<String, Object>> res = new ArrayList<Map<String,Object>>();
 		try{
 			Map<String, Object> map;
+			
+			
 			Field[] fields = c.getDeclaredFields();
 			for(int i = 0; i < fields.length; i++){
-				fields[i].setAccessible(true);
-				if(fields[i].get(oldObject) == null && fields[i].get(newObject) == null){
+				Field field = fields[i];
+				String fieldName = field.getName();
+				String getMethodName = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+				String setMethodName = "set" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+				Method getMethod = null;
+				Method setMethod = null;
+				try {
+					getMethod = c.getDeclaredMethod(getMethodName);//.getMethod(getMethodName);
+					setMethod = c.getDeclaredMethod(setMethodName, new Class[]{field.getType()});//.getMethod(setMethodName);
+				} catch (NoSuchMethodException e) {
+				} catch (SecurityException e) {
+				}
+				if(getMethod == null || setMethod == null) continue;
+				Object oldVal = getMethod.invoke(oldObject, new Object[]{});//field.get(oldObject);
+				Object newVal = getMethod.invoke(newObject, new Object[]{});//field.get(newObject);
+				if(oldVal == null && newVal == null){
 					continue;
-				}else if(fields[i].get(oldObject) != null && fields[i].get(newObject) == null){
-					fields[i].set(newObject, fields[i].get(oldObject));
-					continue;
-				}else if(fields[i].get(oldObject) != null && fields[i].get(newObject) != null){
-					if(!fields[i].get(oldObject).equals(fields[i].get(newObject))){
+				}else if(oldVal != null && newVal == null){
+					setMethod.invoke(newObject, new Object[]{oldVal});
+				}else if(oldVal != null && newVal != null){
+					if(!oldVal.equals(newVal)){
 						map = new HashMap<String, Object>();
 						map.put("field", fields[i].getName());
-						map.put("oldValue", fields[i].get(oldObject));
-						map.put("newValue", fields[i].get(newObject));
+						map.put("oldValue", oldVal);
+						map.put("newValue", newVal);
 						res.add(map);
+						setMethod.invoke(oldObject, new Object[]{newVal});
 					}
 				}else{
 					map = new HashMap<String, Object>();
 					map.put("field", fields[i].getName());
-					map.put("oldValue", fields[i].get(oldObject));
-					map.put("newValue", fields[i].get(newObject));
+					map.put("oldValue", oldVal);
+					map.put("newValue", newVal);
 					res.add(map);
+					setMethod.invoke(oldObject, new Object[]{newVal});
 				}
 			}
 		}catch(Exception ex){

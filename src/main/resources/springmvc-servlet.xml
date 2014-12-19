@@ -50,5 +50,9 @@
 			<mvc:mapping path="/oa/*" />
 			<bean class="com.qunar.ops.oaengine.interceptor.OaAuthInterceptor" />
 		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/oa/setting/*" />
+			<bean class="com.qunar.ops.oaengine.interceptor.OaAuthInterceptor" />
+		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>

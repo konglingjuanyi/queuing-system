@@ -13,24 +13,31 @@ public class EmployeeRelationsFeesInfo extends Formson0118 implements
 	private static final long serialVersionUID = 8933545444370281313L;
 
 	// 员工关系费金额
-	// private Long emRelationsFees;
+	private Long emRelationsFees;
 	// 员工关系费地点
-	// private String emRelationsAddress;
+	private String emRelationsAddress;
 	// 员工关系日期
-	// private Date emRelationsDate;
+	private Date emRelationsDate;
 	// 活动目的
-	// private String actDest;
+	private String actDest;
 	// 员工关系费同行人
-	// private String emRelationsPeerPeople;
+	private String emRelationsPeerPeople;
 	// 员工关系费备注
-	// private String emRelationsFeesComment;
-
+	private String emRelationsFeesComment;
+	private Long ratify;
+	public Long getRatify(){
+		return super.getRatify();
+	}
+	public void setRatify(Long v){
+		super.setRatify(v);
+	}
 	public Long getEmRelationsFees() {
 		return super.getField0051();
 	}
 
 	public void setEmRelationsFees(Long emRelationsFees) {
 		super.setField0051(emRelationsFees);
+		this.emRelationsFees = emRelationsFees;
 	}
 
 	public String getEmRelationsAddress() {
@@ -39,6 +46,7 @@ public class EmployeeRelationsFeesInfo extends Formson0118 implements
 
 	public void setEmRelationsAddress(String emRelationsAddress) {
 		super.setField0052(emRelationsAddress);
+		this.emRelationsAddress = emRelationsAddress;
 	}
 
 	public Date getEmRelationsDate() {
@@ -47,6 +55,7 @@ public class EmployeeRelationsFeesInfo extends Formson0118 implements
 
 	public void setEmRelationsDate(Date emRelationsDate) {
 		super.setField0053(emRelationsDate);
+		this.emRelationsDate = emRelationsDate;
 	}
 
 	public String getActDest() {
@@ -55,6 +64,7 @@ public class EmployeeRelationsFeesInfo extends Formson0118 implements
 
 	public void setActDest(String actDest) {
 		super.setField0054(actDest);
+		this.actDest = actDest;
 	}
 
 	public String getEmRelationsPeerPeople() {
@@ -63,6 +73,7 @@ public class EmployeeRelationsFeesInfo extends Formson0118 implements
 
 	public void setEmRelationsPeerPeople(String emRelationsPeerPeople) {
 		super.setField0055(emRelationsPeerPeople);
+		this.emRelationsPeerPeople = emRelationsPeerPeople;
 	}
 
 	public String getEmRelationsFeesComment() {
@@ -71,5 +82,6 @@ public class EmployeeRelationsFeesInfo extends Formson0118 implements
 
 	public void setEmRelationsFeesComment(String emRelationsFeesComment) {
 		super.setField0089(emRelationsFeesComment);
+		this.emRelationsFeesComment = emRelationsFeesComment;
 	}
 }

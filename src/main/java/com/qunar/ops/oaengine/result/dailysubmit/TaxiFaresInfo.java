@@ -13,25 +13,33 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 	private static final long serialVersionUID = 8933545444370281313L;
 
 	// 加班餐费工时
-	// private String taxiFaresPeerPeople;
+	private String taxiFaresPeerPeople;
 	// 出租车费金额
-	// private Long taxiFaresAmount;
+	private Long taxiFaresAmount;
 	// 出租车费用途
-	// private String taxiFaresUse;
+	private String taxiFaresUse;
 	// 出租车费具体时间
-	// private String taxiFaresTime;
+	private String taxiFaresTime;
 	// 终出租车费终点
-	// private String taxiFaresDest;
+	private String taxiFaresDest;
 	// 出租车费地点
-	// private String taxiFaresAddr;
+	private String taxiFaresAddr;
 	// 出租车费日期
-	// private Date taxiFaresDate;
+	private Date taxiFaresDate;
 	// 出租车费具体时间新
-	// private String taxiFaresTimeNew;
+	private String taxiFaresTimeNew;
 	// 出租车费工时
-	// private BigDecimal taxiFaresWorkhour;
+	private BigDecimal taxiFaresWorkhour;
 	// 备注
-	// private String comment;
+	private String comment;
+	
+	private Long ratify;
+	public Long getRatify(){
+		return super.getRatify();
+	}
+	public void setRatify(Long v){
+		super.setRatify(v);
+	}
 
 	public String getTaxiFaresPeerPeople() {
 		return super.getField0056();
@@ -39,6 +47,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setTaxiFaresPeerPeople(String taxiFaresPeerPeople) {
 		super.setField0056(taxiFaresPeerPeople);
+		this.taxiFaresPeerPeople = taxiFaresPeerPeople;
 	}
 
 	public Long getTaxiFaresAmount() {
@@ -47,6 +56,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setTaxiFaresAmount(Long taxiFaresAmount) {
 		super.setField0057(taxiFaresAmount);
+		this.taxiFaresAmount = taxiFaresAmount;
 	}
 
 	public String getTaxiFaresUse() {
@@ -55,6 +65,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setTaxiFaresUse(String taxiFaresUse) {
 		super.setField0058(taxiFaresUse);
+		this.taxiFaresUse = taxiFaresUse;
 	}
 
 	public String getTaxiFaresTime() {
@@ -63,6 +74,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setTaxiFaresTime(String taxiFaresTime) {
 		super.setField0059(taxiFaresTime);
+		this.taxiFaresTime = taxiFaresTime;
 	}
 
 	public String getTaxiFaresDest() {
@@ -71,6 +83,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setTaxiFaresDest(String taxiFaresDest) {
 		super.setField0060(taxiFaresDest);
+		this.taxiFaresDest = taxiFaresDest;
 	}
 
 	public String getTaxiFaresAddr() {
@@ -79,6 +92,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setTaxiFaresAddr(String taxiFaresAddr) {
 		super.setField0061(taxiFaresAddr);
+		this.taxiFaresAddr = taxiFaresAddr;
 	}
 
 	public Date getTaxiFaresDate() {
@@ -87,6 +101,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setTaxiFaresDate(Date taxiFaresDate) {
 		super.setField0062(taxiFaresDate);
+		this.taxiFaresDate = taxiFaresDate;
 	}
 
 	public String getTaxiFaresTimeNew() {
@@ -95,6 +110,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setTaxiFaresTimeNew(String taxiFaresTimeNew) {
 		super.setField0088(taxiFaresTimeNew);
+		this.taxiFaresTimeNew = taxiFaresTimeNew;
 	}
 
 	public BigDecimal getTaxiFaresWorkhour() {
@@ -103,6 +119,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setTaxiFaresWorkhour(BigDecimal taxiFaresWorkhour) {
 		super.setField0095(taxiFaresWorkhour);
+		this.taxiFaresWorkhour = taxiFaresWorkhour;
 	}
 
 	public String getComment() {
@@ -111,5 +128,6 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 
 	public void setComment(String comment) {
 		super.setField0098(comment);
+		this.comment = comment;
 	}
 }

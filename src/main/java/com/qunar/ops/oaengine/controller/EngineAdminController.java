@@ -33,6 +33,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.qunar.ops.oaengine.manager.GroupManager;
+import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
+import com.qunar.ops.oaengine.result.BaseResult;
+import com.qunar.ops.oaengine.result.CommonRequest;
+import com.qunar.ops.oaengine.util.OAEngineConst;
 
 @Controller
 public class EngineAdminController {
@@ -49,14 +54,11 @@ public class EngineAdminController {
 	protected RepositoryService repositoryService;
 	@Autowired
 	protected ProcessEngineFactoryBean processEngine;
-
-	private Set<String> adminUsers = new HashSet<String>();
-	{
-		adminUsers.add("nuby.zhang");
-		adminUsers.add("yongnian.jiang");
-		adminUsers.add("zhen.pei");
-		adminUsers.add("weidong.jiang");
-		adminUsers.add("zhenqing.wang");
+	@Autowired
+	private GroupManager goupManager;
+	
+	private boolean isAdmin(String userId){
+		return goupManager.inGroups(new String[]{"admin"}, userId);
 	}
 	
 	/**
@@ -84,7 +86,7 @@ public class EngineAdminController {
 			String ret = parseObject.getString("ret");
 			if (ret.equals("true")) {
 				String userId = parseObject.getJSONObject("data").getString("userId");
-				if(!this.adminUsers.contains(userId)){
+				if(!isAdmin(userId)){
 					return "redirect:/admin/index.html";
 				}
 				request.getSession().setAttribute("USER_ID", userId);
@@ -106,6 +108,22 @@ public class EngineAdminController {
 	 */
 	@RequestMapping(value = "/admin/index.html")
 	public ModelAndView welcom(HttpServletRequest request) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId != null) {
+			return addProcess(request);
+		}
+		ModelAndView mav = new ModelAndView("/index");
+		return mav;
+	}
+	
+	/**
+	 * login
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/admin/login.html")
+	public ModelAndView loginPage(HttpServletRequest request) {
 		String userId = (String) request.getSession().getAttribute("USER_ID");
 		if (userId != null) {
 			return addProcess(request);
@@ -322,5 +340,56 @@ public class EngineAdminController {
 		historyService.deleteHistoricProcessInstance(processInstanceId);
 		return "redirect:/admin/" + processDefinitionId + "/instance_list.html";
 	}
+	
+    @RequestMapping(value = "/admin/group_list.html")
+    public ModelAndView groupInfo(HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("group_list");
+        List<GroupInfo> list = this.goupManager.getGroup(null);
+        mav.addObject("list", list);
+        return mav;
+    }
 
+	@RequestMapping(value = "/admin/group/add_member")
+	@ResponseBody
+	public BaseResult addGroupMember(HttpServletRequest request, @RequestBody CommonRequest commonRequestt) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequestt.getVars();
+		String groupKey = vars.get("groupKey");
+		String memberId = vars.get("memberId");
+		BaseResult res = new BaseResult();
+		if(groupKey == null || memberId == null){
+			res.setErrorCode(-100);
+			res.setErrorMessage("参数错误");
+			return res;
+		}
+		this.goupManager.appendMember(groupKey, memberId);
+		return res;
+	}
+	
+	@RequestMapping(value = "/admin/group/remove_member")
+	@ResponseBody
+	public BaseResult removeGroupMember(HttpServletRequest request, @RequestBody CommonRequest commonRequestt) {
+		String userId = (String) request.getSession().getAttribute("USER_ID");
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequestt.getVars();
+		String groupKey = vars.get("groupKey");
+		String memberId = vars.get("memberId");
+		BaseResult res = new BaseResult();
+		if(groupKey == null || memberId == null){
+			res.setErrorCode(-100);
+			res.setErrorMessage("参数错误");
+			return res;
+		}
+		this.goupManager.removeMember(groupKey, memberId);
+		return res;
+	}
 }

@@ -41,7 +41,8 @@ public class OAControllerUtils {
      * @param money
      * @return
      */
-    public static String centMoneyToYuan(long money) {
+    public static String centMoneyToYuan(Long money) {
+    	if(money == null) money = 0L;
         DecimalFormat ndf = new DecimalFormat("##0.00");
         double sMoney = (double) money / 100;
         return ndf.format(sMoney);
