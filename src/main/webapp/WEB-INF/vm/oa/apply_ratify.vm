@@ -378,10 +378,6 @@
                	 拒绝
             </button>
             <button class="btn btn-info" type="button"
-                    onclick="approveBack();">
-               	 退回
-            </button>
-            <button class="btn btn-info" type="button"
                     onclick="approveEndorse();">
                	 加签
             </button>

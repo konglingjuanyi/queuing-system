@@ -446,6 +446,68 @@ public class Form0114Manager {
 		return formInfoList;
 	}
 	
+	
+	/**
+	 * 获取用户拒绝列表
+	 * @param processKey
+	 * @param userId
+	 * @param startTime - 允许null
+	 * @param endTime - 允许null
+	 * @param pageNo
+	 * @param pageSize - 默认20
+	 * @return FormInfoList 用户申请流程中列表
+	 * 
+	 */
+	public FormInfoList getUserRefuseList(String userId, Date startTime, Date endTime, int pageNo, int pageSize) {
+		
+		pageNo = pageNo <= 0 ? 1 : pageNo;
+		pageSize = pageSize > 0 ? pageSize : 20;
+		
+		FormInfoList formInfoList = new FormInfoList();
+		List<FormInfo> formInfos = new ArrayList<FormInfo>();
+		Formmain0114Example example = new Formmain0114Example();
+		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+		criteria.andStartMemberIdEqualTo(userId);
+		if(startTime != null){
+			criteria = criteria.andStartDateGreaterThanOrEqualTo(startTime);
+		}
+		if(endTime != null){
+			criteria = criteria.andStartDateLessThanOrEqualTo(endTime);
+		}
+		criteria.andFinishedflagEqualTo(Constants.REFUSE);
+		int count = formmain0114Mapper.countByExample(example);
+
+		example.setOffset((pageNo - 1) * pageSize);
+		example.setLimit(pageSize);
+		example.setOrderByClause("field0005 desc");
+		List<Formmain0114> formmain0114s = formmain0114Mapper.selectByExample(example);
+		FormInfo formInfo;
+		for(int i = 0; i < formmain0114s.size(); i++){
+			formInfo = new FormInfo();
+			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+			
+			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+					.get("overtimeMealsInfos"));
+			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+					.get("hospitalityInfos"));
+			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+					.get("otherCostsInfos"));
+			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+					.get("employeeRelationsFeesInfos"));
+			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+					.get("taxiFaresInfos"));
+			
+			formInfos.add(formInfo);
+		}
+		formInfoList.setCount(count);
+		formInfoList.setPageSize(pageSize);
+		formInfoList.setPageNo(pageNo);
+		formInfoList.setFormInfos(formInfos);
+		
+		return formInfoList;
+	}
+	
 	/**
 	 * 获取用户申请流程中列表
 	 * @param processKey
@@ -468,6 +530,7 @@ public class Form0114Manager {
 		Formmain0114Example example = new Formmain0114Example();
 		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
 		criteria.andFinishedflagNotEqualTo(Constants.PROC_GRIFT);
+		criteria.andFinishedflagNotEqualTo(Constants.REFUSE);
 		criteria.andStartMemberIdEqualTo(userId);
 		if(startTime != null){
 			criteria = criteria.andStartDateGreaterThanOrEqualTo(startTime);
@@ -627,10 +690,10 @@ public class Form0114Manager {
 		formmain0114Mapper.insert(formmain0114clone);
 
 		// 子表数据到历史表中
-		cloneFormsInfo(formId);
+		cloneFormsInfo(formId, formmain0114clone.getId());
 	}
 
-	private void cloneFormsInfo(Long formId) {
+	private void cloneFormsInfo(Long formId, Long nid) {
 		// 子表中的数据到历史
 		Formson0115Example example115 = new Formson0115Example();
 		example115.createCriteria().andFormmain0114idEqualTo(formId);
@@ -640,6 +703,7 @@ public class Form0114Manager {
 		for (int i = 0; i < formson0115s.size(); i++) {
 			formson0115 = new Formson0115();
 			BeanUtils.copyProperties(formson0115s.get(i), formson0115);
+			formson0115.setFormmain0114id(nid);
 			formson0115Mapper.insert(formson0115);
 		}
 
@@ -651,6 +715,7 @@ public class Form0114Manager {
 		for (int i = 0; i < formson0116s.size(); i++) {
 			formson0116 = new Formson0116();
 			BeanUtils.copyProperties(formson0116s.get(i), formson0116);
+			formson0116.setFormmain0114id(nid);
 			formson0116Mapper.insert(formson0116);
 		}
 
@@ -662,6 +727,7 @@ public class Form0114Manager {
 		for (int i = 0; i < formson0117s.size(); i++) {
 			formson0117 = new Formson0117();
 			BeanUtils.copyProperties(formson0117s.get(i), formson0117);
+			formson0117.setFormmain0114id(nid);
 			formson0117Mapper.insert(formson0117);
 		}
 
@@ -673,6 +739,7 @@ public class Form0114Manager {
 		for (int i = 0; i < formson0118s.size(); i++) {
 			formson0118 = new Formson0118();
 			BeanUtils.copyProperties(formson0118s.get(i), formson0118);
+			formson0118.setFormmain0114id(nid);
 			formson0118Mapper.insert(formson0118);
 		}
 
@@ -684,6 +751,7 @@ public class Form0114Manager {
 		for (int i = 0; i < formson0119s.size(); i++) {
 			formson0119 = new Formson0119();
 			BeanUtils.copyProperties(formson0119s.get(i), formson0119);
+			formson0119.setFormmain0114id(nid);
 			formson0119Mapper.insert(formson0119);
 		}
 	}

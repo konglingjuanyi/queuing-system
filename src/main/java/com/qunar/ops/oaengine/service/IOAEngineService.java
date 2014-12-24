@@ -220,6 +220,19 @@ public interface IOAEngineService {
 	public FormInfoList getUserDraftList(String processKey, String userId, int pageNo, int pageSize);
 	
 	/**
+	 * 获取用户拒绝列表
+	 * @param processKey
+	 * @param userId
+	 * @param startTime - 允许null
+	 * @param endTime - 允许null
+	 * @param pageNo
+	 * @param pageSize - 默认20
+	 * @return FormInfoList 用户拒绝列表
+	 * 
+	 */
+	public FormInfoList getUserRefuseList(String processKey, String userId, Date startTime, Date endTime, int pageNo, int pageSize);
+	
+	/**
 	 * 获取用户申请流程中列表
 	 * @param processKey
 	 * @param userId
@@ -441,5 +454,14 @@ public interface IOAEngineService {
 	public FormInfoList historyProcessInstList(String processKey, String userId,
 			Date startTime, Date endTime, String owner, int pageNo, int pageSize)
 			throws FormNotFoundException;
+	
+	/**
+	 * 拷贝被拒绝申请到草稿
+	 * @param userId
+	 * @param formId
+	 * @throws FormNotFoundException
+	 * @throws ManagerFormException
+	 */
+	public void cloneToDraft(String userId, String formId) throws FormNotFoundException, ManagerFormException;
 
 }

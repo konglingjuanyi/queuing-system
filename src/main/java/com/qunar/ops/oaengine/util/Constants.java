@@ -9,6 +9,7 @@ public interface Constants {
 	public static final int PROC_END = 1;
 	public static final int TERMINATION = 3;
 	public static final int PROC_GRIFT = 5;
+	public static final int REFUSE = 6;
 	
 	
 	//return result

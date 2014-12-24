@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
@@ -455,7 +457,7 @@ public class WorkflowManager {
 	
 	private List<HistoricActivityInstance> findLastTasks(Task task) {
 		List<HistoricActivityInstance> res = new ArrayList<HistoricActivityInstance>();
-		List<String> acts = new ArrayList<String>();
+		Set<String> acts = new TreeSet<String>();
 		PvmActivity act = this.findActivitiImpl(task.getId(), null);
 		this.findIncomingTasks(act, acts);
 		for (String actid : acts) {
@@ -494,7 +496,7 @@ public class WorkflowManager {
 		return activityImpl;
 	}
 	
-	private void findIncomingTasks(PvmActivity act, List<String> taskKeys) {
+	private void findIncomingTasks(PvmActivity act, Set<String> taskKeys) {
 		List<PvmTransition> incomings = act.getIncomingTransitions();
 		if(incomings.isEmpty() && act.getParent() != null &&  act.getParent() instanceof PvmActivity) {
 			PvmActivity parent = (PvmActivity)act.getParent();
@@ -506,8 +508,10 @@ public class WorkflowManager {
 			PvmActivity source = incoming.getSource();
 			if ("userTask".equals(source.getProperty("type"))) {
 				taskKeys.add(source.getId());
+				System.out.println(source.getId());
 			}else if("subProcess".equals(source.getProperty("type"))){
 				taskKeys.add(source.getId());
+				System.out.println(source.getId());
 				/*
 				for(PvmActivity _act : source.getActivities()){
 					if(((String)_act.getProperty("type")).toLowerCase().indexOf("endevent")>=0){

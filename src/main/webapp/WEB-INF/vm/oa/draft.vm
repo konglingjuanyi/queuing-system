@@ -86,35 +86,23 @@
             {
                 "sTitle": '<lable><input id="current-checkbox-select-all" ' +
                 'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
-                "bSortable": false, "sWidth": 100, "sClass": "center"
+                "bSortable": false, "sWidth": 10, "sClass": "center"
             }, {
                 "sTitle": "ID",
-                "sWidth": 100,
+                "sWidth": 80,
                 "sClass": "center",
                 "bVisible": true
             }, {
-                "sTitle": "员工编号",
-                "sWidth": 150,
-                "sClass": "center"
-            }, {
-                "sTitle": "部门",
-                "sWidth": 300,
-                "sClass": "center"
-            }, {
-                "sTitle": "姓名",
-                "sWidth": 150,
-                "sClass": "center"
-            }, {
                 "sTitle": "创建时间",
-                "sWidth": 200,
+                "sWidth": 50,
                 "sClass": "center"
             }, {
                 "sTitle": "报销金额",
-                "sWidth": 150,
+                "sWidth": 300,
                 "sClass": "center"
             }, {
                 "sTitle": "编辑",
-                "sWidth": 150,
+                "sWidth": 50,
                 "sClass": "center"
             }];
         var wh = $(window).height();
@@ -223,13 +211,12 @@
         var needData = data.tableInfos;
         var d_len = needData.length;
         for (var i = 0; i < d_len; i++) {
-            var money = parseFloat(needData[i][5]);
+            var money = parseFloat(needData[i][2]);
             money /= 100;
             var map = $.parseStr("<a href='javascript:void(0);' " +
             "onclick='draftEdit(%s);'><i class='icon-link'></i></a>", needData[i][0]);
             var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
-            aaData.push([checkbox, needData[i][0], needData[i][1],
-                needData[i][2], needData[i][3], needData[i][4], money.toFixed(2), map]);
+            aaData.push([checkbox, needData[i][0], needData[i][1], money.toFixed(2), map]);
 
         }
         return aaData;

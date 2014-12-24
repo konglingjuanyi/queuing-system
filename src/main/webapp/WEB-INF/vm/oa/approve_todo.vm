@@ -27,11 +27,6 @@
                         class="btn btn-minier btn-primary">
                     拒绝
                 </button>
-                <button id="approve_back"
-                        style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
-                        class="btn btn-minier btn-primary">
-                    退回
-                </button>
                 <button id="approve_other"
                         style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
                         class="btn btn-minier btn-primary">

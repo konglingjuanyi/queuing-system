@@ -171,6 +171,21 @@ public class DefaultOaEngineService implements IOAEngineService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
+	public void cloneToDraft(String userId, String formId) throws FormNotFoundException, ManagerFormException {
+		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
+		String _userId = formInfo.getStartMemberId();
+		int finishedflag = formInfo.getFinishedflag();
+		if(userId.equals(_userId) && finishedflag == Constants.REFUSE){
+			form0114Manager.cloneFormInfo(Long.valueOf(formId));
+		}else if(!userId.equals(_userId)){
+			throw new ManagerFormException("不是你的申请，你无权复制", DefaultOaEngineService.class);
+		}else{
+			throw new ManagerFormException("不是拒绝状态，无法撤销", DefaultOaEngineService.class);
+		}
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
 	public void cancelFormInfo(String processKey, String userId, String formId) throws FormNotFoundException, ManagerFormException, ActivitiException{
 		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		String _userId = formInfo.getStartMemberId();
@@ -233,6 +248,12 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public FormInfoList getUserDraftList(String processKey, String userId, int pageNo, int pageSize) {
 		return form0114Manager.getUserDraftList(userId, pageNo, pageSize);
+	}
+	
+	@Override
+	public FormInfoList getUserRefuseList(String processKey, String userId,
+			Date startTime, Date endTime, int pageNo, int pageSize) {
+		return form0114Manager.getUserRefuseList(userId, startTime, endTime, pageNo, pageSize);
 	}
 	
 	@Override
@@ -404,14 +425,15 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Transactional(rollbackFor=Exception.class)
 	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException {
 		TaskResult tr = this.workflowManager.refuse(processKey, taskId, userId, refuseReason);
-		if(tr != null){
-			this.form0114Manager.deleteFormInfo(userId, formId);
-			//this.logManager.refuseLog(userId, formId, refuseReason);
+		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
+		if(tr != null && formInfo != null ){
+			this.form0114Manager.updateFormFinishedFlag(userId, formId, Constants.REFUSE, null, false);
 			this.logManager.appendApproveLog(userId, formId, "refuse", tr, refuseReason);
 		}else{
 			throw new FormNotFoundException("任务没有找到", this.getClass());
 		}
 		this.sendMail(userId, "拒绝", tr.getOwner(), null, refuseReason);
+		
 	}
 
 	@Override

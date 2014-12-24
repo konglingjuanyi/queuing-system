@@ -114,13 +114,19 @@
                     <li>
                         <a href="oa/apply_todo.html">
                             <i class="icon-double-angle-right"></i>
-                            正在审批的申请
+                            审批中的申请
+                        </a>
+                    </li>
+                    <li>
+                        <a href="oa/apply_refuse.html">
+                            <i class="icon-double-angle-right"></i>
+                            被拒绝的申请
                         </a>
                     </li>
                     <li>
                         <a href="oa/apply_history.html">
                             <i class="icon-double-angle-right"></i>
-                            已经结束的申请
+                            已结束的申请
                         </a>
                     </li>
                     <li>

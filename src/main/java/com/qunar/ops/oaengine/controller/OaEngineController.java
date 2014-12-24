@@ -231,6 +231,18 @@ public class OaEngineController {
 		ModelAndView mav = new ModelAndView("oa/apply_history");
 		return mav;
 	}
+	
+	/**
+	 * 我的申请，已经拒绝的页面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/apply_refuse.html")
+	public ModelAndView myApplyRefuse(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("oa/apply_refuse");
+		return mav;
+	}
 
 	/**
 	 * 待审批
@@ -734,6 +746,96 @@ public class OaEngineController {
 		}
 		return BaseResult.getSuccessResult(dataResult);
 	}
+	
+	/**
+	 * 被拒绝的申请
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/refuse")
+	@ResponseBody
+	public BaseResult getAllMyApplyRefuseList(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
+		int pageSize = noSize[0];
+		int pageNo = noSize[1];
+		String startTime = vars.get("startTime");
+		String endTime = vars.get("endTime");
+		Date _startTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		Date _endTime = null;
+		if (endTime != null) {
+			try {
+				_endTime = sdf.parse(endTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		FormInfoList formInfoList = ioaEngineService.getUserRefuseList(
+				processKey, userId, _startTime, _endTime, pageNo, pageSize);
+		DataResult dataResult;
+		try {
+			dataResult = getAllTableInfos(formInfoList, userId, 1);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+					OAEngineConst.ACL_LIMIT_ERROR_MSG);
+		}
+		return BaseResult.getSuccessResult(dataResult);
+	}
+	
+	/**
+	 * 复制到草稿
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/clone")
+	@ResponseBody
+	public BaseResult cloneToDraft(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String formId = vars.get("formId");
+		try {
+			this.ioaEngineService.cloneToDraft(userId, formId);
+		} catch (FormNotFoundException e) {
+			return BaseResult.getErrorResult(-1, e.getMessage());
+		} catch (ManagerFormException e) {
+			return BaseResult.getErrorResult(-1, e.getMessage());
+		}
+		return BaseResult.getSuccessResult("");
+	}
 
 	/**
 	 * 已经结束的申请
@@ -1049,7 +1151,6 @@ public class OaEngineController {
 	 * 
 	 * @param request
 	 * @return
-	 */
 	@RequestMapping(value = "oa/approve_back")
 	@ResponseBody
 	public BaseResult approveBack(HttpServletRequest request,
@@ -1091,6 +1192,7 @@ public class OaEngineController {
 		return BaseResult.getSuccessResult("回退审批结束");
 
 	}
+	 */
 
 	/**
 	 * 批量加签任务
@@ -1632,8 +1734,6 @@ public class OaEngineController {
 		List<FormInfo> formInfos = formInfoList.getFormInfos();
 		int size = formInfos.size();
 		List<String[]> tableInfos = new ArrayList<String[]>();
-		//EmployeeInfo employeeInfo = ioaEngineService.getEmployeeInfo(userId);
-		//String depart = getDepartMent(employeeInfo);
 		Boolean ratify = null;
 		for (int i = 0; i < size; i++) {
 			FormInfo formInfo = formInfos.get(i);
@@ -1665,8 +1765,6 @@ public class OaEngineController {
 		String tableInfo[] = {};
 		if (id == 1) {
 			tableInfo = new String[] { String.valueOf(formInfo.getId()),
-					formInfo.getSerialNumber(), formInfo.getApplyDep(),
-					formInfo.getApplyUser(),
 					OAControllerUtils.dateToStr(formInfo.getField0005()),
 					String.valueOf(formInfo.getMoneyAmount()) };
 		} else if (id == 2) {
@@ -1688,8 +1786,6 @@ public class OaEngineController {
 			tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
 		} else if (id == 4) {
 			tableInfo = new String[] { String.valueOf(formInfo.getOid()),
-					formInfo.getSerialNumber(), formInfo.getApplyDep(),
-					formInfo.getApplyUser(),
 					OAControllerUtils.dateToStr(formInfo.getApplyDate()),
 					String.valueOf(formInfo.getMoneyAmount()) };
 		}
