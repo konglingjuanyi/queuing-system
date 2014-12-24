@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.ops.oaengine.dao.Formson0117Mapper" >
+  <resultMap id="BaseResultMap" type="com.qunar.ops.oaengine.model.Formson0117" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="formmain_0114id" property="formmain0114id" jdbcType="BIGINT" />
+    <result column="field0048" property="field0048" jdbcType="VARCHAR" />
+    <result column="field0049" property="field0049" jdbcType="BIGINT" />
+    <result column="field0050" property="field0050" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="ratify" property="ratify" jdbcType="BIGINT" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, formmain_0114id, field0048, field0049, field0050, sort, ratify
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.oaengine.model.Formson0117Example" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from formson_0117
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit >= 0" >
+      limit ${limit} offset ${offset}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from formson_0117
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from formson_0117
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qunar.ops.oaengine.model.Formson0117Example" >
+    delete from formson_0117
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qunar.ops.oaengine.model.Formson0117" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      select currval('formson_0117_id_seq')
+    </selectKey>
+    insert into formson_0117 (formmain_0114id, field0048, field0049, 
+      field0050, sort, ratify
+      )
+    values (#{formmain0114id,jdbcType=BIGINT}, #{field0048,jdbcType=VARCHAR}, #{field0049,jdbcType=BIGINT}, 
+      #{field0050,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{ratify,jdbcType=BIGINT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.Formson0117" >
+    <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
+      select currval('formson_0117_id_seq')
+    </selectKey>
+    insert into formson_0117
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="formmain0114id != null" >
+        formmain_0114id,
+      </if>
+      <if test="field0048 != null" >
+        field0048,
+      </if>
+      <if test="field0049 != null" >
+        field0049,
+      </if>
+      <if test="field0050 != null" >
+        field0050,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="ratify != null" >
+        ratify,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="formmain0114id != null" >
+        #{formmain0114id,jdbcType=BIGINT},
+      </if>
+      <if test="field0048 != null" >
+        #{field0048,jdbcType=VARCHAR},
+      </if>
+      <if test="field0049 != null" >
+        #{field0049,jdbcType=BIGINT},
+      </if>
+      <if test="field0050 != null" >
+        #{field0050,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="ratify != null" >
+        #{ratify,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qunar.ops.oaengine.model.Formson0117Example" resultType="java.lang.Integer" >
+    select count(*) from formson_0117
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update formson_0117
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.formmain0114id != null" >
+        formmain_0114id = #{record.formmain0114id,jdbcType=BIGINT},
+      </if>
+      <if test="record.field0048 != null" >
+        field0048 = #{record.field0048,jdbcType=VARCHAR},
+      </if>
+      <if test="record.field0049 != null" >
+        field0049 = #{record.field0049,jdbcType=BIGINT},
+      </if>
+      <if test="record.field0050 != null" >
+        field0050 = #{record.field0050,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sort != null" >
+        sort = #{record.sort,jdbcType=INTEGER},
+      </if>
+      <if test="record.ratify != null" >
+        ratify = #{record.ratify,jdbcType=BIGINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update formson_0117
+    set id = #{record.id,jdbcType=BIGINT},
+      formmain_0114id = #{record.formmain0114id,jdbcType=BIGINT},
+      field0048 = #{record.field0048,jdbcType=VARCHAR},
+      field0049 = #{record.field0049,jdbcType=BIGINT},
+      field0050 = #{record.field0050,jdbcType=VARCHAR},
+      sort = #{record.sort,jdbcType=INTEGER},
+      ratify = #{record.ratify,jdbcType=BIGINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.oaengine.model.Formson0117" >
+    update formson_0117
+    <set >
+      <if test="formmain0114id != null" >
+        formmain_0114id = #{formmain0114id,jdbcType=BIGINT},
+      </if>
+      <if test="field0048 != null" >
+        field0048 = #{field0048,jdbcType=VARCHAR},
+      </if>
+      <if test="field0049 != null" >
+        field0049 = #{field0049,jdbcType=BIGINT},
+      </if>
+      <if test="field0050 != null" >
+        field0050 = #{field0050,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="ratify != null" >
+        ratify = #{ratify,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.oaengine.model.Formson0117" >
+    update formson_0117
+    set formmain_0114id = #{formmain0114id,jdbcType=BIGINT},
+      field0048 = #{field0048,jdbcType=VARCHAR},
+      field0049 = #{field0049,jdbcType=BIGINT},
+      field0050 = #{field0050,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      ratify = #{ratify,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
