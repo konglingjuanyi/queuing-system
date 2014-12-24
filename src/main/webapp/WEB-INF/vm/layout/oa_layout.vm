@@ -78,12 +78,17 @@
         <div class="navbar-header pull-left">
 					<span class="navbar-brand">
 						<small>
-                            报销系统
+                          		Qunar日常报销系统
                         </small>
 					</span>
         </div>
         <div class="navbar-header pull-right">
-					<input type="input" id="username"/><button onclick="changeuser()">提交</button>
+        	<span class="navbar-brand">
+						<small>
+							<input type="input" id="username"/><button onclick="changeuser()">切换用户</button>
+                           	<button onclick="logout();">退出</button>
+                        </small>
+			</span>
         </div>
     </div>
 </div>
@@ -149,7 +154,7 @@
                     <li>
                         <a href="oa/setting/delegation.html">
                             <i class="icon-double-angle-right"></i>
-                           	设置代理人
+                           	设置审批代理人
                         </a>
                     </li>
                 </ul>
@@ -185,6 +190,22 @@
                 },
                 "error": function (jqxhr, textstatus, errorthrown) {
                     alert("切换失败!");
+                }
+            });
+	}
+	
+	function logout(){
+		$.ajax({
+                contentType: "application/json; charset=utf-8",
+                url: "oa/logout",
+                type: "post",
+                data: {},
+                success: function (resp) {
+                    alert("退出成功!");
+                	window.location.reload();
+                },
+                "error": function (jqxhr, textstatus, errorthrown) {
+                    alert("退出成功!");
                 }
             });
 	}

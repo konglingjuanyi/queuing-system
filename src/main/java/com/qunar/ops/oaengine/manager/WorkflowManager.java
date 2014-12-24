@@ -262,6 +262,7 @@ public class WorkflowManager {
 		String owner = getOwner(task.getProcessInstanceId());
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", true);
+		vars.put("candidates", null);
 		taskService.complete(taskId, vars);
 		return new TaskResult(owner, task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
@@ -309,6 +310,13 @@ public class WorkflowManager {
 		vars.put("complete", false);
 		vars.put("candidates", assignees);
 		taskService.complete(taskId, vars);
+		List<TaskInfo> tasks = this.getCurrentTasks(task.getProcessInstanceId());
+		for(TaskInfo info : tasks){
+			Task t = taskService.createTaskQuery().taskId(info.getTaskId()).singleResult();
+			if(t != null){
+				runtimeService.setVariable(t.getExecutionId(), "candidates", null);
+			}
+		}
 		return new TaskResult(getOwner(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
 	

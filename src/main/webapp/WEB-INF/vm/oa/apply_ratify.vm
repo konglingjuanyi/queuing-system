@@ -87,10 +87,10 @@
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
                 <tr>
-                    <td>冲销借款总计</td>
-                    <td><input type="text" value="0.00" id="loan" readonly="readonly"></td>
+                    <td>&nbsp;&nbsp;支付金额&nbsp;&nbsp;</td>
+                    <td><input type="text" value="0.00" id="payAmount" onblur="payAmount()"></td>
                 </tr>
-            </table>         
+            </table>        
         </div>
 
     </div>
@@ -127,7 +127,7 @@
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" onblur="addMoney('table1')"></td>
                     <td><input type="text" ></td>
-                    <td><input type='text' value=''></td>
+                    <td><input type='text' value='' type='hidden'></td>
 
                 </tr>
             </table>
@@ -336,12 +336,30 @@
                 </tr>
             </table>
         </div>
-
     </div>
+    
+	    <div class="row">
+	        <div class="col-sm-12">
+	            <div class="col-xs-12" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span style="font-size:18px">冲销借款</span></div>
+	            <table frame="vsides" class="col-xs-12" id="table7">
+	                <tr>
+	                    <td bgcolor="#96E0E2">借款编号</td>
+	                    <td bgcolor="#96E0E2">借款金额</td>
+	                </tr>
+	                #foreach($loan in $loans)
+	                <tr>
+	                    <td>$loan[1]</td>
+	                    <td>$loan[2]</td>
+	                </tr>
+					#end
+	            </table>
+	            <div class="col-xs-12" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"></div>
+	        </div>
+	    </div>
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <div style="float:right;margin-top:20px;margin-bottom:10px; margin-right:1%;">
+    	<span style="float:left;margin-top:20px;margin-bottom:10px; margin-right:1%;">
         	<button class="btn btn-info" type="button" onclick="history.back();;">
                	 返回
             </button>
@@ -349,6 +367,8 @@
                     onclick="subTableInfos(false, false);">
                	 保存
             </button>
+    	</span>
+        <span style="float:right;margin-top:20px;margin-bottom:10px; margin-right:1%;">
             <button class="btn btn-info" type="button"
                     onclick="subTableInfos(false, true);">
                	 通过
@@ -365,7 +385,7 @@
                     onclick="approveEndorse();">
                	 加签
             </button>
-        </div>
+        </span>
     </div>
 </div>
 
@@ -482,7 +502,7 @@
                     }
                 }
                 cell = nRow.insertCell(coLen - 1);
-                cell.innerHTML = "<input type='text' value='"+tableInfo[j][100]+"'>";
+                cell.innerHTML = "<input type='hidden' value='"+tableInfo[j][100]+"'>";
 
                 rowLen += 1;
             }
@@ -504,15 +524,15 @@
         $("#sum").val(vars["sum"]);
         $("#ratify").val(vars["ratify"]);
         $("#remark").val(vars["remark"]);
-
+		$("#payAmount").val(vars["payAmount"]);
     }
 
 
     function addMoney(tableId) {
-        var tableList = ["table1", "table2", "table3", "table4", "table5"];
-        var errorMsgList = ["出租车费", "餐费", "招待费用", "员工关系费", "其他费用"];
+        var tableList = ["table1", "table2", "table3", "table4", "table5", "table6"];
+        var errorMsgList = ["出租车费", "餐费", "招待费用", "员工关系费", "其他费用", "通信费"];
         var dic = {};
-        for (var i = 0; i < 5; i++) {
+        for (var i = 0; i < 6; i++) {
             dic[tableList[i]] = errorMsgList[i];
         }
 
@@ -521,31 +541,52 @@
             var rowLen = table.rows.length;
             var coLen = table.rows[0].cells.length;
             var tableSum = 0;
-            for (i = 1; i < rowLen; i++) {
-                var innerSum = '';
-                if (tableId == "table6") {
-                    innerSum = table.rows[i].cells[coLen - 2].childNodes[0].value;
-                } else {
-                    innerSum = table.rows[i].cells[coLen - 3].childNodes[0].value;
-                }
-                var regexp = new RegExp("^[0-9.]*$")
-                if (isNull(innerSum)) {
-                    innerSum = 0;
-                }
-                else if (!regexp.test(innerSum)) {
-                    alert("金额必须为数字，请检查");
-                    return;
-                }
-                else {
-                    innerSum = parseFloat(innerSum);
-                }
-                tableSum = parseFloat(tableSum);
-                tableSum += innerSum;
+            if(tableId == "table6"){
+            	cell = table.rows[0].cells[3].childNodes[0];
+            	innerSum = cell.value;
+	            if (isNull(innerSum)) {
+	            	innerSum = 0;
+	            }else if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(innerSum)) {
+	                alert(dic[tableId] + "金额格式错误");
+	                cell.value = "";
+	                return false;
+	            }
+	            $("#ratify6").val(parseFloat(innerSum).toFixed(2));
+            }else{
+	            for (i = 1; i < rowLen; i++) {
+	                var innerSum = '';
+	                var amount = 0;
+	                var cell = table.rows[i].cells[coLen - 3].childNodes[0];
+	                innerSum = cell.value;
+	                if (tableId == "table2") {
+	                    amount = table.rows[i].cells[4].childNodes[0].value;
+	                }else {
+	                    amount = table.rows[i].cells[coLen - 4].childNodes[0].value;
+	                }
+	                var regexp = new RegExp("^[0-9.]*$")
+	                if (isNull(innerSum)) {
+	                    innerSum = 0;
+	                }else if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(innerSum)) {
+		                alert(dic[tableId] + "金额格式错误");
+		                cell.value = "";
+		                return false;
+		            }else {
+	                    innerSum = parseFloat(innerSum);
+	                }
+	                amount = parseFloat(amount);
+	                if(innerSum > amount){
+	                	alert("核定金额不能大于申请金额");
+	                	cell.value = "";
+	                	return false;
+	                }
+	                tableSum = parseFloat(tableSum);
+	                tableSum += innerSum;
+	            }
+	            tableSum
+	            var length = tableId.length;
+	            var id = tableId.substr(length - 1);
+	            $("#ratify" + id).val(tableSum.toFixed(2));
             }
-            tableSum
-            var length = tableId.length;
-            var id = tableId.substr(length - 1);
-            $("#ratify" + id).val(tableSum.toFixed(2));
         }
 
         var sum = 0;
@@ -578,6 +619,7 @@
         vars["sum"] = $("#sum").val();
         vars["ratify"] = $("#ratify").val();
         vars["remark"] = $("#remark").val();
+        vars["payAmount"] = $("#payAmount").val();
         var tableMap = {};
         var tableList = ["table1", "table2", "table3", "table4", "table5"];
         var len = tableList.length;
@@ -640,9 +682,9 @@
             success: function (resp) {
                 if (resp.errorCode == 0) {
                 	if(pass){
-                    	approveProxy("approve_pass", "", "通过");
+                    	approveProxy("oa/approve_pass", "", "通过");
                     }else{
-                    	showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("创建报销申请成功！"), 300);
+                    	showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("保存成功！"), 300);
                     	window.location.href = '/oaengine/oa/approve_todo.html';
                     }
                 } else {
@@ -746,7 +788,7 @@
     
     
     function approveReject() {
-        var url = "approve_reject";
+        var url = "oa/approve_reject";
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#reject-msg-dialog").empty();
@@ -814,7 +856,7 @@
     }
 
     function approveBack() {
-        var url = "approve_back";
+        var url = "oa/approve_back";
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#back-msg-dialog").empty();
@@ -882,7 +924,7 @@
     }
 
     function approveEndorse() {
-        var url = "approve_endorse";
+        var url = "oa/approve_endorse";
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#endorse-msg-dialog").empty();
@@ -980,5 +1022,20 @@
         form += '</div>';
         form += '</form>';
         return form;
+    }
+    
+    function payAmount(){
+    	payAmount = $("#payAmount").val();
+    	ratify = $("#ratify").val();
+    	if(payAmount <= 0 || payAmount==''){
+    		alert("支付金额不能等于0");
+    		$("#payAmount").val("");
+    		return false;
+    	}
+    	if(payAmount > ratify){
+    		alert("支付金额不能大于核定总金额");
+    		$("#payAmount").val("");
+    		return false;
+    	}
     }
 </script>

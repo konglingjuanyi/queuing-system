@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
@@ -27,6 +28,9 @@ public class EmployeeInfoService {
 
 	@Value("${backyard.apihost}")
 	String backyardUrl;
+	
+	@Value("${oa.apihost}")
+	String oadUrl;
 
 	/**
 	 * 获取员工信息
@@ -68,6 +72,36 @@ public class EmployeeInfoService {
 			// eInfo.setBankName((String)data.get(""));
 		}
 		return eInfo;
+	}
+	
+	/**
+	 * 获取员工借款
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws RemoteAccessException
+	 */
+	public List<String[]> getLoans(String userId) throws RemoteAccessException {
+		List<String[]> infos = new ArrayList<String[]>();
+		String apiUrl = oadUrl + "getLoans?date=2014-01-01%2000:00:00&username=" + userId;
+		JSONObject json = invokeGetApi(apiUrl);
+		System.out.println(json);
+		Integer code = json.getInteger("resultcode");
+		if (code != 0) {
+			throw new RemoteAccessException(json.getString("desc"),
+					EmployeeInfoService.class);
+		} else {
+			JSONArray array = json.getJSONArray("loans");
+			for(int i=0; i < array.size(); i++){
+				JSONObject info = array.getJSONObject(i);
+				String recordid = (String) info.get("field0034");
+				String payAmount = (String) info.get("field0004");
+				infos.add(new String[]{recordid + "," + payAmount, recordid, payAmount});
+			}
+		}
+//		infos.add(new String[]{"xxxxx,1.00", "xxxxx", "1.0"});
+//		infos.add(new String[]{"aaaaa,2.00", "aaaaa", "2.0"});
+		return infos;
 	}
 
 	/**

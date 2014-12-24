@@ -1,6 +1,17 @@
 /**
  * Created by zhenqingwang on 12/1/14.
  */
+(function($){
+        $.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+            _title: function(title){
+                var $title = this.options.title || '&nbsp;'
+                if(("title_html" in this.options) && (this.options.title_html == true))
+                    title.html($title);
+                else title.text($title);
+            }
+        }));
+
+    })(jQuery);
 
 function generateNoticeMsg(msg) {
     return $.parseStr('<div class="alert alert-info bigger-110" style="margin-bottom: 0px; margin-top: 5px;">%s</div>', msg);
@@ -67,9 +78,9 @@ function showEditDialog(formId) {
 
 function constructEditDialogDatas(tableMap, vars) {
     $('#edit-form').html(edit_form);
-    var fixedInfo = '<div style="text-align:center; vertical-align:middle;">';
+    var fixedInfo = '<!--startprint--><div style="text-align:center; vertical-align:middle;">';
     fixedInfo += fixedTableInfo(tableMap, vars);
-    fixedInfo += '</div>';
+    fixedInfo += '</div><!--endprint-->';
     $('#edit_content').append(fixedInfo);
     $("#dialog-confirm").removeClass('hide').dialog({
         width: 1100,
@@ -77,7 +88,8 @@ function constructEditDialogDatas(tableMap, vars) {
         modal: true,
         draggable: true,
         resizable: false,
-        title: "报销页详情",
+        title_html:true,
+        title: "报销页详情<button onclick='printPage()'>打印</button>",
         close: function () {
             $('#edit-form').empty();
             $("#dialog-confirm").dialog('close');
@@ -87,14 +99,14 @@ function constructEditDialogDatas(tableMap, vars) {
 }
 
 function fixedTableInfo(tableMap, vars) {
-    var tableList = ["table1", "table6", "table2", "table3", "table4", "table5"];
+    var tableList = ["table1", "table6", "table2", "table3", "table4", "table5", "table7"];
     var tableHeadList = ["出租车费明细(含汽车燃油费)", "通信费",
         "餐费明细（每人每餐报销不超过50元）",
-        "招待费明细", "员工关系费明细", "其他费用"];
+        "招待费明细", "员工关系费明细", "其他费用", "借款"];
     //var tableForm = "<iframe style='height:1100px; width:1200px'></iframe>";
     var tableForm = "";
     tableForm += table0BodyForm(tableMap["table"], vars); //这里应该先加table信息
-    for (var i = 0; i < 6; i++) {
+    for (var i = 0; i < 7; i++) {
         tableForm += tableHeadForm(tableHeadList[i]);
         tableForm += $.parseStr('<table frame="vsides" id="%s" style="width: 1067px;">', tableList[i]);
         var num1 = i;
@@ -110,7 +122,7 @@ function fixedTableInfo(tableMap, vars) {
             tableForm += tableBodyForm(tableMap, tableList[i], num1);
         }
         tableForm += '</table>';
-        if (tableList[i] != "table6") {
+        if (tableList[i] != "table6" && tableList[i] != "table7") {
             tableForm += tableSumForm(num2, vars);
         }
     }
@@ -126,7 +138,8 @@ function tableZeroNameDic() {
     var table3Name = ["日期", "地点", "业务目的", "客户单位", "客户姓名", "参加人数", "金额", "核定金额", "备注"];
     var table4Name = ["日期", "地点", "同行人（姓名）", "活动目的", "金额", "核定金额", "备注"];
     var table5Name = ["费用项目", "金额", "核定金额", "备注"];
-    var tableNames = [table1Name, table2Name, table3Name, table4Name, table5Name];
+    var table7Name = ["借款编号", "借款金额"];
+    var tableNames = [table1Name, table2Name, table3Name, table4Name, table5Name, table7Name];
     return tableNames;
 }
 
@@ -165,6 +178,9 @@ function tableBodyForm(tableMap, tableId, num) {
             bodyForm += '<tr>';
             for (var j = 0; j < headLen; j++) {
                 var value = tableInfo[i][j];
+                if(tableId == "table7"){
+                	value = tableInfo[i][j+1];
+                }
                 if (isNull(value)) {
                     value = "";
                 }
@@ -265,6 +281,7 @@ function tableSumForm(num, vars) {
     var sum = vars[sumOne];
     var ratifyOne = "ratify" + num;
     var ratify = vars[ratifyOne];
+    var payAmount = vars["payAmount"];
     var form = '';
     form += '<table style="border-collapse:collapse;width: 1067px;" border="1">';
     form += '<tr>';
@@ -280,6 +297,14 @@ function tableSumForm(num, vars) {
 	form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',
 	    		ratify, ratifyOne);
 	form += '</td></tr>';
+	if(num == ''){
+		form += '<tr>';
+		form += '<td>支付金额</td>';
+		form += '<td>';
+		form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',
+				payAmount, payAmount);
+		form += '</td></tr>';
+	}
     form += '</table>';
     return form;
 }
@@ -346,4 +371,16 @@ function showResultDialog(id, header, header_icon, msg, width) {
             $("#"+id).dialog('destroy');
         }
     });
+}
+
+function printPage(){
+	var bdhtml=window.document.body.innerHTML;//获取当前页的html代码，用于保存原来的网页
+	var sprnstr="<!--startprint-->";//设置打印开始区域（在要打印的html上设置要打印的区域开始）
+	var eprnstr="<!--endprint-->";//设置打印结束区域（在要打印的html上设置要打印的区域结束）
+	var prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+	prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html，这样就获取到了需要的局部页面
+
+	window.document.body.innerHTML=prnhtml;//把修改后的局部html替换当前网页
+	window.print(); //进行局部打印
+	window.document.body.innerHTML=bdhtml; //打印结束后，把原来的网页替换回来
 }

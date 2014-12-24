@@ -16,6 +16,7 @@ import com.qunar.ops.oaengine.service.IOAEngineService;
 import com.qunar.ops.oaengine.service.MailSenderService;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
 import com.qunar.ops.oaengine.util.OAEngineConst;
+import com.qunar.ops.oaengine.util.QUtils;
 
 import org.activiti.engine.*;
 import org.activiti.spring.ProcessEngineFactoryBean;
@@ -32,7 +33,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -78,34 +81,30 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/user")
 	@ResponseBody
 	public BaseResult changeRootUser(HttpServletRequest request,
-			@RequestBody CommonRequest commonRequest) {
+			@RequestBody CommonRequest commonRequest, HttpServletResponse response) {
 		Map<String, String> vars = commonRequest.getVars();
 		String userId = vars.get("user");
-		request.getSession().setAttribute("USER_ID", userId);
+		//request.getSession().setAttribute("USER_ID", userId);
+		QUtils.setUsername(response, userId);
 		return new BaseResult();
 	}
-
-	@RequestMapping(value = "/oa/test.html")
-	public void index(HttpServletRequest request) {
-		// mailSenderService.sender("nuby.zhang@qunar.com", new
-		// String[]{"nuby.zhang@qunar.com"}, new
-		// String[]{"nuby.zhang@qunar.com"}, "", "");
-		Request req = new Request();
-		req.setAmountMoney(200l);
-		req.setDepartment("技术部");
-		req.setDepartmentII("OPS");
-		req.setOid("001");
-		req.setReport2vp(true);
-		req.setTbMoney(100l);
-		// Object[] startWorkflow = this.manager.startWorkflow(processKey,
-		// "nuby.zhang", req);
-		// ListInfo<TaskInfo> todoList = this.manager.todoList("test", "nuby",
-		// 0, 10);
-		TaskResult pass = this.manager.pass("5913", "nuby.zhang");
-		// this.manager.endorse("5", "nuby", "nuby,abc");
-		// List<TaskInfo> back = this.manager.back("nuby", "50962", "xxx");
-		// this.manager.cancel("test", "001", "nuby.zhang", "reason");
-		System.out.println("====");
+	
+	/**
+	 * 退出
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/logout")
+	@ResponseBody
+	public BaseResult logout(HttpServletRequest request, HttpServletResponse response) {
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null)for(Cookie cookie : cookies){
+			if("un".equals(cookie.getName())){
+				cookie.setValue("");;
+			}
+		}
+		return new BaseResult();
 	}
 
 	/**
@@ -114,8 +113,8 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/oa/login")
-	public String login(HttpServletRequest request) {
+	@RequestMapping(value = "oa/login")
+	public String login(HttpServletRequest request, HttpServletResponse response2) {
 		HttpClient client = HttpClientBuilder.create().build();
 		String token = request.getParameter("token");
 		HttpGet method = new HttpGet(
@@ -134,7 +133,8 @@ public class OaEngineController {
 			if (ret.equals("true")) {
 				String userId = parseObject.getJSONObject("data").getString(
 						"userId");
-				request.getSession().setAttribute("USER_ID", userId);
+				//request.getSession().setAttribute("USER_ID", userId);
+				QUtils.setUsername(response2, userId);
 			} else {
 				return "redirect:/oa/index.html";
 			}
@@ -151,9 +151,10 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/oa/index.html")
+	@RequestMapping(value = "oa/index.html")
 	public ModelAndView welcom(HttpServletRequest request) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId != null) {
 			return addApply(request);
 		}
@@ -170,6 +171,16 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/apply.html")
 	public ModelAndView addApply(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/apply");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
+		List<String[]> loans = new ArrayList<String[]>();
+		try {
+			loans = this.ioaEngineService.getLoans(userId);
+		} catch (RemoteAccessException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
+		mav.addObject("loans", loans);
 		return mav;
 	}
 
@@ -182,6 +193,16 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/apply_ratify.html")
 	public ModelAndView addApplyRatify(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/apply_ratify");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
+		List<String[]> loans = new ArrayList<String[]>();
+		try {
+			loans = this.ioaEngineService.getLoans(userId);
+		} catch (RemoteAccessException e) {
+			logger.warn(e.getMessage());
+			e.printStackTrace();
+		}
+		mav.addObject("loans", loans);
 		mav.addObject("formId", request.getParameter("formId"));
 		mav.addObject("taskId", request.getParameter("taskId"));
 		return mav;
@@ -255,7 +276,8 @@ public class OaEngineController {
 	 */
 	@RequestMapping(value = "oa/setting/delegation.html")
 	public ModelAndView delegation(HttpServletRequest request) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		List<Delegation> users = delegationManager.findDelegationByMaster(userId);
 		ModelAndView mav = new ModelAndView("oa/delegation");
 		mav.addObject("users", users);
@@ -271,7 +293,8 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/setting/add_delegation")
 	@ResponseBody
 	public BaseResult AddDelegation(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -297,7 +320,8 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/setting/remove_delegation")
 	@ResponseBody
 	public BaseResult RemoveDelegation(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -322,7 +346,8 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/employeeinfo")
 	@ResponseBody
 	public BaseResult webEmployeeInfo(HttpServletRequest request) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -345,6 +370,7 @@ public class OaEngineController {
 				employeeInfo.getDepartmentI(), employeeInfo.getDepartmentIV() };
 		return BaseResult.getSuccessResult(result);
 	}
+	
 
 	/**
 	 * 获取工时
@@ -357,7 +383,8 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult webLaborHour(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -397,7 +424,8 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult Ratify(HttpServletRequest request,
 			@RequestBody FormRequest formRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -460,7 +488,8 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult webPostData(HttpServletRequest request,
 			@RequestBody FormRequest formRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -585,7 +614,8 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getAllDraftInfos(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -620,7 +650,8 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getDraftDetailInfo(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -653,7 +684,8 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getAllMyApplyTodoList(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -714,7 +746,8 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getAllMyApplyHistoryList(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -778,7 +811,8 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getAllApproveTodoList(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -852,7 +886,8 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getAllApproveHistoryList(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -925,11 +960,12 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/approve_pass")
+	@RequestMapping(value = "oa/approve_pass")
 	@ResponseBody
 	public BaseResult approvePass(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequestt) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -968,11 +1004,12 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/approve_reject")
+	@RequestMapping(value = "oa/approve_reject")
 	@ResponseBody
 	public BaseResult approveReject(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -1013,11 +1050,12 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/approve_back")
+	@RequestMapping(value = "oa/approve_back")
 	@ResponseBody
 	public BaseResult approveBack(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -1060,11 +1098,12 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/approve_endorse")
+	@RequestMapping(value = "oa/approve_endorse")
 	@ResponseBody
 	public BaseResult approveEndorse(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -1107,11 +1146,12 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/push_approve")
+	@RequestMapping(value = "oa/push_approve")
 	@ResponseBody
 	public BaseResult pushApprove(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -1142,11 +1182,12 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/restart_form")
+	@RequestMapping(value = "oa/restart_form")
 	@ResponseBody
 	public BaseResult restartForm(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -1194,11 +1235,12 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/back_del")
+	@RequestMapping(value = "oa/back_del")
 	@ResponseBody
 	public BaseResult applyBackorDel(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -1250,11 +1292,12 @@ public class OaEngineController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/approve_info")
+	@RequestMapping(value = "oa/approve_info")
 	@ResponseBody
 	public BaseResult getApproveInfo(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -1358,8 +1401,8 @@ public class OaEngineController {
 		long overSum = 0;
 		long overRatify = 0;
 		for (int i = 0; i < len; i++) {
-			if ("".equals(table[i][0]) || "".equals(table[i][5])
-					|| "0".equals(table[i][5])) {
+			if ("".equals(table[i][0]) || "".equals(table[i][4])
+					|| "0".equals(table[i][4])) {
 				continue;
 			}
 			OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
@@ -1377,11 +1420,9 @@ public class OaEngineController {
 			overInfo.setOvertimeMealsWorkhours(OAControllerUtils
 					.workHourToDec(table[i][7]));
 			if (ratify) {
-				overInfo.setRatify(OAControllerUtils
-						.yuanMoneyToCent(table[i][8]));
+				overInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][8]));
 			} else {
-				overInfo.setRatify(OAControllerUtils
-						.yuanMoneyToCent(table[i][4]));
+				overInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][4]));
 			}
 			overInfo.setOvertimeMealsComment(table[i][9]);
 			if (table[i][10].length() > 0) {
@@ -1419,8 +1460,7 @@ public class OaEngineController {
 				hosInfo.setRatify(OAControllerUtils
 						.yuanMoneyToCent(table[i][7]));
 			} else {
-				hosInfo.setRatify(OAControllerUtils
-						.yuanMoneyToCent(table[i][6]));
+				hosInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][6]));
 			}
 			hosInfo.setMemo(table[i][8]);
 			if (table[i][9].length() > 0) {
@@ -1456,8 +1496,7 @@ public class OaEngineController {
 				employInfo.setRatify(OAControllerUtils
 						.yuanMoneyToCent(table[i][5]));
 			} else {
-				employInfo.setRatify(OAControllerUtils
-						.yuanMoneyToCent(table[i][4]));
+				employInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][4]));
 			}
 			employInfo.setEmRelationsFeesComment(table[i][6]);
 			if (table[i][7].length() > 0) {
@@ -1491,8 +1530,7 @@ public class OaEngineController {
 				otherInfo.setRatify(OAControllerUtils
 						.yuanMoneyToCent(table[i][2]));
 			} else {
-				otherInfo.setRatify(OAControllerUtils
-						.yuanMoneyToCent(table[i][1]));
+				otherInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][1]));
 			}
 			otherInfo.setOtherCostComment(table[i][3]);
 			if (table[i][4].length() > 0) {
@@ -1504,7 +1542,6 @@ public class OaEngineController {
 		}
 		size = list5.size();
 		// 如果全部数据都为空的话，就不存了。
-
 		if (list1.size() == 0 && list2.size() == 0 && list3.size() == 0
 				&& list4.size() == 0 && list5.size() == 0
 				&& OAControllerUtils.isNull(vars.get("remark")) && (
@@ -1526,17 +1563,29 @@ public class OaEngineController {
 		formInfo.setSumOtherAmount(otherSum);
 		formInfo.setCommunicationCosts(OAControllerUtils.yuanMoneyToCent(vars.get("sum6")));
 		formInfo.setCommuCostsComment(vars.get("remark"));
+		
 		long amount = taxiSum + overSum + hosSum + employSum + otherSum + OAControllerUtils.yuanMoneyToCent(vars.get("sum6"));
 		formInfo.setMoneyAmount(amount);
-
-		formInfo.setCommunicationNotifyAmount(OAControllerUtils.yuanMoneyToCent(vars.get("ratify6")));
+		
+		long commRatify = 0;
+		if (ratify) {
+			commRatify = OAControllerUtils.yuanMoneyToCent(vars.get("ratify6"));
+			formInfo.setCommunicationNotifyAmount(commRatify);
+		}else{
+			commRatify = OAControllerUtils.yuanMoneyToCent(vars.get("sum6"));
+			formInfo.setCommunicationNotifyAmount(commRatify);
+		}
 		formInfo.setTaxiFaresNotifyAmount(taxiRatify);
 		formInfo.setOvertimeMealsNotifyAmount(overRatify);
 		formInfo.setHospitalityNotifyAmount(hosRatify);
 		formInfo.setEmRelationsFeesNotify(employRatify);
 		formInfo.setOtherNotifyAmount(otherRatify);
-		long ratifyAmount = taxiRatify + overRatify + hosRatify + employRatify + otherRatify + OAControllerUtils.yuanMoneyToCent(vars.get("ratify6"));
+		long ratifyAmount = taxiRatify + overRatify + hosRatify + employRatify + otherRatify + commRatify;
 		formInfo.setSumFinancialNotify(ratifyAmount);
+		
+		if (ratify) {
+			formInfo.setPayAmount(OAControllerUtils.yuanMoneyToCent(vars.get("payAmount")));
+		}
 
 		table = tableMap.get("table");
 		len = table.length;
@@ -1550,9 +1599,21 @@ public class OaEngineController {
 			formInfo.setIsDirectVp(table[i][6]);
 			formInfo.setBankNumber(table[i][7]);
 			formInfo.setBankName(table[i][8]);
-			// formInfo.setIsBorrow(table[i][9]);
-			// formInfo.setBorrowSN(table[i][10]);
-			// formInfo.setBorrowAmount(OAControllerUtils.strToLong(table[i][11]));
+		}
+		
+		table = tableMap.get("table7");
+		if(table != null){
+			len = table.length;
+			String loans = "";
+			for (int i = 0; i < table.length; i++) {
+				for(int j = 0; j < table[i].length; j++){
+					loans += table[i][j] + ";";
+				}
+			}
+			if(loans.length() > 0){
+				loans = loans.substring(0, loans.length() - 1);
+			}
+			formInfo.setBorrowSN(loans);
 		}
 		return true;
 	}
@@ -1664,11 +1725,9 @@ public class OaEngineController {
 				table[i][4] = infos1[i].getTaxiFaresUse();
 				table[i][5] = infos1[i].getTaxiFaresPeerPeople();
 				table[i][6] = String.valueOf(infos1[i].getTaxiFaresWorkhour());
-				String eMoney = OAControllerUtils.centMoneyToYuan(infos1[i]
-						.getTaxiFaresAmount());
+				String eMoney = OAControllerUtils.centMoneyToYuan(infos1[i].getTaxiFaresAmount());
 				table[i][7] = eMoney;
-				table[i][8] = OAControllerUtils.centMoneyToYuan(infos1[i]
-						.getRatify());
+				table[i][8] = OAControllerUtils.centMoneyToYuan(infos1[i].getRatify());
 				table[i][9] = infos1[i].getComment();
 			}
 		}
@@ -1770,6 +1829,22 @@ public class OaEngineController {
 			}
 		}
 		tableMap.put("table5", table);
+		
+		String borrowSN = formInfo.getBorrowSN();
+		len = 0;
+		String[][] borrowSNs = new String[0][0];
+		if(borrowSN != null && borrowSN.length() > 0){
+			String[] tmp = borrowSN.split(";");
+			borrowSNs = new String[tmp.length][3];
+			len = tmp.length;
+			for (int i = 0; i < len; i++) {
+				String[] split = tmp[i].split(",");
+				borrowSNs[i][0] = tmp[i];
+				borrowSNs[i][1] = split[0];
+				borrowSNs[i][2] = split[1];
+			}
+		}
+		tableMap.put("table7", borrowSNs);
 
 		Map<String, String> vars = new HashMap<String, String>();
 
@@ -1795,7 +1870,7 @@ public class OaEngineController {
 				.getCommunicationCosts());
 		vars.put("sum6", moneySum6);
 		vars.put("remark", formInfo.getCommuCostsComment());
-
+		vars.put("payAmount", OAControllerUtils.centMoneyToYuan(formInfo.getPayAmount()));
 		String m = OAControllerUtils.centMoneyToYuan(formInfo
 				.getTaxiFaresNotifyAmount());
 		vars.put("ratify1", m);
@@ -1830,8 +1905,8 @@ public class OaEngineController {
 	 * @return
 	 */
 	private String[][] createTableFirstInfo(FormInfo formInfo) {
-		String table[][] = new String[1][12];
-		String acTable[] = new String[12];
+		String table[][] = new String[1][13];
+		String acTable[] = new String[13];
 		acTable[0] = formInfo.getApplyUser();
 		acTable[1] = formInfo.getSerialNumber();
 		acTable[2] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
@@ -1844,6 +1919,7 @@ public class OaEngineController {
 		acTable[9] = formInfo.getIsBorrow();
 		acTable[10] = formInfo.getBorrowSN();
 		acTable[11] = String.valueOf(formInfo.getBorrowAmount());
+		acTable[12] = String.valueOf(formInfo.getPayAmount());
 		table[0] = acTable;
 		return table;
 	}

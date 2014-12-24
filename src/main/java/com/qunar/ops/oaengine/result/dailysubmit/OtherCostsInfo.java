@@ -18,7 +18,7 @@ public class OtherCostsInfo extends Formson0117 implements Serializable {
 	private String otherCostProject;
 	private Long ratify;
 	public Long getRatify(){
-		return super.getRatify();
+		return super.getRatify()==null?0:super.getRatify();
 	}
 	public void setRatify(Long v){
 		super.setRatify(v);
@@ -33,7 +33,7 @@ public class OtherCostsInfo extends Formson0117 implements Serializable {
 	}
 
 	public Long getOtherCostAmount() {
-		return super.getField0049();
+		return super.getField0049()==null?0:super.getField0049();
 	}
 
 	public void setOtherCostAmount(Long otherCostAmount) {

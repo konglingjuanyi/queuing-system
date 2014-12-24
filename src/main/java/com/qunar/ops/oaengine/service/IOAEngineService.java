@@ -175,13 +175,12 @@ public interface IOAEngineService {
 	public EmployeeInfo getEmployeeInfo(String userId) throws RemoteAccessException;
 	
 	/**
-	 * 获取工时
+	 * 获取借款
 	 * @param userId
-	 * @param day
 	 * @return
 	 * @throws RemoteAccessException 
 	 */
-	public float getLaborHour(String userId, Date day) throws RemoteAccessException;
+	public List<String[]> getLoans(String userId) throws RemoteAccessException;
 	
 	/**
 	 * 获取菜单栏
@@ -192,7 +191,13 @@ public interface IOAEngineService {
 	 */
 	public TreeMap<String, Integer> getMenu(String processKey, String userId) throws FormNotFoundException;
 	
-	
+	/**
+	 * 获取工时
+	 * @param userId
+	 * @return
+	 * @throws RemoteAccessException 
+	 */
+	public float getLaborHour(String userId, Date day) throws RemoteAccessException;
 	/****************************************************
 	 *  本人申请工单列表页面：
 	 *  角色：申请发起人

@@ -136,10 +136,20 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	// private String isDirectVp;
 	// 开户银行
 	// private String bankName;
+	// 实际支付金额
+	// private Long payAmount;
 	private String taskId;
 	private String taskKey;
 	private Date dealDate;
 	private boolean isRatify;
+	
+	public void setPayAmount(Long payAmount){
+		super.setField0101(payAmount);
+	}
+	
+	public Long getPayAmount(){
+		return super.getField0101();
+	}
 	
 	public void setCommunicationNotifyAmount(Long v){
 		super.setField0099(v);

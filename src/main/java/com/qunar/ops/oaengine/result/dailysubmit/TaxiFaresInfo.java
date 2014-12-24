@@ -35,7 +35,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 	
 	private Long ratify;
 	public Long getRatify(){
-		return super.getRatify();
+		return super.getRatify()==null?0:super.getRatify();
 	}
 	public void setRatify(Long v){
 		super.setRatify(v);
@@ -51,7 +51,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 	}
 
 	public Long getTaxiFaresAmount() {
-		return super.getField0057();
+		return super.getField0057()==null?0:super.getField0057();
 	}
 
 	public void setTaxiFaresAmount(Long taxiFaresAmount) {

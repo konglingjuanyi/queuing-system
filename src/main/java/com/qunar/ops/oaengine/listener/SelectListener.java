@@ -3,6 +3,7 @@ package com.qunar.ops.oaengine.listener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.delegate.DelegateTask;
@@ -43,9 +44,13 @@ public class SelectListener implements TaskListener  {
 			logger.error("发起人为空: pid= {} taskkey={} taskId={}", delegateTask.getProcessInstanceId(), delegateTask.getTaskDefinitionKey(), delegateTask.getId());
 			throw new ActivitiException("审批候选人为空");
 		}
-		if(vars.containsKey("candidates")){//手工指定
+		if(vars.containsKey("candidates") && vars.get("candidates") != null){//手工指定
+			Set<IdentityLink> cs = delegateTask.getCandidates();
+			if(cs != null)for(IdentityLink c : delegateTask.getCandidates()){
+				delegateTask.deleteCandidateUser(c.getUserId());
+			}
 			String _candidates = (String)vars.get("candidates");
-			if(_candidates != null)for(String _candidate : _candidates.split(",")){
+			for(String _candidate : _candidates.split(",")){
 				delegateTask.addCandidateUser(_candidate);
 				candidates.add(_candidate);
 			}

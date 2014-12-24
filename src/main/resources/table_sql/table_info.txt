@@ -22,7 +22,7 @@ field0002		二级部门		varchar(255) DEFAULT NULL
 field0003		三级部门		varchar(255) DEFAULT NULL
 field0004		申请人			varchar(255) DEFAULT NULL
 field0005		申请日期	
-field0006		借款单流水号		varchar(255) DEFAULT NULL
+field0006		借款单流水号		text
 field0007		是否有借款		varchar(255) DEFAULT NULL
 field0008		流水号			varchar(255) DEFAULT NULL
 field0009		四级部门		varchar(255) DEFAULT NULL
@@ -83,6 +83,7 @@ field0096		是否直接向VP汇报	varchar(255) DEFAULT NULL
 field0097		开户银行		varchar(255) DEFAULT NULL
 field0099		通信费财务核实金额		bigint DEFAULT NULL
 field0100		五级部门		varchar(255) DEFAULT NULL
+field0101		支付金额		bigint DEFAULT NULL
 
 ----------------------日常费用报销子表---------------------------
 ----------------------加班餐费---------------------------
@@ -174,4 +175,4 @@ next_candidate	下一节点审批候选人	text
 ts	审批时间	timestamp	with	time	zone
 dob	审批日期	date			
 
-max:99
+max:101

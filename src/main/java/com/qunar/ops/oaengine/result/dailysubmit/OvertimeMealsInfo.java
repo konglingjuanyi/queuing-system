@@ -32,7 +32,7 @@ public class OvertimeMealsInfo extends Formson0115 implements Serializable {
 	private BigDecimal overtimeMealsWorkhours;
 	private Long ratify;
 	public Long getRatify(){
-		return super.getRatify();
+		return super.getRatify()==null?0:super.getRatify();
 	}
 	public void setRatify(Long v){
 		super.setRatify(v);
@@ -65,7 +65,7 @@ public class OvertimeMealsInfo extends Formson0115 implements Serializable {
 	}
 
 	public Long getOvertimeMealsAmount() {
-		return super.getField0037();
+		return super.getField0037()==null?0:super.getField0037();
 	}
 
 	public void setOvertimeMealsAmount(Long overtimeMealsAmount) {

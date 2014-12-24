@@ -219,6 +219,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 	public EmployeeInfo getEmployeeInfo(String userId) throws RemoteAccessException {
 		return employeeInfoService.getEmployee(userId);
 	}
+	
+	@Override
+	public List<String[]> getLoans(String userId) throws RemoteAccessException {
+		return employeeInfoService.getLoans(userId);
+	}
 
 	@Override
 	public float getLaborHour(String userId, Date day) throws RemoteAccessException {

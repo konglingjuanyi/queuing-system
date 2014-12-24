@@ -81,7 +81,7 @@ CREATE TABLE formmain_0114 (
   field0003 varchar(255) DEFAULT NULL,
   field0004 varchar(255) DEFAULT NULL,
   field0005 date DEFAULT NULL,
-  field0006 varchar(255) DEFAULT NULL,
+  field0006 text,
   field0007 varchar(255) DEFAULT NULL,
   field0008 varchar(255) DEFAULT NULL,
   field0009 varchar(255) DEFAULT NULL,
@@ -142,6 +142,7 @@ CREATE TABLE formmain_0114 (
   field0097 varchar(255) DEFAULT NULL,
   field0099 bigint DEFAULT NULL,
   field0100 varchar(255) DEFAULT NULL,
+  field0101 bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -171,7 +172,7 @@ CREATE TABLE formmain_0114_history(
   field0003 varchar(255) DEFAULT NULL,
   field0004 varchar(255) DEFAULT NULL,
   field0005 date DEFAULT NULL,
-  field0006 varchar(255) DEFAULT NULL,
+  field0006 text,
   field0007 varchar(255) DEFAULT NULL,
   field0008 varchar(255) DEFAULT NULL,
   field0009 varchar(255) DEFAULT NULL,
@@ -232,6 +233,7 @@ CREATE TABLE formmain_0114_history(
   field0097 varchar(255) DEFAULT NULL,
   field0099 bigint DEFAULT NULL,
   field0100 varchar(255) DEFAULT NULL,
+  field0101 bigint DEFAULT NULL,
   PRIMARY KEY (id)
 );
 

@@ -308,7 +308,7 @@
         params["vars"] = vars;
         $.ajax({
             contentType: "application/json; charset=utf-8",
-            url: "back_del",
+            url: "oa/back_del",
             type: "post",
             data: JSON.stringify(params),
             success: function (resp) {

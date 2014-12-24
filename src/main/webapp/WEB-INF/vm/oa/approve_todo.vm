@@ -279,7 +279,7 @@
     }
 
     function approvePass(oTable) {
-        var url = "approve_pass";
+        var url = "oa/approve_pass";
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#approve-msg-dialog").empty();
@@ -348,7 +348,7 @@
     }
 
     function approveReject(oTable) {
-        var url = "approve_reject";
+        var url = "oa/approve_reject";
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#reject-msg-dialog").empty();
@@ -420,7 +420,7 @@
     }
 
     function approveBack(oTable) {
-        var url = "approve_back";
+        var url = "oa/approve_back";
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#back-msg-dialog").empty();
@@ -491,7 +491,7 @@
     }
 
     function approveEndorse(oTable) {
-        var url = "approve_endorse";
+        var url = "oa/approve_endorse";
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#endorse-msg-dialog").empty();
@@ -772,7 +772,7 @@
         };
         $.ajax({
             "contentType": "application/json; charset=utf-8",
-            "url": "approve_info",
+            "url": "oa/approve_info",
             "type": "POST",
             "data": JSON.stringify(params),
             success: function (resp) {

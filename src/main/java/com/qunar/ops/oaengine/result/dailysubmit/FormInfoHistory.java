@@ -74,11 +74,20 @@ public class FormInfoHistory extends Formmain0114History implements Serializable
 //    private String address;
 //    private String isDirectVp;
 //    private String bankName;
+// 	  private Long payAmount;
 	private OvertimeMealsInfo[] overtimeMealsInfo;
 	private HospitalityInfo[] hospitalityInfo;
 	private OtherCostsInfo[] otherCostsInfo;
 	private EmployeeRelationsFeesInfo[] employeeRelationsFeesInfo;
 	private TaxiFaresInfo[] taxiFaresInfo;
+	
+	public void setPayAmount(Long payAmount){
+		super.setField0101(payAmount);
+	}
+	
+	public void getPayAmount(){
+		super.getField0101();
+	}
 	
     public OvertimeMealsInfo[] getOvertimeMealsInfo() {
 		return overtimeMealsInfo;
