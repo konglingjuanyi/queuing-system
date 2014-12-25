@@ -35,7 +35,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 	
 	private Long ratify;
 	public Long getRatify(){
-		return super.getRatify()==null?0:super.getRatify();
+		return super.getRatify();
 	}
 	public void setRatify(Long v){
 		super.setRatify(v);

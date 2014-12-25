@@ -29,7 +29,7 @@ public class HospitalityInfo extends Formson0116 implements Serializable {
 	private String memo;
 	private Long ratify;
 	public Long getRatify(){
-		return super.getRatify()==null?0:super.getRatify();
+		return super.getRatify();
 	}
 	public void setRatify(Long v){
 		super.setRatify(v);

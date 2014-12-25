@@ -283,6 +283,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			if(formInfo == null) continue;
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfo.setTaskKey(taskInfo.getTaskKey());
+			formInfo.setIsEndorse(taskInfo.isEndorse());
 			formInfos.add(formInfo);
 		}
 		res.setCount((int)taskInfos.getCount());

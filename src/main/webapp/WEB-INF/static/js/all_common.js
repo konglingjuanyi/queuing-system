@@ -333,13 +333,15 @@ jQuery(function ($) {
 function toggleCheck(oTable) {
     $('input', oTable.fnGetNodes()).unbind("click");
     $('input', oTable.fnGetNodes()).on("click", function () {
-        $(this).prop('checked', this.checked);
-        $(this).attr('checked', this.checked);
+    	if(!$(this).attr("disabled")){
+    		$(this).prop('checked', this.checked);
+    		$(this).attr('checked', this.checked);
+    	}
     });
     $('#current-checkbox-select-all').unbind("click");
     $('#current-checkbox-select-all').on("click", function () {
-        $('input', oTable.fnGetNodes()).prop('checked', this.checked);
-        $('input', oTable.fnGetNodes()).attr('checked', this.checked);
+        $('input:not(:disabled)', oTable.fnGetNodes()).prop('checked', this.checked);
+        $('input:not(:disabled)', oTable.fnGetNodes()).attr('checked', this.checked);
     });
 }
 

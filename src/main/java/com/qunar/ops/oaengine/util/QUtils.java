@@ -96,49 +96,60 @@ public class QUtils {
 		return null;
 	}
 	
-	public static void setUsername(HttpServletResponse response, String userId){
-		userId = encrypt(userId, "qunar-opsdev-1qaz2wsx-123456");
-		Cookie cookie = new Cookie("un", userId);
-		cookie.setMaxAge(60 * 60 * 2);
-		response.addCookie(cookie);
+	public static String setUsername(HttpServletResponse response, String userId){
+		if(userId != null){
+			userId = encrypt(userId, "qunar-opsdev-1qaz2wsx-123456");
+			Cookie cookie = new Cookie("un", userId);
+			cookie.setMaxAge(60 * 60 * 2);
+			response.addCookie(cookie);
+		}else{
+			Cookie cookie = new Cookie("un", null);
+			cookie.setMaxAge(0);
+			cookie.setPath("/"); 
+			response.addCookie(cookie);
+		}
+		return userId;
 	}
 	
 	public static String encrypt(String src, String key)   {  
-		try{
-		    DESedeKeySpec dks = new DESedeKeySpec(key.getBytes("UTF-8"));  
-		    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DESede");  
-		    SecretKey securekey = keyFactory.generateSecret(dks);  
-		    Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");  
-		    cipher.init(Cipher.ENCRYPT_MODE, securekey);  
-		    byte[] b=cipher.doFinal(src.getBytes("UTF-8"));  
-		    BASE64Encoder encoder = new BASE64Encoder();  
-		    return encoder.encode(b).replaceAll("\r", "").replaceAll("\n", "");  
-		}catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
+		return src;
+		
+//		try{
+//		    DESedeKeySpec dks = new DESedeKeySpec(key.getBytes("UTF-8"));  
+//		    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DESede");  
+//		    SecretKey securekey = keyFactory.generateSecret(dks);  
+//		    Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");  
+//		    cipher.init(Cipher.ENCRYPT_MODE, securekey);  
+//		    byte[] b=cipher.doFinal(src.getBytes("UTF-8"));  
+//		    BASE64Encoder encoder = new BASE64Encoder();  
+//		    return encoder.encode(b).replaceAll("\r", "").replaceAll("\n", "");  
+//		}catch(Exception e){
+//			e.printStackTrace();
+//			return null;
+//		}
 	}
 
 	public static String decrypt(String src,String key) {  
-		try{
-		    //--通过base64,将字符串转成byte数组  
-		    BASE64Decoder decoder = new BASE64Decoder();  
-		    byte[] bytesrc = decoder.decodeBuffer(src);  
-		    //--解密的key  
-		    DESedeKeySpec dks = new DESedeKeySpec(key.getBytes("UTF-8"));  
-		    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DESede");  
-		    SecretKey securekey = keyFactory.generateSecret(dks);  
-		      
-		    //--Chipher对象解密  
-		    Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");  
-		    cipher.init(Cipher.DECRYPT_MODE, securekey);  
-		    byte[] retByte = cipher.doFinal(bytesrc);  
-		      
-		    return new String(retByte);  
-		}catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
+		return src;
+//		try{
+//		    //--通过base64,将字符串转成byte数组  
+//		    BASE64Decoder decoder = new BASE64Decoder();  
+//		    byte[] bytesrc = decoder.decodeBuffer(src);  
+//		    //--解密的key  
+//		    DESedeKeySpec dks = new DESedeKeySpec(key.getBytes("UTF-8"));  
+//		    SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DESede");  
+//		    SecretKey securekey = keyFactory.generateSecret(dks);  
+//		      
+//		    //--Chipher对象解密  
+//		    Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");  
+//		    cipher.init(Cipher.DECRYPT_MODE, securekey);  
+//		    byte[] retByte = cipher.doFinal(bytesrc);  
+//		      
+//		    return new String(retByte);  
+//		}catch(Exception e){
+//			e.printStackTrace();
+//			return null;
+//		}
 
 	}
 }

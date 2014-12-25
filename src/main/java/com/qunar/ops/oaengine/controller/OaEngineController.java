@@ -8,6 +8,8 @@ import com.qunar.ops.oaengine.exception.ManagerFormException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.DelegationManager;
 import com.qunar.ops.oaengine.manager.GroupManager;
+import com.qunar.ops.oaengine.manager.LogManager;
+import com.qunar.ops.oaengine.manager.LoginManager;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.*;
@@ -67,7 +69,10 @@ public class OaEngineController {
 	private GroupManager groupManager;
 	@Autowired
 	private DelegationManager delegationManager;
-	
+	@Autowired
+	private LogManager logManager;
+	@Autowired
+	private LoginManager loginManager;
 	private String processKey = "oa_common";
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -85,8 +90,8 @@ public class OaEngineController {
 		Map<String, String> vars = commonRequest.getVars();
 		String userId = vars.get("user");
 		//request.getSession().setAttribute("USER_ID", userId);
-		QUtils.setUsername(response, userId);
-		return new BaseResult();
+		String uid = QUtils.setUsername(response, userId);
+		return BaseResult.getSuccessResult(uid);
 	}
 	
 	/**
@@ -97,14 +102,18 @@ public class OaEngineController {
 	 */
 	@RequestMapping(value = "oa/logout")
 	@ResponseBody
-	public BaseResult logout(HttpServletRequest request, HttpServletResponse response) {
-		Cookie[] cookies = request.getCookies();
-		if(cookies != null)for(Cookie cookie : cookies){
-			if("un".equals(cookie.getName())){
-				cookie.setValue("");;
-			}
-		}
-		return new BaseResult();
+	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
+//		Cookie[] cookies = request.getCookies();
+//		if(cookies != null)for(Cookie cookie : cookies){
+//			if("un".equals(cookie.getName())){
+//				cookie.setValue("");;
+//				response.addCookie(cookie);
+//				response.
+//				break;
+//			}
+//		}
+		QUtils.setUsername(response, null);
+		return welcom(request, null);
 	}
 
 	/**
@@ -114,35 +123,48 @@ public class OaEngineController {
 	 * @return
 	 */
 	@RequestMapping(value = "oa/login")
-	public String login(HttpServletRequest request, HttpServletResponse response2) {
-		HttpClient client = HttpClientBuilder.create().build();
-		String token = request.getParameter("token");
-		HttpGet method = new HttpGet(
-				"http://qsso.corp.qunar.com/api/verifytoken.php?token=" + token);
-		try {
-			HttpResponse response = client.execute(method);
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					response.getEntity().getContent()));
-			StringBuffer result = new StringBuffer();
-			String line = "";
-			while ((line = rd.readLine()) != null) {
-				result.append(line);
+	public ModelAndView login(HttpServletRequest request, HttpServletResponse response2) {
+		
+		String username = request.getParameter("userName");
+		String password = request.getParameter("password");
+		String login = null;
+		if(username != null && password != null){
+			login = loginManager.login(username, password);
+			if(login == null){
+				QUtils.setUsername(response2, username);
+				return myApplyTodo(request);
 			}
-			JSONObject parseObject = JSON.parseObject(result.toString());
-			String ret = parseObject.getString("ret");
-			if (ret.equals("true")) {
-				String userId = parseObject.getJSONObject("data").getString(
-						"userId");
-				//request.getSession().setAttribute("USER_ID", userId);
-				QUtils.setUsername(response2, userId);
-			} else {
-				return "redirect:/oa/index.html";
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error("sso 验证失败", e);
 		}
-		return "redirect:/oa/apply_todo.html";
+		return welcom(request, login);
+		
+//		HttpClient client = HttpClientBuilder.create().build();
+//		String token = request.getParameter("token");
+//		HttpGet method = new HttpGet(
+//				"http://qsso.corp.qunar.com/api/verifytoken.php?token=" + token);
+//		try {
+//			HttpResponse response = client.execute(method);
+//			BufferedReader rd = new BufferedReader(new InputStreamReader(
+//					response.getEntity().getContent()));
+//			StringBuffer result = new StringBuffer();
+//			String line = "";
+//			while ((line = rd.readLine()) != null) {
+//				result.append(line);
+//			}
+//			JSONObject parseObject = JSON.parseObject(result.toString());
+//			String ret = parseObject.getString("ret");
+//			if (ret.equals("true")) {
+//				String userId = parseObject.getJSONObject("data").getString(
+//						"userId");
+//				//request.getSession().setAttribute("USER_ID", userId);
+//				QUtils.setUsername(response2, userId);
+//			} else {
+//				return "redirect:/oa/index.html";
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			logger.error("sso 验证失败", e);
+//		}
+//		return "redirect:/oa/apply_todo.html";
 	}
 
 	/**
@@ -152,13 +174,13 @@ public class OaEngineController {
 	 * @return
 	 */
 	@RequestMapping(value = "oa/index.html")
-	public ModelAndView welcom(HttpServletRequest request) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
-		String userId = QUtils.getUsername(request);
-		if (userId != null) {
-			return addApply(request);
-		}
+	public ModelAndView welcom(HttpServletRequest request, String message) {
+//		String userId = QUtils.getUsername(request);
+//		if (userId != null) {
+//			return addApply(request);
+//		}
 		ModelAndView mav = new ModelAndView("/oa/index");
+		mav.addObject("message", message==null?"":message);
 		return mav;
 	}
 
@@ -181,6 +203,9 @@ public class OaEngineController {
 			e.printStackTrace();
 		}
 		mav.addObject("loans", loans);
+		mav.addObject("formId", request.getParameter("formId")==null?"":request.getParameter("formId"));
+		mav.addObject("taskId", request.getParameter("taskId")==null?"":request.getParameter("taskId"));
+		mav.addObject("euid", request.getParameter("euid")==null?"":request.getParameter("euid"));
 		return mav;
 	}
 
@@ -531,8 +556,7 @@ public class OaEngineController {
 		long id = 0;
 		if (formInfo.getId() == null) {
 			try {
-				EmployeeInfo info = this.ioaEngineService
-						.getEmployeeInfo(userId);
+				EmployeeInfo info = this.ioaEngineService.getEmployeeInfo(userId);
 				if (info != null) {
 					formInfo.setFirstDep(info.getDepartmentI());
 					formInfo.setSecDep(info.getDepartmentII());
@@ -616,7 +640,7 @@ public class OaEngineController {
 	}
 
 	/**
-	 * 正在审批中的申请
+	 * 草稿箱中的申请
 	 * 
 	 * @param request
 	 * @param commonRequest
@@ -1220,6 +1244,12 @@ public class OaEngineController {
 		// 其实这里就是附言
 		String memo = vars.get("memo");
 		String assignees = vars.get("rtx_id");
+		if(assignees==null || assignees.length() == 0){
+			return BaseResult.getErrorResult(-1, "加签人不能为空");
+		}
+		if(userId.equals(assignees)){
+			return BaseResult.getErrorResult(-1, "加签人对象不能是自己");
+		}
 		// userId = vars.get("userId");
 		for (int i = 0; i < len; i++) {
 			try {
@@ -1482,7 +1512,7 @@ public class OaEngineController {
 			if (ratify) {
 				taxiInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][8]));
 			} else {
-				taxiInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][7]));
+				//taxiInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][7]));
 			}
 			taxiInfo.setComment(table[i][9]);
 			if (table[i][10].length() > 0) {
@@ -1490,7 +1520,7 @@ public class OaEngineController {
 			}
 			
 			taxiSum += taxiInfo.getTaxiFaresAmount();
-			taxiRatify += taxiInfo.getRatify();
+			taxiRatify += taxiInfo.getRatify()==null?0:taxiInfo.getRatify();
 			list1.add(taxiInfo);
 		}
 		int size = list1.size();
@@ -1524,14 +1554,14 @@ public class OaEngineController {
 			if (ratify) {
 				overInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][8]));
 			} else {
-				overInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][4]));
+				//overInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][4]));
 			}
 			overInfo.setOvertimeMealsComment(table[i][9]);
 			if (table[i][10].length() > 0) {
 				overInfo.setId(Long.valueOf(table[i][10]));
 			}
 			overSum += overInfo.getOvertimeMealsAmount();
-			overRatify += overInfo.getRatify();
+			overRatify += overInfo.getRatify()==null?0:overInfo.getRatify();
 			list2.add(overInfo);
 		}
 		size = list2.size();
@@ -1562,14 +1592,14 @@ public class OaEngineController {
 				hosInfo.setRatify(OAControllerUtils
 						.yuanMoneyToCent(table[i][7]));
 			} else {
-				hosInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][6]));
+				//hosInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][6]));
 			}
 			hosInfo.setMemo(table[i][8]);
 			if (table[i][9].length() > 0) {
 				hosInfo.setId(Long.valueOf(table[i][9]));
 			}
 			hosSum += hosInfo.getHospitalityAmount();
-			hosRatify += hosInfo.getRatify();
+			hosRatify += hosInfo.getRatify()==null?0:hosInfo.getRatify();
 			list3.add(hosInfo);
 		}
 		size = list3.size();
@@ -1598,14 +1628,14 @@ public class OaEngineController {
 				employInfo.setRatify(OAControllerUtils
 						.yuanMoneyToCent(table[i][5]));
 			} else {
-				employInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][4]));
+				//employInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][4]));
 			}
 			employInfo.setEmRelationsFeesComment(table[i][6]);
 			if (table[i][7].length() > 0) {
 				employInfo.setId(Long.valueOf(table[i][7]));
 			}
 			employSum += employInfo.getEmRelationsFees();
-			employRatify += employInfo.getRatify();
+			employRatify += employInfo.getRatify()==null?0:employInfo.getRatify();
 			list4.add(employInfo);
 
 		}
@@ -1632,14 +1662,14 @@ public class OaEngineController {
 				otherInfo.setRatify(OAControllerUtils
 						.yuanMoneyToCent(table[i][2]));
 			} else {
-				otherInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][1]));
+				//otherInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][1]));
 			}
 			otherInfo.setOtherCostComment(table[i][3]);
 			if (table[i][4].length() > 0) {
 				otherInfo.setId(Long.valueOf(table[i][4]));
 			}
 			otherSum += otherInfo.getOtherCostAmount();
-			otherRatify += otherInfo.getRatify();
+			otherRatify += otherInfo.getRatify()==null?0:otherInfo.getRatify();
 			list5.add(otherInfo);
 		}
 		size = list5.size();
@@ -1674,8 +1704,8 @@ public class OaEngineController {
 			commRatify = OAControllerUtils.yuanMoneyToCent(vars.get("ratify6"));
 			formInfo.setCommunicationNotifyAmount(commRatify);
 		}else{
-			commRatify = OAControllerUtils.yuanMoneyToCent(vars.get("sum6"));
-			formInfo.setCommunicationNotifyAmount(commRatify);
+			//commRatify = OAControllerUtils.yuanMoneyToCent(vars.get("sum6"));
+			//formInfo.setCommunicationNotifyAmount(commRatify);
 		}
 		formInfo.setTaxiFaresNotifyAmount(taxiRatify);
 		formInfo.setOvertimeMealsNotifyAmount(overRatify);
@@ -1740,10 +1770,16 @@ public class OaEngineController {
 			String tk = formInfo.getTaskKey();
 			if ("fin_check".equals(tk) || "fin_check_mdd".equals(tk)) {
 				if (ratify == null) {
-					ratify = this.groupManager.inGroups(new String[] {
-							"fin_check", "fin_check_mdd" }, userId);
+					ratify = this.groupManager.inGroups(new String[] {"fin_check", "fin_check_mdd" }, userId);
 				}
 				formInfo.setIsRatify(ratify);
+			}
+			if(formInfo.isEndorse() && userId.equals(formInfo.getStartMemberId())){
+				String eu = this.logManager.getLastEndorseUser(formInfo.getId(), formInfo.getTaskKey());
+				if(eu != null){
+					formInfo.setEndorse(eu);
+					formInfo.setIsOwner(true);
+				}
 			}
 			String tableInfo[] = getEveryTableInfo(formInfo, id);
 			tableInfos.add(tableInfo);
@@ -1768,7 +1804,7 @@ public class OaEngineController {
 					OAControllerUtils.dateToStr(formInfo.getField0005()),
 					String.valueOf(formInfo.getMoneyAmount()) };
 		} else if (id == 2) {
-			tableInfo = new String[7];
+			tableInfo = new String[9];
 			tableInfo[0] = String.valueOf(formInfo.getId());
 			tableInfo[1] = formInfo.getApplyUser();
 			tableInfo[2] = formInfo.getApplyDep();
@@ -1776,6 +1812,8 @@ public class OaEngineController {
 			tableInfo[4] = String.valueOf(formInfo.getMoneyAmount());
 			tableInfo[5] = formInfo.getTaskId();
 			tableInfo[6] = formInfo.isRatify() ? "true" : "false";
+			tableInfo[7] = (formInfo.isOwner() && formInfo.isEndorse()) ? "true" : "false";
+			tableInfo[8] = String.valueOf(formInfo.getEndorseUser());
 		} else if (id == 3) {
 			tableInfo = new String[6];
 			tableInfo[0] = String.valueOf(formInfo.getId());
@@ -1823,7 +1861,7 @@ public class OaEngineController {
 				table[i][6] = String.valueOf(infos1[i].getTaxiFaresWorkhour());
 				String eMoney = OAControllerUtils.centMoneyToYuan(infos1[i].getTaxiFaresAmount());
 				table[i][7] = eMoney;
-				table[i][8] = OAControllerUtils.centMoneyToYuan(infos1[i].getRatify());
+				table[i][8] = infos1[i].getRatify()==null?eMoney:OAControllerUtils.centMoneyToYuan(infos1[i].getRatify());
 				table[i][9] = infos1[i].getComment();
 			}
 		}
@@ -1851,8 +1889,7 @@ public class OaEngineController {
 				table[i][6] = String.valueOf(infos2[i].getInvoiceAmount());
 				table[i][7] = String.valueOf(infos2[i]
 						.getOvertimeMealsWorkhours());
-				table[i][8] = OAControllerUtils.centMoneyToYuan(infos2[i]
-						.getRatify());
+				table[i][8] = infos2[i].getRatify()==null?money1:OAControllerUtils.centMoneyToYuan(infos2[i].getRatify());
 				table[i][9] = infos2[i].getOvertimeMealsComment();
 			}
 		}
@@ -1876,8 +1913,7 @@ public class OaEngineController {
 				String eMoney = OAControllerUtils.centMoneyToYuan(infos3[i]
 						.getHospitalityAmount());
 				table[i][6] = eMoney;
-				table[i][7] = OAControllerUtils.centMoneyToYuan(infos3[i]
-						.getRatify());
+				table[i][7] = infos3[i].getRatify()==null?eMoney:OAControllerUtils.centMoneyToYuan(infos3[i].getRatify());
 				table[i][8] = infos3[i].getMemo();
 			}
 		}
@@ -1900,8 +1936,7 @@ public class OaEngineController {
 				String eMoney = OAControllerUtils.centMoneyToYuan(infos4[i]
 						.getEmRelationsFees());
 				table[i][4] = eMoney;
-				table[i][5] = OAControllerUtils.centMoneyToYuan(infos4[i]
-						.getRatify());
+				table[i][5] = infos4[i].getRatify()==null?eMoney:OAControllerUtils.centMoneyToYuan(infos4[i].getRatify());
 				table[i][6] = infos4[i].getEmRelationsFeesComment();
 			}
 		}
@@ -1919,8 +1954,7 @@ public class OaEngineController {
 				String eMoney = OAControllerUtils.centMoneyToYuan(infos5[i]
 						.getOtherCostAmount());
 				table[i][1] = String.valueOf(eMoney);
-				table[i][2] = OAControllerUtils.centMoneyToYuan(infos5[i]
-						.getRatify());
+				table[i][2] = infos5[i].getRatify()==null?eMoney:OAControllerUtils.centMoneyToYuan(infos5[i].getRatify());
 				table[i][3] = infos5[i].getOtherCostComment();
 			}
 		}
@@ -1965,7 +1999,7 @@ public class OaEngineController {
 		String moneySum6 = OAControllerUtils.centMoneyToYuan(formInfo
 				.getCommunicationCosts());
 		vars.put("sum6", moneySum6);
-		vars.put("remark", formInfo.getCommuCostsComment());
+		vars.put("remark", formInfo.getCommuCostsComment()==null?moneySum6:formInfo.getCommuCostsComment());
 		vars.put("payAmount", OAControllerUtils.centMoneyToYuan(formInfo.getPayAmount()));
 		String m = OAControllerUtils.centMoneyToYuan(formInfo
 				.getTaxiFaresNotifyAmount());

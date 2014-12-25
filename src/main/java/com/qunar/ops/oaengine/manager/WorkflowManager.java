@@ -121,7 +121,7 @@ public class WorkflowManager {
 			info.setTaskId(task.getId());
 			info.setTaskKey(task.getTaskDefinitionKey());
 			info.setTaskName(task.getName());
-			
+			Map<String, Object> taskLocalVariables = task.getTaskLocalVariables();
 			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
 			if(nrOfInstances == null || nrOfInstances <= 0){
 				info.setEndorse(false);
@@ -310,6 +310,7 @@ public class WorkflowManager {
 		}
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", false);
+		vars.put("endorse_user", userId);
 		vars.put("candidates", assignees);
 		taskService.complete(taskId, vars);
 		List<TaskInfo> tasks = this.getCurrentTasks(task.getProcessInstanceId());

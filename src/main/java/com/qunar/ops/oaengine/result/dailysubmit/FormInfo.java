@@ -142,6 +142,9 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	private String taskKey;
 	private Date dealDate;
 	private boolean isRatify;
+	private boolean isOwner;
+	private String endorseUser;
+	private boolean isEndorse;
 	
 	public void setPayAmount(Long payAmount){
 		super.setField0101(payAmount);
@@ -197,6 +200,30 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	
 	public void setIsRatify(boolean ratify){
 		this.isRatify = ratify;
+	}
+	
+	public boolean isEndorse(){
+		return this.isEndorse;
+	}
+	
+	public void setIsEndorse(boolean isEndorse){
+		this.isEndorse = isEndorse;
+	}
+	
+	public boolean isOwner(){
+		return this.isOwner;
+	}
+	
+	public void setIsOwner(boolean isOwner){
+		this.isOwner = isOwner;
+	}
+	
+	public String getEndorseUser(){
+		return this.endorseUser;
+	}
+	
+	public void setEndorse(String endorseUser){
+		this.endorseUser = endorseUser;
 	}
 	// 加班餐费
 	private OvertimeMealsInfo[] overtimeMealsInfo;

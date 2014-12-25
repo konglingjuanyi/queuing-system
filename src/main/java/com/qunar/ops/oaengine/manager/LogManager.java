@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.qunar.ops.oaengine.dao.FormApproveLogMapper;
 import com.qunar.ops.oaengine.model.FormApproveLog;
 import com.qunar.ops.oaengine.model.FormApproveLogExample;
+import com.qunar.ops.oaengine.model.FormApproveLogExample.Criteria;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.TaskInfo;
 import com.qunar.ops.oaengine.result.TaskResult;
@@ -95,5 +96,18 @@ public class LogManager {
 		BeanUtils.copyProperties(formApproveLogMapper.selectByPrimaryKey(approveId), info);
 		return info;
 	}
+	
+	public String getLastEndorseUser(long formId, String taskKey){
+		FormApproveLogExample e = new FormApproveLogExample();
+		Criteria c = e.createCriteria();
+		e.setOrderByClause("ts desc");
+		c.andFormIdEqualTo(formId);
+		c.andTaskIdEqualTo(taskKey);
+		c.andManagerTypeEqualTo("endorse");
+		List<FormApproveLog> list = formApproveLogMapper.selectByExample(e);
+		if(list == null || list.size() == 0) return null;
+		return list.get(0).getApproveUser();
+	}
+
 	
 }

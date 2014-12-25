@@ -26,7 +26,7 @@ public class EmployeeRelationsFeesInfo extends Formson0118 implements
 	private String emRelationsFeesComment;
 	private Long ratify;
 	public Long getRatify(){
-		return super.getRatify()==null?0:super.getRatify();
+		return super.getRatify();
 	}
 	public void setRatify(Long v){
 		super.setRatify(v);
