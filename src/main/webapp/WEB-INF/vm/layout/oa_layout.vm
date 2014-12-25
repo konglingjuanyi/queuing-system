@@ -192,7 +192,7 @@
                 data: JSON.stringify(params),
                 success: function (resp) {
                     alert("切换成功!");
-                    SetCookie("un", resp.data);
+                    //SetCookie("un", resp.data);
                 	window.location.reload();
                 },
                 "error": function (jqxhr, textstatus, errorthrown) {
