@@ -86,6 +86,7 @@
         	<span class="navbar-brand">
 						<small>
 							<input type="input" id="username"/><button onclick="changeuser()">切换用户</button>
+							<span id="name">xxx</span>
                            	<button onclick="logout();">退出</button>
                         </small>
 			</span>
@@ -178,7 +179,10 @@
     </div>
 </div>
 <script type="text/javascript">
-
+    jQuery(function ($) {
+        var name = getCookie("name");
+		$("#name").html(name);// = name;
+    });
 	function changeuser(){
 		var username = $("#username").val();
 		if(username == '') return;
@@ -192,7 +196,6 @@
                 data: JSON.stringify(params),
                 success: function (resp) {
                     alert("切换成功!");
-                    //SetCookie("un", resp.data);
                 	window.location.reload();
                 },
                 "error": function (jqxhr, textstatus, errorthrown) {

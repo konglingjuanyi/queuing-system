@@ -750,7 +750,8 @@
                 for (var k = 0; k < coLen - 1; k++) {
                     list[j - 1][k] = table.rows[j].cells[k].childNodes[0].value;
                     if (tableId != "table5" && k == 0) {
-                        list[j - 1][k] = table.rows[j].cells[k].childNodes[0].childNodes[1].value;
+                         _data = table.rows[j].cells[k].childNodes[0].childNodes[1].value;
+                         list[j - 1][k] = _data;
                     }
                     if (isNull(list[j - 1][k])) {
                         list[j - 1][k] = "";

@@ -90,8 +90,9 @@ public class OaEngineController {
 		Map<String, String> vars = commonRequest.getVars();
 		String userId = vars.get("user");
 		//request.getSession().setAttribute("USER_ID", userId);
-		String uid = QUtils.setUsername(response, userId);
-		return BaseResult.getSuccessResult(uid);
+		QUtils.setUsername(response, "un", userId, true);
+		QUtils.setUsername(response, "name", userId, false);
+		return BaseResult.getSuccessResult("");
 	}
 	
 	/**
@@ -112,7 +113,8 @@ public class OaEngineController {
 //				break;
 //			}
 //		}
-		QUtils.setUsername(response, null);
+		QUtils.setUsername(response, "un", null, true);
+		QUtils.setUsername(response, "name", null, false);
 		return welcom(request, null);
 	}
 
@@ -131,7 +133,8 @@ public class OaEngineController {
 		if(username != null && password != null){
 			login = loginManager.login(username, password);
 			if(login == null){
-				QUtils.setUsername(response2, username);
+				QUtils.setUsername(response2, "un", username, true);
+				QUtils.setUsername(response2, "name", username, false);
 				return myApplyTodo(request);
 			}
 		}
@@ -542,8 +545,11 @@ public class OaEngineController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 			logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-			return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR,
-					OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			return BaseResult.getErrorResult(-1, e.getMessage());
+		} catch(NumberFormatException e){
+			e.printStackTrace();
+			logger.warn(e.getMessage());
+			return BaseResult.getErrorResult(-1, "数字格式错误");
 		}
 		if (!createFlag) {
 			String errorMsg = "没有任何报销内容，请检查";
@@ -1247,6 +1253,12 @@ public class OaEngineController {
 		if(assignees==null || assignees.length() == 0){
 			return BaseResult.getErrorResult(-1, "加签人不能为空");
 		}
+		try {
+			this.ioaEngineService.getEmployeeInfo(assignees);
+		} catch (RemoteAccessException e1) {
+			e1.printStackTrace();
+			return BaseResult.getErrorResult(-1, "员工不存在");
+		}
 		if(userId.equals(assignees)){
 			return BaseResult.getErrorResult(-1, "加签人对象不能是自己");
 		}
@@ -1483,7 +1495,7 @@ public class OaEngineController {
 	 */
 	private boolean constructFormInfo(FormInfo formInfo,
 			Map<String, String[][]> tableMap, Map<String, String> vars,
-			boolean ratify) throws ParseException {
+			boolean ratify) throws ParseException, NumberFormatException {
 		if (vars.get("formId") != null) {
 			formInfo.setId(Long.parseLong(vars.get("formId")));
 		}
@@ -1539,18 +1551,14 @@ public class OaEngineController {
 			}
 			OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
 			overInfo.setFormmain0114id(formInfo.getId());
-			overInfo.setOvertimeMealsDate(OAControllerUtils
-					.strToDate(table[i][0]));
+			overInfo.setOvertimeMealsDate(OAControllerUtils.strToDate(table[i][0]));
 			overInfo.setMealsAddr(table[i][1]);
 			overInfo.setOvertimeMealsPeerPeople(table[i][2]);
 			overInfo.setMealsPersonNum(OAControllerUtils.strToLong(table[i][3]));
-			overInfo.setOvertimeMealsAmount(OAControllerUtils
-					.yuanMoneyToCent(table[i][4]));
-			overInfo.setPerMealsFee(OAControllerUtils
-					.yuanMoneyToCent(table[i][5]));
+			overInfo.setOvertimeMealsAmount(OAControllerUtils.yuanMoneyToCent(table[i][4]));
+			overInfo.setPerMealsFee(OAControllerUtils.yuanMoneyToCent(table[i][5]));
 			overInfo.setInvoiceAmount(table[i][6]);
-			overInfo.setOvertimeMealsWorkhours(OAControllerUtils
-					.workHourToDec(table[i][7]));
+			overInfo.setOvertimeMealsWorkhours(OAControllerUtils.workHourToDec(table[i][7]));
 			if (ratify) {
 				overInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][8]));
 			} else {
@@ -1586,11 +1594,9 @@ public class OaEngineController {
 			hosInfo.setCustomCompany(table[i][3]);
 			hosInfo.setCustomName(table[i][4]);
 			hosInfo.setHospitalityNum(table[i][5]);
-			hosInfo.setHospitalityAmount(OAControllerUtils
-					.yuanMoneyToCent(table[i][6]));
+			hosInfo.setHospitalityAmount(OAControllerUtils.yuanMoneyToCent(table[i][6]));
 			if (ratify) {
-				hosInfo.setRatify(OAControllerUtils
-						.yuanMoneyToCent(table[i][7]));
+				hosInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][7]));
 			} else {
 				//hosInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][6]));
 			}
@@ -1617,16 +1623,13 @@ public class OaEngineController {
 			}
 			EmployeeRelationsFeesInfo employInfo = new EmployeeRelationsFeesInfo();
 			employInfo.setFormmain0114id(formInfo.getId());
-			employInfo.setEmRelationsDate(OAControllerUtils
-					.strToDate(table[i][0]));
+			employInfo.setEmRelationsDate(OAControllerUtils.strToDate(table[i][0]));
 			employInfo.setEmRelationsAddress(table[i][1]);
 			employInfo.setEmRelationsPeerPeople(table[i][2]);
 			employInfo.setActDest(table[i][3]);
-			employInfo.setEmRelationsFees(OAControllerUtils
-					.yuanMoneyToCent(table[i][4]));
+			employInfo.setEmRelationsFees(OAControllerUtils.yuanMoneyToCent(table[i][4]));
 			if (ratify) {
-				employInfo.setRatify(OAControllerUtils
-						.yuanMoneyToCent(table[i][5]));
+				employInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][5]));
 			} else {
 				//employInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][4]));
 			}
@@ -1656,11 +1659,9 @@ public class OaEngineController {
 			OtherCostsInfo otherInfo = new OtherCostsInfo();
 			otherInfo.setFormmain0114id(formInfo.getId());
 			otherInfo.setOtherCostProject(table[i][0]);
-			otherInfo.setOtherCostAmount(OAControllerUtils
-					.yuanMoneyToCent(table[i][1]));
+			otherInfo.setOtherCostAmount(OAControllerUtils.yuanMoneyToCent(table[i][1]));
 			if (ratify) {
-				otherInfo.setRatify(OAControllerUtils
-						.yuanMoneyToCent(table[i][2]));
+				otherInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][2]));
 			} else {
 				//otherInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][1]));
 			}
@@ -1707,14 +1708,17 @@ public class OaEngineController {
 			//commRatify = OAControllerUtils.yuanMoneyToCent(vars.get("sum6"));
 			//formInfo.setCommunicationNotifyAmount(commRatify);
 		}
-		formInfo.setTaxiFaresNotifyAmount(taxiRatify);
-		formInfo.setOvertimeMealsNotifyAmount(overRatify);
-		formInfo.setHospitalityNotifyAmount(hosRatify);
-		formInfo.setEmRelationsFeesNotify(employRatify);
-		formInfo.setOtherNotifyAmount(otherRatify);
+		if (ratify) {
+			formInfo.setTaxiFaresNotifyAmount(taxiRatify);
+			formInfo.setOvertimeMealsNotifyAmount(overRatify);
+			formInfo.setHospitalityNotifyAmount(hosRatify);
+			formInfo.setEmRelationsFeesNotify(employRatify);
+			formInfo.setOtherNotifyAmount(otherRatify);
+		}
 		long ratifyAmount = taxiRatify + overRatify + hosRatify + employRatify + otherRatify + commRatify;
-		formInfo.setSumFinancialNotify(ratifyAmount);
-		
+		if (ratify) {
+			formInfo.setSumFinancialNotify(ratifyAmount);
+		}
 		if (ratify) {
 			formInfo.setPayAmount(OAControllerUtils.yuanMoneyToCent(vars.get("payAmount")));
 		}
@@ -2000,27 +2004,24 @@ public class OaEngineController {
 				.getCommunicationCosts());
 		vars.put("sum6", moneySum6);
 		vars.put("remark", formInfo.getCommuCostsComment()==null?moneySum6:formInfo.getCommuCostsComment());
-		vars.put("payAmount", OAControllerUtils.centMoneyToYuan(formInfo.getPayAmount()));
-		String m = OAControllerUtils.centMoneyToYuan(formInfo
-				.getTaxiFaresNotifyAmount());
-		vars.put("ratify1", m);
-		m = OAControllerUtils.centMoneyToYuan(formInfo
-				.getOvertimeMealsNotifyAmount());
-		vars.put("ratify2", m);
-		m = OAControllerUtils.centMoneyToYuan(formInfo
-				.getHospitalityNotifyAmount());
-		vars.put("ratify3", m);
-		m = OAControllerUtils.centMoneyToYuan(formInfo
-				.getEmRelationsFeesNotify());
-		vars.put("ratify4", m);
+		
+		String m = OAControllerUtils.centMoneyToYuan(formInfo.getTaxiFaresNotifyAmount());
+		vars.put("ratify1", formInfo.getTaxiFaresNotifyAmount()==null?moneySum1:m);
+		m = OAControllerUtils.centMoneyToYuan(formInfo.getOvertimeMealsNotifyAmount());
+		vars.put("ratify2", formInfo.getOvertimeMealsNotifyAmount()==null?moneySum2:m);
+		m = OAControllerUtils.centMoneyToYuan(formInfo.getHospitalityNotifyAmount());
+		vars.put("ratify3", formInfo.getHospitalityNotifyAmount()==null?moneySum3:m);
+		m = OAControllerUtils.centMoneyToYuan(formInfo.getEmRelationsFeesNotify());
+		vars.put("ratify4", formInfo.getEmRelationsFeesNotify()==null?moneySum4:m);
 		m = OAControllerUtils.centMoneyToYuan(formInfo.getOtherNotifyAmount());
-		vars.put("ratify5", m);
-		m = OAControllerUtils.centMoneyToYuan(formInfo
-				.getCommunicationNotifyAmount());
-		vars.put("ratify6", m);
-		String ratify = OAControllerUtils.centMoneyToYuan(formInfo
-				.getSumFinancialNotify());
-		vars.put("ratify", ratify);
+		vars.put("ratify5", formInfo.getOtherNotifyAmount()==null?moneySum5:m);
+		m = OAControllerUtils.centMoneyToYuan(formInfo.getCommunicationNotifyAmount());
+		vars.put("ratify6", formInfo.getCommunicationNotifyAmount()==null?moneySum6:m);
+		
+		String ratify = OAControllerUtils.centMoneyToYuan(formInfo.getSumFinancialNotify());
+		vars.put("ratify", formInfo.getSumFinancialNotify()==null?moneySum:ratify);
+		
+		vars.put("payAmount", formInfo.getPayAmount() == null?moneySum:OAControllerUtils.centMoneyToYuan(formInfo.getPayAmount()));
 		formRequest.setTableMap(tableMap);
 		formRequest.setVars(vars);
 		formRequest.setFlag(false);

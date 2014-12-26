@@ -59,10 +59,14 @@ public class OAControllerUtils {
         if (isNull(money)) {
             return 0l;
         }
+        try{
         Float fMoney = Float.valueOf(money);
         int iMoney = (int) (fMoney * 100);
         String sMoney = String.valueOf(iMoney);
         return Long.valueOf(sMoney);
+        }catch(Exception e){
+        	throw new NumberFormatException("数字格式错误！");
+        }
     }
 
     /**
@@ -127,15 +131,16 @@ public class OAControllerUtils {
      */
     public static Date strToDate(String timeStr) {
         Date date = null;
-        if (!isNull(timeStr)) {
+        //if (!isNull(timeStr)) {
             try {
                 date = sdf.parse(timeStr);
             } catch (ParseException e) {
-                e.printStackTrace();
-                logger.error(e.getMessage());
-                return date;
+                //e.printStackTrace();
+                //logger.error(e.getMessage());
+                //return date;
+                throw new NumberFormatException("日期格式错误");
             }
-        }
+        //}
         return date;
     }
 

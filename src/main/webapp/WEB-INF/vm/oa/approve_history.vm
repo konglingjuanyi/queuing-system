@@ -251,7 +251,7 @@
         //alert(JSON.stringify(params));
         $.ajax({
             "contentType": "application/json; charset=utf-8",
-            "url": "approve_info",
+            "url": "oa/approve_info",
             "type": "POST",
             "data": JSON.stringify(params),
             success: function (resp) {

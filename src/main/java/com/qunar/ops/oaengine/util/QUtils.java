@@ -96,19 +96,21 @@ public class QUtils {
 		return null;
 	}
 	
-	public static String setUsername(HttpServletResponse response, String userId){
-		if(userId != null){
-			userId = encrypt(userId, "qunar-opsdev-1qaz2wsx-123456");
-			Cookie cookie = new Cookie("un", userId);
+	public static String setUsername(HttpServletResponse response, String name, String value, boolean encrypt){
+		if(value != null){
+			if(encrypt){
+				value = encrypt(value, "qunar-opsdev-1qaz2wsx-123456");
+			}
+			Cookie cookie = new Cookie(name, value);
 			cookie.setMaxAge(60 * 60 * 2);
 			response.addCookie(cookie);
 		}else{
-			Cookie cookie = new Cookie("un", null);
+			Cookie cookie = new Cookie(name, null);
 			cookie.setMaxAge(0);
 			cookie.setPath("/"); 
 			response.addCookie(cookie);
 		}
-		return userId;
+		return value;
 	}
 	
 	public static String encrypt(String src, String key)   {  
