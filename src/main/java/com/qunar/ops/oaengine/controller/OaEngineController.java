@@ -12,8 +12,20 @@ import com.qunar.ops.oaengine.manager.LogManager;
 import com.qunar.ops.oaengine.manager.LoginManager;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
-import com.qunar.ops.oaengine.result.*;
-import com.qunar.ops.oaengine.result.dailysubmit.*;
+import com.qunar.ops.oaengine.result.BaseResult;
+import com.qunar.ops.oaengine.result.CommonRequest;
+import com.qunar.ops.oaengine.result.DataResult;
+import com.qunar.ops.oaengine.result.EmployeeInfo;
+import com.qunar.ops.oaengine.result.FormRequest;
+import com.qunar.ops.oaengine.result.ListInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.EmployeeRelationsFeesInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
+import com.qunar.ops.oaengine.result.dailysubmit.HospitalityInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.OtherCostsInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.OvertimeMealsInfo;
+import com.qunar.ops.oaengine.result.dailysubmit.TaxiFaresInfo;
 import com.qunar.ops.oaengine.service.IOAEngineService;
 import com.qunar.ops.oaengine.service.MailSenderService;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
@@ -1824,7 +1836,6 @@ public class OaEngineController {
 			tableInfo[1] = formInfo.getApplyUser();
 			tableInfo[2] = formInfo.getApplyDep();
 			tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
-			tableInfo[4] = OAControllerUtils.dateToStr(formInfo.getDealDate());
 			tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
 		} else if (id == 4) {
 			tableInfo = new String[] { String.valueOf(formInfo.getOid()),

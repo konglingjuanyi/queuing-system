@@ -14,7 +14,7 @@ public class LoginManagerTest {
 	
 	@Test
 	public void loginTest(){
-		boolean ret = loginManager.login("nuby.zhang", "4rfv3edC");
+		String ret = loginManager.login("nuby.zhang", "4rfv3edC");
 		System.out.println(ret);
 	}
 

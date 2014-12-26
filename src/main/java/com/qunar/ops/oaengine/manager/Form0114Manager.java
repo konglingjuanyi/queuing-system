@@ -338,7 +338,6 @@ public class Form0114Manager {
 			if(fi == null) return null;
 			fi.setId(Long.valueOf(fi.getOid()));
 			return fi;
-//			throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114s.size()), Form0114Manager.class);
 		}
 		BeanUtils.copyProperties(formmain0114s.get(0), formInfo);
 
