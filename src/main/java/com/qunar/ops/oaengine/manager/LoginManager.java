@@ -67,17 +67,27 @@ public class LoginManager {
 	}
 
 	public String getPemPublicKeyFromFile(String filename) throws Exception {
-		File f = new File(filename);
-		FileInputStream fis = new FileInputStream(f);
-		DataInputStream dis = new DataInputStream(fis);
-		byte[] keyBytes = new byte[(int) f.length()];
-		dis.readFully(keyBytes);
-		dis.close();
-
-		String temp = new String(keyBytes);
-		String publicKeyPEM = temp.replace("-----BEGIN RSA PUBLIC KEY-----\n", "");
-		publicKeyPEM = publicKeyPEM.replace("-----END RSA PUBLIC KEY-----", "");
-		return publicKeyPEM;
+		// File f = new File(filename);
+		// FileInputStream fis = new FileInputStream(f);
+		// DataInputStream dis = new DataInputStream(fis);
+		// byte[] keyBytes = new byte[(int) f.length()];
+		// dis.readFully(keyBytes);
+		// dis.close();
+		//
+		// String temp = new String(keyBytes);
+		// String publicKeyPEM =
+		// temp.replace("-----BEGIN RSA PUBLIC KEY-----\n", "");
+		// publicKeyPEM = publicKeyPEM.replace("-----END RSA PUBLIC KEY-----",
+		// "");
+		// return publicKeyPEM;
+		
+		String key = "MIIBCgKCAQEA2M6/CuCMgZmehFC/DA5cmYW1KS3U0qt+AnRco7Ijg0ohYyO1Mh/I" 
+				+ "88djJuvbHuja/wXZ3Fw9laQsykq1akVR0P3N8ax8FAX0Wb+oLszwIJDVzk748Dsp"
+				+ "DvBUSmJ4w9fPUyyk8ENCntNqjp3qiOK2V2Jm7GitHtnwbe53c/ti3m/tjzYcixMC"
+				+ "UoDjbRmYeu/I7jva8AHYPRzAg4Q7Bf4nKX3/2rYi23zWkSEdgPFPq31i8IsrEJPT"
+				+ "ai7usBU7ZU6nokF+LeeiY/d/cSOZe6FeTncf/8e4EXlgtbXuRqhV31hlXhGo/OLJ"
+				+ "RjkPyeklCHiWW8sEIsr+macFLU+K0u4StwIDAQAB";
+		return key;
 	}
 
 	public String getPemPrivateKeyFromFile(String filename) throws Exception {
