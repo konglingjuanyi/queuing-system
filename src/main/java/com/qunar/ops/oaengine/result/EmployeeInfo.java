@@ -34,6 +34,8 @@ public class EmployeeInfo implements Serializable{
 	//VP
 	private String vp;
 	private String vpMail;
+	private int enable;
+	private String company;
 	
 	public String getVp() {
 		return vp;
@@ -118,6 +120,18 @@ public class EmployeeInfo implements Serializable{
 	}
 	public void setManagerMail(String managerMail) {
 		this.managerMail = managerMail;
+	}
+	public int getEnable() {
+		return enable;
+	}
+	public void setEnable(int enable) {
+		this.enable = enable;
+	}
+	public String getCompany() {
+		return company;
+	}
+	public void setCompany(String company) {
+		this.company = company;
 	}
 	
 }

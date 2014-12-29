@@ -66,6 +66,9 @@ public class EmployeeInfoService {
 			// VP INFO
 			eInfo.setVp((String) data.get("vp"));
 			eInfo.setVpMail((String) data.get("vp_mail"));
+			
+			eInfo.setEnable(data.getIntValue("enable"));
+			eInfo.setCompany(data.getString("company"));
 
 			// 银行卡号qunar.it暂时没有，看是否直接调用coreHr的API。
 			// eInfo.setBankCardNo((String)data.get(""));

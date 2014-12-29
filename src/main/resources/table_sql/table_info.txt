@@ -84,6 +84,7 @@ field0097		开户银行		varchar(255) DEFAULT NULL
 field0099		通信费财务核实金额		bigint DEFAULT NULL
 field0100		五级部门		varchar(255) DEFAULT NULL
 field0101		支付金额		bigint DEFAULT NULL
+field0102		合同签署单位		varchar(255) DEFAULT NULL
 
 ----------------------日常费用报销子表---------------------------
 ----------------------加班餐费---------------------------
@@ -175,4 +176,4 @@ next_candidate	下一节点审批候选人	text
 ts	审批时间	timestamp	with	time	zone
 dob	审批日期	date			
 
-max:101
+max:102

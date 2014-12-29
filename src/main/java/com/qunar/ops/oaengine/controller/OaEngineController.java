@@ -536,6 +536,7 @@ public class OaEngineController {
 					formInfo.setThridDep(info.getDepartmentIII());
 					formInfo.setFourthDep(info.getDepartmentIV());
 					formInfo.setFivethDep(info.getDepartmentV());
+					formInfo.setCompany(info.getCompany());
 				}
 			} catch (RemoteAccessException e) {
 				e.printStackTrace();
@@ -1098,10 +1099,13 @@ public class OaEngineController {
 			return BaseResult.getErrorResult(-1, "加签人不能为空");
 		}
 		try {
-			this.ioaEngineService.getEmployeeInfo(assignees);
+			EmployeeInfo einfo = this.ioaEngineService.getEmployeeInfo(assignees);
+			if(einfo == null || einfo.getEnable() == 0){
+				return BaseResult.getErrorResult(-1, "被加签人没有找到，或已经离职");
+			}
 		} catch (RemoteAccessException e1) {
 			e1.printStackTrace();
-			return BaseResult.getErrorResult(-1, "员工不存在");
+			return BaseResult.getErrorResult(-1, "被加签人没有找到，或已经离职");
 		}
 		if(userId.equals(assignees)){
 			return BaseResult.getErrorResult(-1, "加签人对象不能是自己");

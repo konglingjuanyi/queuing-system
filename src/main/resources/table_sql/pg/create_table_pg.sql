@@ -144,6 +144,7 @@ CREATE TABLE formmain_0114 (
   field0099 bigint DEFAULT NULL,
   field0100 varchar(255) DEFAULT NULL,
   field0101 bigint DEFAULT NULL,
+  field0102 varchar(255) DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -235,6 +236,7 @@ CREATE TABLE formmain_0114_history(
   field0099 bigint DEFAULT NULL,
   field0100 varchar(255) DEFAULT NULL,
   field0101 bigint DEFAULT NULL,
+  field0102 varchar(255) DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -629,3 +631,21 @@ CREATE TABLE t_group_member
   member_user_id character varying(50),
   ts time with time zone
 );
+
+
+
+--索引
+create index idx_form_id on form_approve_log (form_id);
+create index idx_form_approve_owner on form_approve_log (form_id, approve_user, owner);
+create index idx_14proc on formmain_0114 (proc_inst_id);
+create index idx_14hproc on formmain_0114_history (oid);
+create index idx_15form_id on formson_0115 (formmain_0114id);
+create index idx_15hform_id on formson_0115_history (formmain_0114id);
+create index idx_16form_id on formson_0116 (formmain_0114id);
+create index idx_16hform_id on formson_0116_history (formmain_0114id);
+create index idx_17form_id on formson_0117 (formmain_0114id);
+create index idx_17hform_id on formson_0117_history (formmain_0114id);
+create index idx_18form_id on formson_0118 (formmain_0114id);
+create index idx_18hform_id on formson_0118_history (formmain_0114id);
+create index idx_19form_id on formson_0119 (formmain_0114id);
+create index idx_19hform_id on formson_0119_history (formmain_0114id);

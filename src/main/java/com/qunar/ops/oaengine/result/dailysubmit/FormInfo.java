@@ -138,6 +138,8 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	// private String bankName;
 	// 实际支付金额
 	// private Long payAmount;
+	// 合同签署单位
+	// private String company;
 	private String taskId;
 	private String taskKey;
 	private Date dealDate;
@@ -787,5 +789,13 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	
 	public void setRatifyAmount(Long ratifyAmount){
 		super.setField0069(ratifyAmount);
+	}
+	
+	public String getCompany(){
+		return super.getField0102();
+	}
+	
+	public void setCompany(String company){
+		super.setField0102(company);
 	}
 }
