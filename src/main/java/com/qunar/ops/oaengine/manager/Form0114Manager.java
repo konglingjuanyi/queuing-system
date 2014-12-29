@@ -771,7 +771,7 @@ public class Form0114Manager {
 		List<Object> result = new ArrayList<Object>();
 		for(Formmain0114History info : list){
 			List<Object> infos = new ArrayList<Object>();
-			infos.add("");					//所属公司
+			infos.add(info.getField0102());					//所属公司
 			infos.add("日常报销");
 			infos.add(info.getField0005());	//提交日期
 			infos.add(info.getField0029());	//结束日期
