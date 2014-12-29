@@ -673,7 +673,7 @@
             var money = parseFloat(needData[i][4]);
             money /= 100;
             var map = "";
-            if(needData[i][7] == 'true'){
+            if(needData[i][7] == 'true' || needData[i][9] == 'fin_check'){
             	map = $.parseStr("<a href='javascript:void(0);' " +
             	"onclick='update(%s, %s, \"%s\");'><i class='icon-link'></i></a>", needData[i][0], needData[i][5], needData[i][8]);
             	checkbox = '<label><input value="'+needData[i][5]+'" type="checkbox" class="ace" disabled> <span class="lbl"></span></label>';

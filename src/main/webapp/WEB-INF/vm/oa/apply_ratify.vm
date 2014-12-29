@@ -371,7 +371,7 @@
         <span style="float:right;margin-top:20px;margin-bottom:10px; margin-right:1%;">
             <button class="btn btn-info" type="button"
                     onclick="subTableInfos(false, true);">
-               	 通过
+               	 保存并通过
             </button>
             <button class="btn btn-info" type="button"
                     onclick="approveReject();">

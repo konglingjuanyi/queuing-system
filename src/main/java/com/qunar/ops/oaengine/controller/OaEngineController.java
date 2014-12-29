@@ -24,9 +24,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.ManagerFormException;
@@ -100,7 +102,6 @@ public class OaEngineController {
 			@RequestBody CommonRequest commonRequest, HttpServletResponse response) {
 		Map<String, String> vars = commonRequest.getVars();
 		String userId = vars.get("user");
-		//request.getSession().setAttribute("USER_ID", userId);
 		QUtils.setUsername(response, "un", userId, true);
 		QUtils.setUsername(response, "name", userId, false);
 		return BaseResult.getSuccessResult("");
@@ -115,15 +116,6 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/logout")
 	@ResponseBody
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
-//		Cookie[] cookies = request.getCookies();
-//		if(cookies != null)for(Cookie cookie : cookies){
-//			if("un".equals(cookie.getName())){
-//				cookie.setValue("");;
-//				response.addCookie(cookie);
-//				response.
-//				break;
-//			}
-//		}
 		QUtils.setUsername(response, "un", null, true);
 		QUtils.setUsername(response, "name", null, false);
 		return welcom(request, null);
@@ -150,35 +142,6 @@ public class OaEngineController {
 			}
 		}
 		return welcom(request, login);
-		
-//		HttpClient client = HttpClientBuilder.create().build();
-//		String token = request.getParameter("token");
-//		HttpGet method = new HttpGet(
-//				"http://qsso.corp.qunar.com/api/verifytoken.php?token=" + token);
-//		try {
-//			HttpResponse response = client.execute(method);
-//			BufferedReader rd = new BufferedReader(new InputStreamReader(
-//					response.getEntity().getContent()));
-//			StringBuffer result = new StringBuffer();
-//			String line = "";
-//			while ((line = rd.readLine()) != null) {
-//				result.append(line);
-//			}
-//			JSONObject parseObject = JSON.parseObject(result.toString());
-//			String ret = parseObject.getString("ret");
-//			if (ret.equals("true")) {
-//				String userId = parseObject.getJSONObject("data").getString(
-//						"userId");
-//				//request.getSession().setAttribute("USER_ID", userId);
-//				QUtils.setUsername(response2, userId);
-//			} else {
-//				return "redirect:/oa/index.html";
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			logger.error("sso 验证失败", e);
-//		}
-//		return "redirect:/oa/apply_todo.html";
 	}
 
 	/**
@@ -189,10 +152,6 @@ public class OaEngineController {
 	 */
 	@RequestMapping(value = "oa/index.html")
 	public ModelAndView welcom(HttpServletRequest request, String message) {
-//		String userId = QUtils.getUsername(request);
-//		if (userId != null) {
-//			return addApply(request);
-//		}
 		ModelAndView mav = new ModelAndView("/oa/index");
 		mav.addObject("message", message==null?"":message);
 		return mav;
@@ -327,7 +286,6 @@ public class OaEngineController {
 	 */
 	@RequestMapping(value = "oa/setting/delegation.html")
 	public ModelAndView delegation(HttpServletRequest request) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
 		String userId = QUtils.getUsername(request);
 		List<Delegation> users = delegationManager.findDelegationByMaster(userId);
 		ModelAndView mav = new ModelAndView("oa/delegation");
@@ -344,7 +302,6 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/setting/add_delegation")
 	@ResponseBody
 	public BaseResult AddDelegation(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -434,7 +391,6 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult webLaborHour(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -667,7 +623,6 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getAllDraftInfos(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -703,7 +658,6 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getDraftDetailInfo(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -737,7 +691,6 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getAllMyApplyTodoList(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -788,66 +741,6 @@ public class OaEngineController {
 		return BaseResult.getSuccessResult(dataResult);
 	}
 	
-	/**
-	 * 被拒绝的申请
-	 * 
-	 * @param request
-	 * @param commonRequest
-	 * @return
-	@RequestMapping(value = "oa/refuse")
-	@ResponseBody
-	public BaseResult getAllMyApplyRefuseList(HttpServletRequest request,
-			@RequestBody CommonRequest commonRequest) {
-		String userId = QUtils.getUsername(request);
-		if (userId == null || userId.length() == 0) {
-			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
-					OAEngineConst.RTX_ID_IS_NULL_MSG);
-		}
-		Map<String, String> vars = commonRequest.getVars();
-		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
-		int pageSize = noSize[0];
-		int pageNo = noSize[1];
-		String startTime = vars.get("startTime");
-		String endTime = vars.get("endTime");
-		Date _startTime = null;
-		if (startTime != null) {
-			try {
-				_startTime = sdf.parse(startTime);
-			} catch (ParseException e) {
-				logger.warn(e.getMessage());
-				e.printStackTrace();
-				return BaseResult.getErrorResult(
-						OAEngineConst.DATE_FORMAT_ERROR,
-						OAEngineConst.DATE_FORMAT_ERROR_MSG);
-			}
-		}
-		Date _endTime = null;
-		if (endTime != null) {
-			try {
-				_endTime = sdf.parse(endTime);
-			} catch (ParseException e) {
-				logger.warn(e.getMessage());
-				e.printStackTrace();
-				return BaseResult.getErrorResult(
-						OAEngineConst.DATE_FORMAT_ERROR,
-						OAEngineConst.DATE_FORMAT_ERROR_MSG);
-			}
-		}
-		FormInfoList formInfoList = ioaEngineService.getUserRefuseList(
-				processKey, userId, _startTime, _endTime, pageNo, pageSize);
-		DataResult dataResult;
-		try {
-			dataResult = getAllTableInfos(formInfoList, userId, 1);
-		} catch (RemoteAccessException e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
-					OAEngineConst.ACL_LIMIT_ERROR_MSG);
-		}
-		return BaseResult.getSuccessResult(dataResult);
-	}
-	 */
 	
 	/**
 	 * 复制到草稿
@@ -954,14 +847,12 @@ public class OaEngineController {
 	@ResponseBody
 	public BaseResult getAllApproveTodoList(HttpServletRequest request,
 			@RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
 					OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
-		// Date startTime, Date endTime,
 		// 默认一页显示50条数据
 		Map<String, String> vars = commonRequest.getVars();
 		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
@@ -1119,7 +1010,6 @@ public class OaEngineController {
 		}
 		// 其实这里就是附言
 		String memo = vars.get("memo");
-		// userId = vars.get("userId");
 		List<Long> errorFormIds = ioaEngineService.batchPass(processKey,
 				userId, formIdList, taskIdList, memo);
 		int size = errorFormIds.size();
@@ -1177,53 +1067,6 @@ public class OaEngineController {
 		return BaseResult.getSuccessResult("拒绝审批结束");
 	}
 
-	/**
-	 * 批量退回任务
-	 * 
-	 * @param request
-	 * @return
-	@RequestMapping(value = "oa/approve_back")
-	@ResponseBody
-	public BaseResult approveBack(HttpServletRequest request,
-			@RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
-		String userId = QUtils.getUsername(request);
-		if (userId == null || userId.length() == 0) {
-			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
-					OAEngineConst.RTX_ID_IS_NULL_MSG);
-		}
-		Map<String, String> vars = commonRequest.getVars();
-		String formIds = vars.get("formIds");
-		String taskIds = vars.get("taskIds");
-		String formMsg[] = formIds.split(",");
-		int len = formMsg.length;
-		String taskMsg[] = taskIds.split(",");
-		// 其实这里就是附言
-		String memo = vars.get("memo");
-		// userId = vars.get("userId");
-		for (int i = 0; i < len; i++) {
-			try {
-				ioaEngineService.back(processKey, userId,
-						Long.valueOf(formMsg[i]), taskMsg[i], memo);
-			} catch (FormNotFoundException e) {
-				e.printStackTrace();
-				logger.error(e.getMessage());
-				return BaseResult.getErrorResult(
-						OAEngineConst.FORM_NOT_FOUND_ERROR,
-						OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-			} catch (ActivitiException e) {
-				e.printStackTrace();
-				logger.error(e.getMessage());
-				return BaseResult.getErrorResult(
-						OAEngineConst.APPROVE_BACK_ERROR,
-						OAEngineConst.APPROVE_BACK_ERROR_MSG);
-			}
-		}
-		return BaseResult.getSuccessResult("回退审批结束");
-
-	}
-	 */
 
 	/**
 	 * 批量加签任务
@@ -1320,59 +1163,6 @@ public class OaEngineController {
 		return BaseResult.getSuccessResult(reMsg);
 
 	}
-
-	/**
-	 * 重新发起
-	 * 
-	 * @param request
-	 * @return
-	@RequestMapping(value = "oa/restart_form")
-	@ResponseBody
-	public BaseResult restartForm(HttpServletRequest request,
-			@RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
-		String userId = QUtils.getUsername(request);
-		if (userId == null || userId.length() == 0) {
-			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
-					OAEngineConst.RTX_ID_IS_NULL_MSG);
-		}
-		Map<String, String> vars = commonRequest.getVars();
-		String formId = vars.get("formId");
-		FormInfo formInfo;
-		try {
-			formInfo = ioaEngineService.getHistoryFormInfo(processKey, userId,
-					formId);
-		} catch (FormNotFoundException e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-			return BaseResult.getErrorResult(
-					OAEngineConst.FORM_NOT_FOUND_ERROR,
-					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-		}
-		try {
-			ioaEngineService.createFormAndstart(processKey, userId, formInfo);
-		} catch (RemoteAccessException e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
-					OAEngineConst.ACL_LIMIT_ERROR_MSG);
-		} catch (CompareModelException e) {
-			e.printStackTrace();
-			logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
-			return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR,
-					OAEngineConst.DATE_FORMAT_ERROR_MSG);
-		} catch (FormNotFoundException e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-			return BaseResult.getErrorResult(
-					OAEngineConst.FORM_NOT_FOUND_ERROR,
-					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-		}
-		return BaseResult.getSuccessResult("重新发起流程成功!");
-
-	}
-	 */
 
 	/**
 	 * 我的正在审批的申请,撤销或者删除
@@ -1493,12 +1283,11 @@ public class OaEngineController {
 	 * @param commonRequest
 	 * @return
 	 */
-	@RequestMapping(value = "api/info")
+	@RequestMapping(value = "api/info", method = RequestMethod.GET)
 	@ResponseBody
-	public BaseResult api(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
-		Map<String, String> vars = commonRequest.getVars();
-		String startTime = vars.get("startTime");
-		String endTime = vars.get("endTime");
+	public BaseResult api(HttpServletRequest request) {
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
 		if(startTime == null || endTime == null){
 			return BaseResult.getErrorResult(-100, "日期范围不能为空");
 		}
@@ -1856,7 +1645,7 @@ public class OaEngineController {
 					OAControllerUtils.dateToStr(formInfo.getField0005()),
 					String.valueOf(formInfo.getMoneyAmount()) };
 		} else if (id == 2) {
-			tableInfo = new String[9];
+			tableInfo = new String[10];
 			tableInfo[0] = String.valueOf(formInfo.getId());
 			tableInfo[1] = formInfo.getApplyUser();
 			tableInfo[2] = formInfo.getApplyDep();
@@ -1866,6 +1655,7 @@ public class OaEngineController {
 			tableInfo[6] = formInfo.isRatify() ? "true" : "false";
 			tableInfo[7] = (formInfo.isOwner() && formInfo.isEndorse()) ? "true" : "false";
 			tableInfo[8] = String.valueOf(formInfo.getEndorseUser());
+			tableInfo[9] = formInfo.getTaskKey();
 		} else if (id == 3) {
 			tableInfo = new String[6];
 			tableInfo[0] = String.valueOf(formInfo.getId());

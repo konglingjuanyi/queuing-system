@@ -765,18 +765,18 @@ public class Form0114Manager {
 	
 	public List<Object> findHistoryForm(Date start, Date end){
 		Formmain0114HistoryExample e = new Formmain0114HistoryExample();
-		e.createCriteria().andField0029GreaterThan(start).andApproveDateLessThanOrEqualTo(end);
+		e.createCriteria().andFinishedflagEqualTo(Constants.PROC_END).andField0029GreaterThan(start).andField0029LessThanOrEqualTo(end);
 		List<Formmain0114History> list = formmain0114HistoryMapper.selectByExample(e);
 		
-		List<Object> infos = new ArrayList<Object>();
-		
+		List<Object> result = new ArrayList<Object>();
 		for(Formmain0114History info : list){
+			List<Object> infos = new ArrayList<Object>();
 			infos.add("");					//所属公司
 			infos.add("日常报销");
 			infos.add(info.getField0005());	//提交日期
 			infos.add(info.getField0029());	//结束日期
 			infos.add(info.getOid());		//编号
-			infos.add(info.getField0064());	//员工编号
+			infos.add(info.getField0008());	//员工编号
 			infos.add(info.getField0004());	//员工姓名
 			infos.add("");					//备注
 			infos.add(info.getField0069());	//总确认金额
@@ -831,9 +831,9 @@ public class Form0114Manager {
 			commInfo.add(dep);
 			commInfo.add(info.getField0099());
 			infos.add(commInfo);
-			
+			result.add(infos);
 		}
-		return infos;
+		return result;
 		
 	}
 
