@@ -549,8 +549,7 @@ public class OaEngineController {
 					ioaEngineService.updateFormInfo(processKey, userId, ""
 							+ formInfo.getId(), formInfo, true);
 				} else {
-					ioaEngineService.createFormAndstart(processKey, userId,
-							formInfo);
+					ioaEngineService.createFormAndstart(processKey, userId, formInfo);
 				}
 			} catch (RemoteAccessException e) {
 				e.printStackTrace();
