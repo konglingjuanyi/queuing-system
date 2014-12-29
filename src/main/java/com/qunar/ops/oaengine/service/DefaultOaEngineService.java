@@ -111,10 +111,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 			String processInstanceId = (String)res[0];
 			TaskResult tr = (TaskResult)res[1];
 			logManager.appendApproveLog(userId, formInfo.getId(), "start", tr, "");
-			
 			//修改状态同时回写进程ID
 			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING, processInstanceId, true);
-			
 			this.sendMail(null, null, userId, tr.getNextTasks(), null);
 		}
 	}
@@ -162,7 +160,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		String _userId = formInfo.getStartMemberId();
 		int finishedflag = formInfo.getFinishedflag();
 		if(userId.equals(_userId) && finishedflag == Constants.PROC_GRIFT){
-			form0114Manager.deleteFormInfo(userId, Long.valueOf(formId));
+			form0114Manager._deleteFormInfo(Long.valueOf(formId), true);
 		}else if(!userId.equals(_userId)){
 			throw new ManagerFormException("不是你的申请，你无权删除", DefaultOaEngineService.class);
 		}else{
@@ -173,15 +171,12 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void cloneToDraft(String userId, String formId) throws FormNotFoundException, ManagerFormException {
-		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
+		FormInfo formInfo = form0114Manager.getFormInfoHistory(Long.valueOf(formId));
 		String _userId = formInfo.getStartMemberId();
-		int finishedflag = formInfo.getFinishedflag();
-		if(userId.equals(_userId) && finishedflag == Constants.REFUSE){
-			form0114Manager.cloneFormInfo(Long.valueOf(formId));
-		}else if(!userId.equals(_userId)){
-			throw new ManagerFormException("不是你的申请，你无权复制", DefaultOaEngineService.class);
+		if(userId.equals(_userId)){
+			form0114Manager.cloneFormInfo(formInfo);
 		}else{
-			throw new ManagerFormException("不是拒绝状态，无法撤销", DefaultOaEngineService.class);
+			throw new ManagerFormException("不是你的申请，你无权复制", DefaultOaEngineService.class);
 		}
 	}
 	
@@ -196,8 +191,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 			if(cancel == null){
 				throw new FormNotFoundException("申请流程没有找到", this.getClass());
 			}
-			form0114Manager.cloneFormInfo(Long.valueOf(formId));
-			form0114Manager._deleteFormInfo(Long.valueOf(formId));
+			this.logManager.appendApproveLog(userId, Long.valueOf(formId), "cancel", cancel, "用户取消申请");
+			form0114Manager.deleteFormInfo(_userId, Long.valueOf(formId), Constants.CANCEL);
 		}else if(!userId.equals(_userId)){
 			throw new ManagerFormException("不是你的申请，你无权撤销", DefaultOaEngineService.class);
 		}else{
@@ -251,11 +246,12 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return form0114Manager.getUserDraftList(userId, pageNo, pageSize);
 	}
 	
+	/*
 	@Override
 	public FormInfoList getUserRefuseList(String processKey, String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
 		return form0114Manager.getUserRefuseList(userId, startTime, endTime, pageNo, pageSize);
-	}
+	}*/
 	
 	@Override
 	public FormInfoList getUserApplyList(String processKey, String userId,
@@ -294,6 +290,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return res;
 	}
 
+	/*
 	@Override
 	public FormInfoList historyList(String processKey, String userId,
 			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
@@ -317,7 +314,9 @@ public class DefaultOaEngineService implements IOAEngineService {
 		res.setFormInfos(formInfos);
 		return res;
 	}
+	*/
 	
+	/*
 	@Override
 	public FormInfoList historyProcessInstList(String processKey, String userId,
 			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
@@ -341,7 +340,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		res.setPageSize(pageSize);
 		res.setFormInfos(formInfos);
 		return res;
-	}
+	}*/
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -396,7 +395,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		this.logManager.appendApproveLog(userId, formId, "pass", tr, memo);
 		if(tr.isFinished()){
 			this.form0114Manager.recordKeyOperation(userId, "cashier", formId);
-			this.form0114Manager.deleteFormInfo(userId, formId);
+			this.form0114Manager.deleteFormInfo(userId, formId, Constants.PROC_END);
 		}else if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
 			this.form0114Manager.recordKeyOperation(userId, "check", formId);
 		}
@@ -429,8 +428,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 		TaskResult tr = this.workflowManager.refuse(processKey, taskId, userId, refuseReason);
 		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		if(tr != null && formInfo != null ){
-			this.form0114Manager.updateFormFinishedFlag(userId, formId, Constants.REFUSE, null, false);
 			this.logManager.appendApproveLog(userId, formId, "refuse", tr, refuseReason);
+			this.form0114Manager.deleteFormInfo(userId, formId, Constants.REFUSE);
 		}else{
 			throw new FormNotFoundException("任务没有找到", this.getClass());
 		}
@@ -537,6 +536,16 @@ public class DefaultOaEngineService implements IOAEngineService {
 			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
 		ListInfo<TaskInfo> taskInfos = workflowManager.todoList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
 		return (int)taskInfos.getCount();
+	}
+
+	@Override
+	public List<Object> findHistoryForm(Date start, Date end) {
+		return form0114Manager.findHistoryForm(start, end);
+	}
+
+	@Override
+	public FormInfoList historyList(String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize) {
+		return this.form0114Manager.historyList(userId, startTime, endTime, owner, pageNo, pageSize);
 	}
 
 }

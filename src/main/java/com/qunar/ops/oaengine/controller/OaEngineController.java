@@ -1,7 +1,32 @@
 package com.qunar.ops.oaengine.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.activiti.engine.ActivitiException;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
+import org.activiti.spring.ProcessEngineFactoryBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.ManagerFormException;
@@ -31,32 +56,6 @@ import com.qunar.ops.oaengine.service.MailSenderService;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
 import com.qunar.ops.oaengine.util.OAEngineConst;
 import com.qunar.ops.oaengine.util.QUtils;
-
-import org.activiti.engine.*;
-import org.activiti.spring.ProcessEngineFactoryBean;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 @Controller
 public class OaEngineController {
@@ -277,12 +276,12 @@ public class OaEngineController {
 	 * 
 	 * @param request
 	 * @return
-	 */
 	@RequestMapping(value = "oa/apply_refuse.html")
 	public ModelAndView myApplyRefuse(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/apply_refuse");
 		return mav;
 	}
+	 */
 
 	/**
 	 * 待审批
@@ -795,7 +794,6 @@ public class OaEngineController {
 	 * @param request
 	 * @param commonRequest
 	 * @return
-	 */
 	@RequestMapping(value = "oa/refuse")
 	@ResponseBody
 	public BaseResult getAllMyApplyRefuseList(HttpServletRequest request,
@@ -849,6 +847,7 @@ public class OaEngineController {
 		}
 		return BaseResult.getSuccessResult(dataResult);
 	}
+	 */
 	
 	/**
 	 * 复制到草稿
@@ -1075,17 +1074,7 @@ public class OaEngineController {
 		}
 		// userId = vars.get("userId");
 		FormInfoList formInfoList = null;
-		try {
-			formInfoList = ioaEngineService.historyProcessInstList(processKey,
-					userId, _startTime, _endTime, approve_user, pageNo,
-					pageSize);
-		} catch (FormNotFoundException e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-			return BaseResult.getErrorResult(
-					OAEngineConst.FORM_NOT_FOUND_ERROR,
-					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
-		}
+		formInfoList = ioaEngineService.historyList(userId, _startTime, _endTime, approve_user, pageNo, pageSize);
 		DataResult dataResult;
 		try {
 			dataResult = getAllTableInfos(formInfoList, userId, 3);
@@ -1337,7 +1326,6 @@ public class OaEngineController {
 	 * 
 	 * @param request
 	 * @return
-	 */
 	@RequestMapping(value = "oa/restart_form")
 	@ResponseBody
 	public BaseResult restartForm(HttpServletRequest request,
@@ -1384,6 +1372,7 @@ public class OaEngineController {
 		return BaseResult.getSuccessResult("重新发起流程成功!");
 
 	}
+	 */
 
 	/**
 	 * 我的正在审批的申请,撤销或者删除
@@ -1411,13 +1400,10 @@ public class OaEngineController {
 		for (int i = 0; i < len; i++) {
 			try {
 				if ("delete".equals(backDel)) {
-					ioaEngineService.deleteFormInfo(processKey, userId,
-							formMsg[i]);
+					ioaEngineService.deleteFormInfo(processKey, userId, formMsg[i]);
 				} else if ("cancel".equals(backDel)) {
-					ioaEngineService.cancelFormInfo(processKey, userId,
-							formMsg[i]);
+					ioaEngineService.cancelFormInfo(processKey, userId, formMsg[i]);
 				}
-
 			} catch (FormNotFoundException e) {
 				e.printStackTrace();
 				logger.error(e.getMessage());
@@ -1480,6 +1466,10 @@ public class OaEngineController {
 				result[k++] = "申请人: " + approveInfo.getApproveUser();
 				result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
 				result[k++] = "";
+			} else if ("取消".equals(type)) {
+				result[k++] = "用户取消申请: " + approveInfo.getApproveUser();
+				result[k++] = "取消时间: " + tdf.format(approveInfo.getTs());
+				result[k++] = "";
 			} else {
 				result[k++] = "审批节点: " + approveInfo.getTaskName();
 				result[k++] = "审批人: " + approveInfo.getApproveUser();
@@ -1494,6 +1484,52 @@ public class OaEngineController {
 
 		return BaseResult.getSuccessResult(result);
 
+	}
+	
+	/**
+	 * 审批完成API
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "api/info")
+	@ResponseBody
+	public BaseResult api(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		String startTime = vars.get("startTime");
+		String endTime = vars.get("endTime");
+		if(startTime == null || endTime == null){
+			return BaseResult.getErrorResult(-100, "日期范围不能为空");
+		}
+		Date _startTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				return BaseResult.getErrorResult(-101, "开始日期格式错误");
+			}
+		}
+		Date _endTime = null;
+		if (endTime != null) {
+			try {
+				_endTime = sdf.parse(endTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+				return BaseResult.getErrorResult(-101, "结束日期格式错误");
+			}
+		}
+		try{
+			List<Object> info = ioaEngineService.findHistoryForm(_startTime, _endTime);
+			return BaseResult.getSuccessResult(info);
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(-500, e.getMessage());
+		}
 	}
 
 	/**
@@ -2123,5 +2159,7 @@ public class OaEngineController {
 		}
 		return depart;
 	}
+	
+	
 
 }

@@ -215,7 +215,6 @@ public class WorkflowManager {
 		
 		HistoricProcessInstanceQuery query = this.historyService
 				.createHistoricProcessInstanceQuery()
-				.processDefinitionKey(processKey)
 				.involvedUser(userId).variableValueNotEquals("owner", userId);
 		if(startTime != null){
 			query.startedAfter(startTime);
@@ -342,6 +341,7 @@ public class WorkflowManager {
 		}
 		String owner = (String)pi.getProcessVariables().get("owner");
 		this.runtimeService.deleteProcessInstance(pi.getId(), reason);
+		this.historyService.deleteHistoricProcessInstance(pi.getId());
 		return new TaskResult(owner, null, null);
 	}
 	

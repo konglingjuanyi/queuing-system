@@ -16,6 +16,7 @@ CREATE TABLE form_approve_log(
   next_task_name varchar(255),
   next_candidate text,
   memo text,
+  owner varchar(100),
   ts timestamp with time zone,
      dob date,
     PRIMARY KEY (id)

@@ -161,7 +161,9 @@ public class OAControllerUtils {
             return "拒绝";
         } else if ("start".equals(approveEn)) {
             return "申请";
-        }
+        } else if ("cancel".equals(approveEn)) {
+            return "取消";
+        } 
         return "";
     }
     

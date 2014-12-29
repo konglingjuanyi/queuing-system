@@ -202,7 +202,7 @@
                     <td><input type="text"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
-                    <td><input type='text' value=''></td>
+                    <td><input type='hidden' value=''></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
@@ -252,7 +252,7 @@
                     <td><input type="text" onblur="addMoney('table3')"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
-                    <td><input type='text' value=''></td>
+                    <td><input type='hidden' value=''></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
@@ -297,7 +297,7 @@
                     <td><input type="text" onblur="addMoney('table4')"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
-                    <td><input type='text' value=''></td>
+                    <td><input type='hidden' value=''></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
@@ -334,7 +334,7 @@
                     <td><input type="text" onblur="addMoney('table5')"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
-                    <td><input type='text' value=''></td>
+                    <td><input type='hidden' value=''></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">

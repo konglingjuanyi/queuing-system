@@ -34,6 +34,9 @@ import com.qunar.ops.oaengine.dao.Formson0119LogMapper;
 import com.qunar.ops.oaengine.dao.Formson0119Mapper;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.model.FormApproveLog;
+import com.qunar.ops.oaengine.model.FormApproveLogExample;
+import com.qunar.ops.oaengine.model.FormApproveLogExample.Criteria;
 import com.qunar.ops.oaengine.model.FormUpdateLog;
 import com.qunar.ops.oaengine.model.FormUpdateLogExample;
 import com.qunar.ops.oaengine.model.Formmain0114;
@@ -130,6 +133,8 @@ public class Form0114Manager {
 	private Formson0119LogMapper formson0119LogMapper;
 	@Autowired(required=true)
 	private FormUpdateLogMapper formUpdateLogMapper;
+	@Autowired(required=true)
+	private LogManager logManager;
 
 	// --------------------------表单相关----------------------------
 	/**
@@ -153,22 +158,17 @@ public class Form0114Manager {
 	}
 
 	/**
-	 * 表单删除
+	 * 表单删除,并移入历史表
 	 * 
 	 * @param userId
 	 * @param formId
 	 * @throws FormNotFoundException 
 	 */
-	public void deleteFormInfo(String userId, Long formId) throws FormNotFoundException {
-		int finishedflag = getFormInfo(formId).getFinishedflag();
-		if(finishedflag != Constants.PROC_GRIFT){
-			// 移动到历史记录表中
-			copyFormInfoToHistory(formId);
-		}
-
+	public void deleteFormInfo(String userId, Long formId, int finishedFlag) throws FormNotFoundException {
+		// 移动到历史记录表中
+		copyFormInfoToHistory(formId, finishedFlag);
 		// 删除记录
-		_deleteFormInfo(formId);
-
+		_deleteFormInfo(formId, false);
 		// 插入日志数据
 		addUpdateLog(userId, formId, "delete", "delete", "delete");
 	}
@@ -258,7 +258,7 @@ public class Form0114Manager {
 	 * @return
 	 * @throws FormNotFoundException 
 	 */
-	public FormInfo getFormInfo(Long formId) throws FormNotFoundException {
+	public FormInfo getFormInfo(Long formId) {
 		FormInfo formInfo = new FormInfo();
 		Formmain0114 formmain0114 = formmain0114Mapper
 				.selectByPrimaryKey(formId);
@@ -292,14 +292,14 @@ public class Form0114Manager {
 	 * @return
 	 * @throws FormNotFoundException 
 	 */
-	public FormInfo getFormInfoHistory(Long formId) throws FormNotFoundException {
+	public FormInfo getFormInfoHistory(Long formId) {
 		FormInfo formInfo = new FormInfo();
 		Formmain0114HistoryExample e = new Formmain0114HistoryExample();
 		e.createCriteria().andOidEqualTo(""+formId);
 		List<Formmain0114History> list = formmain0114HistoryMapper.selectByExample(e);
 
 		if(list.size() == 0){
-			throw new FormNotFoundException(String.format("通过formId:%s，找到%s个form", formId, 0), Form0114Manager.class);
+			return null;
 		}
 		Formmain0114History formmain0114History = list.get(0);
 		BeanUtils.copyProperties(formmain0114History, formInfo);
@@ -371,7 +371,6 @@ public class Form0114Manager {
 				.selectByExample(example);
 		if(formmain0114Historys.size() == 0){
 			return null;
-			//throw new FormNotFoundException(String.format("通过proc_inst_id:%s，找到%s个form", proc_inst_id, formmain0114Historys.size()), Form0114Manager.class);
 		}
 		BeanUtils.copyProperties(formmain0114Historys.get(0), formInfo);
 
@@ -457,46 +456,40 @@ public class Form0114Manager {
 	 * @return FormInfoList 用户申请流程中列表
 	 * 
 	 */
-	public FormInfoList getUserRefuseList(String userId, Date startTime, Date endTime, int pageNo, int pageSize) {
+	public FormInfoList historyList(String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize) {
 		
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
 		
 		FormInfoList formInfoList = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
-		Formmain0114Example example = new Formmain0114Example();
-		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
-		criteria.andStartMemberIdEqualTo(userId);
+		FormApproveLogExample e = new FormApproveLogExample();
+		Criteria criteria = e.createCriteria();
+		criteria.andApproveUserEqualTo(userId);
+		criteria.andOwnerNotEqualTo(userId);
 		if(startTime != null){
-			criteria = criteria.andStartDateGreaterThanOrEqualTo(startTime);
+			criteria = criteria.andTsGreaterThanOrEqualTo(startTime);
 		}
 		if(endTime != null){
-			criteria = criteria.andStartDateLessThanOrEqualTo(endTime);
+			criteria = criteria.andTsLessThanOrEqualTo(endTime);
 		}
-		criteria.andFinishedflagEqualTo(Constants.REFUSE);
-		int count = formmain0114Mapper.countByExample(example);
+		if(owner != null){
+			criteria = criteria.andOwnerEqualTo(owner);
+		}
+		int count = formApproveLogMapper.countByExample(e);
 
-		example.setOffset((pageNo - 1) * pageSize);
-		example.setLimit(pageSize);
-		example.setOrderByClause("field0005 desc");
-		List<Formmain0114> formmain0114s = formmain0114Mapper.selectByExample(example);
-		FormInfo formInfo;
-		for(int i = 0; i < formmain0114s.size(); i++){
-			formInfo = new FormInfo();
-			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
-			
-			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
-			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
-					.get("overtimeMealsInfos"));
-			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
-					.get("hospitalityInfos"));
-			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
-					.get("otherCostsInfos"));
-			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
-					.get("employeeRelationsFeesInfos"));
-			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
-					.get("taxiFaresInfos"));
-			
+		e.setOffset((pageNo - 1) * pageSize);
+		e.setLimit(pageSize);
+		e.setOrderByClause("form_id desc");
+		List<FormApproveLog> logs = formApproveLogMapper.selectDistinctFromIds(e);
+		for(int i = 0; i < logs.size(); i++){
+			FormInfo formInfo = null;
+			FormApproveLog log = logs.get(i);
+			formInfo = this.getFormInfo(log.getFormId());
+			if(formInfo == null) continue;
+			if(formInfo.getOid() != null){
+				formInfo.setId(Long.valueOf(formInfo.getOid()));
+			}
 			formInfos.add(formInfo);
 		}
 		formInfoList.setCount(count);
@@ -624,8 +617,7 @@ public class Form0114Manager {
 	 * @return FormInfoList 用户历史流程中列表
 	 * 
 	 */
-	public FormInfoList getUserApplyHisList(String userId,
-			Date startTime, Date endTime, int pageNo, int pageSize) {
+	public FormInfoList getUserApplyHisList(String userId, Date startTime, Date endTime, int pageNo, int pageSize) {
 		
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
@@ -673,30 +665,25 @@ public class Form0114Manager {
 		return formInfoList;
 	}
 
-	public FormInfoList todoList(String processKey, String userId,
-			Date startTime, Date endTime, String owner, int pageNo, int pageSize) {
-		FormInfoList formInfoList = new FormInfoList();
-		List<FormInfo> formInfos = new ArrayList<FormInfo>();
-		return null;
-	}
 	
-	public void cloneFormInfo(Long formId) {
+	public void cloneFormInfo(FormInfo formInfo) {
 		// 主表的数据到历史
-		Formmain0114 formmain0114 = formmain0114Mapper.selectByPrimaryKey(formId);
+		//Formmain0114 formmain0114 = formmain0114Mapper.selectByPrimaryKey(formId);
 		Formmain0114 formmain0114clone = new Formmain0114();
-		BeanUtils.copyProperties(formmain0114, formmain0114clone);
+		BeanUtils.copyProperties(formInfo, formmain0114clone);
 		formmain0114clone.setFinishedflag(Constants.PROC_GRIFT);
+		formmain0114clone.setProcInstId("");
 		formmain0114Mapper.insert(formmain0114clone);
 
 		// 子表数据到历史表中
-		cloneFormsInfo(formId, formmain0114clone.getId());
+		cloneFormsInfo(Long.valueOf(formInfo.getOid()), formmain0114clone.getId());
 	}
 
 	private void cloneFormsInfo(Long formId, Long nid) {
 		// 子表中的数据到历史
-		Formson0115Example example115 = new Formson0115Example();
+		Formson0115HistoryExample example115 = new Formson0115HistoryExample();
 		example115.createCriteria().andFormmain0114idEqualTo(formId);
-		List<Formson0115> formson0115s = formson0115Mapper
+		List<Formson0115History> formson0115s = formson0115HistoryMapper
 				.selectByExample(example115);
 		Formson0115 formson0115;
 		for (int i = 0; i < formson0115s.size(); i++) {
@@ -706,9 +693,9 @@ public class Form0114Manager {
 			formson0115Mapper.insert(formson0115);
 		}
 
-		Formson0116Example example116 = new Formson0116Example();
+		Formson0116HistoryExample example116 = new Formson0116HistoryExample();
 		example116.createCriteria().andFormmain0114idEqualTo(formId);
-		List<Formson0116> formson0116s = formson0116Mapper
+		List<Formson0116History> formson0116s = formson0116HistoryMapper
 				.selectByExample(example116);
 		Formson0116 formson0116;
 		for (int i = 0; i < formson0116s.size(); i++) {
@@ -718,9 +705,9 @@ public class Form0114Manager {
 			formson0116Mapper.insert(formson0116);
 		}
 
-		Formson0117Example example117 = new Formson0117Example();
+		Formson0117HistoryExample example117 = new Formson0117HistoryExample();
 		example117.createCriteria().andFormmain0114idEqualTo(formId);
-		List<Formson0117> formson0117s = formson0117Mapper
+		List<Formson0117History> formson0117s = formson0117HistoryMapper
 				.selectByExample(example117);
 		Formson0117 formson0117;
 		for (int i = 0; i < formson0117s.size(); i++) {
@@ -730,9 +717,9 @@ public class Form0114Manager {
 			formson0117Mapper.insert(formson0117);
 		}
 
-		Formson0118Example example118 = new Formson0118Example();
+		Formson0118HistoryExample example118 = new Formson0118HistoryExample();
 		example118.createCriteria().andFormmain0114idEqualTo(formId);
-		List<Formson0118> formson0118s = formson0118Mapper
+		List<Formson0118History> formson0118s = formson0118HistoryMapper
 				.selectByExample(example118);
 		Formson0118 formson0118;
 		for (int i = 0; i < formson0118s.size(); i++) {
@@ -742,9 +729,9 @@ public class Form0114Manager {
 			formson0118Mapper.insert(formson0118);
 		}
 
-		Formson0119Example example119 = new Formson0119Example();
+		Formson0119HistoryExample example119 = new Formson0119HistoryExample();
 		example119.createCriteria().andFormmain0114idEqualTo(formId);
-		List<Formson0119> formson0119s = formson0119Mapper
+		List<Formson0119History> formson0119s = formson0119HistoryMapper
 				.selectByExample(example119);
 		Formson0119 formson0119;
 		for (int i = 0; i < formson0119s.size(); i++) {
@@ -773,6 +760,81 @@ public class Form0114Manager {
 			info.setCashierDate(new Date());
 		}
 		this.updateFormInfo(userId, formId, info);
+	}
+	
+	
+	public List<Object> findHistoryForm(Date start, Date end){
+		Formmain0114HistoryExample e = new Formmain0114HistoryExample();
+		e.createCriteria().andField0029GreaterThan(start).andApproveDateLessThanOrEqualTo(end);
+		List<Formmain0114History> list = formmain0114HistoryMapper.selectByExample(e);
+		
+		List<Object> infos = new ArrayList<Object>();
+		
+		for(Formmain0114History info : list){
+			infos.add("");					//所属公司
+			infos.add("日常报销");
+			infos.add(info.getField0005());	//提交日期
+			infos.add(info.getField0029());	//结束日期
+			infos.add(info.getOid());		//编号
+			infos.add(info.getField0064());	//员工编号
+			infos.add(info.getField0004());	//员工姓名
+			infos.add("");					//备注
+			infos.add(info.getField0069());	//总确认金额
+			infos.add(info.getField0101());	//付款金额
+			infos.add(info.getField0006());	//借款单编号
+			infos.add("");					//冲销借款金额
+			infos.add("");					//发票ID
+			infos.add("CNY");				//币种
+			infos.add("");					//汇率
+			infos.add("");					//付款银行
+			
+			String dep = info.getField0001()+","+info.getField0002()+","+info.getField0003()+","+info.getField0009()+","+info.getField0100();
+			
+			List<Object> taxiInfo = new ArrayList<Object>();
+			taxiInfo.add(info.getOid());
+			taxiInfo.add("出租车费");
+			taxiInfo.add(dep);
+			taxiInfo.add(info.getField0068());
+			infos.add(taxiInfo);
+			
+			List<Object> overInfo = new ArrayList<Object>();
+			overInfo.add(info.getOid());
+			overInfo.add("加班餐费");
+			overInfo.add(dep);
+			overInfo.add(info.getField0065());
+			infos.add(overInfo);
+			
+			List<Object> hosInfo = new ArrayList<Object>();
+			hosInfo.add(info.getOid());
+			hosInfo.add("招待费");
+			hosInfo.add(dep);
+			hosInfo.add(info.getField0066());
+			infos.add(hosInfo);
+			
+			List<Object> otherInfo = new ArrayList<Object>();
+			otherInfo.add(info.getOid());
+			otherInfo.add("其他费用");
+			otherInfo.add(dep);
+			otherInfo.add(info.getField0070());
+			infos.add(otherInfo);
+			
+			List<Object> employInfo = new ArrayList<Object>();
+			employInfo.add(info.getOid());
+			employInfo.add("员工关系费");
+			employInfo.add(dep);
+			employInfo.add(info.getField0067());
+			infos.add(employInfo);
+			
+			List<Object> commInfo = new ArrayList<Object>();
+			commInfo.add(info.getOid());
+			commInfo.add("通信费");
+			commInfo.add(dep);
+			commInfo.add(info.getField0099());
+			infos.add(commInfo);
+			
+		}
+		return infos;
+		
 	}
 
 	
@@ -1109,39 +1171,6 @@ public class Form0114Manager {
 		return ids;
 	}
 
-	public static void main(String[] args) throws Exception {
-		// SqlSessionFactoryBean sqlSessionFactory = new
-		// ClassPathXmlApplicationContext(new
-		// String[]{"spring.xml"}).getBean(SqlSessionFactoryBean.class);
-		// SqlSession sqlSession = sqlSessionFactory.getObject().openSession();
-		// FormAppmainMapper mapper =
-		// sqlSession.getMapper(FormAppmainMapper.class);
-		// FormAppmainMapper mapper = new ClassPathXmlApplicationContext(
-		// new String[] { "spring.xml" }).getBean(FormAppmainMapper.class);
-		// FormAppmain main = new FormAppmain();
-		// main.setAppname("test");
-		// main.setId(10l);
-		// main.setState((short) 1);
-		// main.setTableName("test");
-		// mapper.insert(main);
-		// System.out.println(main.getId());
-		// FormAppmain mod = mapper.selectByPrimaryKey(2l);
-		// System.out.println(mod.getAppname());
-
-		// 获取主表的更新
-		// FormUpdateLogMapper formUpdateLogMapper = new
-		// ClassPathXmlApplicationContext(
-		// new String[] { "spring.xml" }).getBean(FormUpdateLogMapper.class);
-		// FormUpdateLogExample example = new FormUpdateLogExample();
-		// example.createCriteria().andFormIdEqualTo(1l);
-		// example.setOffset((1 - 1) * 1);
-		// example.setLimit(1);
-		// List<GroupResultInfo> logs = formUpdateLogMapper
-		// .groupByExampleTs(example);
-		// System.out.println(logs);
-
-	}
-
 	private <T> void createFormsonInfos(T[] infos, int type, Long formId) {
 		for (int i = 0; i < infos.length; i++) {
 			switch (type) {
@@ -1188,13 +1217,14 @@ public class Form0114Manager {
 		formUpdateLogMapper.insert(updateLog);
 	}
 
-	private void copyFormInfoToHistory(Long formId) {
+	private void copyFormInfoToHistory(Long formId, int finishedFlag) {
 		// 主表的数据到历史
 		Formmain0114 formmain0114 = formmain0114Mapper
 				.selectByPrimaryKey(formId);
 		Formmain0114History formmain0114History = new Formmain0114History();
 		BeanUtils.copyProperties(formmain0114, formmain0114History);
 		formmain0114History.setOid(""+formId);
+		formmain0114History.setFinishedflag(finishedFlag);
 		formmain0114HistoryMapper.insert(formmain0114History);
 
 		// 子表数据到历史表中
@@ -1259,12 +1289,15 @@ public class Form0114Manager {
 		}
 	}
 
-	public void _deleteFormInfo(Long formId) {
+	public void _deleteFormInfo(Long formId, boolean deleteLog) {
 		// 删除主表的记录
 		formmain0114Mapper.deleteByPrimaryKey(formId);
-
 		// 删除子表的记录
 		_deleteFormsonInfo(formId);
+		
+		if(deleteLog){
+			logManager.removeLog(formId);
+		}
 	}
 
 	private void _deleteFormsonInfo(Long formId) {

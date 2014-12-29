@@ -273,7 +273,7 @@
 
     function applyBackorDel(oTable, num) {
         var operStr = "cancel";
-        var msg = "报销撤销以后将存为草稿,是否撤销?";
+        var msg = "是否撤销?";
         var title = "撤销操作";
         var formIds = "";
         $("input:checked", oTable.fnGetNodes()).each(function () {

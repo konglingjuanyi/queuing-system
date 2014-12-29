@@ -55,6 +55,7 @@ public class LoginManager {
 //	}
 	
 	public String login(String username, String password){
+		//return null;
 		String p = "{\"p\": \""+password+"\", \"a\": \""+key+"\", \"u\": \""+username+"\"}";
 		byte[] eRes1;
 		try {

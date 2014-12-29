@@ -45,7 +45,7 @@ public class FormManagerTest {
 	
 	@After
 	public void destory_data() throws FormNotFoundException{
-		form0114manager.deleteFormInfo("yongnian.jiang", formId);
+		form0114manager.deleteFormInfo("yongnian.jiang", formId, 0);
 	}
 	
 	@Test
