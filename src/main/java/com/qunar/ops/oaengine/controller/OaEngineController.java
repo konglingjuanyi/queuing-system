@@ -450,6 +450,10 @@ public class OaEngineController {
 			logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.DATE_FORMAT_ERROR,
 					OAEngineConst.DATE_FORMAT_ERROR_MSG);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			logger.warn(e.getMessage());
+			return BaseResult.getErrorResult(-1, e.getMessage());
 		}
 		if (!createFlag) {
 			String errorMsg = "没有任何报销内容，请检查";
@@ -1590,6 +1594,10 @@ public class OaEngineController {
 		}
 		if (ratify) {
 			formInfo.setPayAmount(OAControllerUtils.yuanMoneyToCent(vars.get("payAmount")));
+		}
+		
+		if(formInfo.getPayAmount() > formInfo.getSumFinancialNotify()){
+			throw new NumberFormatException("支付金额不能大于核定金额");
 		}
 
 		table = tableMap.get("table");
