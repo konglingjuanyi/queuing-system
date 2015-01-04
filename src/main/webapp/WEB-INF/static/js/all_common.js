@@ -187,7 +187,7 @@ function tableBodyForm(tableMap, tableId, num) {
                 }
                 bodyForm += '<td>';
                 bodyForm += $.parseStr('<input type="text" style="width: 100%;color:#000000" ' +
-                'readonly="readonly" value="%s">', value);
+                'readonly="readonly" value="%s">', value.replace("<", "&lt;").replace(">", "&gt;"));
                 bodyForm += '</td>';
             }
             bodyForm += '</tr>';
