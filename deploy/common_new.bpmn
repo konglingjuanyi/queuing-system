@@ -58,7 +58,7 @@
     <exclusiveGateway id="exclusivegateway7" name="Exclusive Gateway"></exclusiveGateway>
     <task id="empty_4" name="空节点"></task>
     <parallelGateway id="parallelgateway1" name="Parallel Gateway"></parallelGateway>
-    <userTask id="fin_director" name="财务总监" activiti:candidateUsers="nuby.zhang">
+    <userTask id="fin_director" name="财务总监" activiti:candidateUsers="jingyao.shi">
       <extensionElements>
         <activiti:taskListener event="create" delegateExpression="${selectListener}"></activiti:taskListener>
       </extensionElements>

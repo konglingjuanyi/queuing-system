@@ -80,6 +80,7 @@ function constructEditDialogDatas(tableMap, vars) {
     $('#edit-form').html(edit_form);
     var fixedInfo = '<!--startprint--><div style="text-align:center; vertical-align:middle;">';
     fixedInfo += fixedTableInfo(tableMap, vars);
+    fixedInfo += '<div style="text-align:left">'+vars["approveInfo"]+'</div>';
     fixedInfo += '</div><!--endprint-->';
     $('#edit_content').append(fixedInfo);
     $("#dialog-confirm").removeClass('hide').dialog({

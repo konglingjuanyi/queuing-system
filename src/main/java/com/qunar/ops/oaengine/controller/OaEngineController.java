@@ -667,16 +667,16 @@ public class OaEngineController {
 		Map<String, String> vars = commonRequest.getVars();
 		String formId = vars.get("formId");
 		FormInfo formInfo;
+		String[] approveInfo;
 		try {
 			formInfo = ioaEngineService.getFormInfo(processKey, userId, formId);
+			approveInfo = this._getApproveInfo(processKey, formId);
 		} catch (FormNotFoundException e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
-			return BaseResult.getErrorResult(
-					OAEngineConst.FORM_NOT_FOUND_ERROR,
-					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
 		}
-		FormRequest formRequest = getApplyDetailInfo(formInfo);
+		FormRequest formRequest = getApplyDetailInfo(formInfo, approveInfo);
 		return BaseResult.getSuccessResult(formRequest);
 	}
 
@@ -1229,22 +1229,55 @@ public class OaEngineController {
 	 */
 	@RequestMapping(value = "oa/approve_info")
 	@ResponseBody
-	public BaseResult getApproveInfo(HttpServletRequest request,
-			@RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
+	public BaseResult getApproveInfo(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
-					OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
 		Map<String, String> vars = commonRequest.getVars();
 		String formId = vars.get("formId");
-		ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(
-				processKey, formId, 1, 20);
+//		ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 100);
+//		long count = approveInfos.getCount();
+//		if (count == 0) {
+//			return BaseResult.getSuccessResult("");
+//		}
+//		List<ApprovalInfo> infos = approveInfos.getInfos();
+//		int size = infos.size();
+//		SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//		String[] result = new String[size * 6];
+//		int k = 0;
+//		for (int i = 0; i < size; i++) {
+//			ApprovalInfo approveInfo = infos.get(i);
+//			String type = OAControllerUtils.transformApproveEnToCh(approveInfo
+//					.getManagerType());
+//			if ("申请".equals(type)) {
+//				result[k++] = "申请人: " + approveInfo.getApproveUser();
+//				result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
+//				result[k++] = "";
+//			} else if ("取消".equals(type)) {
+//				result[k++] = "用户取消申请: " + approveInfo.getApproveUser();
+//				result[k++] = "取消时间: " + tdf.format(approveInfo.getTs());
+//				result[k++] = "";
+//			} else {
+//				result[k++] = "审批节点: " + approveInfo.getTaskName();
+//				result[k++] = "审批人: " + approveInfo.getApproveUser();
+//				result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
+//				result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
+//				result[k++] = "附言: " + approveInfo.getMemo();
+//				result[k++] = "";
+//			}
+//		}
+		String[] result = this._getApproveInfo(processKey, formId);
+		if(result == null) return BaseResult.getSuccessResult("");
+		return BaseResult.getSuccessResult(result);
+	}
+	
+	private String[] _getApproveInfo(String processKey, String formId){
+		ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 100);
 		long count = approveInfos.getCount();
 		if (count == 0) {
-			return BaseResult.getSuccessResult("");
+			return null;
 		}
 		List<ApprovalInfo> infos = approveInfos.getInfos();
 		int size = infos.size();
@@ -1267,16 +1300,12 @@ public class OaEngineController {
 				result[k++] = "审批节点: " + approveInfo.getTaskName();
 				result[k++] = "审批人: " + approveInfo.getApproveUser();
 				result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
-				result[k++] = "审批结果: "
-						+ OAControllerUtils.transformApproveEnToCh(approveInfo
-								.getManagerType());
+				result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
 				result[k++] = "附言: " + approveInfo.getMemo();
 				result[k++] = "";
 			}
 		}
-
-		return BaseResult.getSuccessResult(result);
-
+		return result;
 	}
 	
 	/**
@@ -1680,7 +1709,7 @@ public class OaEngineController {
 	 * @param formInfo
 	 * @return FormRequest
 	 */
-	private FormRequest getApplyDetailInfo(FormInfo formInfo) {
+	private FormRequest getApplyDetailInfo(FormInfo formInfo, String[] approveInfo) {
 		FormRequest formRequest = new FormRequest();
 		Map<String, String[][]> tableMap = new HashMap<String, String[][]>();
 		String table[][] = createTableFirstInfo(formInfo);
@@ -1865,6 +1894,13 @@ public class OaEngineController {
 		formRequest.setTableMap(tableMap);
 		formRequest.setVars(vars);
 		formRequest.setFlag(false);
+		
+		String aInfo = "";
+		if(approveInfo != null)for(String info : approveInfo){
+			if(info == null) continue;
+			aInfo += info + "<br/>";
+		}
+		vars.put("approveInfo", aInfo);
 		return formRequest;
 
 	}

@@ -673,6 +673,7 @@ public class Form0114Manager {
 		BeanUtils.copyProperties(formInfo, formmain0114clone);
 		formmain0114clone.setFinishedflag(Constants.PROC_GRIFT);
 		formmain0114clone.setProcInstId("");
+		formmain0114clone.setOid(null);
 		formmain0114Mapper.insert(formmain0114clone);
 
 		// 子表数据到历史表中
