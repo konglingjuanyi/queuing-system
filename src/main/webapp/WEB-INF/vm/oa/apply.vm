@@ -645,6 +645,8 @@
         for (var i = 0; i < 6; i++) {
             dic[tableList[i]] = errorMsgList[i];
         }
+        
+        var errorInfo = "";
 
         if (containsValue(tableList, tableId)) {
             var table = document.getElementById(tableId);
@@ -656,12 +658,14 @@
             	innerSum = cell.value;
 	            if (isNull(innerSum)) {
 	            	innerSum = 0;
-	            }else if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(innerSum)) {
-	                alert(dic[tableId] + "金额格式错误");
-	                cell.value = "";
-	                return false;
+	            } else if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(innerSum)) {
+	            	errorInfo = dic[tableId] + "金额格式错误";
+	            	innerSum = 0;
+	            	cell.value = "";
+	            	cell.style.backgroundColor="yellow";
+	            } else {
+	            	cell.style.backgroundColor="";
 	            }
-	            //$("#ratify6").val(parseFloat(innerSum).toFixed(2));
             }else{
 	            for (i = 1; i < rowLen; i++) {
 	                var innerSum = '';
@@ -674,14 +678,14 @@
 	                innerSum = cell.value;
 	                if (isNull(innerSum)) {
 	                    innerSum = 0;
-	                }
-	                else if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(innerSum)) {
-	                    alert(dic[tableId] + "金额格式错误");
-	                    cell.value = "";
-	                    return false;
-	                }
-	                else {
+	                } else if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(innerSum)) {
+	                    errorInfo = dic[tableId] + "金额格式错误";
+	            		innerSum = 0;
+	            		cell.value = "";
+	            		cell.style.backgroundColor="yellow"
+	                } else {
 	                    innerSum = parseFloat(innerSum);
+	                    cell.style.backgroundColor="";
 	                }
 	                tableSum = parseFloat(tableSum);
 	                tableSum += innerSum;
@@ -689,7 +693,6 @@
 	            var length = tableId.length;
 	            var id = tableId.substr(length - 1);
 	            $("#sum" + id).val(tableSum.toFixed(2));
-	            //$("#ratify" + id).val(tableSum.toFixed(2));
             }
         }
 
@@ -705,7 +708,11 @@
             sum += innerSum;
         }
         $("#sum").val(sum.toFixed(2));
-        //$("#ratify").val(sum.toFixed(2));
+        
+        if(errorInfo != ""){
+			alert(errorInfo);
+	        return false;
+        }
     }
 
     function avgMoney(tableId, curRow) {
@@ -722,6 +729,12 @@
     }
 
     function subTableInfos(flag) {
+    	//addMoney("table1");
+    	//addMoney("table2");
+    	//addMoney("table3");
+    	//addMoney("table4");
+    	//addMoney("table5");
+    	//addMoney("table6");
         var params = {};
         var vars = {};
         if(formId != null && formId != ""){

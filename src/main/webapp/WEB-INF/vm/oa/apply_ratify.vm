@@ -531,6 +531,8 @@
         for (var i = 0; i < 6; i++) {
             dic[tableList[i]] = errorMsgList[i];
         }
+        
+        var errorInfo = "";
 
         if (containsValue(tableList, tableId)) {
             var table = document.getElementById(tableId);
@@ -543,9 +545,12 @@
 	            if (isNull(innerSum)) {
 	            	innerSum = 0;
 	            }else if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(innerSum)) {
-	                alert(dic[tableId] + "金额格式错误");
-	                cell.value = "";
-	                return false;
+	                errorInfo = dic[tableId] + "金额格式错误";
+	            	innerSum = 0;
+	            	cell.value = "";
+	            	cell.style.backgroundColor="yellow";
+	            }else{
+	            	cell.style.backgroundColor="";
 	            }
 	            $("#ratify6").val(parseFloat(innerSum).toFixed(2));
             }else{
@@ -563,11 +568,13 @@
 	                if (isNull(innerSum)) {
 	                    innerSum = 0;
 	                }else if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(innerSum)) {
-		                alert(dic[tableId] + "金额格式错误");
-		                cell.value = "";
-		                return false;
+		                errorInfo = dic[tableId] + "金额格式错误";
+		            	innerSum = 0;
+		            	cell.value = "";
+		            	cell.style.backgroundColor="yellow";
 		            }else {
 	                    innerSum = parseFloat(innerSum);
+	                    cell.style.backgroundColor="";
 	                }
 	                amount = parseFloat(amount);
 	                if(innerSum > amount){
@@ -597,6 +604,11 @@
             sum += innerSum;
         }
         $("#ratify").val(sum.toFixed(2));
+        
+        if(errorInfo != ""){
+			alert(errorInfo);
+	        return false;
+        }
     }
 
     function subTableInfos(flag, pass) {

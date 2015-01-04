@@ -1241,75 +1241,9 @@ public class OaEngineController {
 		}
 		Map<String, String> vars = commonRequest.getVars();
 		String formId = vars.get("formId");
-//		ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 100);
-//		long count = approveInfos.getCount();
-//		if (count == 0) {
-//			return BaseResult.getSuccessResult("");
-//		}
-//		List<ApprovalInfo> infos = approveInfos.getInfos();
-//		int size = infos.size();
-//		SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-//		String[] result = new String[size * 6];
-//		int k = 0;
-//		for (int i = 0; i < size; i++) {
-//			ApprovalInfo approveInfo = infos.get(i);
-//			String type = OAControllerUtils.transformApproveEnToCh(approveInfo
-//					.getManagerType());
-//			if ("申请".equals(type)) {
-//				result[k++] = "申请人: " + approveInfo.getApproveUser();
-//				result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
-//				result[k++] = "";
-//			} else if ("取消".equals(type)) {
-//				result[k++] = "用户取消申请: " + approveInfo.getApproveUser();
-//				result[k++] = "取消时间: " + tdf.format(approveInfo.getTs());
-//				result[k++] = "";
-//			} else {
-//				result[k++] = "审批节点: " + approveInfo.getTaskName();
-//				result[k++] = "审批人: " + approveInfo.getApproveUser();
-//				result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
-//				result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
-//				result[k++] = "附言: " + approveInfo.getMemo();
-//				result[k++] = "";
-//			}
-//		}
 		String[] result = this._getApproveInfo(processKey, formId);
 		if(result == null) return BaseResult.getSuccessResult("");
 		return BaseResult.getSuccessResult(result);
-	}
-	
-	private String[] _getApproveInfo(String processKey, String formId){
-		ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 100);
-		long count = approveInfos.getCount();
-		if (count == 0) {
-			return null;
-		}
-		List<ApprovalInfo> infos = approveInfos.getInfos();
-		int size = infos.size();
-		SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String[] result = new String[size * 6];
-		int k = 0;
-		for (int i = 0; i < size; i++) {
-			ApprovalInfo approveInfo = infos.get(i);
-			String type = OAControllerUtils.transformApproveEnToCh(approveInfo
-					.getManagerType());
-			if ("申请".equals(type)) {
-				result[k++] = "申请人: " + approveInfo.getApproveUser();
-				result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
-				result[k++] = "";
-			} else if ("取消".equals(type)) {
-				result[k++] = "用户取消申请: " + approveInfo.getApproveUser();
-				result[k++] = "取消时间: " + tdf.format(approveInfo.getTs());
-				result[k++] = "";
-			} else {
-				result[k++] = "审批节点: " + approveInfo.getTaskName();
-				result[k++] = "审批人: " + approveInfo.getApproveUser();
-				result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
-				result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
-				result[k++] = "附言: " + approveInfo.getMemo();
-				result[k++] = "";
-			}
-		}
-		return result;
 	}
 	
 	/**
@@ -1355,6 +1289,47 @@ public class OaEngineController {
 			logger.error(e.getMessage());
 			return BaseResult.getErrorResult(-500, e.getMessage());
 		}
+	}
+	
+	/**
+	 * 审批信息
+	 * @param processKey
+	 * @param formId
+	 * @return
+	 */
+	private String[] _getApproveInfo(String processKey, String formId){
+		ListInfo<ApprovalInfo> approveInfos = ioaEngineService.getApprovalInfo(processKey, formId, 1, 100);
+		long count = approveInfos.getCount();
+		if (count == 0) {
+			return null;
+		}
+		List<ApprovalInfo> infos = approveInfos.getInfos();
+		int size = infos.size();
+		SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		String[] result = new String[size * 6];
+		int k = 0;
+		for (int i = 0; i < size; i++) {
+			ApprovalInfo approveInfo = infos.get(i);
+			String type = OAControllerUtils.transformApproveEnToCh(approveInfo
+					.getManagerType());
+			if ("申请".equals(type)) {
+				result[k++] = "申请人: " + approveInfo.getApproveUser();
+				result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
+				result[k++] = "";
+			} else if ("取消".equals(type)) {
+				result[k++] = "用户取消申请: " + approveInfo.getApproveUser();
+				result[k++] = "取消时间: " + tdf.format(approveInfo.getTs());
+				result[k++] = "";
+			} else {
+				result[k++] = "审批节点: " + approveInfo.getTaskName();
+				result[k++] = "审批人: " + approveInfo.getApproveUser();
+				result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
+				result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
+				result[k++] = "附言: " + approveInfo.getMemo();
+				result[k++] = "";
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -1596,7 +1571,7 @@ public class OaEngineController {
 			formInfo.setPayAmount(OAControllerUtils.yuanMoneyToCent(vars.get("payAmount")));
 		}
 		
-		if(formInfo.getPayAmount() > formInfo.getSumFinancialNotify()){
+		if(ratify && formInfo.getPayAmount() > formInfo.getSumFinancialNotify()){
 			throw new NumberFormatException("支付金额不能大于核定金额");
 		}
 

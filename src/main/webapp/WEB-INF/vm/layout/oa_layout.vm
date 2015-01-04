@@ -63,6 +63,7 @@
     <script src="static/ace/js/dropzone.min.js"></script>
 
     <script src="static/MyPlugin/jquery-ui.1.10.3.full.my.js"></script>
+    <script src="static/MyPlugin/jquery.PrintArea.js"></script>
 ##    <script src="static/MyPlugin/jquery.myplugin.js"></script>
 
 </head>

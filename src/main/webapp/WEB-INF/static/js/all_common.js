@@ -78,7 +78,7 @@ function showEditDialog(formId) {
 
 function constructEditDialogDatas(tableMap, vars) {
     $('#edit-form').html(edit_form);
-    var fixedInfo = '<!--startprint--><div style="text-align:center; vertical-align:middle;">';
+    var fixedInfo = '<!--startprint--><div id="printContent" style="text-align:center; vertical-align:middle;">';
     fixedInfo += fixedTableInfo(tableMap, vars);
     fixedInfo += '<div style="text-align:left">'+vars["approveInfo"]+'</div>';
     fixedInfo += '</div><!--endprint-->';
@@ -377,13 +377,16 @@ function showResultDialog(id, header, header_icon, msg, width) {
 }
 
 function printPage(){
-	var bdhtml=window.document.body.innerHTML;//获取当前页的html代码，用于保存原来的网页
-	var sprnstr="<!--startprint-->";//设置打印开始区域（在要打印的html上设置要打印的区域开始）
-	var eprnstr="<!--endprint-->";//设置打印结束区域（在要打印的html上设置要打印的区域结束）
-	var prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
-	prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html，这样就获取到了需要的局部页面
+	//var bdhtml=window.document.body.innerHTML;//获取当前页的html代码，用于保存原来的网页
+	//var sprnstr="<!--startprint-->";//设置打印开始区域（在要打印的html上设置要打印的区域开始）
+	//var eprnstr="<!--endprint-->";//设置打印结束区域（在要打印的html上设置要打印的区域结束）
+	//var prnhtml=bdhtml.substring(bdhtml.indexOf(sprnstr)+18); //从开始代码向后取html
+	//prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr));//从结束代码向前取html，这样就获取到了需要的局部页面
 
-	window.document.body.innerHTML=prnhtml;//把修改后的局部html替换当前网页
-	window.print(); //进行局部打印
-	window.document.body.innerHTML=bdhtml; //打印结束后，把原来的网页替换回来
+	//window.document.body.innerHTML=prnhtml;//把修改后的局部html替换当前网页
+	//window.print(); //进行局部打印
+	//window.document.body.innerHTML=bdhtml; //打印结束后，把原来的网页替换回来
+	
+	$("#printContent").printArea();
 }
+
