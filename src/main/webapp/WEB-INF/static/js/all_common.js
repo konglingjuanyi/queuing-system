@@ -201,15 +201,15 @@ function table6BodyForm(vars) {
     form += '<tr>';
     form += '<td>金额</td>';
     form += '<td>';
-    form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="sum6">', vars["sum6"]);
+    form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="sum6" readonly="readonly">', vars["sum6"]);
     form += '</td>';
     form += '<td>核定金额</td>';
     form += '<td>';
-    form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="sum6">', vars["sum6"]);
+    form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="sum6" readonly="readonly">', vars["sum6"]);
     form += '</td>';
     form += '<td>备注(话费实际发生月份)</td>';
     form += '<td>';
-    form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="remark">', vars["remark"]);
+    form += $.parseStr('<input type="text" value="%s" style="width: 100%;color:#000000" id="remark" readonly="readonly">', vars["remark"]);
     form += '</td>';
     form += '</tr>';
     return form;
