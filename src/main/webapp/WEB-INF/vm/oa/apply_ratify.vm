@@ -690,7 +690,8 @@
             success: function (resp) {
                 if (resp.errorCode == 0) {
                 	if(pass){
-                    	approveProxy("oa/approve_pass", "", "通过");
+                    	//approveProxy("oa/approve_pass", "", "通过");
+                    	approvePass();
                     }else{
                     	showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("保存成功！"), 300);
                     	window.location.href = '/oaengine/oa/approve_todo.html';
@@ -794,6 +795,74 @@
         });
     }
     
+    
+    function approvePass() {
+        var url = "oa/approve_pass";
+        var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
+        try {
+            $("#approve-msg-dialog").empty();
+            var form = createOperateMsgForm('Tips: 同意理由请不要超过100个字符');
+            $("#approve-msg-dialog").append(form);
+            var dialog = $("#approve-msg-dialog").removeClass('hide').dialog({
+                modal: true,
+                width: dialog_width,
+                height: 250,
+                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
+                '<li class="icon-user"></li> 同意理由</div>',
+                title_html: true,
+                closeOnEscape: false,
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                },
+                buttons: [
+                    {
+                        id: "approve-msg-submit",
+                        text: "提交",
+                        "class": "btn btn-primary btn-xs",
+                        click: function (e) {
+                            try {
+                                var this_form = $("#approve-msg-dialog").find("form");
+                                var postData = this_form.serializeArray();
+                                var msg = "";
+                                for (var i in postData) {
+                                    if (postData[i]['name'] == 'msg') {
+                                        if (postData[i]['value'].length >= 100) {
+                                            enableAccountApplicationDialogButton(true);
+                                            showCommonNoticeDialog('同意理由错误', 'icon-warning-sign',
+                                                    generateNoticeMsg('同意理由不能超过100个字符'), 300);
+                                            return;
+                                        } else {
+                                            msg = postData[i]['value'];
+                                            break;
+                                        }
+                                    }
+                                }
+                                approveProxy(url, msg, "审批通过");
+                                e.preventDefault(); //STOP default action
+                                $(this).dialog("close");
+                            } catch (e) {
+                                enableAccountApplicationDialogButton(true);
+                                showCommonNoticeDialog('网络错误', 'icon-warning-sign',
+                                        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                            }
+                        }
+                    },
+                    {
+                        id: "approve-msg-cancel",
+                        text: "取消",
+                        "class": "btn btn-xs",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+        } catch (e) {
+            showCommonNoticeDialog('网络错误', 'icon-warning-sign',
+                    generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+        }
+
+    }
     
     function approveReject() {
         var url = "oa/approve_reject";
