@@ -674,6 +674,14 @@ public class Form0114Manager {
 		formmain0114clone.setFinishedflag(Constants.PROC_GRIFT);
 		formmain0114clone.setProcInstId("");
 		formmain0114clone.setOid(null);
+		formmain0114clone.setField0101(null);
+		formmain0114clone.setField0069(null);
+		formmain0114clone.setField0099(null);
+		formmain0114clone.setField0070(null);
+		formmain0114clone.setField0067(null);
+		formmain0114clone.setField0066(null);
+		formmain0114clone.setField0065(null);
+		formmain0114clone.setField0068(null);
 		formmain0114Mapper.insert(formmain0114clone);
 
 		// 子表数据到历史表中
@@ -691,6 +699,7 @@ public class Form0114Manager {
 			formson0115 = new Formson0115();
 			BeanUtils.copyProperties(formson0115s.get(i), formson0115);
 			formson0115.setFormmain0114id(nid);
+			formson0115.setRatify(null);
 			formson0115Mapper.insert(formson0115);
 		}
 
@@ -703,6 +712,7 @@ public class Form0114Manager {
 			formson0116 = new Formson0116();
 			BeanUtils.copyProperties(formson0116s.get(i), formson0116);
 			formson0116.setFormmain0114id(nid);
+			formson0116.setRatify(null);
 			formson0116Mapper.insert(formson0116);
 		}
 
@@ -715,6 +725,7 @@ public class Form0114Manager {
 			formson0117 = new Formson0117();
 			BeanUtils.copyProperties(formson0117s.get(i), formson0117);
 			formson0117.setFormmain0114id(nid);
+			formson0117.setRatify(null);
 			formson0117Mapper.insert(formson0117);
 		}
 
@@ -727,6 +738,7 @@ public class Form0114Manager {
 			formson0118 = new Formson0118();
 			BeanUtils.copyProperties(formson0118s.get(i), formson0118);
 			formson0118.setFormmain0114id(nid);
+			formson0118.setRatify(null);
 			formson0118Mapper.insert(formson0118);
 		}
 
@@ -739,6 +751,7 @@ public class Form0114Manager {
 			formson0119 = new Formson0119();
 			BeanUtils.copyProperties(formson0119s.get(i), formson0119);
 			formson0119.setFormmain0114id(nid);
+			formson0119.setRatify(null);
 			formson0119Mapper.insert(formson0119);
 		}
 	}
