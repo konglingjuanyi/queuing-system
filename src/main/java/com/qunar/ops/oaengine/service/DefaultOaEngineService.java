@@ -414,7 +414,19 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void endorse(String processKey, String userId, long formId, String taskId, String assignees, String memo) throws FormNotFoundException, ActivitiException {
-		TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees);
+		FormInfo formInfo = form0114Manager.getFormInfo(formId);
+		if(formInfo == null) throw new FormNotFoundException("工单没有找到", this.getClass());
+		
+		Request request = new Request();
+		request.setOid(""+formInfo.getId());
+		if("是".equals(formInfo.getIsDirectVp())){
+			request.setReport2vp(true);
+		}else{
+			request.setReport2vp(false);
+		}
+		request.setAmountMoney(formInfo.getMoneyAmount());
+		request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
+		TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees, request);
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		if(memo == null) memo = "";
 		memo += "[加签给："+assignees+"]";

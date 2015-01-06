@@ -86,6 +86,8 @@ public class OaEngineController {
 	private LogManager logManager;
 	@Autowired
 	private LoginManager loginManager;
+	@Autowired
+	private WorkflowManager workflowManager;
 	private String processKey = "oa_common";
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -1080,14 +1082,11 @@ public class OaEngineController {
 	 */
 	@RequestMapping(value = "oa/approve_endorse")
 	@ResponseBody
-	public BaseResult approveEndorse(HttpServletRequest request,
-			@RequestBody CommonRequest commonRequest) {
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
+	public BaseResult approveEndorse(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
-					OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
 		Map<String, String> vars = commonRequest.getVars();
 		String formIds = vars.get("formIds");
@@ -1113,11 +1112,19 @@ public class OaEngineController {
 		if(userId.equals(assignees)){
 			return BaseResult.getErrorResult(-1, "加签人对象不能是自己");
 		}
-		// userId = vars.get("userId");
+		
 		for (int i = 0; i < len; i++) {
 			try {
-				ioaEngineService.endorse(processKey, userId,
-						Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
+				FormInfo formInfo = ioaEngineService.getFormInfo(processKey, userId, formMsg[i]);
+				String tk = this.workflowManager.getTaskKey(taskMsg[i]);
+				if (tk != null 
+						&& (tk.equals("fin_check") || tk.equals("cashier"))
+						&& !userId.equals(formInfo.getStartMemberId()) 
+						&& !assignees.equals(formInfo.getStartMemberId()) 
+						&& !this.groupManager.inGroups(new String[] {tk}, assignees)) {
+					return BaseResult.getErrorResult(-1, "加签人对象 必须是同组成员");
+				}
+				ioaEngineService.endorse(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
 			} catch (FormNotFoundException e) {
 				e.printStackTrace();
 				logger.error(e.getMessage());
@@ -1132,7 +1139,6 @@ public class OaEngineController {
 			}
 		}
 		return BaseResult.getSuccessResult("加签结束");
-
 	}
 
 	/**
@@ -1566,13 +1572,13 @@ public class OaEngineController {
 		long ratifyAmount = taxiRatify + overRatify + hosRatify + employRatify + otherRatify + commRatify;
 		if (ratify) {
 			formInfo.setSumFinancialNotify(ratifyAmount);
-		}
-		if (ratify) {
 			formInfo.setPayAmount(OAControllerUtils.yuanMoneyToCent(vars.get("payAmount")));
-		}
-		
-		if(ratify && formInfo.getPayAmount() > formInfo.getSumFinancialNotify()){
-			throw new NumberFormatException("支付金额不能大于核定金额");
+			if(formInfo.getSumFinancialNotify() > formInfo.getMoneyAmount()){
+				throw new NumberFormatException("核定金额不能大于报销金额");
+			}
+			if(formInfo.getPayAmount() > formInfo.getSumFinancialNotify()){
+				throw new NumberFormatException("支付金额不能大于核定金额");
+			}
 		}
 
 		table = tableMap.get("table");

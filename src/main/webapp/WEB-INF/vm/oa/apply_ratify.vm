@@ -152,7 +152,7 @@
                    id="table6">
                 <tr>
                     <td>金额</td>
-                    <td><input type="text" value="0.00" disabled="disabled"></td>
+                    <td><input type="text" value="0.00" id="sum6" disabled="disabled"></td>
                     <td>核定金额</td>
                     <td><input type="text" value="0.00" id="ratify6" onblur="addMoney('table6')"></td>
                     <td>备注(话费实际发生月份)</td>
@@ -542,6 +542,8 @@
             if(tableId == "table6"){
             	cell = table.rows[0].cells[3].childNodes[0];
             	innerSum = cell.value;
+            	amount = table.rows[0].cells[1].childNodes[0].value;
+            	if(isNull(amount)) amount = 0;
 	            if (isNull(innerSum)) {
 	            	innerSum = 0;
 	            }else if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(innerSum)) {
@@ -551,6 +553,13 @@
 	            	cell.style.backgroundColor="yellow";
 	            }else{
 	            	cell.style.backgroundColor="";
+	            }
+	            innerSum = parseFloat(innerSum);
+	            amount = parseFloat(amount)
+	            if(innerSum > amount){
+					alert("核定金额不能大于申请金额");
+					cell.value = "";
+					return false;
 	            }
 	            $("#ratify6").val(parseFloat(innerSum).toFixed(2));
             }else{
@@ -1102,8 +1111,8 @@
     }
     
     function payAmount(){
-    	payAmount = $("#payAmount").val();
-    	ratify = $("#ratify").val();
+    	var ratify = $("#ratify").val();
+    	var payAmount = $("#payAmount").val();
     	if(payAmount <= 0 || payAmount==''){
     		alert("支付金额不能等于0");
     		$("#payAmount").val("");

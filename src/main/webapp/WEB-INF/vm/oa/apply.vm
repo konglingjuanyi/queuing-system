@@ -284,20 +284,20 @@
                     <td bgcolor="#96E0E2">备注</td>
                     <td bgcolor="#96E0E2" width="0"></td>
                     <td bgcolor="#96E0E2"><input type="button" name="Submit" value="添加报销"
-                                                 onclick=addRow("table4")></td>
+                                                 onclick=addRow("table4") class="table4"></td>
                 </tr>
                 <tr>
                     <td><span class="input-icon input-icon-right">
-            <input type="text" onclick="showTime()"/>
+            <input type="text" onclick="showTime()" class="table4"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="text" onblur="addMoney('table4')"></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text"></td>
-                    <td><input type='hidden' value=''></td>
+                    <td><input type="text" class="table4"></td>
+                    <td><input type="text" class="table4"></td>
+                    <td><input type="text" class="table4"></td>
+                    <td><input type="text" onblur="addMoney('table4')" class="table4"></td>
+                    <td><input type="text" disabled="disabled" class="table4"></td>
+                    <td><input type="text" class="table4"></td>
+                    <td><input type='hidden' value='' class="table4"></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
@@ -398,6 +398,7 @@
         var url = location.search;
         if (formId != "") {
             createEditApplyTable(formId);
+            
         } else {
             createNewAddApplyTable();
         }
@@ -468,7 +469,12 @@
                     var tableMap = data.tableMap;
                     var vars = data.vars;
                     getDataToEditDialog(tableMap, vars);
-
+					if(taskId != ""){
+		            	$("input[name='Fruit']").attr('disabled', 'true');
+			            if($("#sum4").val() <= 0){
+			            	$(".table4").attr('disabled', 'true');
+			            }
+		            }
                 } else {
                     showCommonNoticeDialog('失败', 'icon-warning-sign',
                             generateNoticeMsg(resp.errorMessage), 300);
@@ -546,12 +552,13 @@
 			$("#loan_"+tableInfo[j]).attr('checked', true);
 		}
 			
-			
+		/*	
 		$("input:checked", document.getElementById("table7")).each(function () {
             var val = $(this).val();
             list[0][idx] = val;
             idx++;
         });
+        */
     }
     function getDataToEditDialog(tableMap, vars) {
 
@@ -822,14 +829,19 @@
             data: JSON.stringify(params),
             success: function (resp) {
                 if (resp.errorCode == 0) {
-                	if(taskId != null && taskId != ""){
+                	if(flag && taskId != null && taskId != ""){
                 		approveProxy("oa/approve_endorse");
                 	}else if(flag){
                     	showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("创建报销申请成功！"), 300);
                     	window.location.href = '/oaengine/oa/apply_todo.html';
                     }else{
-                        showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("草稿保存成功！"), 300);
-                    	window.location.href = '/oaengine/oa/draft.html';               
+                    	if(taskId != null && taskId != ""){
+                    		showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("保存成功！"), 300);
+	                    	window.location.href = '/oaengine/oa/approve_todo.html';   
+                    	}else{
+	                        showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("草稿保存成功！"), 300);
+	                    	window.location.href = '/oaengine/oa/draft.html';    
+                    	}           
                     }
                 } else {
                     showCommonNoticeDialog('失败', 'icon-warning-sign',

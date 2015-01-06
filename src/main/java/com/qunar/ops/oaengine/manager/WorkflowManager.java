@@ -53,6 +53,12 @@ public class WorkflowManager {
 	@Autowired
 	protected IdentityService identityService;
 	
+	public String getTaskKey(String taskId){
+		Task task = this.taskService.createTaskQuery().taskId(taskId).singleResult();
+		if(task == null) return null;
+		return task.getTaskDefinitionKey();
+	}
+	
 	/**
 	 * 启动申请流程
 	 * @param processKey
@@ -301,7 +307,7 @@ public class WorkflowManager {
 	 * @param assignees
 	 * @return
 	 */
-	public TaskResult endorse(String taskId, String userId, String assignees) throws ActivitiException {
+	public TaskResult endorse(String taskId, String userId, String assignees, Request request) throws ActivitiException {
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
 		if(task == null) {
 			logger.warn("任务没有找到{}", taskId);
@@ -311,6 +317,9 @@ public class WorkflowManager {
 		vars.put("complete", false);
 		vars.put("endorse_user", userId);
 		vars.put("candidates", assignees);
+		if(request != null){
+			vars.put("request", request);
+		}
 		taskService.complete(taskId, vars);
 		List<TaskInfo> tasks = this.getCurrentTasks(task.getProcessInstanceId());
 		for(TaskInfo info : tasks){
