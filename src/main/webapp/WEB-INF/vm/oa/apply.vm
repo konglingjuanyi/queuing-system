@@ -42,37 +42,12 @@
                 </tr>
                 <tr>
                     <td>是否直接向VP汇报</td>
-                    <td>
-                        <form action="" method="get">
-                            <input name="Fruit" type="radio" checked="false" style="width:25% !important"
-                                   value="是"/><span style="width:10%">是</span>
-                            <input name="Fruit" type="radio" checked="true" style="width:25% !important"
-                                   value="否"/><span style="width:10%">否</<span>
-                        </form>
-                    </td>
+                    <td><input name="Fruit" type="radio" checked="false" style="width:25% !important" value="是"/><span style="width:10%">是</span><input name="Fruit" type="radio" checked="true" style="width:25% !important" value="否"/><span style="width:10%">否</<span></td>
                     <td>银行卡号</td>
                     <td><input type="text" readonly="readonly"></td>
                     <td>银行开户行</td>
                     <td><input type="text" readonly="readonly"></td>
                 </tr>
-                <!--
-                <tr>
-                    <td>是否有借款</td>
-                    <td>
-                        <form action="" method="get">
-                            <input name="Fruit" type="radio" checked="false" style="width:25% !important"
-                                   value="是"/><span style="width:10%">是</span>
-                            <input name="Fruit" type="radio" checked="true" style="width:25% !important"
-                                   value="否"/><span style="width:10%">否</<span>
-                        </form>
-                    </td>
-                    <td>借款单流水号</td>
-                    <td><input type="text" readonly="readonly"></td>
-                    <td>借款金额</td>
-                    <td><input type="text" readonly="readonly"></td>
-                </tr>
-                <tr>
-                -->
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
                 <tr>
@@ -127,7 +102,7 @@
                     <td><input type="text"></td>
                     <td><input type="text"></td>
                     <td><input type="text"></td>
-                    <td><input type="text" onblur="isNumber(this, '工时')"></td>
+                    <td><input type="text" disabled="disabled" onblur="isNumber(this, '工时')"></td>
                     <td><input type="text" onblur="addMoney('table1')"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
@@ -199,7 +174,7 @@
                     <td><input type="text" onblur="javascript:addMoney('table2');avgMoney('table2', this)"></td>
                     <td><input type="text" disabled="disabled" value=""></td>
                     <td><input type="text" onblur="isNumber(this, '发票金额')"></td>
-                    <td><input type="text" onblur="isNumber(this, '工时')"></td>
+                    <td><input type="text" disabled="disabled" onblur="isNumber(this, '工时')"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
                     <td><input type='hidden' value=''></td>
@@ -498,7 +473,17 @@
                 if (isNull(value)) {
                     value = "";
                 }
-                table.rows[i].cells[j].childNodes[0].value = value;
+                if(i==2 && j==1){
+                	if(value == "是"){
+                		table.rows[i].cells[j].childNodes[0].checked = true;
+                		table.rows[i].cells[j].childNodes[2].checked = false;
+                	}else{
+                		table.rows[i].cells[j].childNodes[0].checked = false;
+                		table.rows[i].cells[j].childNodes[2].checked = true;
+                	}
+                }else{
+                	table.rows[i].cells[j].childNodes[0].value = value;
+                }
                 k++;
             }
         }
@@ -789,9 +774,9 @@
             for (j = 1; j < 6; j += 2) {
                 if ((i == 2 || i == 3) && j == 1) {
                 	console.log()
-                    var input = table.rows[i].cells[j].childNodes[1].childNodes;
-                    var input1 = input[1];
-                    var input2 = input[4];
+                    var input = table.rows[i].cells[j].childNodes;
+                    var input1 = input[0];
+                    var input2 = input[2];
                     if (input1.checked) {
                         list[0][k] = input1.value;
                     } else if (input2.checked) {

@@ -1324,7 +1324,7 @@ public class OaEngineController {
 		}
 		List<ApprovalInfo> infos = approveInfos.getInfos();
 		int size = infos.size();
-		SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String[] result = new String[size * 6];
 		int k = 0;
 		for (int i = 0; i < size; i++) {
