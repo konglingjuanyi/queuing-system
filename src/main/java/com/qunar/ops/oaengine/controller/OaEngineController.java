@@ -372,12 +372,25 @@ public class OaEngineController {
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
 					OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
+		String dep = employeeInfo.getDepartmentV();
+		if(dep == null || dep.length() == 0){
+			dep = employeeInfo.getDepartmentIV();
+		}
+		if(dep == null || dep.length() == 0){
+			dep = employeeInfo.getDepartmentIII();
+		}
+		if(dep == null || dep.length() == 0){
+			dep = employeeInfo.getDepartmentII();
+		}
+		if(dep == null || dep.length() == 0){
+			dep = employeeInfo.getDepartmentI();
+		}
 		String result[] = new String[] {
 				employeeInfo.getAdName(),
 				employeeInfo.getSn(),
 				OAControllerUtils
 						.dateToStr(new Date(System.currentTimeMillis())),
-				employeeInfo.getDepartmentI(), employeeInfo.getDepartmentIV() };
+				employeeInfo.getDepartmentI(), dep };
 		return BaseResult.getSuccessResult(result);
 	}
 	
@@ -1662,15 +1675,17 @@ public class OaEngineController {
 	private String[] getEveryTableInfo(FormInfo formInfo, int id) {
 		String tableInfo[] = {};
 		if (id == 1) {
-			tableInfo = new String[] { String.valueOf(formInfo.getId()),
-					OAControllerUtils.dateToStr(formInfo.getField0005()),
-					String.valueOf(formInfo.getMoneyAmount()) };
+			tableInfo = new String[] { 
+					String.valueOf(formInfo.getId()),
+					OAControllerUtils.dateToStr(formInfo.getApplyDate()),
+					String.valueOf(formInfo.getMoneyAmount()) 
+					};
 		} else if (id == 2) {
 			tableInfo = new String[10];
 			tableInfo[0] = String.valueOf(formInfo.getId());
 			tableInfo[1] = formInfo.getApplyUser();
 			tableInfo[2] = formInfo.getApplyDep();
-			tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
+			tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getStartDate());
 			tableInfo[4] = String.valueOf(formInfo.getMoneyAmount());
 			tableInfo[5] = formInfo.getTaskId();
 			tableInfo[6] = formInfo.isRatify() ? "true" : "false";
@@ -1682,12 +1697,14 @@ public class OaEngineController {
 			tableInfo[0] = String.valueOf(formInfo.getId());
 			tableInfo[1] = formInfo.getApplyUser();
 			tableInfo[2] = formInfo.getApplyDep();
-			tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
+			tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getStartDate());
 			tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
 		} else if (id == 4) {
-			tableInfo = new String[] { String.valueOf(formInfo.getOid()),
-					OAControllerUtils.dateToStr(formInfo.getApplyDate()),
-					String.valueOf(formInfo.getMoneyAmount()) };
+			tableInfo = new String[] { 
+					String.valueOf(formInfo.getOid()),
+					OAControllerUtils.dateToStr(formInfo.getStartDate()),
+					String.valueOf(formInfo.getMoneyAmount()) 
+					};
 		}
 		return tableInfo;
 	}

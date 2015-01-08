@@ -672,7 +672,9 @@ public class Form0114Manager {
 		Formmain0114 formmain0114clone = new Formmain0114();
 		BeanUtils.copyProperties(formInfo, formmain0114clone);
 		formmain0114clone.setFinishedflag(Constants.PROC_GRIFT);
+		formmain0114clone.setStartDate(null);
 		formmain0114clone.setProcInstId("");
+		formmain0114clone.setField0005(new Date());
 		formmain0114clone.setOid(null);
 		formmain0114clone.setField0101(null);
 		formmain0114clone.setField0069(null);

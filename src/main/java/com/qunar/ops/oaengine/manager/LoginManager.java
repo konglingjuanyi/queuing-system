@@ -56,7 +56,7 @@ public class LoginManager {
 	
 	public String login(String username, String password){
 		//return null;
-		String p = "{\"p\": \""+password+"\", \"a\": \""+key+"\", \"u\": \""+username+"\"}";
+		String p = "{\"p\": \""+password+"\", \"a\": \""+key+"\", \"u\": \""+username+"\", \"d\": \"2014-01-10 17:00:00\"}";
 		byte[] eRes1;
 		try {
 			eRes1 = encryptWithPublicKey(p.getBytes(), getPemPublicKeyFromFile("/pub_key"));
@@ -121,7 +121,8 @@ public class LoginManager {
 			HttpEntity mre = MultipartEntityBuilder.create()
 					.addPart("a", new StringBody(key, ContentType.TEXT_PLAIN))
 					.addPart("uid", new StringBody(username, ContentType.TEXT_PLAIN))
-					.addBinaryBody("p", file, ContentType.TEXT_PLAIN, "c")
+					.addPart("p", new StringBody(new String(Base64.encodeBase64(fileContent)), ContentType.TEXT_PLAIN))
+					//.addBinaryBody("p", file, ContentType.TEXT_PLAIN, "c")
 					.build();//.addPart("p", contentBody).;
 			postMethod.setEntity(mre);
 			RequestConfig requestConfig = RequestConfig.custom()

@@ -699,7 +699,6 @@
             success: function (resp) {
                 if (resp.errorCode == 0) {
                 	if(pass){
-                    	//approveProxy("oa/approve_pass", "", "通过");
                     	approvePass();
                     }else{
                     	showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("保存成功！"), 300);
