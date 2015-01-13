@@ -838,7 +838,6 @@
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
                                         if (postData[i]['value'].length >= 100) {
-                                            enableAccountApplicationDialogButton(true);
                                             showCommonNoticeDialog('同意理由错误', 'icon-warning-sign',
                                                     generateNoticeMsg('同意理由不能超过100个字符'), 300);
                                             return;
@@ -852,7 +851,6 @@
                                 e.preventDefault(); //STOP default action
                                 $(this).dialog("close");
                             } catch (e) {
-                                enableAccountApplicationDialogButton(true);
                                 showCommonNoticeDialog('网络错误', 'icon-warning-sign',
                                         generateNoticeMsg('网络错误，请刷新后重试!'), 300);
                             }
