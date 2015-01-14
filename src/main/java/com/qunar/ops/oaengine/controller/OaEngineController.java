@@ -1659,7 +1659,7 @@ public class OaEngineController {
 			String tableInfo[] = getEveryTableInfo(formInfo, id);
 			tableInfos.add(tableInfo);
 		}
-		dataResult.setCount(size);
+		dataResult.setCount(formInfoList.getCount());
 		dataResult.setTableInfos(tableInfos);
 		return dataResult;
 	}

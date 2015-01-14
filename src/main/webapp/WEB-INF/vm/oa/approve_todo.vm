@@ -439,7 +439,7 @@
                 modal: true,
                 width: dialog_width,
                 height: 300,
-                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 驳回理由</div>',
+                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 加签理由</div>',
                 title_html: true,
                 closeOnEscape: false,
                 open: function (event, ui) {
@@ -587,13 +587,13 @@
     }
 
     function enableCurrentApproveToolbarButton(enable) {
-        if (enable) {
+        /*if (enable) {
             $("#approve_pass").removeAttr('disabled');
             $("#approve_reject").removeAttr('disabled');
         } else {
             $("#approve_pass").attr('disabled', 'true');
             $("#approve_reject").attr('disabled', 'true');
-        }
+        }*/
     }
 
     function showApproveResultDialog(header, header_icon, msg, width) {
@@ -655,13 +655,13 @@
 
 
     function enableAccountApplicationDialogButton(enable) {
-        if (enable) {
+        /*if (enable) {
             $("#account-application-submit").removeAttr('disabled');
             $("#account-application-cancel").removeAttr('disabled');
         } else {
             $("#account-application-submit").attr('disabled', 'true');
             $("#account-application-cancel").attr('disabled', 'true');
-        }
+        }*/
     }
 
     function showTableInfo(data, len) {

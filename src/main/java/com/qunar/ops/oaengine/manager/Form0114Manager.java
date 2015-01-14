@@ -476,7 +476,7 @@ public class Form0114Manager {
 		if(owner != null){
 			criteria = criteria.andOwnerEqualTo(owner);
 		}
-		int count = formApproveLogMapper.countByExample(e);
+		int count = formApproveLogMapper.distinctCountByExample(e);
 
 		e.setOffset((pageNo - 1) * pageSize);
 		e.setLimit(pageSize);

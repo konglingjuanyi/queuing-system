@@ -208,7 +208,7 @@
 
                 $("#search").unbind("click");
                 $("#search").on("click", function (e) {
-                    showInfo(url, tableName, rTableId, status);
+                    showApplyHistoryInfo(url, tableName, rTableId, status);
                 }).on("dblclick", function (e) {
                     e.preventDefault();
                 });
