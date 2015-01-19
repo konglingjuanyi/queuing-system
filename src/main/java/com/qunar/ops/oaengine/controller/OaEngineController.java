@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
+import com.qunar.ops.oaengine.exception.AgentAlreadyExistsException;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.ManagerFormException;
@@ -313,9 +313,22 @@ public class OaEngineController {
 		Map<String, String> vars = commonRequest.getVars();
 		String delegation = vars.get("delegation");
 		if(delegation != null){
+			try {
+				EmployeeInfo einfo = this.ioaEngineService.getEmployeeInfo(delegation);
+				if(einfo == null || einfo.getEnable() == 0){
+					return BaseResult.getErrorResult(-1, "代理人没有找到，或已经离职");
+				}
+			} catch (RemoteAccessException e1) {
+				e1.printStackTrace();
+				return BaseResult.getErrorResult(-1, "代理人没有找到，或已经离职");
+			}
 			List<String> list = new ArrayList<String>();
 			list.add(delegation);
-			this.ioaEngineService.appendCandidate(processKey, userId, list);
+			try {
+				this.ioaEngineService.appendCandidate(processKey, userId, list);
+			} catch (AgentAlreadyExistsException e) {
+				return BaseResult.getErrorResult(-1, e.getMessage());
+			}
 			//this.delegationManager.appendDelegation(userId, list);
 		}
 		return BaseResult.getSuccessResult(null);
@@ -342,7 +355,7 @@ public class OaEngineController {
 		if(delegation != null){
 			List<String> list = new ArrayList<String>();
 			list.add(delegation);
-			this.delegationManager.deleteDelegation(userId, list);
+			this.ioaEngineService.removeCandidate(processKey, userId, list);
 		}
 		return BaseResult.getSuccessResult(null);
 	}

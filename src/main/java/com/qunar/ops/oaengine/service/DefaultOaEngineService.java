@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.qunar.ops.oaengine.exception.AgentAlreadyExistsException;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.ManagerFormException;
@@ -32,7 +33,6 @@ import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.ListInfo;
-import com.qunar.ops.oaengine.result.ProcessInstanceInfo;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
 import com.qunar.ops.oaengine.result.TaskResult;
@@ -219,7 +219,6 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 		for(int i = 0; i < to.length; i++){
 			to_mail[i] = to[i] + "@qunar.com";
-//			to_mail[i] = "zhenqing.wang@qunar.com";
 		}
 		String title = userId + "请你尽快处理日常报销，附言：" + memo;
 		mailSenderService.sender("oa@qunar.com", to_mail, null, title, title);
@@ -245,13 +244,6 @@ public class DefaultOaEngineService implements IOAEngineService {
 	public FormInfoList getUserDraftList(String processKey, String userId, int pageNo, int pageSize) {
 		return form0114Manager.getUserDraftList(userId, pageNo, pageSize);
 	}
-	
-	/*
-	@Override
-	public FormInfoList getUserRefuseList(String processKey, String userId,
-			Date startTime, Date endTime, int pageNo, int pageSize) {
-		return form0114Manager.getUserRefuseList(userId, startTime, endTime, pageNo, pageSize);
-	}*/
 	
 	@Override
 	public FormInfoList getUserApplyList(String processKey, String userId,
@@ -290,57 +282,6 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return res;
 	}
 
-	/*
-	@Override
-	public FormInfoList historyList(String processKey, String userId,
-			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
-		ListInfo<TaskInfo> taskInfos = workflowManager.historyList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
-		List<TaskInfo> _taskInfos = taskInfos.getInfos();
-		FormInfoList res = new FormInfoList();
-		List<FormInfo> formInfos = new ArrayList<FormInfo>();
-		FormInfo formInfo;
-		for(int i = 0; i < _taskInfos.size(); i++){
-			TaskInfo taskInfo = _taskInfos.get(i);
-			String proc_inst_id = taskInfo.getProcessInstanceId();
-			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
-			if(formInfo == null) continue;
-			formInfo.setTaskId(taskInfo.getTaskId());
-			formInfo.setDealDate(taskInfo.getEndTime());
-			formInfos.add(formInfo);
-		}
-		res.setCount((int)taskInfos.getCount());
-		res.setPageNo(pageNo);
-		res.setPageSize(pageSize);
-		res.setFormInfos(formInfos);
-		return res;
-	}
-	*/
-	
-	/*
-	@Override
-	public FormInfoList historyProcessInstList(String processKey, String userId,
-			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
-		ListInfo<ProcessInstanceInfo> infos = workflowManager.historyInstList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
-		List<ProcessInstanceInfo> _infos = infos.getInfos();
-		FormInfoList res = new FormInfoList();
-		List<FormInfo> formInfos = new ArrayList<FormInfo>();
-		FormInfo formInfo;
-		for(int i = 0; i < _infos.size(); i++){
-			ProcessInstanceInfo info = _infos.get(i);
-			String proc_inst_id = info.getProcessInstanceId();
-			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
-			if(formInfo == null) {
-				continue;
-			}
-//			formInfo.setTaskId(info.getTaskId());
-			formInfos.add(formInfo);
-		}
-		res.setCount((int)infos.getCount());
-		res.setPageNo(pageNo);
-		res.setPageSize(pageSize);
-		res.setFormInfos(formInfos);
-		return res;
-	}*/
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
@@ -451,9 +392,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public boolean appendCandidate(String processKey, String ownerId, List<String> userIds) {
-		this.delegationManager.appendDelegation(ownerId, userIds);
-		this.workflowManager.appendCandidate(ownerId, userIds);
+	public boolean appendCandidate(String processKey, String ownerId, List<String> userIds) throws AgentAlreadyExistsException {
+		try {
+			this.delegationManager.appendDelegation(ownerId, userIds);
+		} catch (AgentAlreadyExistsException e) {
+			throw new AgentAlreadyExistsException(e.getMessage(), this.getClass());
+		}
+		//this.workflowManager.appendCandidate(ownerId, userIds);
 		return true;
 	}
 

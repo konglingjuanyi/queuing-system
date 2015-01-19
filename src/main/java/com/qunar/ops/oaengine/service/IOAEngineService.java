@@ -7,6 +7,7 @@ import java.util.TreeMap;
 
 import org.activiti.engine.ActivitiException;
 
+import com.qunar.ops.oaengine.exception.AgentAlreadyExistsException;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.ManagerFormException;
 import com.qunar.ops.oaengine.exception.ErrorParamterException;
@@ -376,7 +377,7 @@ public interface IOAEngineService {
 	 * FE:
 	 * userIds不允许为空，需要符合rtxid格式
 	 */
-	public boolean appendCandidate(String processKey, String ownerId, List<String> userIds);
+	public boolean appendCandidate(String processKey, String ownerId, List<String> userIds) throws AgentAlreadyExistsException;
 	
 	/**
 	 * 取消代理审批人
