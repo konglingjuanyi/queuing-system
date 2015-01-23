@@ -39,12 +39,12 @@
             <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
         <span class="input-icon input-icon-right">
             <input class="date" id="date-from" type="text" style="width: 100px" onclick="showTime()"
-                   placeholder="申请日期..."/>
+                   placeholder="发起时间..."/>
                    <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">
             <input class="date" id="date-to" type="text" style="width: 100px" onclick="showTime()"
-                   placeholder="申请日期..."/>
+                   placeholder="发起时间..."/>
                    <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">

@@ -1063,6 +1063,7 @@ public class OaEngineController {
 			logger.error(e.getMessage());
 		}
 		File file = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
 		try {
 			HSSFWorkbook wb = new HSSFWorkbook();  
 			HSSFSheet sheet = wb.createSheet("sheet1");  
@@ -1101,7 +1102,7 @@ public class OaEngineController {
 		  
 		    // 给Excel的单元格设置样式和赋值  
 		    cell.setCellStyle(style);  
-		    cell.setCellValue("日常费用报销查询");  
+		    cell.setCellValue("日常费用报销查询-"+sdf.format(new Date()));  
 		  
 		    // 设置单元格内容格式  
 		    //HSSFCellStyle style1 = wb.createCellStyle(); 
@@ -1165,7 +1166,7 @@ public class OaEngineController {
 		    cell.setCellValue("出纳办理签字日期");
 		    
 		    int no = 2;
-		    SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+		    //SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
 		    if(formInfoList != null)for(FormInfo info : formInfoList.getFormInfos()){
 		    	row = sheet.createRow(no);  
 			    cell = row.createCell(0);  
@@ -1238,7 +1239,7 @@ public class OaEngineController {
             fis.read(buffer);  
             fis.close();  
             response.reset();  
-            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(filename, "UTF-8"));  
+            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode("日常费用报销查询-"+sdf.format(new Date()), "UTF-8"));  
             response.addHeader("Content-Length", "" + file.length());  
             OutputStream toClient = new BufferedOutputStream(response.getOutputStream());  
             response.setContentType("application/vnd.ms-excel;charset=utf-8");  
