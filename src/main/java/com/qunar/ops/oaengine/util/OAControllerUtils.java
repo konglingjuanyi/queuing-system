@@ -124,6 +124,14 @@ public class OAControllerUtils {
         }
         return dateStr;
     }
+    
+    public static String dateToStrII(Date date) {
+        String dateStr = "";
+        if (date != null) {
+            dateStr = sdf.format(date);
+        }
+        return dateStr;
+    }
 
     /**
      * 日期转为字符串

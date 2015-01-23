@@ -128,11 +128,11 @@
                 "bVisible": true
             }, {
                 "sTitle": "申请日期",
-                "sWidth": 80,
+                "sWidth": 120,
                 "sClass": "center"
             }, {
                 "sTitle": "报销金额",
-                "sWidth": 150,
+                "sWidth": 100,
                 "sClass": "center"
             }, {
                 "sTitle": "详情",

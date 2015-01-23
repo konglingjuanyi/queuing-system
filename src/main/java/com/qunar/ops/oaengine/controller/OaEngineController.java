@@ -714,7 +714,7 @@ public class OaEngineController {
 				processKey, userId, pageNo, pageSize);
 		DataResult dataResult;
 		try {
-			dataResult = getAllTableInfos(formInfoList, userId, 1);
+			dataResult = getAllTableInfos(formInfoList, userId, 5);
 		} catch (RemoteAccessException e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -2043,7 +2043,7 @@ public class OaEngineController {
 		if (id == 1) {
 			tableInfo = new String[] { 
 					String.valueOf(formInfo.getId()),
-					OAControllerUtils.dateToStr(formInfo.getApplyDate()),
+					OAControllerUtils.dateToStr(formInfo.getStartDate()),
 					String.valueOf(formInfo.getMoneyAmount()) 
 					};
 		} else if (id == 2) {
@@ -2072,6 +2072,12 @@ public class OaEngineController {
 			tableInfo = new String[] { 
 					String.valueOf(formInfo.getOid()),
 					OAControllerUtils.dateToStr(formInfo.getStartDate()),
+					String.valueOf(formInfo.getMoneyAmount()) 
+					};
+		} else if (id == 5) {
+			tableInfo = new String[] { 
+					String.valueOf(formInfo.getId()),
+					OAControllerUtils.dateToStrII(formInfo.getApplyDate()),
 					String.valueOf(formInfo.getMoneyAmount()) 
 					};
 		}
