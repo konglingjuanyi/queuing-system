@@ -391,7 +391,12 @@ public class DefaultOaEngineService implements IOAEngineService {
 			throw new FormNotFoundException("您没有处理过此申请，不能召回", this.getClass());
 		}
 		ApprovalInfo log = logs.getInfos().get(0);
-		TaskResult tr = this.workflowManager.recall(""+formId, log.getTaskId(), userId);
+		String type = log.getManagerType();
+		String taskId = log.getTaskId();
+		if("recall".equals(type)){
+			taskId = log.getNextTaskId();
+		}
+		TaskResult tr = this.workflowManager.recall(""+formId, taskId, userId);
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		if(reason == null) reason = "";
 		reason += "[召回："+userId+"]";

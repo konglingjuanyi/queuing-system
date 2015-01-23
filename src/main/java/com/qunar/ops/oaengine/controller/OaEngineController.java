@@ -1224,6 +1224,7 @@ public class OaEngineController {
 			    cell.setCellValue(info.getCashierSign()==null?"":info.getCashierSign());
 			    cell = row.createCell(27);  
 			    cell.setCellValue(info.getCashierDate()==null?"":sdf.format(info.getCashierDate()));
+			    no++;
 		    }
 		    
 		    

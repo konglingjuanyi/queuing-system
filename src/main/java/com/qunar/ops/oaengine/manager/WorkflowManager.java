@@ -103,10 +103,12 @@ public class WorkflowManager {
 		
 		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
 		if(startTime != null){
-			query.taskCreatedAfter(startTime);
+			//query.taskCreatedAfter(startTime);
+			query.processVariableValueGreaterThanOrEqual("startTime", startTime);
 		}
 		if(endTime != null){
-			query.taskCreatedBefore(endTime);
+			//query.taskCreatedBefore(endTime);
+			query.processVariableValueLessThanOrEqual("startTime", endTime);
 		}
 		if(owner != null){
 			query.processVariableValueLike("cname", "%"+owner+"%");
@@ -437,6 +439,9 @@ public class WorkflowManager {
 		}
 		Task task = tasks.get(0);
 		ActivityImpl currActivity = findActivitiImpl(task.getId(), null);
+		if(currActivity.getId().equals(activityId)){
+			throw new Exception("申请已经在您的待办工作中，无法取回");
+		}
 		List<PvmTransition> oriPvmTransitionList = clearTransition(currActivity);
 		TransitionImpl newTransition = currActivity.createOutgoingTransition();
 		ActivityImpl pointActivity = findActivitiImpl(task.getId(), activityId);
