@@ -47,7 +47,7 @@
         <table tableName="formmain_0114_history" domainObjectName="Formmain0114History" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('formmain_0114_history_id_seq')"/>
         </table>
-        <!--
+        <!-- 
         <table tableName="formson_0115" domainObjectName="Formson0115" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0115_id_seq')"/>
         </table>

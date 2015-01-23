@@ -79,14 +79,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public Long createFormAndstart(String processKey, String userId,
-			FormInfo formInfo) throws RemoteAccessException, CompareModelException, FormNotFoundException{
+	public Long createFormAndstart(String processKey, String userId, String cname, FormInfo formInfo) throws RemoteAccessException, CompareModelException, FormNotFoundException{
 		this.createForm(processKey, userId, formInfo);
-		_startProcess(processKey, userId, formInfo);
+		_startProcess(processKey, userId, cname, formInfo);
 		return formInfo.getId();
 	}
 	
-	private void _startProcess(String processKey, String userId, FormInfo formInfo) throws RemoteAccessException, FormNotFoundException, CompareModelException{
+	private void _startProcess(String processKey, String userId, String cname, FormInfo formInfo) throws RemoteAccessException, FormNotFoundException, CompareModelException{
 		FormInfo info = formInfo;
 		Request request = new Request();
 		//request.setOid(formInfo.getOid());
@@ -105,12 +104,12 @@ public class DefaultOaEngineService implements IOAEngineService {
 		request.setDepartmentIII(employeeInfo.getDepartmentIII());
 		request.setDepartmentIV(employeeInfo.getDepartmentIV());
 		request.setDepartmentV(employeeInfo.getDepartmentV());
-		Object[] res = workflowManager.startWorkflow(processKey, userId, request);
+		Object[] res = workflowManager.startWorkflow(processKey, userId, formInfo.getApplyUser(), request);
 		//增加启动日志到审批日志表中
 		if(res != null && res.length == 2){
 			String processInstanceId = (String)res[0];
 			TaskResult tr = (TaskResult)res[1];
-			logManager.appendApproveLog(userId, formInfo.getId(), "start", tr, "");
+			logManager.appendApproveLog(userId, cname, formInfo.getId(), "start", tr, "");
 			//修改状态同时回写进程ID
 			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING, processInstanceId, true);
 			this.sendMail(null, null, userId, tr.getNextTasks(), null);
@@ -119,8 +118,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public FormInfo updateFormInfo(String processKey, String userId,
-			String formId, FormInfo formInfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException, ManagerFormException{
+	public FormInfo updateFormInfo(String processKey, String userId, String cname, String formId, FormInfo formInfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException, ManagerFormException{
 		FormInfo _formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		String _userId = _formInfo.getStartMemberId();
 		if(!userId.equals(_userId)){
@@ -133,7 +131,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		
 		if(_formInfo.getFinishedflag() != Constants.PROCESSING){
 			if(start){
-				_startProcess(processKey, userId, formInfo);
+				_startProcess(processKey, userId, cname, formInfo);
 			}
 		}
 		
@@ -182,7 +180,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void cancelFormInfo(String processKey, String userId, String formId) throws FormNotFoundException, ManagerFormException, ActivitiException{
+	public void cancelFormInfo(String processKey, String userId, String cname, String formId) throws FormNotFoundException, ManagerFormException, ActivitiException{
 		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		String _userId = formInfo.getStartMemberId();
 		int finishedflag = formInfo.getFinishedflag();
@@ -191,7 +189,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			if(cancel == null){
 				throw new FormNotFoundException("申请流程没有找到", this.getClass());
 			}
-			this.logManager.appendApproveLog(userId, Long.valueOf(formId), "cancel", cancel, "用户取消申请");
+			this.logManager.appendApproveLog(userId, cname, Long.valueOf(formId), "cancel", cancel, "用户取消申请");
 			form0114Manager.deleteFormInfo(_userId, Long.valueOf(formId), Constants.CANCEL);
 		}else if(!userId.equals(_userId)){
 			throw new ManagerFormException("不是你的申请，你无权撤销", DefaultOaEngineService.class);
@@ -273,6 +271,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfo.setTaskKey(taskInfo.getTaskKey());
 			formInfo.setIsEndorse(taskInfo.isEndorse());
+			formInfo.setTaskCreateTime(taskInfo.getTaskCreateTime());
 			formInfos.add(formInfo);
 		}
 		res.setCount((int)taskInfos.getCount());
@@ -285,13 +284,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
-		TaskResult tr = this._pass(processKey, userId, formId, taskId, memo);
+	public void pass(String processKey, String userId, String cname, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
+		TaskResult tr = this._pass(processKey, userId, cname, formId, taskId, memo);
 		this.sendMail(userId, "同意", tr.getOwner(), tr.getNextTasks(), memo);
 	}
 	
 	@Override
-	public List<Long> batchPass(String processKey, String userId, List<Long> formIds, List<String> taskIds, String memo) {
+	public List<Long> batchPass(String processKey, String userId, String cname, List<Long> formIds, List<String> taskIds, String memo) {
 		List<Long> errorFormIds = new ArrayList<Long>();
 		Map<String, String> owner = new HashMap<String, String>();
 		Map<String, String> approver = new HashMap<String, String>();
@@ -303,7 +302,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			long formId = formIds.get(i);
 			try{
 				taskService.claim(taskId, userId);
-				TaskResult tr = this._pass(processKey, userId, formId, taskId, memo);
+				TaskResult tr = this._pass(processKey, userId, cname, formId, taskId, memo);
 				String content = userId+" 于 ["+now+"]处理了《"+tr.getOwner()+"-日常报销》 [同意]";
 				if(memo != null) content += " 附言:"+memo;
 				owner.put(tr.getOwner(), content);
@@ -330,10 +329,10 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return errorFormIds;
 	}
 	
-	private TaskResult _pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
+	private TaskResult _pass(String processKey, String userId, String cname, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
 		TaskResult tr = this.workflowManager.pass(taskId, userId);
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
-		this.logManager.appendApproveLog(userId, formId, "pass", tr, memo);
+		this.logManager.appendApproveLog(userId, cname, formId, "pass", tr, memo);
 		if(tr.isFinished()){
 			this.form0114Manager.recordKeyOperation(userId, "cashier", formId);
 			this.form0114Manager.deleteFormInfo(userId, formId, Constants.PROC_END);
@@ -343,18 +342,19 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return tr;
 	}
 
+	/*
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void back(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException {
+	public void back(String processKey, String userId, String cname, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException {
 		TaskResult tr = this.workflowManager.back(userId, taskId, refuseReason);
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
-		this.logManager.appendApproveLog(userId, formId, "back", tr, refuseReason);
+		this.logManager.appendApproveLog(userId, cname, formId, "back", tr, refuseReason);
 		this.sendMail(userId, "退回", tr.getOwner(), tr.getNextTasks(), refuseReason);
-	}
+	}*/
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void endorse(String processKey, String userId, long formId, String taskId, String assignees, String memo) throws FormNotFoundException, ActivitiException {
+	public void endorse(String processKey, String userId, String cname, long formId, String taskId, String assignees, String memo) throws FormNotFoundException, ActivitiException {
 		FormInfo formInfo = form0114Manager.getFormInfo(formId);
 		if(formInfo == null) throw new FormNotFoundException("工单没有找到", this.getClass());
 		
@@ -371,17 +371,40 @@ public class DefaultOaEngineService implements IOAEngineService {
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		if(memo == null) memo = "";
 		memo += "[加签给："+assignees+"]";
-		this.logManager.appendApproveLog(userId, formId, "endorse", tr, memo);
+		this.logManager.appendApproveLog(userId, cname, formId, "endorse", tr, memo);
 		this.sendMail(userId, "加签", tr.getOwner(), tr.getNextTasks(), memo);
+	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void recall(String processKey, String userId, String cname, long formId, String reason) throws Exception {
+		
+		FormInfo formInfo = form0114Manager.getFormInfo(formId);
+		if(formInfo == null) throw new FormNotFoundException("工单没有找到", this.getClass());
+		
+		if(formInfo.getFinishedflag() > 0){
+			throw new FormNotFoundException("流程已经结束，不能召回", this.getClass());
+		}
+		
+		ListInfo<ApprovalInfo> logs = this.logManager.getApproveLogs(formId, 1, 1);
+		if(logs.getCount() == 0){
+			throw new FormNotFoundException("您没有处理过此申请，不能召回", this.getClass());
+		}
+		ApprovalInfo log = logs.getInfos().get(0);
+		TaskResult tr = this.workflowManager.recall(""+formId, log.getTaskId(), userId);
+		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+		if(reason == null) reason = "";
+		reason += "[召回："+userId+"]";
+		this.logManager.appendApproveLog(userId, cname, formId, "recall", tr, reason);
 	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException {
+	public void refuse(String processKey, String userId, String cname, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException {
 		TaskResult tr = this.workflowManager.refuse(processKey, taskId, userId, refuseReason);
 		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
 		if(tr != null && formInfo != null ){
-			this.logManager.appendApproveLog(userId, formId, "refuse", tr, refuseReason);
+			this.logManager.appendApproveLog(userId, cname, formId, "refuse", tr, refuseReason);
 			this.form0114Manager.deleteFormInfo(userId, formId, Constants.REFUSE);
 		}else{
 			throw new FormNotFoundException("任务没有找到", this.getClass());

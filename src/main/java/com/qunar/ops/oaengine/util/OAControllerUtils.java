@@ -20,6 +20,8 @@ public class OAControllerUtils {
     private static Logger logger = LoggerFactory.getLogger(OAControllerUtils.class);
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
+    private static SimpleDateFormat sdfII = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 判断一个字符串是否为空
@@ -118,7 +120,7 @@ public class OAControllerUtils {
     public static String dateToStr(Date date) {
         String dateStr = "";
         if (date != null) {
-            dateStr = sdf.format(date);
+            dateStr = sdfII.format(date);
         }
         return dateStr;
     }
@@ -163,6 +165,8 @@ public class OAControllerUtils {
             return "申请";
         } else if ("cancel".equals(approveEn)) {
             return "取消";
+        } else if ("recall".equals(approveEn)) {
+            return "召回";
         } 
         return "";
     }

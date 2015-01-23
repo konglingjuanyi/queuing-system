@@ -31,9 +31,6 @@ public class DelegationManagerTest {
 	public void appendDelegationTest(){
 		List<String> agents = new ArrayList<String>();
 		agents.add("nuby.zhang");
-		this.manager.appendDelegation("tao.feng", agents);
-		this.manager.appendDelegation("zoe.jin", agents);
-		this.manager.appendDelegation("haiyan.bao", agents);
 	}
 
 }

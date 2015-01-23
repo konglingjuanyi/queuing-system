@@ -5476,6 +5476,76 @@ public class Formmain0114Example {
             addCriterion("field0102 not between", value1, value2, "field0102");
             return (Criteria) this;
         }
+
+        public Criteria andField0103IsNull() {
+            addCriterion("field0103 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103IsNotNull() {
+            addCriterion("field0103 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103EqualTo(String value) {
+            addCriterion("field0103 =", value, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103NotEqualTo(String value) {
+            addCriterion("field0103 <>", value, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103GreaterThan(String value) {
+            addCriterion("field0103 >", value, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103GreaterThanOrEqualTo(String value) {
+            addCriterion("field0103 >=", value, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103LessThan(String value) {
+            addCriterion("field0103 <", value, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103LessThanOrEqualTo(String value) {
+            addCriterion("field0103 <=", value, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103Like(String value) {
+            addCriterion("field0103 like", value, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103NotLike(String value) {
+            addCriterion("field0103 not like", value, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103In(List<String> values) {
+            addCriterion("field0103 in", values, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103NotIn(List<String> values) {
+            addCriterion("field0103 not in", values, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103Between(String value1, String value2) {
+            addCriterion("field0103 between", value1, value2, "field0103");
+            return (Criteria) this;
+        }
+
+        public Criteria andField0103NotBetween(String value1, String value2) {
+            addCriterion("field0103 not between", value1, value2, "field0103");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

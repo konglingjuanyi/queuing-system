@@ -140,6 +140,8 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	// private Long payAmount;
 	// 合同签署单位
 	// private String company;
+	// 银行卡开户城市
+	// private String bankCity;
 	private String taskId;
 	private String taskKey;
 	private Date dealDate;
@@ -147,7 +149,17 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	private boolean isOwner;
 	private String endorseUser;
 	private boolean isEndorse;
+	private Date taskCreateTime;
 	
+	
+	public Date getTaskCreateTime() {
+		return taskCreateTime;
+	}
+
+	public void setTaskCreateTime(Date taskCreateTime) {
+		this.taskCreateTime = taskCreateTime;
+	}
+
 	public void setPayAmount(Long payAmount){
 		super.setField0101(payAmount);
 	}
@@ -797,5 +809,13 @@ public class FormInfo extends Formmain0114 implements Serializable {
 	
 	public void setCompany(String company){
 		super.setField0102(company);
+	}
+	
+	public String getBankCity(){
+		return super.getField0103();
+	}
+	
+	public void setBankCity(String city){
+		super.setField0103(city);
 	}
 }

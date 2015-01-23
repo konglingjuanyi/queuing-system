@@ -52,7 +52,7 @@ public class WorkflowManagerTest {
 	
 	
 	private String _start(Request req){
-		Object[] startWorkflow = this.manager.startWorkflow("oa_common", "nuby.zhang", req);
+		Object[] startWorkflow = this.manager.startWorkflow("oa_common", "nuby.zhang", "张岩", req);
 		TaskResult tr = (TaskResult)startWorkflow[1];
 		TaskInfo info = tr.getNextTasks().get(0);
 		List<String> records = new ArrayList<String>();

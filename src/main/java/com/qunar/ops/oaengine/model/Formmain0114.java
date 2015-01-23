@@ -165,6 +165,8 @@ public class Formmain0114 {
 
     private String field0102;
 
+    private String field0103;
+
     public Long getId() {
         return id;
     }
@@ -811,5 +813,13 @@ public class Formmain0114 {
 
     public void setField0102(String field0102) {
         this.field0102 = field0102 == null ? null : field0102.trim();
+    }
+
+    public String getField0103() {
+        return field0103;
+    }
+
+    public void setField0103(String field0103) {
+        this.field0103 = field0103 == null ? null : field0103.trim();
     }
 }

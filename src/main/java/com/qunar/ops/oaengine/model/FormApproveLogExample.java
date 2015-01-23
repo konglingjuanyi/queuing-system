@@ -347,6 +347,76 @@ public class FormApproveLogExample {
             return (Criteria) this;
         }
 
+        public Criteria andApproveCnameIsNull() {
+            addCriterion("approve_cname is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameIsNotNull() {
+            addCriterion("approve_cname is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameEqualTo(String value) {
+            addCriterion("approve_cname =", value, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameNotEqualTo(String value) {
+            addCriterion("approve_cname <>", value, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameGreaterThan(String value) {
+            addCriterion("approve_cname >", value, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameGreaterThanOrEqualTo(String value) {
+            addCriterion("approve_cname >=", value, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameLessThan(String value) {
+            addCriterion("approve_cname <", value, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameLessThanOrEqualTo(String value) {
+            addCriterion("approve_cname <=", value, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameLike(String value) {
+            addCriterion("approve_cname like", value, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameNotLike(String value) {
+            addCriterion("approve_cname not like", value, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameIn(List<String> values) {
+            addCriterion("approve_cname in", values, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameNotIn(List<String> values) {
+            addCriterion("approve_cname not in", values, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameBetween(String value1, String value2) {
+            addCriterion("approve_cname between", value1, value2, "approveCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andApproveCnameNotBetween(String value1, String value2) {
+            addCriterion("approve_cname not between", value1, value2, "approveCname");
+            return (Criteria) this;
+        }
+
         public Criteria andTaskIdIsNull() {
             addCriterion("task_id is null");
             return (Criteria) this;
@@ -904,6 +974,76 @@ public class FormApproveLogExample {
 
         public Criteria andOwnerNotBetween(String value1, String value2) {
             addCriterion("owner not between", value1, value2, "owner");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameIsNull() {
+            addCriterion("owner_cname is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameIsNotNull() {
+            addCriterion("owner_cname is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameEqualTo(String value) {
+            addCriterion("owner_cname =", value, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameNotEqualTo(String value) {
+            addCriterion("owner_cname <>", value, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameGreaterThan(String value) {
+            addCriterion("owner_cname >", value, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameGreaterThanOrEqualTo(String value) {
+            addCriterion("owner_cname >=", value, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameLessThan(String value) {
+            addCriterion("owner_cname <", value, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameLessThanOrEqualTo(String value) {
+            addCriterion("owner_cname <=", value, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameLike(String value) {
+            addCriterion("owner_cname like", value, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameNotLike(String value) {
+            addCriterion("owner_cname not like", value, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameIn(List<String> values) {
+            addCriterion("owner_cname in", values, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameNotIn(List<String> values) {
+            addCriterion("owner_cname not in", values, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameBetween(String value1, String value2) {
+            addCriterion("owner_cname between", value1, value2, "ownerCname");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerCnameNotBetween(String value1, String value2) {
+            addCriterion("owner_cname not between", value1, value2, "ownerCname");
             return (Criteria) this;
         }
 

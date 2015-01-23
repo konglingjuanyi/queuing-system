@@ -7,13 +7,15 @@ import org.activiti.engine.task.Task;
 
 public class TaskResult {
 	private String owner;
+	private String cname;
 	private Task currentTask;
 	private List<TaskInfo> nextTasks = new ArrayList<TaskInfo>();
 	
-	public TaskResult(String owner, Task currentTask, List<TaskInfo> nextTasks) {
+	public TaskResult(String owner, String cname, Task currentTask, List<TaskInfo> nextTasks) {
 		this.currentTask = currentTask;
 		this.nextTasks = nextTasks;
 		this.owner = owner;
+		this.cname = cname;
 	}
 	
 	public List<TaskInfo> getNextTasks() {
@@ -43,6 +45,14 @@ public class TaskResult {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public String getCname() {
+		return cname;
+	}
+
+	public void setCname(String cname) {
+		this.cname = cname;
 	}
 	
 	

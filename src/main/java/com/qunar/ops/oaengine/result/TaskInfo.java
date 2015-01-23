@@ -16,6 +16,7 @@ public class TaskInfo implements Serializable{
 	private String taskKey;
 	private String taskName;
 	private Date endTime;
+	private Date taskCreateTime;
 	
 	public Date getEndTime() {
 		return endTime;
@@ -64,6 +65,12 @@ public class TaskInfo implements Serializable{
 	}
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
+	}
+	public Date getTaskCreateTime() {
+		return taskCreateTime;
+	}
+	public void setTaskCreateTime(Date taskCreateTime) {
+		this.taskCreateTime = taskCreateTime;
 	}
 
 }

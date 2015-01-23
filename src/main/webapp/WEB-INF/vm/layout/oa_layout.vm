@@ -175,7 +175,7 @@
 </div>
 <script type="text/javascript">
     jQuery(function ($) {
-        var name = getCookie("name");
+        var name = getCookie("test-userid");
 		$("#name").html(name);// = name;
     });
 	function changeuser(){

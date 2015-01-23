@@ -9,6 +9,7 @@ CREATE TABLE form_approve_log(
   id bigint DEFAULT nextval('form_approve_log_id_seq'),
   form_id bigint,
   approve_user varchar(30),
+  approve_cname varchar(30),
   task_id varchar(100),
   task_name varchar(255),
   manager_type varchar(10),
@@ -17,6 +18,7 @@ CREATE TABLE form_approve_log(
   next_candidate text,
   memo text,
   owner varchar(100),
+  owner_cname varchar(100),
   ts timestamp with time zone,
      dob date,
     PRIMARY KEY (id)
@@ -145,6 +147,7 @@ CREATE TABLE formmain_0114 (
   field0100 varchar(255) DEFAULT NULL,
   field0101 bigint DEFAULT NULL,
   field0102 varchar(255) DEFAULT NULL,
+  field0103 varchar(255) DEFAULT NULL,
   PRIMARY KEY (id)
 );
 
@@ -237,6 +240,7 @@ CREATE TABLE formmain_0114_history(
   field0100 varchar(255) DEFAULT NULL,
   field0101 bigint DEFAULT NULL,
   field0102 varchar(255) DEFAULT NULL,
+  field0103 varchar(255) DEFAULT NULL,
   PRIMARY KEY (id)
 );
 

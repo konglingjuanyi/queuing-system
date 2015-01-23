@@ -83,6 +83,7 @@
     <result column="field0100" property="field0100" jdbcType="VARCHAR" />
     <result column="field0101" property="field0101" jdbcType="BIGINT" />
     <result column="field0102" property="field0102" jdbcType="VARCHAR" />
+    <result column="field0103" property="field0103" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -153,7 +154,7 @@
     field0071, field0072, field0073, field0074, field0075, sort, field0076, field0078, 
     field0079, field0080, field0081, field0082, field0083, field0084, field0085, field0086, 
     field0087, field0090, field0091, field0092, field0093, field0096, field0097, field0099, 
-    field0100, field0101, field0102
+    field0100, field0101, field0102, field0103
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.oaengine.model.Formmain0114HistoryExample" >
     select
@@ -219,7 +220,8 @@
       field0087, field0090, field0091, 
       field0092, field0093, field0096, 
       field0097, field0099, field0100, 
-      field0101, field0102)
+      field0101, field0102, field0103
+      )
     values (#{oid,jdbcType=VARCHAR}, #{procInstId,jdbcType=VARCHAR}, #{procTitle,jdbcType=VARCHAR}, 
       #{state,jdbcType=INTEGER}, #{startMemberId,jdbcType=VARCHAR}, #{startDate,jdbcType=TIMESTAMP}, 
       #{approveMemberId,jdbcType=VARCHAR}, #{approveDate,jdbcType=TIMESTAMP}, #{finishedflag,jdbcType=INTEGER}, 
@@ -246,7 +248,8 @@
       #{field0087,jdbcType=VARCHAR}, #{field0090,jdbcType=VARCHAR}, #{field0091,jdbcType=VARCHAR}, 
       #{field0092,jdbcType=DATE}, #{field0093,jdbcType=VARCHAR}, #{field0096,jdbcType=VARCHAR}, 
       #{field0097,jdbcType=VARCHAR}, #{field0099,jdbcType=BIGINT}, #{field0100,jdbcType=VARCHAR}, 
-      #{field0101,jdbcType=BIGINT}, #{field0102,jdbcType=VARCHAR})
+      #{field0101,jdbcType=BIGINT}, #{field0102,jdbcType=VARCHAR}, #{field0103,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.Formmain0114History" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
@@ -494,6 +497,9 @@
       <if test="field0102 != null" >
         field0102,
       </if>
+      <if test="field0103 != null" >
+        field0103,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="oid != null" >
@@ -735,6 +741,9 @@
       </if>
       <if test="field0102 != null" >
         #{field0102,jdbcType=VARCHAR},
+      </if>
+      <if test="field0103 != null" >
+        #{field0103,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -990,6 +999,9 @@
       <if test="record.field0102 != null" >
         field0102 = #{record.field0102,jdbcType=VARCHAR},
       </if>
+      <if test="record.field0103 != null" >
+        field0103 = #{record.field0103,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -1077,7 +1089,8 @@
       field0099 = #{record.field0099,jdbcType=BIGINT},
       field0100 = #{record.field0100,jdbcType=VARCHAR},
       field0101 = #{record.field0101,jdbcType=BIGINT},
-      field0102 = #{record.field0102,jdbcType=VARCHAR}
+      field0102 = #{record.field0102,jdbcType=VARCHAR},
+      field0103 = #{record.field0103,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -1325,6 +1338,9 @@
       <if test="field0102 != null" >
         field0102 = #{field0102,jdbcType=VARCHAR},
       </if>
+      <if test="field0103 != null" >
+        field0103 = #{field0103,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -1409,7 +1425,8 @@
       field0099 = #{field0099,jdbcType=BIGINT},
       field0100 = #{field0100,jdbcType=VARCHAR},
       field0101 = #{field0101,jdbcType=BIGINT},
-      field0102 = #{field0102,jdbcType=VARCHAR}
+      field0102 = #{field0102,jdbcType=VARCHAR},
+      field0103 = #{field0103,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -26,12 +26,13 @@ public class LogManager {
 	@Autowired(required=true)
 	private FormApproveLogMapper formApproveLogMapper;
 	
-	public void appendApproveLog(String userId, long formId, String type, TaskResult tr, String memo){
+	public void appendApproveLog(String userId, String approveCname, long formId, String type, TaskResult tr, String memo){
 		if(userId == null || userId.length() == 0) return;
 		if(formId == 0) return;
 		if(type == null || type.length() == 0) return;
 		FormApproveLog log = new FormApproveLog();
 		log.setApproveUser(userId);
+		log.setApproveCname(approveCname);
 		log.setFormId(formId);
 		log.setDob(new Date());
 		log.setTs(new Date());
@@ -39,6 +40,7 @@ public class LogManager {
 		if(memo != null) log.setMemo(memo);
 		if(tr != null){
 			log.setOwner(tr.getOwner());
+			log.setOwnerCname(tr.getCname());
 			Task currentTask = tr.getCurrentTask();
 			if(currentTask != null){
 				log.setTaskId(currentTask.getTaskDefinitionKey());

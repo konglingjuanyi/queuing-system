@@ -43,12 +43,12 @@ public class OaEngineServiceTest {
 	//@Test
 	public void TestCreateFormAndstart(){
 		try {
-			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
+			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", "nuby.zhang", this.initFormInfo());
 			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
 			Assert.assertEquals(1, list.getCount());
 			FormInfo info = list.getFormInfos().get(0);
 			String taskId = info.getTaskId();
-			this.service.refuse("oa_common", "nuby.zhang", formId, taskId, "xxx");
+			this.service.refuse("oa_common", "nuby.zhang", "nuby.zhang", formId, taskId, "xxx");
 			
 		} catch (RemoteAccessException e) {
 			e.printStackTrace();
@@ -63,51 +63,30 @@ public class OaEngineServiceTest {
 	//@Test
 	public void TestPass(){
 		try {
-			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
+			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", "nuby.zhang", this.initFormInfo());
 			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
 			Assert.assertEquals(1, list.getCount());
 			FormInfo info = list.getFormInfos().get(0);
 			String taskId = info.getTaskId();
-			this.service.pass("oa_common", "nuby.zhang", formId, taskId, null);
-			this.service.refuse("oa_common", "nuby.zhang", formId, null, "xxx");
+			this.service.pass("oa_common", "nuby.zhang", "nuby.zhang", formId, taskId, null);
+			this.service.refuse("oa_common", "nuby.zhang", "nuby.zhang", formId, null, "xxx");
 		} catch (Exception e) {
 			// TODO Auto-generatd catch block
 			e.printStackTrace();
 		} 
 	}
 	
-	@Test
-	public void TestBack(){
-		try {
-			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
-			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
-			FormInfo info = list.getFormInfos().get(0);
-			String taskId = info.getTaskId();
-			this.service.pass("oa_common", "nuby.zhang", formId, taskId, null);
-			list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
-			info = list.getFormInfos().get(0);
-			taskId = info.getTaskId();
-			this.service.pass("oa_common", "nuby.zhang", formId, taskId, null);
-			list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
-			info = list.getFormInfos().get(0);
-			taskId = info.getTaskId();
-			this.service.back("oa_common", "nuby.zhang", formId, taskId, "xxx");
-			this.service.refuse("oa_common", "nuby.zhang", formId, null, "xxx");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
 	//@Test
 	public void TestEndorse(){
 		try {
-			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", this.initFormInfo());
+			long formId = this.service.createFormAndstart("oa_common", "nuby.zhang", "nuby.zhang", this.initFormInfo());
 			FormInfoList list = this.service.todoList("oa_common", "nuby.zhang", null, null, null, 0, 10);
 			//Assert.assertEquals(1, list.getPageCount());
 			FormInfo info = list.getFormInfos().get(0);
 			String taskId = info.getTaskId();
-			this.service.endorse("oa_common", "nuby.zhang", formId, taskId, "nuby.zhang,yongnina.jiang", null);
-			this.service.refuse("oa_common", "nuby.zhang", formId, null, "xxx");
+			this.service.endorse("oa_common", "nuby.zhang", "nuby.zhang", formId, taskId, "nuby.zhang,yongnina.jiang", null);
+			this.service.refuse("oa_common", "nuby.zhang", "nuby.zhang", formId, null, "xxx");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

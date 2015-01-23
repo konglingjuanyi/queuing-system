@@ -2,6 +2,8 @@ package com.qunar.ops.oaengine.util;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -96,8 +98,30 @@ public class QUtils {
 		return null;
 	}
 	
+	public static String getAdname(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null)for(Cookie cookie : cookies){
+			if("name".equals(cookie.getName())){
+				String name = cookie.getValue();
+				if(name == null || name.length() == 0) return null;
+				name = decrypt(name, "qunar-opsdev-1qaz2wsx-123456");
+				try {
+					return URLDecoder.decode(name, "utf-8");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+	
 	public static String setUsername(HttpServletResponse response, String name, String value, boolean encrypt){
 		if(value != null){
+			try {
+				value = URLEncoder.encode(value, "utf-8");
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 			if(encrypt){
 				value = encrypt(value, "qunar-opsdev-1qaz2wsx-123456");
 			}

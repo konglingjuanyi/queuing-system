@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qunar.ops.oaengine.dao.FormApproveLogMapper" >
-
   <resultMap id="DistinctFormResultMap" type="com.qunar.ops.oaengine.model.FormApproveLog" >
     <result column="form_id" property="formId" jdbcType="BIGINT" />
+    <result column="ts" property="ts" jdbcType="TIMESTAMP" />
   </resultMap>
   <resultMap id="BaseResultMap" type="com.qunar.ops.oaengine.model.FormApproveLog" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="form_id" property="formId" jdbcType="BIGINT" />
     <result column="approve_user" property="approveUser" jdbcType="VARCHAR" />
+    <result column="approve_cname" property="approveCname" jdbcType="VARCHAR" />
     <result column="task_id" property="taskId" jdbcType="VARCHAR" />
     <result column="task_name" property="taskName" jdbcType="VARCHAR" />
     <result column="manager_type" property="managerType" jdbcType="VARCHAR" />
@@ -17,6 +18,7 @@
     <result column="next_candidate" property="nextCandidate" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="owner" property="owner" jdbcType="VARCHAR" />
+    <result column="owner_cname" property="ownerCname" jdbcType="VARCHAR" />
     <result column="ts" property="ts" jdbcType="TIMESTAMP" />
     <result column="dob" property="dob" jdbcType="DATE" />
   </resultMap>
@@ -79,8 +81,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, form_id, approve_user, task_id, task_name, manager_type, next_task_id, next_task_name, 
-    next_candidate, memo, owner, ts, dob
+    id, form_id, approve_user, approve_cname, task_id, task_name, manager_type, next_task_id, 
+    next_task_name, next_candidate, memo, owner, owner_cname, ts, dob
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.oaengine.model.FormApproveLogExample" >
     select
@@ -120,14 +122,16 @@
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
       select currval('form_approve_log_id_seq')
     </selectKey>
-    insert into form_approve_log (form_id, approve_user, task_id, 
-      task_name, manager_type, next_task_id, 
-      next_task_name, next_candidate, memo, 
-      owner, ts, dob)
-    values (#{formId,jdbcType=BIGINT}, #{approveUser,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
-      #{taskName,jdbcType=VARCHAR}, #{managerType,jdbcType=VARCHAR}, #{nextTaskId,jdbcType=VARCHAR}, 
-      #{nextTaskName,jdbcType=VARCHAR}, #{nextCandidate,jdbcType=VARCHAR}, #{memo,jdbcType=VARCHAR}, 
-      #{owner,jdbcType=VARCHAR}, #{ts,jdbcType=TIMESTAMP}, #{dob,jdbcType=DATE})
+    insert into form_approve_log (form_id, approve_user, approve_cname, 
+      task_id, task_name, manager_type, 
+      next_task_id, next_task_name, next_candidate, 
+      memo, owner, owner_cname, 
+      ts, dob)
+    values (#{formId,jdbcType=BIGINT}, #{approveUser,jdbcType=VARCHAR}, #{approveCname,jdbcType=VARCHAR}, 
+      #{taskId,jdbcType=VARCHAR}, #{taskName,jdbcType=VARCHAR}, #{managerType,jdbcType=VARCHAR}, 
+      #{nextTaskId,jdbcType=VARCHAR}, #{nextTaskName,jdbcType=VARCHAR}, #{nextCandidate,jdbcType=VARCHAR}, 
+      #{memo,jdbcType=VARCHAR}, #{owner,jdbcType=VARCHAR}, #{ownerCname,jdbcType=VARCHAR}, 
+      #{ts,jdbcType=TIMESTAMP}, #{dob,jdbcType=DATE})
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.oaengine.model.FormApproveLog" >
     <selectKey resultType="java.lang.Long" keyProperty="id" order="AFTER" >
@@ -140,6 +144,9 @@
       </if>
       <if test="approveUser != null" >
         approve_user,
+      </if>
+      <if test="approveCname != null" >
+        approve_cname,
       </if>
       <if test="taskId != null" >
         task_id,
@@ -165,6 +172,9 @@
       <if test="owner != null" >
         owner,
       </if>
+      <if test="ownerCname != null" >
+        owner_cname,
+      </if>
       <if test="ts != null" >
         ts,
       </if>
@@ -178,6 +188,9 @@
       </if>
       <if test="approveUser != null" >
         #{approveUser,jdbcType=VARCHAR},
+      </if>
+      <if test="approveCname != null" >
+        #{approveCname,jdbcType=VARCHAR},
       </if>
       <if test="taskId != null" >
         #{taskId,jdbcType=VARCHAR},
@@ -202,6 +215,9 @@
       </if>
       <if test="owner != null" >
         #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="ownerCname != null" >
+        #{ownerCname,jdbcType=VARCHAR},
       </if>
       <if test="ts != null" >
         #{ts,jdbcType=TIMESTAMP},
@@ -229,6 +245,9 @@
       <if test="record.approveUser != null" >
         approve_user = #{record.approveUser,jdbcType=VARCHAR},
       </if>
+      <if test="record.approveCname != null" >
+        approve_cname = #{record.approveCname,jdbcType=VARCHAR},
+      </if>
       <if test="record.taskId != null" >
         task_id = #{record.taskId,jdbcType=VARCHAR},
       </if>
@@ -253,6 +272,9 @@
       <if test="record.owner != null" >
         owner = #{record.owner,jdbcType=VARCHAR},
       </if>
+      <if test="record.ownerCname != null" >
+        owner_cname = #{record.ownerCname,jdbcType=VARCHAR},
+      </if>
       <if test="record.ts != null" >
         ts = #{record.ts,jdbcType=TIMESTAMP},
       </if>
@@ -269,6 +291,7 @@
     set id = #{record.id,jdbcType=BIGINT},
       form_id = #{record.formId,jdbcType=BIGINT},
       approve_user = #{record.approveUser,jdbcType=VARCHAR},
+      approve_cname = #{record.approveCname,jdbcType=VARCHAR},
       task_id = #{record.taskId,jdbcType=VARCHAR},
       task_name = #{record.taskName,jdbcType=VARCHAR},
       manager_type = #{record.managerType,jdbcType=VARCHAR},
@@ -277,6 +300,7 @@
       next_candidate = #{record.nextCandidate,jdbcType=VARCHAR},
       memo = #{record.memo,jdbcType=VARCHAR},
       owner = #{record.owner,jdbcType=VARCHAR},
+      owner_cname = #{record.ownerCname,jdbcType=VARCHAR},
       ts = #{record.ts,jdbcType=TIMESTAMP},
       dob = #{record.dob,jdbcType=DATE}
     <if test="_parameter != null" >
@@ -291,6 +315,9 @@
       </if>
       <if test="approveUser != null" >
         approve_user = #{approveUser,jdbcType=VARCHAR},
+      </if>
+      <if test="approveCname != null" >
+        approve_cname = #{approveCname,jdbcType=VARCHAR},
       </if>
       <if test="taskId != null" >
         task_id = #{taskId,jdbcType=VARCHAR},
@@ -316,6 +343,9 @@
       <if test="owner != null" >
         owner = #{owner,jdbcType=VARCHAR},
       </if>
+      <if test="ownerCname != null" >
+        owner_cname = #{ownerCname,jdbcType=VARCHAR},
+      </if>
       <if test="ts != null" >
         ts = #{ts,jdbcType=TIMESTAMP},
       </if>
@@ -329,6 +359,7 @@
     update form_approve_log
     set form_id = #{formId,jdbcType=BIGINT},
       approve_user = #{approveUser,jdbcType=VARCHAR},
+      approve_cname = #{approveCname,jdbcType=VARCHAR},
       task_id = #{taskId,jdbcType=VARCHAR},
       task_name = #{taskName,jdbcType=VARCHAR},
       manager_type = #{managerType,jdbcType=VARCHAR},
@@ -337,17 +368,18 @@
       next_candidate = #{nextCandidate,jdbcType=VARCHAR},
       memo = #{memo,jdbcType=VARCHAR},
       owner = #{owner,jdbcType=VARCHAR},
+      owner_cname = #{ownerCname,jdbcType=VARCHAR},
       ts = #{ts,jdbcType=TIMESTAMP},
       dob = #{dob,jdbcType=DATE}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  
   <select id="selectDistinctFromIds" resultMap="DistinctFormResultMap" parameterType="com.qunar.ops.oaengine.model.FormApproveLogExample" >
-    select distinct(form_id) as form_id
+    select distinct(form_id) as form_id, max(ts) as ts
     from form_approve_log
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
+     group by form_id 
     <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>

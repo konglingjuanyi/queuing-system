@@ -74,7 +74,7 @@ public interface IOAEngineService {
 	 * BE:
 	 * 需要记录修改日志；需要记录操作历史
 	 */
-	public Long createFormAndstart(String processKey, String userId, FormInfo forminfo) throws RemoteAccessException, CompareModelException, FormNotFoundException;
+	public Long createFormAndstart(String processKey, String userId, String cname, FormInfo forminfo) throws RemoteAccessException, CompareModelException, FormNotFoundException;
 	
 	/**
 	 * 更新工单
@@ -93,7 +93,7 @@ public interface IOAEngineService {
 	 * BE：
 	 * 需要记录修改日志
 	 */
-	public FormInfo updateFormInfo(String processKey, String userId, String formId, FormInfo forminfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException, ManagerFormException;
+	public FormInfo updateFormInfo(String processKey, String userId, String cname, String formId, FormInfo forminfo, Boolean start) throws CompareModelException, FormNotFoundException, RemoteAccessException, ManagerFormException;
 	
 	
 	/**
@@ -140,7 +140,7 @@ public interface IOAEngineService {
 	 * @throws 工单没有找到；工单锁定（仅允许创建人删除）； 系统错误
 	 * 需要记录操作历史
 	 */
-	public void cancelFormInfo(String processKey, String userId, String formId) throws FormNotFoundException, ManagerFormException, ActivitiException;
+	public void cancelFormInfo(String processKey, String userId, String cname, String formId) throws FormNotFoundException, ManagerFormException, ActivitiException;
 	
 	/**
 	 * 获取修改日志列表
@@ -304,7 +304,7 @@ public interface IOAEngineService {
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public void pass(String processKey, String userId, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException;
+	public void pass(String processKey, String userId, String cname, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException;
 	
 	/**
 	 * 通过 - 批量操作
@@ -316,7 +316,7 @@ public interface IOAEngineService {
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public List<Long> batchPass(String processKey, String userId, List<Long> formId, List<String> taskId, String memo);
+	public List<Long> batchPass(String processKey, String userId, String cname, List<Long> formId, List<String> taskId, String memo);
 	
 	/**
 	 * 退回 - controller需要实现单个/批量操作
@@ -328,8 +328,8 @@ public interface IOAEngineService {
 	 * @throws 工单没有找到；任务没有找到；系统错误
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
+	public void back(String processKey, String userId, String cname, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException;
 	 */
-	public void back(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException;
 	
 	/**
 	 * 加签
@@ -342,7 +342,7 @@ public interface IOAEngineService {
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public void endorse(String processKey, String userId, long formId, String taskId, String assignees, String memo) throws FormNotFoundException, ActivitiException;
+	public void endorse(String processKey, String userId, String cname, long formId, String taskId, String assignees, String memo) throws FormNotFoundException, ActivitiException;
 
 	/**
 	 * 拒绝
@@ -357,8 +357,9 @@ public interface IOAEngineService {
 	 * 需要记录操作历史
 	 * 需要向发起人、下一节点审核人发送提醒邮件
 	 */
-	public void refuse(String processKey, String userId, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException;
+	public void refuse(String processKey, String userId, String cname, long formId, String taskId, String refuseReason) throws FormNotFoundException, ActivitiException;
 	
+	public void recall(String processKey, String userId, String cname, long formId, String reason) throws Exception;
 	
 	/****************************************************
 	 *  Setting页面：

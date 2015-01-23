@@ -21,6 +21,7 @@ import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.pvm.PvmActivity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
+import org.activiti.engine.impl.pvm.process.TransitionImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.IdentityLinkType;
@@ -66,11 +67,13 @@ public class WorkflowManager {
 	 * @param request
 	 * @return Object[]; 0-流程ID；1-当前任务信息
 	 */
-	public Object[] startWorkflow(String processKey, String userId, Request request) throws ActivitiException{
+	public Object[] startWorkflow(String processKey, String userId, String cname, Request request) throws ActivitiException{
 		this.identityService.setAuthenticatedUserId(userId);
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("request", request);
 		vars.put("owner", userId);
+		vars.put("cname", cname);
+		vars.put("startTime", new Date());
 		ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(processKey, request.getOid(), vars);
 		if(processInstance == null){
 			logger.error("start process fail! {key={}, bkey={}}", new Object[]{processKey, request.getOid()});
@@ -79,7 +82,7 @@ public class WorkflowManager {
 		logger.debug(
 				"start process of {key={}, bkey={}, pid={}}",
 				new Object[] { processKey, request.getOid(), processInstance.getId()});
-		TaskResult tr = new TaskResult(userId, null, this.getCurrentTasks(processInstance.getId()));
+		TaskResult tr = new TaskResult(userId, cname, null, this.getCurrentTasks(processInstance.getId()));
 		return new Object[]{processInstance.getId(), tr};
 	}
 	
@@ -106,7 +109,7 @@ public class WorkflowManager {
 			query.taskCreatedBefore(endTime);
 		}
 		if(owner != null){
-			query.processVariableValueEquals("owner", owner);
+			query.processVariableValueLike("cname", "%"+owner+"%");
 		}
 		
 		long count = query.count();
@@ -127,6 +130,7 @@ public class WorkflowManager {
 			info.setTaskId(task.getId());
 			info.setTaskKey(task.getTaskDefinitionKey());
 			info.setTaskName(task.getName());
+			info.setTaskCreateTime(task.getCreateTime());
 			Map<String, Object> taskLocalVariables = task.getTaskLocalVariables();
 			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
 			if(nrOfInstances == null || nrOfInstances <= 0){
@@ -267,18 +271,18 @@ public class WorkflowManager {
 			return null;
 		}
 		String owner = getOwner(task.getProcessInstanceId());
+		String cname = getCname(task.getProcessInstanceId());
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", true);
 		vars.put("candidates", null);
 		taskService.complete(taskId, vars);
-		return new TaskResult(owner, task, this.getCurrentTasks(task.getProcessInstanceId()));
+		return new TaskResult(owner, cname, task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
 	
 	/**
 	 * 退回
 	 * @param taskId
 	 * @param turnback_reason
-	 */
 	public TaskResult back(String userId, String taskId, String turnback_reason)  throws ActivitiException {
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
 		if(task == null) {
@@ -297,8 +301,9 @@ public class WorkflowManager {
 		}
 		Map<String, String> findFlowActivity = this.findFlowActivity(lastActs, task.getProcessDefinitionId());
 		taskService.getCommandExecutor().execute(new TurnBackTaskCmd(task.getId(), destinationTasks, findFlowActivity, turnback_reason));
-		return new TaskResult(getOwner(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
+		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()),task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
+	 */
 	
 	/**
 	 * 加签
@@ -328,7 +333,7 @@ public class WorkflowManager {
 				runtimeService.setVariable(t.getExecutionId(), "candidates", null);
 			}
 		}
-		return new TaskResult(getOwner(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
+		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
 	
 
@@ -349,9 +354,10 @@ public class WorkflowManager {
 			return null;
 		}
 		String owner = (String)pi.getProcessVariables().get("owner");
+		String cname = (String)pi.getProcessVariables().get("cname");
 		this.runtimeService.deleteProcessInstance(pi.getId(), reason);
 		this.historyService.deleteHistoricProcessInstance(pi.getId());
-		return new TaskResult(owner, null, null);
+		return new TaskResult(owner, cname, null, null);
 	}
 	
 	/**
@@ -368,8 +374,9 @@ public class WorkflowManager {
 			return null;
 		}
 		String owner = getOwner(task.getProcessInstanceId());
+		String cname = getCname(task.getProcessInstanceId());
 		this.runtimeService.deleteProcessInstance(task.getProcessInstanceId(), reason);
-		return new TaskResult(owner, task, null);
+		return new TaskResult(owner, cname, task, null);
 	}
 	
 	/**
@@ -420,8 +427,53 @@ public class WorkflowManager {
 		return false;
 	}
 	
+	public TaskResult recall(String oid, String activityId, String assignee) throws Exception {
+		List<Task> tasks = this.taskService.createTaskQuery().processInstanceBusinessKey(oid).list();
+		if(tasks.size() == 0){
+			throw new Exception("流程已经结束，无法取回");
+		}
+		if(tasks.size() > 1){
+			throw new Exception("此申请不支持取回，无法取回");
+		}
+		Task task = tasks.get(0);
+		ActivityImpl currActivity = findActivitiImpl(task.getId(), null);
+		List<PvmTransition> oriPvmTransitionList = clearTransition(currActivity);
+		TransitionImpl newTransition = currActivity.createOutgoingTransition();
+		ActivityImpl pointActivity = findActivitiImpl(task.getId(), activityId);
+		newTransition.setDestination(pointActivity);
+		taskService.complete(task.getId());
+		pointActivity.getIncomingTransitions().remove(newTransition);
+		restoreTransition(currActivity, oriPvmTransitionList);
+		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
+	}
+	
+	private List<PvmTransition> clearTransition(ActivityImpl activityImpl) {
+		List<PvmTransition> oriPvmTransitionList = new ArrayList<PvmTransition>();
+		List<PvmTransition> pvmTransitionList = activityImpl
+				.getOutgoingTransitions();
+		for (PvmTransition pvmTransition : pvmTransitionList) {
+			oriPvmTransitionList.add(pvmTransition);
+		}
+		pvmTransitionList.clear();
+		return oriPvmTransitionList;
+	}
+
+	private void restoreTransition(ActivityImpl activityImpl,
+			List<PvmTransition> oriPvmTransitionList) {
+		List<PvmTransition> pvmTransitionList = activityImpl
+				.getOutgoingTransitions();
+		pvmTransitionList.clear();
+		for (PvmTransition pvmTransition : oriPvmTransitionList) {
+			pvmTransitionList.add(pvmTransition);
+		}
+	}
+	
 	private String getOwner(String processId){
 		return (String)this.runtimeService.getVariable(processId, "owner");
+	}
+	
+	private String getCname(String processId){
+		return (String)this.runtimeService.getVariable(processId, "cname");
 	}
 	
 	private List<TaskInfo> getCurrentTasks(String processInstanceId) {
@@ -465,26 +517,26 @@ public class WorkflowManager {
 		return taskInfos;
 	}
 	
-	private List<HistoricActivityInstance> findLastTasks(Task task) {
-		List<HistoricActivityInstance> res = new ArrayList<HistoricActivityInstance>();
-		Set<String> acts = new TreeSet<String>();
-		PvmActivity act = this.findActivitiImpl(task.getId(), null);
-		this.findIncomingTasks(act, acts);
-		for (String actid : acts) {
-			/*
-			List<HistoricTaskInstance> list = this.historyService
-					.createHistoricTaskInstanceQuery().processInstanceId(task.getProcessInstanceId()).finished()
-					.taskDefinitionKey(taskKey).orderByHistoricTaskInstanceEndTime()
-					.desc().list();
-			if (list.size() == 0) continue;
-			tasks.add(list.get(0));*/
-			
-			List<HistoricActivityInstance> list = this.historyService.createHistoricActivityInstanceQuery().processInstanceId(task.getProcessInstanceId()).finished().activityId(actid).orderByHistoricActivityInstanceEndTime().desc().list();
-			if (list.size() == 0) continue;
-			res.add(list.get(0));
-		}
-		return res;
-	}
+//	private List<HistoricActivityInstance> findLastTasks(Task task) {
+//		List<HistoricActivityInstance> res = new ArrayList<HistoricActivityInstance>();
+//		Set<String> acts = new TreeSet<String>();
+//		PvmActivity act = this.findActivitiImpl(task.getId(), null);
+//		this.findIncomingTasks(act, acts);
+//		for (String actid : acts) {
+//			/*
+//			List<HistoricTaskInstance> list = this.historyService
+//					.createHistoricTaskInstanceQuery().processInstanceId(task.getProcessInstanceId()).finished()
+//					.taskDefinitionKey(taskKey).orderByHistoricTaskInstanceEndTime()
+//					.desc().list();
+//			if (list.size() == 0) continue;
+//			tasks.add(list.get(0));*/
+//			
+//			List<HistoricActivityInstance> list = this.historyService.createHistoricActivityInstanceQuery().processInstanceId(task.getProcessInstanceId()).finished().activityId(actid).orderByHistoricActivityInstanceEndTime().desc().list();
+//			if (list.size() == 0) continue;
+//			res.add(list.get(0));
+//		}
+//		return res;
+//	}
 	
 	private ActivityImpl findActivitiImpl(String taskId, String activityId) {
 		TaskEntity task = findTaskById(taskId);

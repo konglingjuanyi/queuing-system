@@ -9,6 +9,8 @@ public class FormApproveLog {
 
     private String approveUser;
 
+    private String approveCname;
+
     private String taskId;
 
     private String taskName;
@@ -24,6 +26,8 @@ public class FormApproveLog {
     private String memo;
 
     private String owner;
+
+    private String ownerCname;
 
     private Date ts;
 
@@ -51,6 +55,14 @@ public class FormApproveLog {
 
     public void setApproveUser(String approveUser) {
         this.approveUser = approveUser == null ? null : approveUser.trim();
+    }
+
+    public String getApproveCname() {
+        return approveCname;
+    }
+
+    public void setApproveCname(String approveCname) {
+        this.approveCname = approveCname == null ? null : approveCname.trim();
     }
 
     public String getTaskId() {
@@ -115,6 +127,14 @@ public class FormApproveLog {
 
     public void setOwner(String owner) {
         this.owner = owner == null ? null : owner.trim();
+    }
+
+    public String getOwnerCname() {
+        return ownerCname;
+    }
+
+    public void setOwnerCname(String ownerCname) {
+        this.ownerCname = ownerCname == null ? null : ownerCname.trim();
     }
 
     public Date getTs() {

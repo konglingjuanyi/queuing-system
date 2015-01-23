@@ -1,5 +1,14 @@
 package com.qunar.ops.oaengine.controller;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +27,18 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.repository.Deployment;
 import org.activiti.spring.ProcessEngineFactoryBean;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFDataFormat;
+import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +46,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.oaengine.exception.AgentAlreadyExistsException;
@@ -53,6 +76,7 @@ import com.qunar.ops.oaengine.result.dailysubmit.HospitalityInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.OtherCostsInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.OvertimeMealsInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.TaxiFaresInfo;
+import com.qunar.ops.oaengine.service.EmployeeInfoService;
 import com.qunar.ops.oaengine.service.IOAEngineService;
 import com.qunar.ops.oaengine.service.MailSenderService;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
@@ -104,8 +128,17 @@ public class OaEngineController {
 			@RequestBody CommonRequest commonRequest, HttpServletResponse response) {
 		Map<String, String> vars = commonRequest.getVars();
 		String userId = vars.get("user");
-		QUtils.setUsername(response, "un", userId, true);
-		QUtils.setUsername(response, "name", userId, false);
+		EmployeeInfo employeeInfo;
+		try {
+			employeeInfo = ioaEngineService.getEmployeeInfo(userId);
+			QUtils.setUsername(response, "un", userId, true);
+			QUtils.setUsername(response, "name", employeeInfo.getAdName(), true);
+			QUtils.setUsername(response, "test-userid", userId, false);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			BaseResult.getSuccessResult("");
+		}
 		return BaseResult.getSuccessResult("");
 	}
 	
@@ -119,7 +152,8 @@ public class OaEngineController {
 	@ResponseBody
 	public ModelAndView logout(HttpServletRequest request, HttpServletResponse response) {
 		QUtils.setUsername(response, "un", null, true);
-		QUtils.setUsername(response, "name", null, false);
+		QUtils.setUsername(response, "name", null, true);
+		QUtils.setUsername(response, "test-userid", null, false);
 		return welcom(request, null);
 	}
 
@@ -138,8 +172,17 @@ public class OaEngineController {
 		if(username != null && password != null){
 			login = loginManager.login(username, password);
 			if(login == null){
+				EmployeeInfo employeeInfo;
+				try {
+					employeeInfo = ioaEngineService.getEmployeeInfo(username);
+				} catch (RemoteAccessException e) {
+					e.printStackTrace();
+					logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+					return welcom(request, login);
+				}
 				QUtils.setUsername(response2, "un", username, true);
-				QUtils.setUsername(response2, "name", username, false);
+				QUtils.setUsername(response2, "name", employeeInfo.getAdName(), true);
+				QUtils.setUsername(response2, "test-userid", username, false);
 				return myApplyTodo(request);
 			}
 		}
@@ -466,6 +509,7 @@ public class OaEngineController {
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
 					OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
+		String cname = QUtils.getAdname(request);
 		Map<String, String> vars = formRequest.getVars();
 		Map<String, String[][]> tableMap = formRequest.getTableMap();
 		boolean isRatify = true;
@@ -489,7 +533,7 @@ public class OaEngineController {
 			return BaseResult.getErrorResult(-1, errorMsg);
 		}
 		try {
-			ioaEngineService.updateFormInfo(processKey, userId,
+			ioaEngineService.updateFormInfo(processKey, userId, cname, 
 					"" + formInfo.getId(), formInfo, true);
 		} catch (RemoteAccessException e) {
 			e.printStackTrace();
@@ -534,6 +578,7 @@ public class OaEngineController {
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
 					OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
+		String cname = QUtils.getAdname(request);
 		Map<String, String> vars = formRequest.getVars();
 		Map<String, String[][]> tableMap = formRequest.getTableMap();
 		boolean isRatify = false;
@@ -578,10 +623,10 @@ public class OaEngineController {
 		if (flag) {
 			try {
 				if (formInfo.getId() != null) {
-					ioaEngineService.updateFormInfo(processKey, userId, ""
+					ioaEngineService.updateFormInfo(processKey, userId, cname, ""
 							+ formInfo.getId(), formInfo, true);
 				} else {
-					ioaEngineService.createFormAndstart(processKey, userId, formInfo);
+					ioaEngineService.createFormAndstart(processKey, userId, cname, formInfo);
 				}
 			} catch (RemoteAccessException e) {
 				e.printStackTrace();
@@ -610,7 +655,7 @@ public class OaEngineController {
 		} else {
 			if (formInfo.getId() != null) {
 				try {
-					ioaEngineService.updateFormInfo(processKey, userId, ""
+					ioaEngineService.updateFormInfo(processKey, userId, cname, ""
 							+ formInfo.getId(), formInfo, false);
 				} catch (CompareModelException e) {
 					e.printStackTrace();
@@ -893,6 +938,17 @@ public class OaEngineController {
 		String startTime = vars.get("startTime");
 		String endTime = vars.get("endTime");
 		String approve_user = vars.get("approveUser");
+		String fids = vars.get("fids");
+		Map<String, Boolean> fidMap = new HashMap<String, Boolean>();
+		if(fids != null){
+			startTime = null;
+			endTime = null;
+			pageSize = Integer.MAX_VALUE;
+			pageNo = 1;
+			for(String id : fids.split(",")){
+				fidMap.put(id, true);
+			}
+		}
 		Date _startTime = null;
 		if (startTime != null) {
 			try {
@@ -917,11 +973,18 @@ public class OaEngineController {
 						OAEngineConst.DATE_FORMAT_ERROR_MSG);
 			}
 		}
-		// userId = vars.get("userId");
 		FormInfoList formInfoList = null;
 		try {
-			formInfoList = ioaEngineService.todoList(processKey, userId,
-					_startTime, _endTime, approve_user, pageNo, pageSize);
+			formInfoList = ioaEngineService.todoList(processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);
+			if(fids != null){
+				List<FormInfo> infos = new ArrayList<FormInfo>();
+				for(FormInfo info : formInfoList.getFormInfos()){
+					if(fidMap.containsKey(""+info.getId())){
+						infos.add(info);
+					}
+				}
+				formInfoList.setFormInfos(infos);
+			}
 		} catch (FormNotFoundException e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -939,6 +1002,258 @@ public class OaEngineController {
 					OAEngineConst.ACL_LIMIT_ERROR_MSG);
 		}
 		return BaseResult.getSuccessResult(dataResult);
+	}
+	
+	
+	/**
+	 * 解析excel，获得formId串
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/parse_xls")
+	@ResponseBody
+	public BaseResult getAllApproveTodoList(@RequestParam(value = "file", required = false) MultipartFile file) {
+		String fileName = file.getOriginalFilename();
+		String res = "";
+		try {
+			InputStream fileInputStream = file.getInputStream();
+			String extension = FilenameUtils.getExtension(fileName);
+			if (extension.equals("xls")) {
+				HSSFWorkbook wb = new HSSFWorkbook(fileInputStream);
+				HSSFSheet sheet = wb.getSheetAt(0);
+				for(int idx = 2; idx <= sheet.getLastRowNum(); idx++){
+					HSSFRow row = sheet.getRow(idx);
+					if(row == null) continue;
+					HSSFCell cell = row.getCell(16);
+					if(cell == null) continue;
+					int fid = (int)cell.getNumericCellValue();
+					res += ""+fid+",";
+				}
+				wb.close();
+			}
+			if(res.length() > 0) res = res.substring(0, res.length()-1);
+		} catch (Exception e) {
+			logger.error("error on deploy process, because of file input stream", e);
+		}
+		return BaseResult.getSuccessResult(res);
+	}
+	
+	/**
+	 * 待审批导出
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/approve_todo_export")
+	public void getAllApproveTodoListExport(HttpServletRequest request, HttpServletResponse response) {
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		int pageSize = Integer.MAX_VALUE;
+		int pageNo = 0;
+		String approve_user = request.getParameter("approve-user");
+		FormInfoList formInfoList = null;
+		try {
+			formInfoList = ioaEngineService.todoList(processKey, userId, null, null, approve_user, pageNo, pageSize);
+		} catch (FormNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+		}
+		File file = null;
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();  
+			HSSFSheet sheet = wb.createSheet("sheet1");  
+			// 设置excel每列宽度  
+		    sheet.setColumnWidth(0, 4000);  
+		    sheet.setColumnWidth(1, 3500);  
+		  
+		    // 创建字体样式  
+		    HSSFFont font = wb.createFont();  
+		    font.setFontName("Verdana");  
+		    font.setBoldweight((short) 100);  
+		    font.setFontHeight((short) 300);  
+		  
+		    // 创建单元格样式  
+		    HSSFCellStyle style = wb.createCellStyle();  
+		    style.setAlignment(HSSFCellStyle.ALIGN_CENTER);  
+		    style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);  
+		  
+		    // 设置边框  
+		    //style.setBottomBorderColor(HSSFColor.RED.index);  
+		    //style.setBorderBottom(HSSFCellStyle.BORDER_THIN);  
+		    //style.setBorderLeft(HSSFCellStyle.BORDER_THIN);  
+		    //style.setBorderRight(HSSFCellStyle.BORDER_THIN);  
+		    //style.setBorderTop(HSSFCellStyle.BORDER_THIN);  
+		  
+		    style.setFont(font);// 设置字体 
+		    
+		    // 创建Excel的sheet的一行  
+		    HSSFRow row = sheet.createRow(0);  
+		    row.setHeight((short) 500);// 设定行的高度  
+		    // 创建一个Excel的单元格  
+		    HSSFCell cell = row.createCell(0);  
+		  
+		    // 合并单元格(startRow，endRow，startColumn，endColumn)  
+		    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 27));  
+		  
+		    // 给Excel的单元格设置样式和赋值  
+		    cell.setCellStyle(style);  
+		    cell.setCellValue("日常费用报销查询");  
+		  
+		    // 设置单元格内容格式  
+		    //HSSFCellStyle style1 = wb.createCellStyle(); 
+		  
+		    row = sheet.createRow(1);  
+		    cell = row.createCell(0);  
+		    cell.setCellValue("RTX_ID");
+		    cell = row.createCell(1);  
+		    cell.setCellValue("部门编号");
+		    cell = row.createCell(2);  
+		    cell.setCellValue("一级部门");
+		    cell = row.createCell(3);  
+		    cell.setCellValue("二级部门");
+		    cell = row.createCell(4);  
+		    cell.setCellValue("三级部门");
+		    cell = row.createCell(5);  
+		    cell.setCellValue("四级部门");
+		    cell = row.createCell(6);  
+		    cell.setCellValue("五级部门");
+		    cell = row.createCell(7);  
+		    cell.setCellValue("人员编号");
+		    cell = row.createCell(8);  
+		    cell.setCellValue("申请人");
+		    cell = row.createCell(9);  
+		    cell.setCellValue("银行卡号");
+		    cell = row.createCell(10);  
+		    cell.setCellValue("开户银行");
+		    cell = row.createCell(11);  
+		    cell.setCellValue("开户所在地");
+		    cell = row.createCell(12);  
+		    cell.setCellValue("申请日期");
+		    cell = row.createCell(13);  
+		    cell.setCellValue("借款单流水号");
+		    cell = row.createCell(14);  
+		    cell.setCellValue("是否有借款");
+		    cell = row.createCell(15);  
+		    cell.setCellValue("借款金额");
+		    cell = row.createCell(16);  
+		    cell.setCellValue("流水号");
+		    cell = row.createCell(17);  
+		    cell.setCellValue("金额总计");
+		    cell = row.createCell(18);  
+		    cell.setCellValue("通信费金额总计");
+		    cell = row.createCell(19);  
+		    cell.setCellValue("其他费用金额总计");
+		    cell = row.createCell(20);  
+		    cell.setCellValue("加班餐费金额总计");
+		    cell = row.createCell(21);  
+		    cell.setCellValue("招待费金额总计");
+		    cell = row.createCell(22);  
+		    cell.setCellValue("员工关系费金额总计");
+		    cell = row.createCell(23);  
+		    cell.setCellValue("出租车费金额总计");
+		    cell = row.createCell(24);  
+		    cell.setCellValue("财务确认总计");
+		    cell = row.createCell(25);  
+		    cell.setCellValue("财务审核签字时间");
+		    cell = row.createCell(26);  
+		    cell.setCellValue("出纳办理签字");
+		    cell = row.createCell(27);  
+		    cell.setCellValue("出纳办理签字日期");
+		    
+		    int no = 2;
+		    SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+		    if(formInfoList != null)for(FormInfo info : formInfoList.getFormInfos()){
+		    	row = sheet.createRow(no);  
+			    cell = row.createCell(0);  
+			    cell.setCellValue(info.getStartMemberId());
+			    cell = row.createCell(1);  
+			    cell.setCellValue("部门编号");
+			    cell = row.createCell(2);  
+			    cell.setCellValue(info.getFirstDep());
+			    cell = row.createCell(3);  
+			    cell.setCellValue(info.getSecDep());
+			    cell = row.createCell(4);  
+			    cell.setCellValue(info.getThridDep());
+			    cell = row.createCell(5);  
+			    cell.setCellValue(info.getFourthDep());
+			    cell = row.createCell(6);  
+			    cell.setCellValue(info.getFivethDep());
+			    cell = row.createCell(7);  
+			    cell.setCellValue(info.getSerialNumber());
+			    cell = row.createCell(8);  
+			    cell.setCellValue(info.getApplyUser());
+			    cell = row.createCell(9);  
+			    cell.setCellValue(info.getBankNumber());
+			    cell = row.createCell(10);  
+			    cell.setCellValue(info.getBankName());
+			    cell = row.createCell(11);  
+			    cell.setCellValue("开户所在地");
+			    cell = row.createCell(12);  
+			    cell.setCellValue(sdf.format(info.getApplyDate()));
+			    cell = row.createCell(13);  
+			    cell.setCellValue(info.getBorrowSN());
+			    cell = row.createCell(14);  
+			    cell.setCellValue("是否有借款");
+			    cell = row.createCell(15);  
+			    cell.setCellValue("借款金额");
+			    cell = row.createCell(16);  
+			    cell.setCellValue(info.getId());
+			    cell = row.createCell(17);  
+			    cell.setCellValue(info.getSumFinancialNotify()==null?"":OAControllerUtils.centMoneyToYuan(info.getSumFinancialNotify()));
+			    cell = row.createCell(18);  
+			    cell.setCellValue(info.getCommunicationNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getCommunicationNotifyAmount()));
+			    cell = row.createCell(19);  
+			    cell.setCellValue(info.getOtherNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getOtherNotifyAmount()));
+			    cell = row.createCell(20);  
+			    cell.setCellValue(info.getOvertimeMealsNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getOvertimeMealsNotifyAmount()));
+			    cell = row.createCell(21);  
+			    cell.setCellValue(info.getHospitalityNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getHospitalityNotifyAmount()));
+			    cell = row.createCell(22);  
+			    cell.setCellValue(info.getEmRelationsFeesNotify()==null?"":OAControllerUtils.centMoneyToYuan(info.getEmRelationsFeesNotify()));
+			    cell = row.createCell(23);  
+			    cell.setCellValue(info.getTaxiFaresNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getTaxiFaresNotifyAmount()));
+			    cell = row.createCell(24);  
+			    cell.setCellValue(info.getSumFinancialNotify()==null?"":OAControllerUtils.centMoneyToYuan(info.getSumFinancialNotify()));
+			    cell = row.createCell(25);  
+			    cell.setCellValue(info.getFinancialDate()==null?"":sdf.format(info.getFinancialDate()));
+			    cell = row.createCell(26);  
+			    cell.setCellValue(info.getCashierSign()==null?"":info.getCashierSign());
+			    cell = row.createCell(27);  
+			    cell.setCellValue(info.getCashierDate()==null?"":sdf.format(info.getCashierDate()));
+		    }
+		    
+		    
+            file = File.createTempFile("日常报销", ".xls");
+            FileOutputStream os = new FileOutputStream(file);
+            wb.write(os);  
+		    os.close();
+            String filename = file.getName();  
+            InputStream fis = new BufferedInputStream(new FileInputStream(file.getAbsolutePath()));  
+            byte[] buffer = new byte[fis.available()];  
+            fis.read(buffer);  
+            fis.close();  
+            response.reset();  
+            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(filename, "UTF-8"));  
+            response.addHeader("Content-Length", "" + file.length());  
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());  
+            response.setContentType("application/vnd.ms-excel;charset=utf-8");  
+            toClient.write(buffer);  
+            toClient.flush();  
+            toClient.close();
+		  
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			if(file != null){
+				file.deleteOnExit();
+			}
+		}
 	}
 
 	/**
@@ -1027,6 +1342,7 @@ public class OaEngineController {
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
 					OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
+		String cname = QUtils.getAdname(request);
 		Map<String, String> vars = commonRequestt.getVars();
 		String formIds = vars.get("formIds");
 		String taskIds = vars.get("taskIds");
@@ -1043,7 +1359,7 @@ public class OaEngineController {
 		// 其实这里就是附言
 		String memo = vars.get("memo");
 		List<Long> errorFormIds = ioaEngineService.batchPass(processKey,
-				userId, formIdList, taskIdList, memo);
+				userId, cname, formIdList, taskIdList, memo);
 		int size = errorFormIds.size();
 		if (size == 0) {
 			return BaseResult.getSuccessResult("同意操作成功");
@@ -1070,6 +1386,7 @@ public class OaEngineController {
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
 					OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
+		String cname = QUtils.getAdname(request);
 		Map<String, String> vars = commonRequest.getVars();
 		String formIds = vars.get("formIds");
 		String taskIds = vars.get("taskIds");
@@ -1081,7 +1398,7 @@ public class OaEngineController {
 		// userId = vars.get("userId");
 		for (int i = 0; i < len; i++) {
 			try {
-				ioaEngineService.refuse(processKey, userId,
+				ioaEngineService.refuse(processKey, userId, cname, 
 						Long.valueOf(formMsg[i]), taskMsg[i], memo);
 			} catch (FormNotFoundException e) {
 				e.printStackTrace();
@@ -1114,6 +1431,7 @@ public class OaEngineController {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
+		String cname = QUtils.getAdname(request);
 		Map<String, String> vars = commonRequest.getVars();
 		String formIds = vars.get("formIds");
 		String taskIds = vars.get("taskIds");
@@ -1150,7 +1468,7 @@ public class OaEngineController {
 						&& !this.groupManager.inGroups(new String[] {tk}, assignees)) {
 					return BaseResult.getErrorResult(-1, "加签人对象 必须是同组成员");
 				}
-				ioaEngineService.endorse(processKey, userId, Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
+				ioaEngineService.endorse(processKey, userId, cname, Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
 			} catch (FormNotFoundException e) {
 				e.printStackTrace();
 				logger.error(e.getMessage());
@@ -1165,6 +1483,35 @@ public class OaEngineController {
 			}
 		}
 		return BaseResult.getSuccessResult("加签结束");
+	}
+	
+	
+	/**
+	 * 召回
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/approve_recall")
+	@ResponseBody
+	public BaseResult approveRecall(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		String cname = QUtils.getAdname(request);
+		Map<String, String> vars = commonRequest.getVars();
+		String formId = vars.get("formId");
+		
+		try {
+			ioaEngineService.recall(processKey, userId, cname, Long.parseLong(formId), "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(-1, e.getMessage());
+		} 
+		return BaseResult.getSuccessResult("召回成功");
 	}
 
 	/**
@@ -1220,6 +1567,7 @@ public class OaEngineController {
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
 					OAEngineConst.RTX_ID_IS_NULL_MSG);
 		}
+		String cname = QUtils.getAdname(request);
 		Map<String, String> vars = commonRequest.getVars();
 		String backDel = vars.get("backDel");
 		String formIds = vars.get("formIds");
@@ -1231,7 +1579,7 @@ public class OaEngineController {
 				if ("delete".equals(backDel)) {
 					ioaEngineService.deleteFormInfo(processKey, userId, formMsg[i]);
 				} else if ("cancel".equals(backDel)) {
-					ioaEngineService.cancelFormInfo(processKey, userId, formMsg[i]);
+					ioaEngineService.cancelFormInfo(processKey, userId, cname, formMsg[i]);
 				}
 			} catch (FormNotFoundException e) {
 				e.printStackTrace();
@@ -1345,16 +1693,20 @@ public class OaEngineController {
 			String type = OAControllerUtils.transformApproveEnToCh(approveInfo
 					.getManagerType());
 			if ("申请".equals(type)) {
-				result[k++] = "申请人: " + approveInfo.getApproveUser();
+				result[k++] = "申请人: " + approveInfo.getApproveCname();
 				result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
 				result[k++] = "";
 			} else if ("取消".equals(type)) {
-				result[k++] = "用户取消申请: " + approveInfo.getApproveUser();
+				result[k++] = "用户取消申请: " + approveInfo.getApproveCname();
+				result[k++] = "取消时间: " + tdf.format(approveInfo.getTs());
+				result[k++] = "";
+			} else if ("召回".equals(type)) {
+				result[k++] = "召回: " + approveInfo.getApproveCname();
 				result[k++] = "取消时间: " + tdf.format(approveInfo.getTs());
 				result[k++] = "";
 			} else {
 				result[k++] = "审批节点: " + approveInfo.getTaskName();
-				result[k++] = "审批人: " + approveInfo.getApproveUser();
+				result[k++] = "审批人: " + approveInfo.getApproveCname();
 				result[k++] = "审批时间: " + tdf.format(approveInfo.getTs());
 				result[k++] = "审批结果: " + OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
 				result[k++] = "附言: " + approveInfo.getMemo();
@@ -1694,7 +2046,7 @@ public class OaEngineController {
 					String.valueOf(formInfo.getMoneyAmount()) 
 					};
 		} else if (id == 2) {
-			tableInfo = new String[10];
+			tableInfo = new String[11];
 			tableInfo[0] = String.valueOf(formInfo.getId());
 			tableInfo[1] = formInfo.getApplyUser();
 			tableInfo[2] = formInfo.getApplyDep();
@@ -1705,13 +2057,16 @@ public class OaEngineController {
 			tableInfo[7] = (formInfo.isOwner() && formInfo.isEndorse()) ? "true" : "false";
 			tableInfo[8] = String.valueOf(formInfo.getEndorseUser());
 			tableInfo[9] = formInfo.getTaskKey();
+			tableInfo[10] = OAControllerUtils.dateToStr(formInfo.getTaskCreateTime());
 		} else if (id == 3) {
-			tableInfo = new String[6];
+			tableInfo = new String[7];
 			tableInfo[0] = String.valueOf(formInfo.getId());
 			tableInfo[1] = formInfo.getApplyUser();
 			tableInfo[2] = formInfo.getApplyDep();
 			tableInfo[3] = OAControllerUtils.dateToStr(formInfo.getStartDate());
 			tableInfo[5] = String.valueOf(formInfo.getMoneyAmount());
+			tableInfo[6] = OAControllerUtils.dateToStr(formInfo.getTaskCreateTime());
+			//tableInfo[7] =  this.groupManager.inGroups(new String[] {"fin_check", "fin_check_mdd"}, userId);
 		} else if (id == 4) {
 			tableInfo = new String[] { 
 					String.valueOf(formInfo.getOid()),

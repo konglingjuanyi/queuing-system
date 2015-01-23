@@ -474,7 +474,7 @@ public class Form0114Manager {
 			criteria = criteria.andTsLessThanOrEqualTo(endTime);
 		}
 		if(owner != null){
-			criteria = criteria.andOwnerEqualTo(owner);
+			criteria = criteria.andOwnerCnameLike("%"+owner+"%");
 		}
 		int count = formApproveLogMapper.distinctCountByExample(e);
 
@@ -490,6 +490,7 @@ public class Form0114Manager {
 			if(formInfo.getOid() != null){
 				formInfo.setId(Long.valueOf(formInfo.getOid()));
 			}
+			formInfo.setTaskCreateTime(log.getTs());
 			formInfos.add(formInfo);
 		}
 		formInfoList.setCount(count);

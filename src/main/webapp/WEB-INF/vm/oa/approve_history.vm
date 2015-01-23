@@ -106,11 +106,13 @@
         }
         var aoColumns = [
             {"sTitle": 'ID', "sClass": "center", "sWidth": 100},
-            {"sTitle": '申请人', "sClass": "center", "sWidth": 200},
-            {"sTitle": '申请部门', "sWidth": 300, "sClass": "center"},
-            {"sTitle": '申请时间', "sClass": "center", "sWidth": 200},
             {"sTitle": '金额', "sClass": "center", "sWidth": 250},
-            {"sTitle": "报销详情", "sClass": "center", "sWidth": 150}];
+            {"sTitle": '发起人', "sClass": "center", "sWidth": 200},
+            {"sTitle": '发起时间', "sClass": "center", "sWidth": 200},
+            {"sTitle": '办理时间', "sClass": "center", "sWidth": 200},
+            {"sTitle": "报销详情", "sClass": "center", "sWidth": 150},
+            {"sTitle": "召回", "sClass": "center", "sWidth": 150},
+            ];
         var wh = $(window).height();
         var sY = (wh - 100) + 'px';
         var oTable = $(ex).dataTable({
@@ -228,13 +230,69 @@
             money /= 100;
             var map = $.parseStr("<a href='javascript:void(0);' " +
             "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", needData[i][0]);
-            aaData.push([needData[i][0], needData[i][1], needData[i][2], needData[i][3], money.toFixed(2), map]);
+            var recall = $.parseStr("<a href='javascript:void(0);' " +
+            "onclick='recall(%s);'><i class='icon-link'></i></a>", needData[i][0]);
+            aaData.push([needData[i][0], money.toFixed(2), needData[i][1], needData[i][3], needData[i][6], map, recall]);
         }
         return aaData;
     }
 
     function showTime() {
         WdatePicker({dateFmt: 'yyyy-MM-dd'});
+    }
+    
+    function recall(id) {
+        var params = {
+            "vars": {
+                formId: id
+            }
+        };
+        $.ajax({
+            "contentType": "application/json; charset=utf-8",
+            "url": "oa/approve_recall",
+            "type": "POST",
+            "data": JSON.stringify(params),
+            success: function (resp) {
+                try {
+                    if (resp.errorCode == 0) {
+                        title_html_str = '<div class="dialog_title"><li class="icon-info-sign"></li> 召回</div>';
+                        var succeed_html = '<b><li class="icon-check"></li>召回成功</b><br/>';
+                        $("#approve-result-dialog").append(generateNoticeMsg(succeed_html));
+                        window.location.href = "oa/approve_todo.html";
+                    } else {
+                        title_html_str = '<div class="dialog_title"><li class="icon-exclamation-sign"></li>召回</div>';
+                        $("#approve-result-dialog").append(generateNoticeMsg(resp.errorMessage));
+                    }
+                } catch (e) {
+                }
+                var dialog = $("#approve-result-dialog").removeClass('hide').dialog({
+                    modal: true,
+                    width: 400,
+                    resizable: true,
+                    title: title_html_str,
+                    title_html: true,
+                    closeOnEscape: false,
+                    buttons: [
+                        {
+                            text: "确定",
+                            "class": "btn btn-primary btn-xs",
+                            click: function () {
+                                $("#approve-result-dialog").empty();
+                                $("#approve-result-dialog").dialog('destroy');
+                            }
+                        }
+                    ],
+                    close: function () {
+                        $("#approve-result-dialog").empty();
+                        $("#approve-result-dialog").dialog('destroy');
+                    }
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                showApproveResultDialog('网络错误', 'icon-warning-sign',
+                        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+            }
+        })
     }
 
     function showApproveHistoryDetailsList(id) {
