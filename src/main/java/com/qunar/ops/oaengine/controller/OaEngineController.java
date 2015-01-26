@@ -39,6 +39,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -489,6 +491,44 @@ public class OaEngineController {
 		}
 		String result[] = new String[] { String.valueOf(laborHour) };
 		return BaseResult.getSuccessResult(result);
+	}
+	
+	/**
+	 * 批量获取工时
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/batch_labor")
+	@ResponseBody
+	public BaseResult webBatchLaborHour(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		String start = vars.get("start");
+		String end = vars.get("end");
+		DateTime startDate = DateTime.parse(start);
+		DateTime endDate = DateTime.parse(end);
+		List<String> infos = new ArrayList<String>();// laborHour = 0;
+		int days = Days.daysBetween(startDate, endDate).getDays();
+		for(int i=0; i<=days; i++){
+			try {
+				DateTime date = startDate.plusDays(i);
+				float laborHour = ioaEngineService.getLaborHour(userId, date.toDate());
+				if(laborHour >= 11.5){
+					infos.add(date.toString("YYYY-MM-DD")+":"+laborHour);
+				}
+			} catch (RemoteAccessException e) {
+				e.printStackTrace();
+				logger.error(e.getMessage());
+				continue;
+			}
+		}
+		return BaseResult.getSuccessResult(infos);
 	}
 
 	/**
@@ -2106,7 +2146,7 @@ public class OaEngineController {
 			table = new String[len][101];
 			for (int i = 0; i < len; i++) {
 				table[i][100] = String.valueOf(infos1[i].getId());
-				table[i][0] = OAControllerUtils.dateToStr(infos1[i]
+				table[i][0] = OAControllerUtils.dateToStrII(infos1[i]
 						.getTaxiFaresDate());
 				table[i][1] = infos1[i].getTaxiFaresAddr();
 				table[i][2] = infos1[i].getTaxiFaresDest();
@@ -2130,7 +2170,7 @@ public class OaEngineController {
 			table = new String[len][101];
 			for (int i = 0; i < len; i++) {
 				table[i][100] = String.valueOf(infos2[i].getId());
-				table[i][0] = OAControllerUtils.dateToStr(infos2[i]
+				table[i][0] = OAControllerUtils.dateToStrII(infos2[i]
 						.getOvertimeMealsDate());
 				table[i][1] = infos2[i].getMealsAddr();
 				table[i][2] = infos2[i].getOvertimeMealsPeerPeople();
@@ -2158,7 +2198,7 @@ public class OaEngineController {
 			table = new String[len][101];
 			for (int i = 0; i < len; i++) {
 				table[i][100] = String.valueOf(infos3[i].getId());
-				table[i][0] = OAControllerUtils.dateToStr(infos3[i]
+				table[i][0] = OAControllerUtils.dateToStrII(infos3[i]
 						.getHospitalityDate());
 				table[i][1] = infos3[i].getHospitalityAddr();
 				table[i][2] = infos3[i].getBusinessPurpose();
@@ -2183,7 +2223,7 @@ public class OaEngineController {
 			table = new String[len][101];
 			for (int i = 0; i < len; i++) {
 				table[i][100] = String.valueOf(infos4[i].getId());
-				table[i][0] = OAControllerUtils.dateToStr(infos4[i]
+				table[i][0] = OAControllerUtils.dateToStrII(infos4[i]
 						.getEmRelationsDate());
 				table[i][1] = infos4[i].getEmRelationsAddress();
 				table[i][2] = infos4[i].getEmRelationsPeerPeople();
