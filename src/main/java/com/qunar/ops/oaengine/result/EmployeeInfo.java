@@ -28,6 +28,7 @@ public class EmployeeInfo implements Serializable{
 	private String bankCardNo;
 	//开户行
 	private String bankName;
+	private String bankCity;
 	//直接主管
 	private String manager;
 	private String managerMail;
@@ -132,6 +133,12 @@ public class EmployeeInfo implements Serializable{
 	}
 	public void setCompany(String company) {
 		this.company = company;
+	}
+	public String getBankCity() {
+		return bankCity;
+	}
+	public void setBankCity(String bankCity) {
+		this.bankCity = bankCity;
 	}
 	
 }

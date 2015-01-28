@@ -426,11 +426,12 @@
                     var data = resp.data;
                     var table = document.getElementById("table");
                     var k = 0;
-                    for (var i = 0; i < 2; i++) {
+                    for (var i = 0; i <= 2; i++) {
                         for (var j = 1; j < 6; j += 2) {
-                            if (k >= 5) {
-                                break;
-                            }
+                        	if(i==2 && j==1)continue;
+                            //if (k >= 5) {
+                            //    break;
+                            //}
                             table.rows[i].cells[j].childNodes[0].value = data[k];
                             k++;
                         }
@@ -1048,6 +1049,8 @@
 		    					addRow(tableId, vals[0], vals[1]);
 		                    }
 	                    }
+                    }else{
+                    	showCommonNoticeDialog('自动填写', 'icon-warning-sign', generateNoticeMsg("你没有大于11.5小时的考勤记录"), 300);
                     }
                 } else {
                     showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg(resp.errorMessage), 300);

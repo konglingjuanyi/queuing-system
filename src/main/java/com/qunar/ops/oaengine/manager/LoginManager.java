@@ -11,7 +11,9 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.crypto.Cipher;
 
@@ -55,8 +57,8 @@ public class LoginManager {
 //	}
 	
 	public String login(String username, String password){
-		//return null;
-		String p = "{\"p\": \""+password+"\", \"a\": \""+key+"\", \"u\": \""+username+"\", \"d\": \"2014-01-10 17:00:00\"}";
+		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
+		String p = "{\"p\": \""+password+"\", \"a\": \""+key+"\", \"u\": \""+username+"\", \"d\": \""+sdf.format(new Date())+"\"}";
 		byte[] eRes1;
 		try {
 			eRes1 = encryptWithPublicKey(p.getBytes(), getPemPublicKeyFromFile("/pub_key"));

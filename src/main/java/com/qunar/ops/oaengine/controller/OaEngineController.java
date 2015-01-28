@@ -114,6 +114,8 @@ public class OaEngineController {
 	private LoginManager loginManager;
 	@Autowired
 	private WorkflowManager workflowManager;
+	@Autowired
+	private EmployeeInfoService employeeInfoService;
 	private String processKey = "oa_common";
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -424,6 +426,10 @@ public class OaEngineController {
 		EmployeeInfo employeeInfo;
 		try {
 			employeeInfo = ioaEngineService.getEmployeeInfo(userId);
+			EmployeeInfo bankInfo = employeeInfoService.getEmployeeBankInfo(userId);
+			employeeInfo.setBankCardNo(bankInfo.getBankCardNo());
+			employeeInfo.setBankCity(bankInfo.getBankCity());
+			employeeInfo.setBankName(bankInfo.getBankName());
 		} catch (RemoteAccessException e) {
 			e.printStackTrace();
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -446,9 +452,11 @@ public class OaEngineController {
 		String result[] = new String[] {
 				employeeInfo.getAdName(),
 				employeeInfo.getSn(),
-				OAControllerUtils
-						.dateToStr(new Date(System.currentTimeMillis())),
-				employeeInfo.getDepartmentI(), dep };
+				OAControllerUtils.dateToStr(new Date(System.currentTimeMillis())),
+				employeeInfo.getDepartmentI(), 
+				dep,"",
+				employeeInfo.getBankCardNo(),
+				employeeInfo.getBankName()};
 		return BaseResult.getSuccessResult(result);
 	}
 	
@@ -655,6 +663,10 @@ public class OaEngineController {
 					formInfo.setFivethDep(info.getDepartmentV());
 					formInfo.setCompany(info.getCompany());
 				}
+				EmployeeInfo bankInfo = this.employeeInfoService.getEmployeeBankInfo(userId);
+				formInfo.setBankCity(bankInfo.getBankCity());
+				formInfo.setBankName(bankInfo.getBankName());
+				formInfo.setBankNumber(bankInfo.getBankCardNo());
 			} catch (RemoteAccessException e) {
 				e.printStackTrace();
 				logger.warn(e.getMessage());
@@ -2338,7 +2350,7 @@ public class OaEngineController {
 		String acTable[] = new String[13];
 		acTable[0] = formInfo.getApplyUser();
 		acTable[1] = formInfo.getSerialNumber();
-		acTable[2] = OAControllerUtils.dateToStr(formInfo.getApplyDate());
+		acTable[2] = OAControllerUtils.dateToStrII(formInfo.getApplyDate());
 		acTable[3] = formInfo.getFirstDep();
 		acTable[4] = formInfo.getApplyDep();
 		acTable[5] = formInfo.getDepNum();

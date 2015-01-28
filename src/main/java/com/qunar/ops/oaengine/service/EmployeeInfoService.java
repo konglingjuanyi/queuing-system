@@ -29,6 +29,9 @@ public class EmployeeInfoService {
 	@Value("${backyard.apihost}")
 	String backyardUrl;
 	
+	@Value("${backyard.apihost.bank}")
+	String backyardBankUrl;
+	
 	@Value("${oa.apihost}")
 	String oadUrl;
 
@@ -43,7 +46,6 @@ public class EmployeeInfoService {
 		EmployeeInfo eInfo = new EmployeeInfo();
 		String apiUrl = backyardUrl + "?require=info&rtx_id=" + userId;
 		JSONObject json = invokeGetApi(apiUrl);
-		System.out.println(json);
 		if (json.containsKey("err_id")) {
 			throw new RemoteAccessException(json.getString("msg"),
 					EmployeeInfoService.class);
@@ -78,6 +80,30 @@ public class EmployeeInfoService {
 	}
 	
 	/**
+	 * 获取员工信息
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws RemoteAccessException
+	 */
+	public EmployeeInfo getEmployeeBankInfo(String userId) throws RemoteAccessException {
+		EmployeeInfo eInfo = new EmployeeInfo();
+		String apiUrl = backyardBankUrl + "?require=bank_info&rtx_id=" + userId;
+		JSONObject json = invokeGetApi(apiUrl);
+		if (json.containsKey("err_id")) {
+			throw new RemoteAccessException(json.getString("msg"),
+					EmployeeInfoService.class);
+		} else {
+			JSONObject data = json.getJSONObject("data");
+
+			eInfo.setBankCardNo((String)data.get("bank_card"));
+			eInfo.setBankName((String)data.get("bank_class"));
+			eInfo.setBankCity((String)data.get("bank_city"));
+		}
+		return eInfo;
+	}
+	
+	/**
 	 * 获取员工借款
 	 * 
 	 * @param userId
@@ -88,7 +114,6 @@ public class EmployeeInfoService {
 		List<String[]> infos = new ArrayList<String[]>();
 		String apiUrl = oadUrl + "getLoans?date=2014-01-01%2000:00:00&username=" + userId;
 		JSONObject json = invokeGetApi(apiUrl);
-		System.out.println(json);
 		Integer code = json.getInteger("resultcode");
 		if (code != 0) {
 			throw new RemoteAccessException(json.getString("desc"),
