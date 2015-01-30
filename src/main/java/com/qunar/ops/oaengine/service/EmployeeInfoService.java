@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
+import com.qunar.ops.oaengine.util.OAControllerUtils;
 
 @Component
 public class EmployeeInfoService {
@@ -34,6 +35,8 @@ public class EmployeeInfoService {
 	
 	@Value("${oa.apihost}")
 	String oadUrl;
+	
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	/**
 	 * 获取员工信息
@@ -88,6 +91,8 @@ public class EmployeeInfoService {
 	 */
 	public EmployeeInfo getEmployeeBankInfo(String userId) throws RemoteAccessException {
 		EmployeeInfo eInfo = new EmployeeInfo();
+		return eInfo;
+		/*
 		String apiUrl = backyardBankUrl + "?require=bank_info&rtx_id=" + userId;
 		JSONObject json = invokeGetApi(apiUrl);
 		if (json.containsKey("err_id")) {
@@ -101,6 +106,7 @@ public class EmployeeInfoService {
 			eInfo.setBankCity((String)data.get("bank_city"));
 		}
 		return eInfo;
+		*/
 	}
 	
 	/**
@@ -112,23 +118,25 @@ public class EmployeeInfoService {
 	 */
 	public List<String[]> getLoans(String userId) throws RemoteAccessException {
 		List<String[]> infos = new ArrayList<String[]>();
-		String apiUrl = oadUrl + "getLoans?date=2014-01-01%2000:00:00&username=" + userId;
+		String apiUrl = oadUrl + userId + "@qunar.com/1";
 		JSONObject json = invokeGetApi(apiUrl);
-		Integer code = json.getInteger("resultcode");
-		if (code != 0) {
-			throw new RemoteAccessException(json.getString("desc"),
-					EmployeeInfoService.class);
+		Boolean ret = json.getBoolean("ret");
+		if (!ret) {
+			throw new RemoteAccessException(json.getString("errmsg"), EmployeeInfoService.class);
 		} else {
-			JSONArray array = json.getJSONArray("loans");
+			JSONArray array = json.getJSONArray("data");
 			for(int i=0; i < array.size(); i++){
 				JSONObject info = array.getJSONObject(i);
-				String recordid = (String) info.get("field0034");
-				String payAmount = (String) info.get("field0004");
-				infos.add(new String[]{recordid + "," + payAmount, recordid, payAmount});
+				String billNo = (String) info.get("billNo");
+				long invoiceDate = info.getLongValue("invoiceDate");
+				String date = sdf.format(new Date(invoiceDate));
+				String amount = (String) info.get("amount");
+				String borrowBillBalance = (String) info.get("borrowBillBalance");
+				infos.add(new String[]{billNo, date, amount, borrowBillBalance});
 			}
 		}
-//		infos.add(new String[]{"xxxxx,1.00", "xxxxx", "1.0"});
-//		infos.add(new String[]{"aaaaa,2.00", "aaaaa", "2.0"});
+		infos.add(new String[]{"xxxxx", "2000-01-01", "1000.00", "500.0"});
+		infos.add(new String[]{"yyyyy", "2000-01-01", "2000.00", "300.0"});
 		return infos;
 	}
 

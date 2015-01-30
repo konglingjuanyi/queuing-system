@@ -44,3 +44,25 @@ drop sequence formson_0119_log_id_seq;
 drop sequence t_delegation_id_seq;
 drop sequence t_group_id_seq;
 drop sequence t_group_member_id_seq;
+
+
+delete from form_approve_log;
+delete from form_update_log;
+delete from form_appmain;
+delete from formmain_0114;
+delete from formmain_0114_history;
+delete from formson_0115;
+delete from formson_0116;
+delete from formson_0117;
+delete from formson_0118;
+delete from formson_0119;
+delete from formson_0115_history;
+delete from formson_0116_history;
+delete from formson_0117_history;
+delete from formson_0118_history;
+delete from formson_0119_history;
+delete from formson_0115_log;
+delete from formson_0116_log;
+delete from formson_0117_log;
+delete from formson_0118_log;
+delete from formson_0119_log;

@@ -75,24 +75,6 @@
                     <td>银行开户行</td>
                     <td><input type="text" readonly="readonly"></td>
                 </tr>
-                <!--
-                <tr>
-                    <td>是否有借款</td>
-                    <td>
-                        <form action="" method="get">
-                            <input name="Fruit" type="radio" checked="false" style="width:25% !important"
-                                   value="是"/><span style="width:10%">是</span>
-                            <input name="Fruit" type="radio" checked="true" style="width:25% !important"
-                                   value="否"/><span style="width:10%">否</<span>
-                        </form>
-                    </td>
-                    <td>借款单流水号</td>
-                    <td><input type="text" readonly="readonly"></td>
-                    <td>借款金额</td>
-                    <td><input type="text" readonly="readonly"></td>
-                </tr>
-                <tr>
-                -->
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
                 <tr>
@@ -108,6 +90,12 @@
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
                 <tr>
+                    <td>冲销借款总计</td>
+                    <td><input type="text" value="0.00" id="borrowAmount" readonly="readonly"></td>
+                </tr>
+            </table>
+            <table style="border-collapse:collapse;" border="1" class="col-xs-12">
+                <tr>
                     <td>&nbsp;&nbsp;支付金额&nbsp;&nbsp;</td>
                     <td><input type="text" value="0.00" id="payAmount" onblur="payAmount()"></td>
                 </tr>
@@ -116,6 +104,20 @@
 
     </div>
     <div class="row">
+			<div class="col-sm-12">
+	            <div class="col-xs-12" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span style="font-size:18px">冲销借款</span></div>
+	            <table style="border-collapse:collapse;" border="1" class="col-xs-12" id="table7">
+	                <tr>
+                    <td bgcolor="#96E0E2">借款编号</td>
+                    <td bgcolor="#96E0E2">借款日期</td>
+                    <td bgcolor="#96E0E2">借款金额</td>
+                    <td bgcolor="#96E0E2">借款余额</td>
+                    <td bgcolor="#96E0E2">冲销金额</td>
+	                </tr>
+
+	            </table>
+	            <div class="col-xs-12" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"></div>
+	        </div>
         <div class="col-sm-12">
             <div class="col-xs-12" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span
                     style="font-size:18px">出租车费明细(含汽车燃油费)</span></div>
@@ -359,24 +361,6 @@
         </div>
     </div>
     
-	    <div class="row">
-	        <div class="col-sm-12">
-	            <div class="col-xs-12" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"><span style="font-size:18px">冲销借款</span></div>
-	            <table frame="vsides" class="col-xs-12" id="table7">
-	                <tr>
-	                    <td bgcolor="#96E0E2">借款编号</td>
-	                    <td bgcolor="#96E0E2">借款金额</td>
-	                </tr>
-	                #foreach($loan in $loans)
-	                <tr>
-	                    <td>$loan[1]</td>
-	                    <td>$loan[2]</td>
-	                </tr>
-					#end
-	            </table>
-	            <div class="col-xs-12" style="border:solid 1px; background-color: #f0f0f0;text-align: center;"></div>
-	        </div>
-	    </div>
 </div>
 
 
@@ -509,6 +493,24 @@
             }
             table.deleteRow(1);//删掉第一行.
         }
+        //借款
+		var table = document.getElementById("table7");
+        var tableInfo = tableMap["table7"];
+        var tableLen = tableInfo.length;
+        var rowLen = table.rows.length;
+        var coLen = table.rows[0].cells.length;
+        for (var j = 0; j < tableLen; j++) {
+                var nRow = table.insertRow(rowLen);
+                for (var k = 0; k < coLen; k++) {
+                    var value = tableInfo[j][k];
+                    if (isNull(value)) {
+                        value = "";
+                    }
+                    var cell = nRow.insertCell(k);
+                    cell.innerHTML = "<input type='hidden' value='"+value+"'>"+value;
+                }
+                rowLen += 1;
+		}
     }
     function getDataToEditDialog(tableMap, vars) {
 
@@ -526,6 +528,7 @@
         $("#ratify").val(vars["ratify"]);
         $("#remark").val(vars["remark"]);
 		$("#payAmount").val(vars["payAmount"]);
+		$("#borrowAmount").val(vars["borrowAmount"]);
     }
 
 
@@ -618,7 +621,8 @@
             sum += innerSum;
         }
         $("#ratify").val(sum.toFixed(2));
-        $("#payAmount").val(sum.toFixed(2));
+        var payAmount = sum - parseFloat($("#borrowAmount").val());
+        $("#payAmount").val(payAmount.toFixed(2));
         if(errorInfo != ""){
 			alert(errorInfo);
 	        return false;
@@ -692,6 +696,36 @@
             }
         }
         tableMap["table"] = list;
+        
+        //table 借款信息
+        table = document.getElementById("table7");
+        list = new Array();
+        list[0] = new Array();
+        var rowLen = table.rows.length;
+        k = 0;
+        priceSum = 0;
+        for (i = 1; i < rowLen; i++) {
+            var billNo = table.rows[i].cells[0].childNodes[0].value;
+            var invoiceDate = table.rows[i].cells[1].childNodes[0].value;
+            var amount = table.rows[i].cells[2].childNodes[0].value;
+            var borrowBillBalance = table.rows[i].cells[3].childNodes[0].value;
+            var price = table.rows[i].cells[4].childNodes[0].value;
+            if(price == "") price = "0.00";
+            if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(price)) {
+				showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg("冲销金额格式错误"), 300);
+				return false;
+			}
+			borrowBillBalance = parseFloat(borrowBillBalance);
+			price = parseFloat(price);
+			priceSum += price;
+			if (price > borrowBillBalance) {
+				showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg("冲销金额不能大于借款余额"), 300);
+				return false;
+			}
+            list[0][k] = billNo+","+invoiceDate+","+amount+","+borrowBillBalance+","+price;
+            k++;
+        }
+        tableMap["table7"] = list;
 
         params["vars"] = vars;
         params["tableMap"] = tableMap;

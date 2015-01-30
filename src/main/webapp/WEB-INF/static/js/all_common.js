@@ -100,10 +100,10 @@ function constructEditDialogDatas(tableMap, vars) {
 }
 
 function fixedTableInfo(tableMap, vars) {
-    var tableList = ["table1", "table6", "table2", "table3", "table4", "table5", "table7"];
-    var tableHeadList = ["出租车费明细(含汽车燃油费)", "通信费",
+    var tableList = ["table7", "table1", "table6", "table2", "table3", "table4", "table5"];
+    var tableHeadList = ["借款", "出租车费明细(含汽车燃油费)", "通信费",
         "餐费明细（每人每餐报销不超过50元）",
-        "招待费明细", "员工关系费明细", "其他费用", "借款"];
+        "招待费明细", "员工关系费明细", "其他费用"];
     //var tableForm = "<iframe style='height:1100px; width:1200px'></iframe>";
     var tableForm = "";
     tableForm += table0BodyForm(tableMap["table"], vars); //这里应该先加table信息
@@ -139,8 +139,8 @@ function tableZeroNameDic() {
     var table3Name = ["日期", "地点", "业务目的", "客户单位", "客户姓名", "参加人数", "金额", "核定金额", "备注"];
     var table4Name = ["日期", "地点", "同行人（姓名）", "活动目的", "金额", "核定金额", "备注"];
     var table5Name = ["费用项目", "金额", "核定金额", "备注"];
-    var table7Name = ["借款编号", "借款金额"];
-    var tableNames = [table1Name, table2Name, table3Name, table4Name, table5Name, table7Name];
+    var table7Name = ["借款编号", "借款日期", "借款金额", "借款余额", "冲销金额"];
+    var tableNames = [table7Name, table1Name, table2Name, table3Name, table4Name, table5Name];
     return tableNames;
 }
 
@@ -180,14 +180,14 @@ function tableBodyForm(tableMap, tableId, num) {
             for (var j = 0; j < headLen; j++) {
                 var value = tableInfo[i][j];
                 if(tableId == "table7"){
-                	value = tableInfo[i][j+1];
+                	value = tableInfo[i][j];
                 }
                 if (isNull(value)) {
                     value = "";
                 }
                 bodyForm += '<td>';
                 bodyForm += $.parseStr('<input type="text" style="width: 100%;color:#000000" ' +
-                'readonly="readonly" value="%s">', value.replace("<", "&lt;").replace(">", "&gt;"));
+                'readonly="readonly" value="%s">', value.replace(new RegExp("<", "gm"), "&lt;").replace(new RegExp(">", "gm"), "&gt;"));
                 bodyForm += '</td>';
             }
             bodyForm += '</tr>';
@@ -283,20 +283,25 @@ function tableSumForm(num, vars) {
     var ratifyOne = "ratify" + num;
     var ratify = vars[ratifyOne];
     var payAmount = vars["payAmount"];
+    var borrowAmount = vars["borrowAmount"];
     var form = '';
     form += '<table style="border-collapse:collapse;width: 1067px;" border="1">';
     form += '<tr>';
     form += '<td>金额总计</td>';
     form += '<td>';
-    form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',
-        sum, sumOne);
+    form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',sum, sumOne);
     form += '</td></tr>';
     form += '<tr>';
 	form += '<tr>';
 	form += '<td>核定金额总计</td>';
 	form += '<td>';
-	form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',
-	    		ratify, ratifyOne);
+	form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',ratify, ratifyOne);
+	form += '</td></tr>';
+    form += '<tr>';
+	form += '<tr>';
+	form += '<td>冲销借款总计</td>';
+	form += '<td>';
+	form += $.parseStr('<input type="text" value="%s" readonly="readonly"  style="width: 100%;color:#000000">',borrowAmount);
 	form += '</td></tr>';
 	if(num == ''){
 		form += '<tr>';

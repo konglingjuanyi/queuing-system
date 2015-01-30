@@ -30,6 +30,7 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -240,7 +241,6 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/apply_ratify.html")
 	public ModelAndView addApplyRatify(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/apply_ratify");
-		//String userId = (String) request.getSession().getAttribute("USER_ID");
 		String userId = QUtils.getUsername(request);
 		List<String[]> loans = new ArrayList<String[]>();
 		try {
@@ -581,8 +581,7 @@ public class OaEngineController {
 			return BaseResult.getErrorResult(-1, errorMsg);
 		}
 		try {
-			ioaEngineService.updateFormInfo(processKey, userId, cname, 
-					"" + formInfo.getId(), formInfo, true);
+			ioaEngineService.updateFormInfo(processKey, userId, cname, "" + formInfo.getId(), formInfo, true);
 		} catch (RemoteAccessException e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -641,7 +640,7 @@ public class OaEngineController {
 		} catch(NumberFormatException e){
 			e.printStackTrace();
 			logger.warn(e.getMessage());
-			return BaseResult.getErrorResult(-1, "数字格式错误");
+			return BaseResult.getErrorResult(-1, e.getMessage());
 		}
 		if (!createFlag) {
 			String errorMsg = "没有任何报销内容，请检查";
@@ -1973,8 +1972,8 @@ public class OaEngineController {
 		}
 
 		OtherCostsInfo[] otherInfos = list5.toArray(new OtherCostsInfo[size]);
-		formInfo.setOtherCostsInfo(otherInfos);
 		// 存储所有数据之和
+		formInfo.setOtherCostsInfo(otherInfos);
 		formInfo.setSumTaxiFaresAmount(taxiSum);
 		formInfo.setSumOvertimeMealsAmount(overSum);
 		formInfo.setSumHospitalityAmount(hosSum);
@@ -2002,9 +2001,9 @@ public class OaEngineController {
 			formInfo.setOtherNotifyAmount(otherRatify);
 		}
 		long ratifyAmount = taxiRatify + overRatify + hosRatify + employRatify + otherRatify + commRatify;
+		formInfo.setPayAmount(OAControllerUtils.yuanMoneyToCent(vars.get("payAmount")));
 		if (ratify) {
 			formInfo.setSumFinancialNotify(ratifyAmount);
-			formInfo.setPayAmount(OAControllerUtils.yuanMoneyToCent(vars.get("payAmount")));
 			if(formInfo.getSumFinancialNotify() > formInfo.getMoneyAmount()){
 				throw new NumberFormatException("核定金额不能大于报销金额");
 			}
@@ -2028,18 +2027,33 @@ public class OaEngineController {
 		}
 		
 		table = tableMap.get("table7");
+		long borrowBillBalance = 0;
 		if(table != null){
 			len = table.length;
 			String loans = "";
 			for (int i = 0; i < table.length; i++) {
 				for(int j = 0; j < table[i].length; j++){
-					loans += table[i][j] + ";";
+					String _loans = table[i][j];
+					String[] tmp = _loans.split(",");
+					String b = tmp[4];
+					if( NumberUtils.isNumber(b)){
+						borrowBillBalance += NumberUtils.toLong(b);
+					}
+					loans += _loans + ";";
 				}
 			}
 			if(loans.length() > 0){
 				loans = loans.substring(0, loans.length() - 1);
 			}
 			formInfo.setBorrowSN(loans);
+		}
+		borrowBillBalance = borrowBillBalance * 100;
+		formInfo.setBorrowAmount(borrowBillBalance);
+		if (ratify && borrowBillBalance > ratifyAmount) {
+			throw new NumberFormatException("冲销借款金额不能大于核定金额");
+		}
+		if (!ratify && borrowBillBalance > amount) {
+			throw new NumberFormatException("冲销借款金额不能大于报销金额");
 		}
 		return true;
 	}
@@ -2272,13 +2286,15 @@ public class OaEngineController {
 		String[][] borrowSNs = new String[0][0];
 		if(borrowSN != null && borrowSN.length() > 0){
 			String[] tmp = borrowSN.split(";");
-			borrowSNs = new String[tmp.length][3];
+			borrowSNs = new String[tmp.length][5];
 			len = tmp.length;
 			for (int i = 0; i < len; i++) {
 				String[] split = tmp[i].split(",");
-				borrowSNs[i][0] = tmp[i];
-				borrowSNs[i][1] = split[0];
-				borrowSNs[i][2] = split[1];
+				borrowSNs[i][0] = split[0];
+				borrowSNs[i][1] = split[1];
+				borrowSNs[i][2] = split[2];
+				borrowSNs[i][3] = split[3];
+				borrowSNs[i][4] = split[4];
 			}
 		}
 		tableMap.put("table7", borrowSNs);
@@ -2323,8 +2339,8 @@ public class OaEngineController {
 		
 		String ratify = OAControllerUtils.centMoneyToYuan(formInfo.getSumFinancialNotify());
 		vars.put("ratify", formInfo.getSumFinancialNotify()==null?moneySum:ratify);
-		
 		vars.put("payAmount", formInfo.getPayAmount() == null?moneySum:OAControllerUtils.centMoneyToYuan(formInfo.getPayAmount()));
+		vars.put("borrowAmount", formInfo.getBorrowAmount() == null?moneySum:OAControllerUtils.centMoneyToYuan(formInfo.getBorrowAmount()));
 		formRequest.setTableMap(tableMap);
 		formRequest.setVars(vars);
 		formRequest.setFlag(false);
