@@ -87,6 +87,17 @@ public class LogManager {
 		return approvalInfos;
 	}
 	
+	public FormApproveLog getLastApproveLog(long formId, String userId){
+		FormApproveLogExample example = new FormApproveLogExample();
+		example.createCriteria().andFormIdEqualTo(formId).andApproveUserEqualTo(userId);
+		example.setOrderByClause("ts desc");
+		example.setOffset(0);
+		example.setLimit(1);
+		List<FormApproveLog> logs = formApproveLogMapper.selectByExample(example);
+		if(logs.size() == 0) return null;
+		return logs.get(0);
+	}
+	
 	public ApprovalInfo getApprovalInfo(long approveId){
 		ApprovalInfo info = new ApprovalInfo();
 		BeanUtils.copyProperties(formApproveLogMapper.selectByPrimaryKey(approveId), info);

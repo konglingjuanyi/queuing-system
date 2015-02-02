@@ -31,6 +31,7 @@ import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
 import com.qunar.ops.oaengine.manager.LogManager;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
+import com.qunar.ops.oaengine.model.FormApproveLog;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.Request;
@@ -386,11 +387,10 @@ public class DefaultOaEngineService implements IOAEngineService {
 			throw new FormNotFoundException("流程已经结束，不能召回", this.getClass());
 		}
 		
-		ListInfo<ApprovalInfo> logs = this.logManager.getApproveLogs(formId, 1, 1);
-		if(logs.getCount() == 0){
+		FormApproveLog log = this.logManager.getLastApproveLog(formId, userId);
+		if(log == null){
 			throw new FormNotFoundException("您没有处理过此申请，不能召回", this.getClass());
 		}
-		ApprovalInfo log = logs.getInfos().get(0);
 		String type = log.getManagerType();
 		String taskId = log.getTaskId();
 		if("recall".equals(type)){
