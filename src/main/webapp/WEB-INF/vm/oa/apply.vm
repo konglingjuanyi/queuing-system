@@ -219,7 +219,7 @@
         </span></td>
                     <td><input type="text"></td>
                     <td><input type="text"></td>
-                    <td><input type="text" onblur="isNumber(this, '就餐人数');avgMoney('table2', this)"></td>
+                    <td><input type="text" onblur="isInteger(this, '就餐人数');avgMoney('table2', this)"></td>
                     <td><input type="text" onblur="javascript:addMoney('table2');avgMoney('table2', this)"></td>
                     <td><input type="text" disabled="disabled" value=""></td>
                     <td><input type="text" onblur="isNumber(this, '发票金额')"></td>
@@ -272,7 +272,7 @@
                     <td><input type="text"></td>
                     <td><input type="text"></td>
                     <td><input type="text"></td>
-                    <td><input type="text" onblur="isNumber(this, '参加人数')"></td>
+                    <td><input type="text" onblur="isInteger(this, '就餐人数');"></td>
                     <td><input type="text" onblur="addMoney('table3')"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
@@ -1018,6 +1018,14 @@
     
     function isNumber(cell, field){
     	if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(cell.value)) {
+			alert(field + "格式错误");
+			cell.value = "";
+			return false;
+		}
+    }
+    
+    function isInteger(cell, field){
+    	if (!(/^(([1-9]\d*)|\d)?$/).test(cell.value)) {
 			alert(field + "格式错误");
 			cell.value = "";
 			return false;

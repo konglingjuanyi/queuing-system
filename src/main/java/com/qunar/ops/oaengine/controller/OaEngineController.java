@@ -2027,7 +2027,7 @@ public class OaEngineController {
 		}
 		
 		table = tableMap.get("table7");
-		long borrowBillBalance = 0;
+		double borrowBillBalance = 0;
 		if(table != null){
 			len = table.length;
 			String loans = "";
@@ -2037,7 +2037,7 @@ public class OaEngineController {
 					String[] tmp = _loans.split(",");
 					String b = tmp[4];
 					if( NumberUtils.isNumber(b)){
-						borrowBillBalance += NumberUtils.toLong(b);
+						borrowBillBalance += NumberUtils.toDouble(b);
 					}
 					loans += _loans + ";";
 				}
@@ -2048,7 +2048,7 @@ public class OaEngineController {
 			formInfo.setBorrowSN(loans);
 		}
 		borrowBillBalance = borrowBillBalance * 100;
-		formInfo.setBorrowAmount(borrowBillBalance);
+		formInfo.setBorrowAmount(NumberUtils.toLong(""+(int)borrowBillBalance));
 		if (ratify && borrowBillBalance > ratifyAmount) {
 			throw new NumberFormatException("冲销借款金额不能大于核定金额");
 		}
