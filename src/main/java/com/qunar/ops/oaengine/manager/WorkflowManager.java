@@ -285,6 +285,7 @@ public class WorkflowManager {
 	 * 退回
 	 * @param taskId
 	 * @param turnback_reason
+	 */
 	public TaskResult back(String userId, String taskId, String turnback_reason)  throws ActivitiException {
 		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
 		if(task == null) {
@@ -305,7 +306,6 @@ public class WorkflowManager {
 		taskService.getCommandExecutor().execute(new TurnBackTaskCmd(task.getId(), destinationTasks, findFlowActivity, turnback_reason));
 		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()),task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
-	 */
 	
 	/**
 	 * 加签
@@ -522,26 +522,33 @@ public class WorkflowManager {
 		return taskInfos;
 	}
 	
-//	private List<HistoricActivityInstance> findLastTasks(Task task) {
-//		List<HistoricActivityInstance> res = new ArrayList<HistoricActivityInstance>();
-//		Set<String> acts = new TreeSet<String>();
-//		PvmActivity act = this.findActivitiImpl(task.getId(), null);
-//		this.findIncomingTasks(act, acts);
-//		for (String actid : acts) {
-//			/*
-//			List<HistoricTaskInstance> list = this.historyService
-//					.createHistoricTaskInstanceQuery().processInstanceId(task.getProcessInstanceId()).finished()
-//					.taskDefinitionKey(taskKey).orderByHistoricTaskInstanceEndTime()
-//					.desc().list();
-//			if (list.size() == 0) continue;
-//			tasks.add(list.get(0));*/
-//			
-//			List<HistoricActivityInstance> list = this.historyService.createHistoricActivityInstanceQuery().processInstanceId(task.getProcessInstanceId()).finished().activityId(actid).orderByHistoricActivityInstanceEndTime().desc().list();
-//			if (list.size() == 0) continue;
-//			res.add(list.get(0));
-//		}
-//		return res;
-//	}
+	private List<HistoricActivityInstance> findLastTasks(Task task) {
+		List<HistoricActivityInstance> res = new ArrayList<HistoricActivityInstance>();
+		Set<String> acts = new TreeSet<String>();
+		PvmActivity act = this.findActivitiImpl(task.getId(), null);
+		this.findIncomingTasks(act, acts);
+		for (String actid : acts) {
+			/*
+			List<HistoricTaskInstance> list = this.historyService
+					.createHistoricTaskInstanceQuery().processInstanceId(task.getProcessInstanceId()).finished()
+					.taskDefinitionKey(taskKey).orderByHistoricTaskInstanceEndTime()
+					.desc().list();
+			if (list.size() == 0) continue;
+			tasks.add(list.get(0));*/
+			
+			List<HistoricActivityInstance> list = this.historyService
+					.createHistoricActivityInstanceQuery()
+					.processInstanceId(task.getProcessInstanceId())
+					.finished()
+					.activityId(actid)
+					.orderByHistoricActivityInstanceEndTime()
+					.desc()
+					.list();
+			if (list.size() == 0) continue;
+			res.add(list.get(0));
+		}
+		return res;
+	}
 	
 	private ActivityImpl findActivitiImpl(String taskId, String activityId) {
 		TaskEntity task = findTaskById(taskId);
