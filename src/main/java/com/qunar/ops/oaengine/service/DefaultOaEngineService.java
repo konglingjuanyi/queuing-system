@@ -98,6 +98,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		}
 		request.setAmountMoney(formInfo.getMoneyAmount());
 		request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
+		request.setHosMoney(formInfo.getSumHospitalityAmount());
 		//五级部门从员工信息中获取
 		EmployeeInfo employeeInfo = getEmployeeInfo(userId);
 		request.setDepartment(employeeInfo.getDepartmentI());
@@ -368,6 +369,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		}
 		request.setAmountMoney(formInfo.getMoneyAmount());
 		request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
+		request.setHosMoney(formInfo.getSumHospitalityAmount());
 		TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees, request);
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		if(memo == null) memo = "";

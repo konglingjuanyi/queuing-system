@@ -8,6 +8,7 @@ public class Request implements Serializable{
 	private String oid;
 	private Long amountMoney;
 	private Long tbMoney;
+	private Long hosMoney;
 	private boolean report2vp;
 	private String department;
 	private String departmentII;
@@ -67,6 +68,12 @@ public class Request implements Serializable{
 	}
 	public void setDepartmentV(String departmentV) {
 		this.departmentV = departmentV;
+	}
+	public Long getHosMoney() {
+		return hosMoney;
+	}
+	public void setHosMoney(Long hosMoney) {
+		this.hosMoney = hosMoney;
 	}
 
 }
