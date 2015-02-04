@@ -19,6 +19,7 @@ import com.qunar.ops.oaengine.manager.GroupManager;
 import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.model.GroupMember;
+import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.service.EmployeeInfoService;
 
 
@@ -76,7 +77,11 @@ public class SelectListener implements TaskListener  {
 				if("direct_manager".equals(delegateTask.getTaskDefinitionKey())){
 					users = this.employeeInfoService.findManager(owner);
 				}else if("director".equals(delegateTask.getTaskDefinitionKey())){
-					users = this.employeeInfoService.findDirector(owner);
+					Request request = (Request)vars.get("request");
+					if(request == null){
+						throw new RemoteAccessException("request is null, 请联系ops", this.getClass());
+					}
+					users = this.employeeInfoService.findDirector(request.getDepartment(), request.getDepartmentII(), request.getDepartmentIII(), request.getDepartmentIV(), request.getDepartmentV());
 				}else if(delegateTask.getTaskDefinitionKey().indexOf("vp") >= 0){
 					users = this.employeeInfoService.findVP(owner);
 				}

@@ -120,14 +120,13 @@ function fixedTableInfo(tableMap, vars) {
         if (tableList[i] == "table6") {
             tableForm += table6BodyForm(vars);
         } else {
-            tableForm += tableBodyForm(tableMap, tableList[i], num1);
+            tableForm += tableBodyForm(tableMap, tableList[i], i);
         }
         tableForm += '</table>';
         if (tableList[i] != "table6" && tableList[i] != "table7") {
             tableForm += tableSumForm(num2, vars);
         }
     }
-    //tableForm += tableApproveBodyForm(tableMap["table7"]);
     $("#sum").val(vars["sum"]);
     return tableForm;
 }
@@ -140,7 +139,8 @@ function tableZeroNameDic() {
     var table4Name = ["日期", "地点", "同行人（姓名）", "活动目的", "金额", "核定金额", "备注"];
     var table5Name = ["费用项目", "金额", "核定金额", "备注"];
     var table7Name = ["借款编号", "借款日期", "借款金额", "借款余额", "冲销金额"];
-    var tableNames = [table7Name, table1Name, table2Name, table3Name, table4Name, table5Name];
+    var table6Name = [];
+    var tableNames = [table7Name, table1Name, table6Name, table2Name, table3Name, table4Name, table5Name];
     return tableNames;
 }
 
@@ -298,11 +298,13 @@ function tableSumForm(num, vars) {
 	form += $.parseStr('<input type="text" value="%s" id="%s" readonly="readonly"  style="width: 100%;color:#000000">',ratify, ratifyOne);
 	form += '</td></tr>';
     form += '<tr>';
-	form += '<tr>';
-	form += '<td>冲销借款总计</td>';
-	form += '<td>';
-	form += $.parseStr('<input type="text" value="%s" readonly="readonly"  style="width: 100%;color:#000000">',borrowAmount);
-	form += '</td></tr>';
+    if(num == ''){
+		form += '<tr>';
+		form += '<td>冲销借款总计</td>';
+		form += '<td>';
+		form += $.parseStr('<input type="text" value="%s" readonly="readonly"  style="width: 100%;color:#000000">',borrowAmount);
+		form += '</td></tr>';
+	}
 	if(num == ''){
 		form += '<tr>';
 		form += '<td>支付金额</td>';

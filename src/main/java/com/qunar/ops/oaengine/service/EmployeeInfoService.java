@@ -8,11 +8,15 @@ import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -20,6 +24,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ctc.wstx.util.StringUtil;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
@@ -202,9 +207,7 @@ public class EmployeeInfoService {
 	 * @param userId
 	 * @return
 	 * @throws RemoteAccessException
-	 */
-	public List<String> findDirector(String userId)
-			throws RemoteAccessException {
+	public List<String> findDirector(String userId) throws RemoteAccessException {
 		List<String> users = new ArrayList<String>();
 		String apiUrl = backyardUrl + "?require=info&rtx_id=" + userId;
 		JSONObject json = invokeGetApi(apiUrl);
@@ -239,6 +242,35 @@ public class EmployeeInfoService {
 		}
 		if(user != null){
 			users.add(user.split("@")[0]);
+		}
+		return users;
+	}
+	 */
+	public List<String> findDirector(String dep1, String dep2, String dep3, String dep4, String dep5) throws RemoteAccessException {
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("dep1", dep1==null?"":dep1));
+		params.add(new BasicNameValuePair("dep2", dep2==null?"":dep2));
+		params.add(new BasicNameValuePair("dep3", dep3==null?"":dep3));
+		params.add(new BasicNameValuePair("dep4", dep4==null?"":dep4));
+		params.add(new BasicNameValuePair("dep5", dep5==null?"":dep5));
+		List<String> users = new ArrayList<String>();
+		String apiUrl = backyardUrl + "?require=get_tree_dep";
+		//String apiUrl = "http://l-backyard1.ops.dev.cn6.qunar.com:8899/api/employees/" + "?require=get_tree_dep";
+		JSONObject json = invokePostApi(apiUrl, params);
+		if ("false".equals(json.getString("ret"))) {
+			throw new RemoteAccessException(json.getString("msg"), EmployeeInfoService.class);
+		}
+		JSONObject data = json.getJSONObject("data");
+		String leaders = data.getString("leaders");
+		if (leaders == null || leaders.length() == 0) {
+			leaders = data.getString("hrbps");
+		}
+		if (leaders.length() == 0) {
+			throw new RemoteAccessException("没有找到leaders", EmployeeInfoService.class);
+		}
+		for(String leader : leaders.split(",")){
+			if(leader.length() == 0) continue;
+			users.add(leader);
 		}
 		return users;
 	}
@@ -317,12 +349,71 @@ public class EmployeeInfoService {
 			}
 		}
 	}
+	
+	/**
+	 * 
+	 * @param apiUrl
+	 * @return JSONObject对象，内容为返回结果
+	 * @throws RemoteAccessException
+	 */
+	private JSONObject invokePostApi(String apiUrl, List<NameValuePair> params) throws RemoteAccessException {
+		CloseableHttpClient httpclient = HttpClients.createDefault();
+		try {
+			HttpPost httppost = new HttpPost(apiUrl);
+			//httppost.setHeader("Content-Type", "application/json; charset=UTF-8");
+			httppost.setEntity(new UrlEncodedFormEntity(params, "utf-8"));
+			ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+				public String handleResponse(final HttpResponse response)
+						throws ClientProtocolException, IOException {
+					int status = response.getStatusLine().getStatusCode();
+					if (status >= 200 && status < 300) {
+						HttpEntity entity = response.getEntity();
+						return entity != null ? EntityUtils.toString(entity)
+								: null;
+					} else {
+						throw new ClientProtocolException(
+								"Unexpected response status: " + status);
+					}
+				}
+
+			};
+			String responseBody = httpclient.execute(httppost, responseHandler);
+			JSONObject json = JSONObject.parseObject(responseBody);
+			if (json == null) {
+				throw new RemoteAccessException("responseBody is null",
+						EmployeeInfoService.class);
+			}
+			return json;
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RemoteAccessException(e.getMessage(),
+					EmployeeInfoService.class);
+		} finally {
+			try {
+				httpclient.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+				throw new RemoteAccessException(e.getMessage(),
+						EmployeeInfoService.class);
+			}
+		}
+	}
 
 	public static void main(String[] args) throws RemoteAccessException {
-		EmployeeInfoService s = new ClassPathXmlApplicationContext(
-				new String[] { "spring.xml" })
-				.getBean(EmployeeInfoService.class);
-		System.out.println(s.getEmployee("yongnian.jiang").getAdName());
-		System.out.println(s.getLaborHour("yongnian.jiang", new Date()));
+//		EmployeeInfoService s = new ClassPathXmlApplicationContext(
+//				new String[] { "spring.xml" })
+//				.getBean(EmployeeInfoService.class);
+//		System.out.println(s.getEmployee("yongnian.jiang").getAdName());
+//		System.out.println(s.getLaborHour("yongnian.jiang", new Date()));
+		
+		EmployeeInfoService employeeInfoService = new EmployeeInfoService();
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("dep1", "技术部"));
+		params.add(new BasicNameValuePair("dep2", "OPS-IT-CCops"));
+		params.add(new BasicNameValuePair("dep3", "Dev"));
+		params.add(new BasicNameValuePair("dep4", "HrDev"));
+		params.add(new BasicNameValuePair("dep5", ""));
+		JSONObject json = employeeInfoService.invokePostApi("http://l-backyard1.ops.dev.cn6.qunar.com:8899/api/employees/?require=get_tree_dep", params);
+		System.out.println(json.toJSONString());
 	}
 }

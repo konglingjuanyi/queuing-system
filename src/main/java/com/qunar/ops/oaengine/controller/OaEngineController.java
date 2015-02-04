@@ -528,7 +528,7 @@ public class OaEngineController {
 				DateTime date = startDate.plusDays(i);
 				float laborHour = ioaEngineService.getLaborHour(userId, date.toDate());
 				if(laborHour >= 11.5){
-					infos.add(date.toString("YYYY-MM-DD")+":"+laborHour);
+					infos.add(date.toString("YYYY-MM-dd")+":"+laborHour);
 				}
 			} catch (RemoteAccessException e) {
 				e.printStackTrace();
