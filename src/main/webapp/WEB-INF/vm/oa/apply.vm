@@ -268,14 +268,14 @@
             <input type="text" onclick="showTime()"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
-                    <td><input type="text" onblur="isInteger(this, '就餐人数');"></td>
-                    <td><input type="text" onblur="addMoney('table3')"></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text"></td>
+                    <td><input type="text" class="table3"></td>
+                    <td><input type="text" class="table3"></td>
+                    <td><input type="text" class="table3"></td>
+                    <td><input type="text" class="table3"></td>
+                    <td><input type="text" class="table3" onblur="isInteger(this, '就餐人数');"></td>
+                    <td><input type="text" class="table3" onblur="addMoney('table3')"></td>
+                    <td><input type="text" class="table3" disabled="disabled"></td>
+                    <td><input type="text" class="table3"></td>
                     <td><input type='hidden' value=''></td>
                 </tr>
             </table>
@@ -478,6 +478,9 @@
 		            	$("input[name='Fruit']").attr('disabled', 'true');
 			            if($("#sum4").val() <= 0){
 			            	$(".table4").attr('disabled', 'true');
+			            }
+			            if($("#sum3").val() <= 0){
+			            	$(".table3").attr('disabled', 'true');
 			            }
 		            }
                 } else {

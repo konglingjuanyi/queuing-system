@@ -493,8 +493,7 @@ public class OaEngineController {
 		try {
 			laborHour = ioaEngineService.getLaborHour(userId, date);
 		} catch (RemoteAccessException e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
+			logger.warn(e.getMessage(), e);
 			laborHour = 0;
 		}
 		String result[] = new String[] { String.valueOf(laborHour) };

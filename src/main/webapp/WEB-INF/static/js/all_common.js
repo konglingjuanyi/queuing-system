@@ -110,13 +110,8 @@ function fixedTableInfo(tableMap, vars) {
     for (var i = 0; i < 7; i++) {
         tableForm += tableHeadForm(tableHeadList[i]);
         tableForm += $.parseStr('<table frame="vsides" id="%s" style="width: 1067px;">', tableList[i]);
-        var num1 = i;
         var num2 = i;
-        if (i > 0) {
-            num1 -= 1;
-        } else {
-            num2 += 1;
-        }
+        if(i > 2) num2 = i-1;
         if (tableList[i] == "table6") {
             tableForm += table6BodyForm(vars);
         } else {

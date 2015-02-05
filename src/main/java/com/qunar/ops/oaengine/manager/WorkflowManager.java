@@ -332,6 +332,7 @@ public class WorkflowManager {
 		for(TaskInfo info : tasks){
 			Task t = taskService.createTaskQuery().taskId(info.getTaskId()).singleResult();
 			if(t != null){
+				taskService.setAssignee(t.getId(), assignees);
 				runtimeService.setVariable(t.getExecutionId(), "candidates", null);
 			}
 		}
