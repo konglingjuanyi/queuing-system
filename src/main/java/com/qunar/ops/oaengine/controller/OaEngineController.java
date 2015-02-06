@@ -1104,10 +1104,26 @@ public class OaEngineController {
 		}
 		int pageSize = Integer.MAX_VALUE;
 		int pageNo = 0;
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
 		String approve_user = request.getParameter("approve-user");
+		Date _startTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+			}
+		}
+		Date _endTime = null;
+		if (endTime != null) {
+			try {
+				_endTime = sdf.parse(endTime);
+			} catch (ParseException e) {
+			}
+		}
 		FormInfoList formInfoList = null;
 		try {
-			formInfoList = ioaEngineService.todoList(processKey, userId, null, null, approve_user, pageNo, pageSize);
+			formInfoList = ioaEngineService.todoList(processKey, userId, _startTime, _endTime, approve_user, pageNo, pageSize);
 		} catch (FormNotFoundException e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -1222,7 +1238,7 @@ public class OaEngineController {
 			    cell = row.createCell(0);  
 			    cell.setCellValue(info.getStartMemberId());
 			    cell = row.createCell(1);  
-			    cell.setCellValue("部门编号");
+			    cell.setCellValue("");
 			    cell = row.createCell(2);  
 			    cell.setCellValue(info.getFirstDep());
 			    cell = row.createCell(3);  
@@ -1242,31 +1258,42 @@ public class OaEngineController {
 			    cell = row.createCell(10);  
 			    cell.setCellValue(info.getBankName());
 			    cell = row.createCell(11);  
-			    cell.setCellValue("开户所在地");
+			    cell.setCellValue(info.getBankCity());
 			    cell = row.createCell(12);  
 			    cell.setCellValue(sdf.format(info.getApplyDate()));
+			    String borrowInfo = info.getBorrowSN();
+			    String borrowSn = "";
+			    double borrowBillBalance = 0;
+			    if(borrowInfo != null)for(String _info : borrowInfo.split(";")){
+			    	 String[] _tmpinfo = _info.split(",");
+			    	 borrowSn += _tmpinfo[0];
+			    	 String b = _tmpinfo[3];
+					if( NumberUtils.isNumber(b)){
+						borrowBillBalance += NumberUtils.toDouble(b);
+					}
+			    }
 			    cell = row.createCell(13);  
-			    cell.setCellValue(info.getBorrowSN());
+			    cell.setCellValue(borrowSn);
 			    cell = row.createCell(14);  
-			    cell.setCellValue("是否有借款");
+			    cell.setCellValue(borrowSn.length()==0?"否":"有");
 			    cell = row.createCell(15);  
-			    cell.setCellValue("借款金额");
+			    cell.setCellValue(borrowBillBalance);
 			    cell = row.createCell(16);  
 			    cell.setCellValue(info.getId());
 			    cell = row.createCell(17);  
-			    cell.setCellValue(info.getSumFinancialNotify()==null?"":OAControllerUtils.centMoneyToYuan(info.getSumFinancialNotify()));
+			    cell.setCellValue(info.getSumFinancialNotify()==null?OAControllerUtils.centMoneyToYuan(info.getMoneyAmount()):OAControllerUtils.centMoneyToYuan(info.getSumFinancialNotify()));
 			    cell = row.createCell(18);  
-			    cell.setCellValue(info.getCommunicationNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getCommunicationNotifyAmount()));
+			    cell.setCellValue(info.getCommunicationNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getCommunicationCosts()):OAControllerUtils.centMoneyToYuan(info.getCommunicationNotifyAmount()));
 			    cell = row.createCell(19);  
-			    cell.setCellValue(info.getOtherNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getOtherNotifyAmount()));
+			    cell.setCellValue(info.getOtherNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getSumOtherAmount()):OAControllerUtils.centMoneyToYuan(info.getOtherNotifyAmount()));
 			    cell = row.createCell(20);  
-			    cell.setCellValue(info.getOvertimeMealsNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getOvertimeMealsNotifyAmount()));
+			    cell.setCellValue(info.getOvertimeMealsNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getSumOvertimeMealsAmount()):OAControllerUtils.centMoneyToYuan(info.getOvertimeMealsNotifyAmount()));
 			    cell = row.createCell(21);  
-			    cell.setCellValue(info.getHospitalityNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getHospitalityNotifyAmount()));
+			    cell.setCellValue(info.getHospitalityNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getSumHospitalityAmount()):OAControllerUtils.centMoneyToYuan(info.getHospitalityNotifyAmount()));
 			    cell = row.createCell(22);  
-			    cell.setCellValue(info.getEmRelationsFeesNotify()==null?"":OAControllerUtils.centMoneyToYuan(info.getEmRelationsFeesNotify()));
+			    cell.setCellValue(info.getEmRelationsFeesNotify()==null?OAControllerUtils.centMoneyToYuan(info.getSumEmployeeRelationsFees()):OAControllerUtils.centMoneyToYuan(info.getEmRelationsFeesNotify()));
 			    cell = row.createCell(23);  
-			    cell.setCellValue(info.getTaxiFaresNotifyAmount()==null?"":OAControllerUtils.centMoneyToYuan(info.getTaxiFaresNotifyAmount()));
+			    cell.setCellValue(info.getTaxiFaresNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getSumTaxiFaresAmount()):OAControllerUtils.centMoneyToYuan(info.getTaxiFaresNotifyAmount()));
 			    cell = row.createCell(24);  
 			    cell.setCellValue(info.getSumFinancialNotify()==null?"":OAControllerUtils.centMoneyToYuan(info.getSumFinancialNotify()));
 			    cell = row.createCell(25);  
