@@ -450,7 +450,13 @@ public class WorkflowManager {
 		taskService.complete(task.getId());
 		pointActivity.getIncomingTransitions().remove(newTransition);
 		restoreTransition(currActivity, oriPvmTransitionList);
-		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, this.getCurrentTasks(task.getProcessInstanceId()));
+		List<TaskInfo> currentTasks = this.getCurrentTasks(task.getProcessInstanceId());
+		for(TaskInfo info : currentTasks){
+			if(activityId.equals(info.getTaskKey())){
+				taskService.setAssignee(info.getTaskId(), assignee);
+			}
+		}
+		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, currentTasks);
 	}
 	
 	private List<PvmTransition> clearTransition(ActivityImpl activityImpl) {
