@@ -527,7 +527,7 @@ public class OaEngineController {
 				DateTime date = startDate.plusDays(i);
 				float laborHour = ioaEngineService.getLaborHour(userId, date.toDate());
 				if(laborHour >= 11.5){
-					infos.add(date.toString("YYYY-MM-dd")+":"+laborHour);
+					infos.add(date.toString("yyyy-MM-dd")+":"+laborHour);
 				}
 			} catch (RemoteAccessException e) {
 				e.printStackTrace();
@@ -1129,7 +1129,7 @@ public class OaEngineController {
 			logger.error(e.getMessage());
 		}
 		File file = null;
-		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			HSSFWorkbook wb = new HSSFWorkbook();  
 			HSSFSheet sheet = wb.createSheet("sheet1");  
@@ -1232,7 +1232,6 @@ public class OaEngineController {
 		    cell.setCellValue("出纳办理签字日期");
 		    
 		    int no = 2;
-		    //SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD");
 		    if(formInfoList != null)for(FormInfo info : formInfoList.getFormInfos()){
 		    	row = sheet.createRow(no);  
 			    cell = row.createCell(0);  
