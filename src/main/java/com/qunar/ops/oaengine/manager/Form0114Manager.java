@@ -677,7 +677,7 @@ public class Form0114Manager {
 		formmain0114clone.setProcInstId("");
 		formmain0114clone.setField0005(new Date());
 		formmain0114clone.setOid(null);
-		formmain0114clone.setField0101(null);
+		//formmain0114clone.setField0101(null);
 		formmain0114clone.setField0069(null);
 		formmain0114clone.setField0099(null);
 		formmain0114clone.setField0070(null);

@@ -440,7 +440,7 @@ public class WorkflowManager {
 		}
 		Task task = tasks.get(0);
 		ActivityImpl currActivity = findActivitiImpl(task.getId(), null);
-		if(currActivity.getId().equals(activityId)){
+		if(currActivity.getId().equals(activityId) && task.getAssignee().equals(assignee)){
 			throw new Exception("申请已经在您的待办工作中，无法取回");
 		}
 		List<PvmTransition> oriPvmTransitionList = clearTransition(currActivity);

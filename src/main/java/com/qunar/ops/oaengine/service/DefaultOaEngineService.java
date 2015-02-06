@@ -370,6 +370,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 		request.setAmountMoney(formInfo.getMoneyAmount());
 		request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
 		request.setHosMoney(formInfo.getSumHospitalityAmount());
+		request.setDepartment(formInfo.getFirstDep());
+		request.setDepartmentII(formInfo.getSecDep());
+		request.setDepartmentIII(formInfo.getThridDep());
+		request.setDepartmentIV(formInfo.getFourthDep());
+		request.setDepartmentV(formInfo.getFivethDep());
 		TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees, request);
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		if(memo == null) memo = "";
