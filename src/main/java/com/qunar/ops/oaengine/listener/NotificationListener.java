@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.service.MailSenderService;
 
-public class NotificationListener implements JavaDelegate{
+public class NotificationListener implements TaskListener{
 	private static final long serialVersionUID = 1L;
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -38,9 +38,9 @@ public class NotificationListener implements JavaDelegate{
 	@Autowired
 	protected RepositoryService repositoryService;
 	
-
 	@Override
-	public void execute(DelegateExecution execution) throws Exception {
+	public void notify(DelegateTask delegateTask) {
+		DelegateExecution execution = delegateTask.getExecution();
 		ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) ((RepositoryServiceImpl) repositoryService)
 				.getDeployedProcessDefinition(execution.getProcessDefinitionId());
 		ActivityImpl impl = processDefinition.findActivity(execution.getCurrentActivityId());

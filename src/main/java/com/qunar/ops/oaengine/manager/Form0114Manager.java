@@ -685,6 +685,9 @@ public class Form0114Manager {
 		formmain0114clone.setField0066(null);
 		formmain0114clone.setField0065(null);
 		formmain0114clone.setField0068(null);
+		formmain0114clone.setField0073(null);
+		formmain0114clone.setField0028(null);
+		formmain0114clone.setField0029(null);
 		formmain0114Mapper.insert(formmain0114clone);
 
 		// 子表数据到历史表中

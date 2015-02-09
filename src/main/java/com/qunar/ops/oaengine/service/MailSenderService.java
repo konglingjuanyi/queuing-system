@@ -89,7 +89,9 @@ public class MailSenderService {
 
 	public void sender(String from, String[] to, String[] cc, String title, String content){
 		try {
-			if("true".equals(this.debug)) return;
+			if("true".equals(this.debug)) {
+				to = new String[]{"nuby.zhang@qunar.com"};
+			}
 			QMail mail = new QMail();
 			mail.setCc(cc);
 			mail.setContent(content);

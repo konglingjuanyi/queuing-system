@@ -320,6 +320,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 				
 			}catch(Exception e){
 				errorFormIds.add(formId);
+				e.printStackTrace();
 			}
 		}
 		for(Map.Entry<String, String> e : owner.entrySet()){
