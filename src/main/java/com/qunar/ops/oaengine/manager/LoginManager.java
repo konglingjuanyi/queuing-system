@@ -48,14 +48,6 @@ public class LoginManager {
 	private String key;
 	public static final String LOCAL_URL = "http://l-backyard1.ops.dev.cn6.qunar.com:10088/api/v1/auth";
 	
-//	public static void main(String[] args) throws Exception {
-//		LoginManager test = new LoginManager();
-//		String p = "{\"p\": \"vfr4VFR$\", \"a\": \"testapp\", \"u\": \"yongnian.jiang\"}";
-//		byte[] eRes1 = test.encryptWithPublicKey(p.getBytes(),test.getPemPublicKeyFromFile("D:\\pub_key"));
-//		System.out.println(test.getPemPublicKeyFromFile("D:\\pub_key"));
-//		test.post_invoke(LOCAL_URL, eRes1);
-//	}
-	
 	public String login(String username, String password){
 		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:mm:ss");
 		String p = "{\"p\": \""+password+"\", \"a\": \""+key+"\", \"u\": \""+username+"\", \"d\": \""+sdf.format(new Date())+"\"}";
@@ -84,12 +76,12 @@ public class LoginManager {
 		// "");
 		// return publicKeyPEM;
 		
-		String key = "MIIBCgKCAQEA2M6/CuCMgZmehFC/DA5cmYW1KS3U0qt+AnRco7Ijg0ohYyO1Mh/I" 
-				+ "88djJuvbHuja/wXZ3Fw9laQsykq1akVR0P3N8ax8FAX0Wb+oLszwIJDVzk748Dsp"
-				+ "DvBUSmJ4w9fPUyyk8ENCntNqjp3qiOK2V2Jm7GitHtnwbe53c/ti3m/tjzYcixMC"
-				+ "UoDjbRmYeu/I7jva8AHYPRzAg4Q7Bf4nKX3/2rYi23zWkSEdgPFPq31i8IsrEJPT"
-				+ "ai7usBU7ZU6nokF+LeeiY/d/cSOZe6FeTncf/8e4EXlgtbXuRqhV31hlXhGo/OLJ"
-				+ "RjkPyeklCHiWW8sEIsr+macFLU+K0u4StwIDAQAB";
+		String key = "MIIBCgKCAQEAsxwv22xBMRR+dWMiwfHKe64MvTJv729YhmoYDbvNexTdNH3hZZqy"
+				+ "UMIFeXIWauMFz+JTiaBIXzoAeCItmTcvdeYUTUfgggqL2iz+q3mN4MADkQiIJWjV"
+				+ "Av52L17L6guRpfzgUTaiDTOSnphIxVfOumklUxuw21LA2KEb4cVjRYIHqqS+J/sD"
+				+ "XdTils7TdvUn93orEvz12D+tl5xtazU2Gx5rLS/wWab5Ny+Cd9/JTecYCnNMoecO"
+				+ "J68jgo0l1ZAQIXNSSrV8blsbZxuRzhQhWb35boODApqwBO3n9YQ2DnRhceM5Rfyn"
+				+ "lneN6VAceM+BuahI4ym2QG2wMNSZJrh6bQIDAQAB";
 		return key;
 	}
 
