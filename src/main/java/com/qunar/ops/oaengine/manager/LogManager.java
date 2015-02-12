@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.oaengine.dao.FormApproveLogMapper;
+import com.qunar.ops.oaengine.datasource.Read;
 import com.qunar.ops.oaengine.model.FormApproveLog;
 import com.qunar.ops.oaengine.model.FormApproveLogExample;
 import com.qunar.ops.oaengine.model.FormApproveLogExample.Criteria;
@@ -59,6 +60,7 @@ public class LogManager {
 		this.formApproveLogMapper.insert(log);
 	}
 	
+	@Read
 	public ListInfo<ApprovalInfo> getApproveLogs(long formId, int pageNo, int pageSize){
 		ListInfo<ApprovalInfo> approvalInfos = new ListInfo<ApprovalInfo>();
 		List<ApprovalInfo> _approvalInfos = new ArrayList<ApprovalInfo>();
@@ -87,6 +89,7 @@ public class LogManager {
 		return approvalInfos;
 	}
 	
+	@Read
 	public FormApproveLog getLastApproveLog(long formId, String userId){
 		FormApproveLogExample example = new FormApproveLogExample();
 		example.createCriteria().andFormIdEqualTo(formId).andApproveUserEqualTo(userId);
@@ -98,12 +101,14 @@ public class LogManager {
 		return logs.get(0);
 	}
 	
+	@Read
 	public ApprovalInfo getApprovalInfo(long approveId){
 		ApprovalInfo info = new ApprovalInfo();
 		BeanUtils.copyProperties(formApproveLogMapper.selectByPrimaryKey(approveId), info);
 		return info;
 	}
 	
+	@Read
 	public String getLastEndorseUser(long formId, String taskKey){
 		FormApproveLogExample e = new FormApproveLogExample();
 		Criteria c = e.createCriteria();

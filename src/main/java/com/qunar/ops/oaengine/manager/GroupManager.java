@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.qunar.ops.oaengine.dao.GroupMapper;
 import com.qunar.ops.oaengine.dao.GroupMemberMapper;
+import com.qunar.ops.oaengine.datasource.Read;
 import com.qunar.ops.oaengine.model.Group;
 import com.qunar.ops.oaengine.model.GroupExample;
 import com.qunar.ops.oaengine.model.GroupExample.Criteria;
@@ -64,6 +65,7 @@ public class GroupManager {
 		this.groupMemberMapper.deleteByExample(e);
 	}
 	
+	@Read
 	public List<GroupInfo> getGroup(String groupKey){
 		List<GroupInfo> infos = new ArrayList<GroupManager.GroupInfo>();
 		GroupExample ge = new GroupExample();
@@ -82,6 +84,7 @@ public class GroupManager {
 		return infos;
 	}
 	
+	@Read
 	public boolean inGroups(String[] groupKeys, String userId){
 		GroupMemberExample ge = new GroupMemberExample();
 		ge.createCriteria().andMemberUserIdEqualTo(userId);

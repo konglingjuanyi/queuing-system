@@ -32,6 +32,7 @@ import com.qunar.ops.oaengine.dao.Formson0118Mapper;
 import com.qunar.ops.oaengine.dao.Formson0119HistoryMapper;
 import com.qunar.ops.oaengine.dao.Formson0119LogMapper;
 import com.qunar.ops.oaengine.dao.Formson0119Mapper;
+import com.qunar.ops.oaengine.datasource.Read;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.model.FormApproveLog;
@@ -258,6 +259,7 @@ public class Form0114Manager {
 	 * @return
 	 * @throws FormNotFoundException 
 	 */
+	@Read
 	public FormInfo getFormInfo(Long formId) {
 		FormInfo formInfo = new FormInfo();
 		Formmain0114 formmain0114 = formmain0114Mapper
@@ -292,6 +294,7 @@ public class Form0114Manager {
 	 * @return
 	 * @throws FormNotFoundException 
 	 */
+	@Read
 	public FormInfo getFormInfoHistory(Long formId) {
 		FormInfo formInfo = new FormInfo();
 		Formmain0114HistoryExample e = new Formmain0114HistoryExample();
@@ -326,6 +329,7 @@ public class Form0114Manager {
 	 * @return
 	 * @throws FormNotFoundException 
 	 */
+	@Read
 	public FormInfo getFormInfoByInst(String proc_inst_id) throws FormNotFoundException {
 		FormInfo formInfo = new FormInfo();
 		Formmain0114Example example = new Formmain0114Example();
@@ -363,6 +367,7 @@ public class Form0114Manager {
 	 * @return
 	 * @throws FormNotFoundException 
 	 */
+	@Read
 	public FormInfo getFormInfoByInstHistory(String proc_inst_id) throws FormNotFoundException {
 		FormInfo formInfo = new FormInfo();
 		Formmain0114HistoryExample example = new Formmain0114HistoryExample();
@@ -400,6 +405,7 @@ public class Form0114Manager {
 	 * @return FormInfoList 用户申请流程中列表
 	 * 
 	 */
+	@Read
 	public FormInfoList getUserDraftList(String userId, int pageNo, int pageSize) {
 		
 		pageNo = pageNo <= 0 ? 1 : pageNo;
@@ -456,6 +462,7 @@ public class Form0114Manager {
 	 * @return FormInfoList 用户申请流程中列表
 	 * 
 	 */
+	@Read
 	public FormInfoList historyList(String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize) {
 		
 		pageNo = pageNo <= 0 ? 1 : pageNo;
@@ -512,6 +519,7 @@ public class Form0114Manager {
 	 * @return FormInfoList 用户申请流程中列表
 	 * 
 	 */
+	@Read
 	public FormInfoList getUserApplyList(String userId,
 			Date startTime, Date endTime, int pageNo, int pageSize) {
 		
@@ -569,6 +577,7 @@ public class Form0114Manager {
 	 * @return int 用户申请草稿状态的总数
 	 * 
 	 */
+	@Read
 	public int getUserDraftCount(String userId) {
 		Formmain0114Example example = new Formmain0114Example();
 		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
@@ -585,6 +594,7 @@ public class Form0114Manager {
 	 * @return int 用户申请流程中总数
 	 * 
 	 */
+	@Read
 	public int getUserApplyCount(String userId) {
 		Formmain0114Example example = new Formmain0114Example();
 		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
@@ -600,6 +610,7 @@ public class Form0114Manager {
 	 * @return int 用户历史流程总数
 	 * 
 	 */
+	@Read
 	public int getUserApplyHisCount(String userId) {
 		Formmain0114HistoryExample example = new Formmain0114HistoryExample();
 		com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria criteria = example.createCriteria();
@@ -618,6 +629,7 @@ public class Form0114Manager {
 	 * @return FormInfoList 用户历史流程中列表
 	 * 
 	 */
+	@Read
 	public FormInfoList getUserApplyHisList(String userId, Date startTime, Date endTime, int pageNo, int pageSize) {
 		
 		pageNo = pageNo <= 0 ? 1 : pageNo;
@@ -666,7 +678,7 @@ public class Form0114Manager {
 		return formInfoList;
 	}
 
-	
+	@Read
 	public void cloneFormInfo(FormInfo formInfo) {
 		// 主表的数据到历史
 		//Formmain0114 formmain0114 = formmain0114Mapper.selectByPrimaryKey(formId);
@@ -782,7 +794,7 @@ public class Form0114Manager {
 		this.updateFormInfo(userId, formId, info);
 	}
 	
-	
+	@Read
 	public List<Object> findHistoryForm(Date start, Date end){
 		Formmain0114HistoryExample e = new Formmain0114HistoryExample();
 		e.createCriteria().andFinishedflagEqualTo(Constants.PROC_END).andField0029GreaterThan(start).andField0029LessThanOrEqualTo(end);
@@ -867,6 +879,7 @@ public class Form0114Manager {
 	 * @param pageSize
 	 * @return
 	 */
+	@Read
 	public ListInfo<AlertInfo> getAlertInfos(Long formId, int pageNo,
 			int pageSize) {
 		pageNo = pageNo <= 0 ? 1 : pageNo;

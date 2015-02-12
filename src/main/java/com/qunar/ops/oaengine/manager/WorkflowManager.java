@@ -55,6 +55,7 @@ public class WorkflowManager {
 	@Autowired
 	protected IdentityService identityService;
 	
+	@Read
 	public String getTaskKey(String taskId){
 		Task task = this.taskService.createTaskQuery().taskId(taskId).singleResult();
 		if(task == null) return null;
@@ -159,6 +160,7 @@ public class WorkflowManager {
 	 * @param pageSize
 	 * @return ListInfo<TaskInfo> 任务列表
 	 */
+	@Read
 	public ListInfo<TaskInfo> historyList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize){
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
@@ -223,6 +225,7 @@ public class WorkflowManager {
 	 * @param pageSize
 	 * @return ListInfo<TaskInfo> 任务列表
 	 */
+	@Read
 	public ListInfo<ProcessInstanceInfo> historyInstList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize){
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
@@ -424,6 +427,7 @@ public class WorkflowManager {
 	 * @param businessKey
 	 * @return
 	 */
+	@Read
 	public boolean findProcessInstanceCountByBusinessKey(String processKey,
 			String businessKey) {
 		if(this.historyService.createHistoricProcessInstanceQuery().processDefinitionKey(processKey).processInstanceBusinessKey(businessKey).count() > 0){

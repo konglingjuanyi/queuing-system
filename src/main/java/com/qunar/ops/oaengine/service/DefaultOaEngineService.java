@@ -12,8 +12,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.activiti.engine.ActivitiException;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,10 +60,6 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private MailSenderService mailSenderService;
 	@Autowired
 	private EmployeeInfoService employeeInfoService;
-	@Autowired
-	private RuntimeService runtimeService;
-	@Autowired
-	protected TaskService taskService;
 
 	
 	@Override
@@ -303,7 +297,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			String taskId = taskIds.get(i);
 			long formId = formIds.get(i);
 			try{
-				taskService.claim(taskId, userId);
+				//taskService.claim(taskId, userId);
 				TaskResult tr = this._pass(processKey, userId, cname, formId, taskId, memo);
 				String content = userId+" 于 ["+now+"]处理了《"+tr.getOwner()+"-日常报销》 [同意]";
 				if(memo != null) content += " 附言:"+memo;

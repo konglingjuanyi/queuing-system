@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.oaengine.dao.DelegationMapper;
+import com.qunar.ops.oaengine.datasource.Read;
 import com.qunar.ops.oaengine.exception.AgentAlreadyExistsException;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.model.DelegationExample;
@@ -48,6 +49,7 @@ public class DelegationManager {
 		}
 	}
 	
+	@Read
 	public List<Delegation> findDelegationByMaster(String master){
 		DelegationExample e = new DelegationExample();
 		Criteria c = e.createCriteria();
