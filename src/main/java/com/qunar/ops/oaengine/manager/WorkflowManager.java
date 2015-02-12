@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.oaengine.command.TurnBackTaskCmd;
+import com.qunar.ops.oaengine.datasource.Read;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.ProcessInstanceInfo;
 import com.qunar.ops.oaengine.result.Request;
@@ -97,6 +98,7 @@ public class WorkflowManager {
 	 * @param pageSize
 	 * @return ListInfo<TaskInfo> 任务列表
 	 */
+	@Read
 	public ListInfo<TaskInfo> todoList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize){
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;

@@ -123,6 +123,7 @@ public class EmployeeInfoService {
 	 */
 	public List<String[]> getLoans(String userId) throws RemoteAccessException {
 		List<String[]> infos = new ArrayList<String[]>();
+		/*
 		String apiUrl = oadUrl + userId + "@qunar.com/1";
 		JSONObject json = invokeGetApi(apiUrl);
 		Boolean ret = json.getBoolean("ret");
@@ -140,6 +141,7 @@ public class EmployeeInfoService {
 				infos.add(new String[]{billNo, date, amount, borrowBillBalance});
 			}
 		}
+		*/
 		infos.add(new String[]{"xxxxx", "2000-01-01", "1000.00", "500.0"});
 		infos.add(new String[]{"yyyyy", "2000-01-01", "2000.00", "300.0"});
 		return infos;
