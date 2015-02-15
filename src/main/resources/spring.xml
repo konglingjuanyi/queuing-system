@@ -5,6 +5,7 @@
 	xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:cache="http://www.springframework.org/schema/cache"
 	xsi:schemaLocation="
 	http://www.springframework.org/schema/rabbit
 	http://www.springframework.org/schema/rabbit/spring-rabbit-1.3.xsd
@@ -15,14 +16,28 @@
 	http://www.springframework.org/schema/context 
 	http://www.springframework.org/schema/context/spring-context-3.1.xsd
 	http://www.springframework.org/schema/aop
-	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+	http://www.springframework.org/schema/cache
+	http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	<context:property-placeholder
 		ignore-unresolvable="true" local-override="true"
 		location="classpath*:/oaengine.properties,classpath*:/mq.properties" />
 
 	<aop:aspectj-autoproxy/>
+	
+	<cache:annotation-driven/>
+	
 	<context:component-scan base-package="com.qunar.ops.oaengine" />
+	
+	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+	  <property name="caches">
+	    <list>
+	      <bean name="oaCache" class="com.qunar.ops.oaengine.cache.GuavaCacheAdapter">
+	      </bean>
+	    </list>
+	  </property>
+	</bean>
 
 	<!-- 引擎内部提供的UUID生成器，依赖fastxml的java-uuid-generator模块 -->
 	<bean id="uuidGenerator"

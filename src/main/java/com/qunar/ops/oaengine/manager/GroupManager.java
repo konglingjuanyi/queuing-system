@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.oaengine.dao.GroupMapper;
@@ -66,6 +67,7 @@ public class GroupManager {
 	}
 	
 	@Read
+	@Cacheable("oaCache")
 	public List<GroupInfo> getGroup(String groupKey){
 		List<GroupInfo> infos = new ArrayList<GroupManager.GroupInfo>();
 		GroupExample ge = new GroupExample();
