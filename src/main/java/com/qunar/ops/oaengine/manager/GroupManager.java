@@ -67,7 +67,6 @@ public class GroupManager {
 	}
 	
 	@Read
-	@Cacheable("oaCache")
 	public List<GroupInfo> getGroup(String groupKey){
 		List<GroupInfo> infos = new ArrayList<GroupManager.GroupInfo>();
 		GroupExample ge = new GroupExample();
