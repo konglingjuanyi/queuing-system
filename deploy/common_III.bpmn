@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="oa_common" name="OA Common" isExecutable="true">
     <startEvent id="startevent2" name="Start"></startEvent>
-    <userTask id="hrbp-tb" name="TB费用审核" activiti:candidateUsers="cici.li">
+    <userTask id="tb_check" name="TB费用审核" activiti:candidateGroups="tb_check">
       <extensionElements>
         <activiti:taskListener event="create" delegateExpression="${selectListener}"></activiti:taskListener>
       </extensionElements>
@@ -71,10 +71,6 @@
     </userTask>
     <endEvent id="endevent2" name="End"></endEvent>
     <sequenceFlow id="flow35" sourceRef="startevent2" targetRef="exclusivegateway12"></sequenceFlow>
-    <sequenceFlow id="flow36" sourceRef="exclusivegateway12" targetRef="hrbp-tb">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${request.tbMoney > 0}]]></conditionExpression>
-    </sequenceFlow>
-    <sequenceFlow id="flow37" sourceRef="hrbp-tb" targetRef="exclusivegateway13"></sequenceFlow>
     <sequenceFlow id="flow49" sourceRef="fin_check" targetRef="exclusivegateway18"></sequenceFlow>
     <sequenceFlow id="flow57" sourceRef="exclusivegateway19" targetRef="exclusivegateway20"></sequenceFlow>
     <sequenceFlow id="flow58" sourceRef="exclusivegateway20" targetRef="cfo">
@@ -133,13 +129,17 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${request.amountMoney >= 1000000}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow87" sourceRef="fin_director" targetRef="exclusivegateway19"></sequenceFlow>
+    <sequenceFlow id="flow88" sourceRef="exclusivegateway12" targetRef="tb_check">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${request.tbMoney > 0}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow89" sourceRef="tb_check" targetRef="exclusivegateway13"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_oa_common">
     <bpmndi:BPMNPlane bpmnElement="oa_common" id="BPMNPlane_oa_common">
       <bpmndi:BPMNShape bpmnElement="startevent2" id="BPMNShape_startevent2">
         <omgdc:Bounds height="35.0" width="35.0" x="19.0" y="170.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="hrbp-tb" id="BPMNShape_hrbp-tb">
+      <bpmndi:BPMNShape bpmnElement="tb_check" id="BPMNShape_tb_check">
         <omgdc:Bounds height="55.0" width="105.0" x="119.0" y="220.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway12" id="BPMNShape_exclusivegateway12">
@@ -208,16 +208,6 @@
       <bpmndi:BPMNEdge bpmnElement="flow35" id="BPMNEdge_flow35">
         <omgdi:waypoint x="54.0" y="187.0"></omgdi:waypoint>
         <omgdi:waypoint x="69.0" y="187.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow36" id="BPMNEdge_flow36">
-        <omgdi:waypoint x="89.0" y="207.0"></omgdi:waypoint>
-        <omgdi:waypoint x="89.0" y="247.0"></omgdi:waypoint>
-        <omgdi:waypoint x="119.0" y="247.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow37" id="BPMNEdge_flow37">
-        <omgdi:waypoint x="224.0" y="247.0"></omgdi:waypoint>
-        <omgdi:waypoint x="253.0" y="247.0"></omgdi:waypoint>
-        <omgdi:waypoint x="253.0" y="207.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow49" id="BPMNEdge_flow49">
         <omgdi:waypoint x="780.0" y="187.0"></omgdi:waypoint>
@@ -332,6 +322,16 @@
         <omgdi:waypoint x="1004.0" y="242.0"></omgdi:waypoint>
         <omgdi:waypoint x="1058.0" y="242.0"></omgdi:waypoint>
         <omgdi:waypoint x="1058.0" y="207.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow88" id="BPMNEdge_flow88">
+        <omgdi:waypoint x="89.0" y="207.0"></omgdi:waypoint>
+        <omgdi:waypoint x="89.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="119.0" y="247.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow89" id="BPMNEdge_flow89">
+        <omgdi:waypoint x="224.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="253.0" y="247.0"></omgdi:waypoint>
+        <omgdi:waypoint x="253.0" y="207.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
