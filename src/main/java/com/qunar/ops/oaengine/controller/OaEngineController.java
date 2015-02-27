@@ -41,9 +41,6 @@ import org.joda.time.Days;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -85,7 +82,6 @@ import com.qunar.ops.oaengine.util.OAControllerUtils;
 import com.qunar.ops.oaengine.util.OAEngineConst;
 import com.qunar.ops.oaengine.util.QUtils;
 
-@Configuration
 @Controller
 public class OaEngineController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -117,8 +113,6 @@ public class OaEngineController {
 	private WorkflowManager workflowManager;
 	@Autowired
 	private EmployeeInfoService employeeInfoService;
-	@Value("${debug}")
-	String debug;
 	private String processKey = "oa_common";
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
