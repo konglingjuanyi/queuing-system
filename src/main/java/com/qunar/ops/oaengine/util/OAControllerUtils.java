@@ -2,13 +2,18 @@ package com.qunar.ops.oaengine.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Copyright @ 2014 OPS, Qunar Inc. (qunar.com)
@@ -177,6 +182,17 @@ public class OAControllerUtils {
             return "召回";
         } 
         return "";
+    }
+    
+    public static boolean isDebug(){
+    	try {
+    		Resource resource = new ClassPathResource("/oaengine.properties");
+			Properties props = PropertiesLoaderUtils.loadProperties(resource);
+			String debug = props.getProperty("debug", "false");
+			return "true".equals(debug)?true:false;
+		} catch (IOException e) {
+			return false;
+		}
     }
     
     

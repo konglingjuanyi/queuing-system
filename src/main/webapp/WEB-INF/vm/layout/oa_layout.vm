@@ -86,12 +86,20 @@
         <div class="navbar-header pull-right">
         	<span class="navbar-brand">
 						<small>
-							<input type="input" id="username"/><button onclick="changeuser()">切换用户</button>
 							<span id="name">xxx</span>
                            	<button onclick="logout();">退出</button>
                         </small>
 			</span>
         </div>
+        #if($debug)
+        <div class="navbar-header pull-right">
+        	<span class="navbar-brand">
+						<small>
+							<input type="input" id="username"/><button onclick="changeuser()">切换用户</button>
+                        </small>
+			</span>
+        </div>
+        #end
     </div>
 </div>
 

@@ -17,7 +17,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,24 +26,24 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.repository.Deployment;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellRangeAddress;
-import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,6 +85,7 @@ import com.qunar.ops.oaengine.util.OAControllerUtils;
 import com.qunar.ops.oaengine.util.OAEngineConst;
 import com.qunar.ops.oaengine.util.QUtils;
 
+@Configuration
 @Controller
 public class OaEngineController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -117,6 +117,8 @@ public class OaEngineController {
 	private WorkflowManager workflowManager;
 	@Autowired
 	private EmployeeInfoService employeeInfoService;
+	@Value("${debug}")
+	String debug;
 	private String processKey = "oa_common";
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -204,6 +206,7 @@ public class OaEngineController {
 	public ModelAndView welcom(HttpServletRequest request, String message) {
 		ModelAndView mav = new ModelAndView("/oa/index");
 		mav.addObject("message", message==null?"":message);
+		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;
 	}
 
@@ -225,6 +228,7 @@ public class OaEngineController {
 			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
+		mav.addObject("debug", OAControllerUtils.isDebug());
 		mav.addObject("loans", loans);
 		mav.addObject("formId", request.getParameter("formId")==null?"":request.getParameter("formId"));
 		mav.addObject("taskId", request.getParameter("taskId")==null?"":request.getParameter("taskId"));
@@ -249,6 +253,7 @@ public class OaEngineController {
 			logger.warn(e.getMessage());
 			e.printStackTrace();
 		}
+		mav.addObject("debug", OAControllerUtils.isDebug());
 		mav.addObject("loans", loans);
 		mav.addObject("formId", request.getParameter("formId"));
 		mav.addObject("taskId", request.getParameter("taskId"));
@@ -264,6 +269,7 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/apply_todo.html")
 	public ModelAndView myApplyTodo(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/apply_todo");
+		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;
 	}
 
@@ -276,20 +282,10 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/apply_history.html")
 	public ModelAndView myApplyHistory(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/apply_history");
+		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;
 	}
 	
-	/**
-	 * 我的申请，已经拒绝的页面
-	 * 
-	 * @param request
-	 * @return
-	@RequestMapping(value = "oa/apply_refuse.html")
-	public ModelAndView myApplyRefuse(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("oa/apply_refuse");
-		return mav;
-	}
-	 */
 
 	/**
 	 * 待审批
@@ -300,6 +296,7 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/approve_todo.html")
 	public ModelAndView approveTodo(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/approve_todo");
+		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;
 	}
 
@@ -312,6 +309,7 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/approve_history.html")
 	public ModelAndView approveHistory(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/approve_history");
+		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;
 	}
 
@@ -324,6 +322,7 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/draft.html")
 	public ModelAndView myDraft(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/draft");
+		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;
 	}
 	
@@ -338,6 +337,7 @@ public class OaEngineController {
 		String userId = QUtils.getUsername(request);
 		List<Delegation> users = delegationManager.findDelegationByMaster(userId);
 		ModelAndView mav = new ModelAndView("oa/delegation");
+		mav.addObject("debug", OAControllerUtils.isDebug());
 		mav.addObject("users", users);
 		return mav;
 	}
@@ -1308,8 +1308,8 @@ public class OaEngineController {
             file = File.createTempFile("日常报销", ".xls");
             FileOutputStream os = new FileOutputStream(file);
             wb.write(os);  
+            wb.close();
 		    os.close();
-            String filename = file.getName();  
             InputStream fis = new BufferedInputStream(new FileInputStream(file.getAbsolutePath()));  
             byte[] buffer = new byte[fis.available()];  
             fis.read(buffer);  

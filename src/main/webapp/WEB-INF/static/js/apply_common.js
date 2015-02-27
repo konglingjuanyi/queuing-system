@@ -53,7 +53,7 @@ function sendEmailToCandidate(id) {
     $.ajax({
         "contentType": "application/json; charset=utf-8",
         "type": "POST",
-        "url": "push_approve",
+        "url": "oa/push_approve",
         "data": JSON.stringify(params),
         "success": function (resp) {
             if (resp.errorCode == 0) {
