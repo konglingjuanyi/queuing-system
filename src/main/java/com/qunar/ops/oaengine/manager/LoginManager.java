@@ -1,9 +1,7 @@
 package com.qunar.ops.oaengine.manager;
 
 import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.KeyFactory;
@@ -32,7 +30,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.x509.RSAPublicKeyStructure;
+import org.bouncycastle.asn1.pkcs.RSAPublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -62,20 +60,6 @@ public class LoginManager {
 	}
 
 	public String getPemPublicKeyFromFile(String filename) throws Exception {
-		// File f = new File(filename);
-		// FileInputStream fis = new FileInputStream(f);
-		// DataInputStream dis = new DataInputStream(fis);
-		// byte[] keyBytes = new byte[(int) f.length()];
-		// dis.readFully(keyBytes);
-		// dis.close();
-		//
-		// String temp = new String(keyBytes);
-		// String publicKeyPEM =
-		// temp.replace("-----BEGIN RSA PUBLIC KEY-----\n", "");
-		// publicKeyPEM = publicKeyPEM.replace("-----END RSA PUBLIC KEY-----",
-		// "");
-		// return publicKeyPEM;
-		
 		String key = "MIIBCgKCAQEAsxwv22xBMRR+dWMiwfHKe64MvTJv729YhmoYDbvNexTdNH3hZZqy"
 				+ "UMIFeXIWauMFz+JTiaBIXzoAeCItmTcvdeYUTUfgggqL2iz+q3mN4MADkQiIJWjV"
 				+ "Av52L17L6guRpfzgUTaiDTOSnphIxVfOumklUxuw21LA2KEb4cVjRYIHqqS+J/sD"
@@ -83,22 +67,6 @@ public class LoginManager {
 				+ "J68jgo0l1ZAQIXNSSrV8blsbZxuRzhQhWb35boODApqwBO3n9YQ2DnRhceM5Rfyn"
 				+ "lneN6VAceM+BuahI4ym2QG2wMNSZJrh6bQIDAQAB";
 		return key;
-	}
-
-	public String getPemPrivateKeyFromFile(String filename) throws Exception {
-		File f = new File(filename);
-		FileInputStream fis = new FileInputStream(f);
-		DataInputStream dis = new DataInputStream(fis);
-		byte[] keyBytes = new byte[(int) f.length()];
-		dis.readFully(keyBytes);
-		dis.close();
-
-		String temp = new String(keyBytes);
-		String privateKeyPEM = temp.replace(
-				"-----BEGIN RSA PRIVATE KEY-----\n", "");
-		privateKeyPEM = privateKeyPEM.replace("-----END RSA PRIVATE KEY-----",
-				"");
-		return privateKeyPEM;
 	}
 
 	public String post_invoke(String username, String url, byte[] fileContent) {
@@ -176,18 +144,17 @@ public class LoginManager {
 		return rsaCipher.doFinal(message);
 	}
 
-	public static PublicKey getRSAPublicKeyFromString(String apiKey)
-			throws Exception {
-		KeyFactory keyFactory = KeyFactory.getInstance("RSA", new BouncyCastleProvider());
+	public static PublicKey getRSAPublicKeyFromString(String apiKey) throws Exception {
+		//KeyFactory keyFactory = KeyFactory.getInstance("RSA", new BouncyCastleProvider());
 		byte[] publicKeyBytes = Base64.decodeBase64(apiKey.getBytes("UTF-8"));
 		ByteArrayInputStream bAIS = new ByteArrayInputStream(publicKeyBytes);
 		ASN1InputStream ais = new ASN1InputStream(bAIS);
 		Object asnObject = ais.readObject();
+		ais.close();
 		ASN1Sequence sequence = (ASN1Sequence) asnObject;
-		RSAPublicKeyStructure rsaPubStructure = new RSAPublicKeyStructure(sequence);
-		RSAPublicKeySpec keySpec = new RSAPublicKeySpec(
-				rsaPubStructure.getModulus(),
-				rsaPubStructure.getPublicExponent());
+		RSAPublicKey rsaPubStructure = RSAPublicKey.getInstance(sequence);
+		//RSAPublicKeyStructure rsaPubStructure = new RSAPublicKeyStructure(sequence);
+		RSAPublicKeySpec keySpec = new RSAPublicKeySpec(rsaPubStructure.getModulus(), rsaPubStructure.getPublicExponent());
 		KeyFactory keyFact = KeyFactory.getInstance("RSA", new BouncyCastleProvider());
 		return keyFact.generatePublic(keySpec);
 	}
