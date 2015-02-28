@@ -176,6 +176,10 @@ public class OaEngineController {
 				EmployeeInfo employeeInfo;
 				try {
 					employeeInfo = ioaEngineService.getEmployeeInfo(username);
+					String departmentI = employeeInfo.getDepartmentI();
+					if("技术部".equals(departmentI)){
+						return welcom(request, "本系统目前只对技术部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
+					}
 				} catch (RemoteAccessException e) {
 					e.printStackTrace();
 					logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
