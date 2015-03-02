@@ -20,8 +20,10 @@
 			</td>
 		</tr>
 		<tr>
-			<td height="40px"
-				style="font-size: 23px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >Qunar 日常报销系统</td>
+			<td height="40px" style="font-size: 23px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >Qunar 日常报销系统</td>
+		</tr>
+		<tr>
+			<td height="30px" style="color:red; font-size: 20px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >[请使用Chrome或FireFox浏览器]</td>
 		</tr>
 		<tr>
 			<td style="font-size: 15px; text-align: center;">
