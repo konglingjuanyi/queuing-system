@@ -143,9 +143,9 @@
     <rabbit:connection-factory id="connectionFactory" addresses="${mqHost}" username="${mqUsername}" password="${mqPassword}"/>
     <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"/>
     <rabbit:admin connection-factory="connectionFactory"/>
-    <rabbit:queue name="oa.sendmail"/>
+    <rabbit:queue name="oa.sendmail.dev"/>
     <rabbit:listener-container connection-factory="connectionFactory">
-    	<rabbit:listener queues="oa.sendmail" ref="mailSender" method="senderMail"/>
+    	<rabbit:listener queues="oa.sendmail.dev" ref="mailSender" method="senderMail"/>
 	</rabbit:listener-container>
 	<bean id="mailSender" class=" com.qunar.ops.oaengine.service.MailSenderService"/>
 	
