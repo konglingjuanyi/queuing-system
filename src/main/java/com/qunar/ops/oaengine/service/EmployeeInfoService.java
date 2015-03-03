@@ -96,8 +96,7 @@ public class EmployeeInfoService {
 	 */
 	public EmployeeInfo getEmployeeBankInfo(String userId) throws RemoteAccessException {
 		EmployeeInfo eInfo = new EmployeeInfo();
-		return eInfo;
-		/*
+		//return eInfo;
 		String apiUrl = backyardBankUrl + "?require=bank_info&rtx_id=" + userId;
 		JSONObject json = invokeGetApi(apiUrl);
 		if (json.containsKey("err_id")) {
@@ -111,7 +110,6 @@ public class EmployeeInfoService {
 			eInfo.setBankCity((String)data.get("bank_city"));
 		}
 		return eInfo;
-		*/
 	}
 	
 	/**
