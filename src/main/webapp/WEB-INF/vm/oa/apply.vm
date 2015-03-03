@@ -42,7 +42,10 @@
                 </tr>
                 <tr>
                     <td>是否直接向VP汇报</td>
-                    <td><input name="Fruit" type="radio" checked="false" style="width:25% !important" value="是"/><span style="width:10%">是</span><input name="Fruit" type="radio" checked="true" style="width:25% !important" value="否"/><span style="width:10%">否</<span></td>
+                    <td>
+                    <input name="Fruit" type="radio" checked="false" style="width:10% !important" value="是"/>是
+                    <input name="Fruit" type="radio" checked="true" style="width:10% !important" value="否"/>否
+                    </td>
                     <td>银行卡号</td>
                     <td><input type="text" readonly="readonly"></td>
                     <td>银行开户行</td>
