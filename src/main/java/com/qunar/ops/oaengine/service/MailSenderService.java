@@ -39,8 +39,8 @@ public class MailSenderService {
 	String starttls;
 	@Value("${debug}")
 	String debug;
-	@Autowired
-	private RabbitTemplate amqpTemplate;
+	//@Autowired
+	//private RabbitTemplate amqpTemplate;
 	
 	/**
 	 * 发送邮件
@@ -98,7 +98,8 @@ public class MailSenderService {
 			mail.setFrom(from);
 			mail.setTo(to);
 			mail.setTitle(title);
-			this.amqpTemplate.convertAndSend("oa.sendmail", mail);
+			this.senderMail(mail);
+			//this.amqpTemplate.convertAndSend("oa.sendmail", mail);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();

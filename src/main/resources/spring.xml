@@ -138,7 +138,7 @@
 	    </property>
 	</bean>  -->
 
-	<!-- Rabbit MQ -->
+	<!-- Rabbit MQ 
     <bean id="jsonMessageConverter"  class="com.qunar.ops.oaengine.mq.FastJsonMessageConverter"></bean>
     <rabbit:connection-factory id="connectionFactory" addresses="${mqHost}" username="${mqUsername}" password="${mqPassword}"/>
     <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"/>
@@ -148,5 +148,5 @@
     	<rabbit:listener queues="oa.sendmail.dev" ref="mailSender" method="senderMail"/>
 	</rabbit:listener-container>
 	<bean id="mailSender" class=" com.qunar.ops.oaengine.service.MailSenderService"/>
-	
+	-->
 </beans>
