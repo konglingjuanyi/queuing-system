@@ -1616,8 +1616,7 @@ public class OaEngineController {
 			return BaseResult.getSuccessResult("没有获取到审批候选人");
 		}
 		List<ApprovalInfo> infos = approveInfos.getInfos();
-		int size = infos.size();
-		ApprovalInfo approvalInfo = infos.get(size - 1);
+		ApprovalInfo approvalInfo = infos.get(0);
 		Long approveId = approvalInfo.getId();
 		String candidates = ioaEngineService.reminder(processKey, userId,
 				formId, String.valueOf(approveId), "催办");
