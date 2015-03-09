@@ -16,12 +16,12 @@ import javax.mail.internet.MimeMessage;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import com.lmax.disruptor.EventFactory;
+import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.qunar.ops.oaengine.domain.QMail;
@@ -51,12 +51,20 @@ public class MailSenderService {
 	private Disruptor<MailEvent> disruptor;
 	private RingBuffer<MailEvent> ringBuffer;
 	
+	@SuppressWarnings("unchecked")
 	@PostConstruct  
 	public void init(){
 		this.executor = Executors.newCachedThreadPool();
         int bufferSize = 1024;
         this.disruptor = new Disruptor<MailEvent>(MailEvent.EVENT_FACTORY, bufferSize, executor);
-        this.disruptor.handleEventsWith(new MailSenderHandler(this));
+        //this.disruptor.handleEventsWith(new MailSenderHandler(this));
+        this.disruptor.handleEventsWith(new EventHandler<MailEvent>(){
+			@Override
+			public void onEvent(final MailEvent event, final long sequence, final boolean endOfBatch) throws Exception {
+				if(event.getMail() == null) return;
+				senderMail(event.getMail());
+			}
+        });
         disruptor.start();
         this.ringBuffer = disruptor.getRingBuffer();
 	}
@@ -128,4 +136,23 @@ public class MailSenderService {
 			e.printStackTrace();
 		}
 	}
+	
+	public static class MailEvent {
+		private QMail mail;
+		
+		public QMail getMail(){
+			return this.mail;
+		}
+		
+		public void setMail(QMail mail){
+			this.mail = mail;
+		}
+		
+		public static EventFactory<MailEvent> EVENT_FACTORY = new EventFactory<MailEvent>() {
+			public MailEvent newInstance() {
+				return new MailEvent();
+			}
+		};
+	}
 }
+
