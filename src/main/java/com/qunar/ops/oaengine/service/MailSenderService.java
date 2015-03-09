@@ -1,7 +1,10 @@
 package com.qunar.ops.oaengine.service;
 
 import java.util.Properties;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
+import javax.annotation.PostConstruct;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -19,6 +22,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
+import com.lmax.disruptor.RingBuffer;
+import com.lmax.disruptor.dsl.Disruptor;
 import com.qunar.ops.oaengine.domain.QMail;
 
 @Component
@@ -41,6 +46,20 @@ public class MailSenderService {
 	String debug;
 	//@Autowired
 	//private RabbitTemplate amqpTemplate;
+	
+	private Executor executor;
+	private Disruptor<MailEvent> disruptor;
+	private RingBuffer<MailEvent> ringBuffer;
+	
+	@PostConstruct  
+	public void init(){
+		this.executor = Executors.newCachedThreadPool();
+        int bufferSize = 1024;
+        this.disruptor = new Disruptor<MailEvent>(MailEvent.EVENT_FACTORY, bufferSize, executor);
+        this.disruptor.handleEventsWith(new MailSenderHandler(this));
+        disruptor.start();
+        this.ringBuffer = disruptor.getRingBuffer();
+	}
 	
 	/**
 	 * 发送邮件
@@ -98,8 +117,12 @@ public class MailSenderService {
 			mail.setFrom(from);
 			mail.setTo(to);
 			mail.setTitle(title);
-			this.senderMail(mail);
+			//this.senderMail(mail);
 			//this.amqpTemplate.convertAndSend("oa.sendmail", mail);
+			long sequence = ringBuffer.next(); 
+	        MailEvent event = ringBuffer.get(sequence); 
+	        event.setMail(mail);
+	        ringBuffer.publish(sequence);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
