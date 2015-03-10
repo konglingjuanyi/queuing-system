@@ -12,7 +12,6 @@
 		src="https://qsso.corp.qunar.com/lib/qsso-auth.js?t=1">
 	</script>
 	<div align="center" style="margin-top:8%">
-	<form method="post" action="oa/login">
 	<table style="text-align: center;">
 		<tr>
 			<td colspan="2" height="100px">
@@ -20,33 +19,18 @@
 			</td>
 		</tr>
 		<tr>
-			<td height="40px" style="font-size: 23px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >Qunar 日常报销系统</td>
-		</tr>
-		<tr>
 			<td height="30px" style="color:red; font-size: 20px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >[请使用Chrome或FireFox浏览器]</td>
 		</tr>
 		<tr>
-			<td style="font-size: 15px; text-align: center;">
-				$message
-			</td>
+			<td height="40px"
+				style="font-size: 23px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >工作流引擎控制台</td>
 		</tr>
 		<tr>
 			<td style="font-size: 15px; text-align: center;">
-				用户名:<input type="text" name="userName">
-			</td>
-		</tr>
-		<tr>
-			<td style="font-size: 15px; text-align: center;">
-				密&nbsp;&nbsp;码:<input type="password" name="password">
-			</td>
-		</tr>
-		<tr>
-			<td style="font-size: 15px; text-align: center;">
-				<input type="submit" value="登录">
+				<button id="qsso-login" class="qsso_button">QSSO登录</button>
 			</td>
 		</tr>
 	</table>
-	</form>
 	</div>
 	<script>
 		QSSO.attach('qsso-login', '$request.getContextPath()/oa/login');

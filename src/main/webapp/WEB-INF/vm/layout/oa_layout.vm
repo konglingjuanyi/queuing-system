@@ -214,10 +214,9 @@
 	
 	function logout(){
 		$.ajax({
-                contentType: "application/json; charset=utf-8",
-                url: "oa/logout",
-                type: "post",
-                data: {},
+                url: "https://qsso.corp.qunar.com/api/logout.php",
+                dataType:"jsonp",
+             	jsonp:"callback",
                 success: function (resp) {
                     alert("退出成功!");
                     delCookie("un");

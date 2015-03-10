@@ -2,12 +2,14 @@ package com.qunar.ops.oaengine.controller;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -29,6 +31,10 @@ import org.activiti.engine.TaskService;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -50,6 +56,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.qunar.ops.oaengine.exception.AgentAlreadyExistsException;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
@@ -166,7 +175,7 @@ public class OaEngineController {
 	 */
 	@RequestMapping(value = "oa/login")
 	public ModelAndView login(HttpServletRequest request, HttpServletResponse response2) {
-		
+		/*
 		String username = request.getParameter("userName");
 		String password = request.getParameter("password");
 		String login = null;
@@ -191,6 +200,41 @@ public class OaEngineController {
 				return myApplyTodo(request);
 			}
 		}
+		*/
+		String login = null;
+		HttpClient client = HttpClientBuilder.create().build();
+		String token = request.getParameter("token");
+		HttpGet method = new HttpGet(
+				"http://qsso.corp.qunar.com/api/verifytoken.php?token=" + token);
+		try {
+			HttpResponse response = client.execute(method);
+			BufferedReader rd = new BufferedReader(new InputStreamReader(
+					response.getEntity().getContent()));
+			StringBuffer result = new StringBuffer();
+			String line = "";
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+			}
+			JSONObject parseObject = JSON.parseObject(result.toString());
+			String ret = parseObject.getString("ret");
+			if (ret.equals("true")) {
+				String userId = parseObject.getJSONObject("data").getString("userId");
+				String adname = parseObject.getJSONObject("data").getJSONObject("userInfo").getString("ad_cn");
+				JSONArray dept = parseObject.getJSONObject("data").getJSONObject("userInfo").getJSONArray("dept");
+				String departmentI = dept.getString(0);
+				if(!"技术部".equals(departmentI) && !"财务部".equals(departmentI)){
+					return welcom(request, "本系统目前只对技术部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
+				}
+				QUtils.setUsername(response2, "un", userId, true);
+				QUtils.setUsername(response2, "name", adname, true);
+				QUtils.setUsername(response2, "test-userid", userId, false);
+				return myApplyTodo(request);
+			}
+		} catch (Exception e) {
+			logger.error("sso 验证失败", e);
+			login = "sso 验证失败" + e.getMessage();
+		}
+		
 		return welcom(request, login);
 	}
 
