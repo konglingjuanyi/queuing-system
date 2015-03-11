@@ -1305,14 +1305,14 @@ public class OaEngineController {
 			    String borrowInfo = info.getBorrowSN();
 			    String borrowSn = "";
 			    double borrowBillBalance = 0;
-			    if(borrowInfo != null)for(String _info : borrowInfo.split(";")){
+			    /*if(borrowInfo != null)for(String _info : borrowInfo.split(";")){
 			    	 String[] _tmpinfo = _info.split(",");
 			    	 borrowSn += _tmpinfo[0];
 			    	 String b = _tmpinfo[3];
 					if( NumberUtils.isNumber(b)){
 						borrowBillBalance += NumberUtils.toDouble(b);
 					}
-			    }
+			    }*/
 			    cell = row.createCell(13);  
 			    cell.setCellValue(borrowSn);
 			    cell = row.createCell(14);  
