@@ -331,10 +331,10 @@ public class DefaultOaEngineService implements IOAEngineService {
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, cname, formId, "pass", tr, memo);
 		if(tr.isFinished()){
-			this.form0114Manager.recordKeyOperation(userId, "cashier", formId);
+			this.form0114Manager.recordKeyOperation(cname+"("+userId+")", "cashier", formId);
 			this.form0114Manager.deleteFormInfo(userId, formId, Constants.PROC_END);
 		}else if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
-			this.form0114Manager.recordKeyOperation(userId, "check", formId);
+			this.form0114Manager.recordKeyOperation(cname+"("+userId+")", "check", formId);
 		}
 		return tr;
 	}
@@ -533,6 +533,17 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public FormInfoList historyList(String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize) {
 		return this.form0114Manager.historyList(userId, startTime, endTime, owner, pageNo, pageSize);
+	}
+
+	@Override
+	public FormInfoList search(String approveUser, String approveNo,
+			Date approvtStartTime, Date approveEndTime, String checkUser,
+			Date checkStartTime, Date checkEndTime, String payUser,
+			Date payStartTime, Date payEndTime, int pageNo, int pageSize) {
+		return this.form0114Manager.search(approveUser, approveNo,
+				approvtStartTime, approveEndTime, checkUser,
+				checkStartTime, checkEndTime, payUser,
+				payStartTime, payEndTime, pageNo, pageSize);
 	}
 
 }

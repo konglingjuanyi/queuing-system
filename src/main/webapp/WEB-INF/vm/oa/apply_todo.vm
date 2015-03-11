@@ -142,6 +142,10 @@
                 "sTitle": "操作",
                 "sWidth": 100,
                 "sClass": "center"
+            }, {
+                "sTitle": "流程图",
+                "sWidth": 100,
+                "sClass": "center"
             }];
         var wh = $(window).height();
         var sY = (wh - 100) + 'px';
@@ -265,7 +269,8 @@
             var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
             push = '<a href="javascript:void(0);" role="button" ' +
             'onclick="sendEmailToCandidate(\'' + needData[i][0] + '\')" class="green"><i class="icon-user">催办</i></a>';
-            aaData.push([checkbox, needData[i][0], needData[i][1], money.toFixed(2), map, push]);
+            var trace = '<a href="javascript:void(0);" role="button" onclick="trace(\'' + needData[i][0] + '\')" class="green">流程图</a>';
+            aaData.push([checkbox, needData[i][0], needData[i][1], money.toFixed(2), map, push, trace]);
         }
         return aaData;
     }
@@ -383,6 +388,10 @@
                         generateNoticeMsg('网络错误，请刷新后重试!'), 300);
             }
         });
+    }
+    
+    function trace(oid){
+    	window.open('oa/oa_common/'+oid+'/trace_pic.png', 'newwindow',   'height=600,   width=1200, toolbar=no,   menubar=no,   scrollbars=no,   resizable=no,location=n   o,   status=no') ;     
     }
 
 

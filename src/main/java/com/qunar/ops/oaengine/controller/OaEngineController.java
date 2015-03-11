@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,11 +24,16 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.HistoryService;
+import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.impl.context.Context;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.task.Task;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -48,6 +54,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -275,6 +282,25 @@ public class OaEngineController {
 		mav.addObject("formId", request.getParameter("formId")==null?"":request.getParameter("formId"));
 		mav.addObject("taskId", request.getParameter("taskId")==null?"":request.getParameter("taskId"));
 		mav.addObject("euid", request.getParameter("euid")==null?"":request.getParameter("euid"));
+		return mav;
+	}
+	
+	/**
+	 * 综合查询页面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/search.html")
+	public ModelAndView search(HttpServletRequest request) {
+		String userId = QUtils.getUsername(request);
+		boolean inGroups = this.groupManager.inGroups(new String[] {"fin_check", "cashier"}, userId);
+		ModelAndView mav = null;
+		if(inGroups){
+			mav = new ModelAndView("oa/search");
+		}else{
+			mav = new ModelAndView("oa/search");
+		}
 		return mav;
 	}
 
@@ -1444,6 +1470,149 @@ public class OaEngineController {
 		}
 		return BaseResult.getSuccessResult(dataResult);
 	}
+	
+	
+	/**
+	 * 综合查询
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/admin_search")
+	@ResponseBody
+	public BaseResult search(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
+		int pageSize = noSize[0];
+		int pageNo = noSize[1];
+		String startTime = vars.get("startTime");
+		String endTime = vars.get("endTime");
+		String approveUser = vars.get("approveUser");
+		String approveNo = vars.get("approveNo");
+		String checkStartTime = vars.get("checkStartTime");
+		String checkEndTime = vars.get("checkEndTime");
+		String checkUser = vars.get("checkUser");
+		String payStartTime = vars.get("payStartTime");
+		String payEndTime = vars.get("payEndTime");
+		String payUser = vars.get("payUser");
+		Date _startTime = null;
+		Date _endTime = null;
+		Date _checkStartTime = null;
+		Date _checkEndTime = null;
+		Date _payStartTime = null;
+		Date _payEndTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (endTime != null) {
+			try {
+				_endTime = sdf.parse(endTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (checkStartTime != null) {
+			try {
+				_checkStartTime = sdf.parse(checkStartTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (checkEndTime != null) {
+			try {
+				_checkEndTime = sdf.parse(checkEndTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (payStartTime != null) {
+			try {
+				_payStartTime = sdf.parse(payStartTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (payEndTime != null) {
+			try {
+				_payEndTime = sdf.parse(payEndTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+				return BaseResult.getErrorResult(
+						OAEngineConst.DATE_FORMAT_ERROR,
+						OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (OAControllerUtils.isNull(approveUser)) {
+			approveUser = null;
+		}
+		if (OAControllerUtils.isNull(approveNo)) {
+			approveNo = null;
+		}
+		if (OAControllerUtils.isNull(checkUser)) {
+			checkUser = null;
+		}
+		if (OAControllerUtils.isNull(payUser)) {
+			payUser = null;
+		}
+		FormInfoList formInfoList = null;
+		formInfoList = ioaEngineService.search(approveUser, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, pageNo, pageSize);
+		DataResult dataResult;
+		try {
+			dataResult = getAllTableInfos(formInfoList, userId, 6);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(OAEngineConst.ACL_LIMIT_ERROR,
+					OAEngineConst.ACL_LIMIT_ERROR_MSG);
+		}
+		return BaseResult.getSuccessResult(dataResult);
+	}
+	
+	/**
+	 * 获取员工姓名
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/find_employee", method = RequestMethod.GET)
+	@ResponseBody
+	public BaseResult findEmployee(HttpServletRequest request) {
+		String result[] = new String[] { "abc", "aaa", "bbb"};
+		return BaseResult.getSuccessResult(result);
+	}
 
 	/**
 	 * 批量完成任务
@@ -1791,6 +1960,43 @@ public class OaEngineController {
 	}
 	
 	/**
+	 * 流程任务跟踪图
+	 * 
+	 * @param processDefinitionId
+	 * @param processInstanceId
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "oa/{processKey}/{oid}/trace_pic.png")
+	public void readResource(@PathVariable("processKey") String processKey, @PathVariable("oid") String oid, HttpServletResponse response) throws Exception {
+		ProcessDefinition pd = repositoryService.createProcessDefinitionQuery()
+				.processDefinitionKey(processKey).latestVersion()
+				.singleResult();
+		BpmnModel bpmnModel = repositoryService.getBpmnModel(pd.getId());
+		List<Task> list = taskService.createTaskQuery().active().processInstanceBusinessKey(oid).list();
+		List<String> activeActivityIds = new ArrayList<String>();
+		for (Task task : list) {
+			activeActivityIds.add(task.getTaskDefinitionKey());
+		}
+		Context.setProcessEngineConfiguration(processEngine
+				.getProcessEngineConfiguration());
+		ProcessEngineConfiguration processEngineConfiguration = Context
+                .getProcessEngineConfiguration();
+		InputStream imageStream = processEngine.getProcessEngineConfiguration().getProcessDiagramGenerator().generateDiagram(
+				bpmnModel, "png", 
+				activeActivityIds,
+				Collections.<String>emptyList(), 
+				processEngineConfiguration.getActivityFontName(),
+				processEngine.getProcessEngineConfiguration().getLabelFontName(), 
+				null, 1.0);
+		byte[] b = new byte[1024];
+		int len;
+		while ((len = imageStream.read(b, 0, 1024)) != -1) {
+			response.getOutputStream().write(b, 0, len);
+		}
+	}
+	
+	/**
 	 * 审批信息
 	 * @param processKey
 	 * @param formId
@@ -1805,12 +2011,18 @@ public class OaEngineController {
 		List<ApprovalInfo> infos = approveInfos.getInfos();
 		int size = infos.size();
 		SimpleDateFormat tdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String[] result = new String[size * 6];
+		String[] result = new String[(size + 1) * 6];
 		int k = 0;
+		ApprovalInfo approveInfo = null;
+		if(size > 0){
+			approveInfo = infos.get(0);
+			result[k++] = "<b>当前审批节点: " + approveInfo.getNextTaskName() + "</b>";
+			result[k++] = "<b>审批人: " + approveInfo.getNextCandidate() + "</b>";
+			result[k++] = "";
+		}
 		for (int i = 0; i < size; i++) {
-			ApprovalInfo approveInfo = infos.get(i);
-			String type = OAControllerUtils.transformApproveEnToCh(approveInfo
-					.getManagerType());
+			approveInfo = infos.get(i);
+			String type = OAControllerUtils.transformApproveEnToCh(approveInfo.getManagerType());
 			if ("申请".equals(type)) {
 				result[k++] = "申请人: " + approveInfo.getApproveCname();
 				result[k++] = "申请时间: " + tdf.format(approveInfo.getTs());
@@ -1832,6 +2044,7 @@ public class OaEngineController {
 				result[k++] = "";
 			}
 		}
+		
 		return result;
 	}
 
@@ -2212,6 +2425,18 @@ public class OaEngineController {
 					String.valueOf(formInfo.getId()),
 					OAControllerUtils.dateToStrII(formInfo.getApplyDate()),
 					String.valueOf(formInfo.getMoneyAmount()) 
+					};
+		} else if (id == 6) {
+			tableInfo = new String[] { 
+					String.valueOf(formInfo.getId()),
+					formInfo.getApplyUser(),
+					OAControllerUtils.dateToStrII(formInfo.getApplyDate()),
+					formInfo.getFinancialSign(),
+					OAControllerUtils.dateToStrII(formInfo.getFinancialDate()),
+					formInfo.getCashierSign(),
+					OAControllerUtils.dateToStrII(formInfo.getCashierDate()),
+					String.valueOf(formInfo.getMoneyAmount()),
+					formInfo.getFinishedflag() == 0?"审批中":"已结束"
 					};
 		}
 		return tableInfo;

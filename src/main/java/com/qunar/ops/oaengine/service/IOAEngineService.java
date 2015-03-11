@@ -281,6 +281,15 @@ public interface IOAEngineService {
 	public FormInfoList historyList(String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize);
 	
 	
+	/**
+	 * 综合查询
+	 */
+	public FormInfoList search(String approveUser, String approveNo, Date approvtStartTime, Date approveEndTime, 
+			String checkUser,  Date checkStartTime, Date checkEndTime, 
+			String payUser,  Date payStartTime, Date payEndTime, 
+			int pageNo, int pageSize);
+	
+	
 	/****************************************************
 	 *  申请审批页面：
 	 *  角色：审批人

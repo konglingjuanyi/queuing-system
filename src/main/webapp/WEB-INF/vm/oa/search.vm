@@ -1,0 +1,354 @@
+#set($layout = "layout/oa_layout.vm")
+<style type="text/css">
+    td input {
+        width: 100%;
+        text-align: center;
+        color: red;
+        font-size: larger;
+    }
+
+    td {
+        text-align: center;
+    }
+
+
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="col-xs-9">
+        <span class="input-icon input-icon-right">
+            <input class="date" id="date-from" type="text" style="width: 186px" onclick="showTime()" placeholder="申请时间..."/>
+            <i class="icon-calendar green"></i>
+          	  到
+            <input class="date" id="date-to" type="text" style="width: 186px" onclick="showTime()" placeholder="申请时间..."/>
+            <i class="icon-calendar green"></i>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input id="approve-user" type="text" placeholder="申请人..." style="width: 100px"/>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input id="approve-no" type="text" placeholder="申请人编号..." style="width: 100px"/>
+        </span>
+        <br/>
+        <span class="input-icon input-icon-right">
+            <input class="date" id="check-from" type="text" style="width: 186px" onclick="showTime()" placeholder="报销审核时间..."/>
+            <i class="icon-calendar green"></i>
+          	  到
+            <input class="date" id="check-to" type="text" style="width: 186px" onclick="showTime()" placeholder="报销审核时间..."/>
+            <i class="icon-calendar green"></i>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input id="check-user" type="text" placeholder="报销审核人..." style="width: 100px"/>
+        </span>
+        <br/>
+        <span class="input-icon input-icon-right">
+            <input class="date" id="pay-from" type="text" style="width: 186px" onclick="showTime()" placeholder="出纳办理时间..."/>
+            <i class="icon-calendar green"></i>
+          	  到
+            <input class="date" id="pay-to" type="text" style="width: 186px" onclick="showTime()" placeholder="出纳办理时间..."/>
+            <i class="icon-calendar green"></i>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input id="pay-user" type="text" placeholder="出纳办理..." style="width: 100px"/>
+        </span>
+        <br/>
+            <button id="search"
+                    style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                    class="btn btn-minier btn-primary">
+                查询
+            </button>
+        </div>
+    </div>
+    <div class="col-xs-12">
+        <div class="col-xs-9">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue" style="">
+                    <h5 class="bigger lighter"><i class="icon-time"></i>综合查询</h5>
+                </div>
+                <div class="widget-body no-padding-top no-padding-left no-padding-right">
+                    <table id="approve_history"
+                           class="table table-striped table-bordered table-hover"></table>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xs-3">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue">
+                    <h5 class="bigger lighter"><i class="icon-bar-chart"></i>详细信息</h5>
+                </div>
+                <div class="widget-body">
+                    <div id="history-approve-details-list" class="widget-main"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dialog-confirm" class="hide">
+    <form class="form-horizontal">
+        <div id="edit-form">
+            <div id="edit_content" align="center">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="approve-result-dialog" class="hide"></div>
+<div id="reject-msg-dialog" class="hide"></div>
+<div id="approve-detail-dialog" class="hide"></div>
+<div id="approve-msg-dialog" class="hide"></div>
+
+<div id="common-notice-dialog" class="hide"></div>
+
+<script src="static/js/utils.js">
+</script>
+<script src="static/js/dialog_common.js">
+</script>
+<script src="static/js/all_common.js">
+</script>
+<script src="static/js/approve_common.js">
+</script>
+<script src="static/ace/js/jquery.dataTables.min.js">
+</script>
+<script src="static/ace/js/jquery.dataTables.bootstrap.js">
+</script>
+<script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
+
+<script language=JavaScript>
+
+
+
+    jQuery(function ($) {
+        window.edit_form = $("#edit-form").html();
+        $("#search").unbind("click");
+                $("#search").on("click", function (e) {
+                    showApproveTableInfo("oa/admin_search");
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+		});
+    });
+
+    function showApproveTableInfo(url) {
+        var ex = document.getElementById("approve_history");
+        if ($.fn.dataTable.fnIsDataTable(ex)) {
+            $(ex).dataTable().fnDestroy();
+        }
+        var aoColumns = [
+            {"sTitle": 'ID', "sClass": "center", "sWidth": 100},
+            {"sTitle": '金额', "sClass": "center", "sWidth": 250},
+            {"sTitle": '申请人', "sClass": "center", "sWidth": 200},
+            {"sTitle": '申请时间', "sClass": "center", "sWidth": 200},
+            {"sTitle": '报销审核人', "sClass": "center", "sWidth": 200},
+            {"sTitle": '报销审核时间', "sClass": "center", "sWidth": 200},
+            {"sTitle": '状态', "sClass": "center", "sWidth": 200},
+            {"sTitle": "报销详情", "sClass": "center", "sWidth": 150},
+            ];
+        var wh = $(window).height();
+        var sY = (wh - 100) + 'px';
+        var oTable = $(ex).dataTable({
+            "bFilter": false,
+            "bAutoWidth": true,
+            "bProcessing": false,
+            "bServerSide": true,
+            "sDom": 't<"row"<"col-sm-12"i>>',
+            "bSort": false,
+            "bScrollCollapse": true,
+            "iDisplayLength": 20,
+            "iDisplayStart": 0,
+            "aoColumns": aoColumns,
+            "sAjaxSource": "",
+            "bScrollInfinite": true,
+            "sScrollY": sY,
+            "fnServerData": function (sSource, aDataSet, fnCallback) {
+                var startDate = $.trim($('#date-from').val());
+                var endDate = $.trim($('#date-to').val());
+                var approveUser = $.trim($('#approve-user').val());
+                var approveNo = $.trim($('#approve-no').val());
+                var checkStartDate = $.trim($('#check-from').val());
+                var checkEndDate = $.trim($('#check-to').val());
+                var checkUser = $.trim($('#check-user').val());
+                var payStartDate = $.trim($('#pay-from').val());
+                var payEndDate = $.trim($('#pay-to').val());
+                var payUser = $.trim($('#pay-user').val());
+                var start = 0;
+                var length = 0;
+                for (var i = 0; i < aDataSet.length; i++) {
+                    if (aDataSet[i].name == 'iDisplayStart') {
+                        start = aDataSet[i].value;
+                    }
+                    if (aDataSet[i].name == 'iDisplayLength') {
+                        length = aDataSet[i].value;
+                    }
+                }
+                var vars = {};
+                vars["start"] = start;
+                vars["length"] = length;
+                if (startDate != '') {
+                    vars["startTime"] = startDate;
+                }
+                if (endDate != '') {
+                    vars["endTime"] = endDate;
+                }
+                if (approveUser != '') {
+                    vars["approveUser"] = approveUser;
+                }
+                if (approveNo != '') {
+                    vars["approveNo"] = approveNo;
+                }
+                if (checkStartDate != '') {
+                    vars["checkStartTime"] = checkStartDate;
+                }
+                if (checkEndDate != '') {
+                    vars["checkEndTime"] = checkEndDate;
+                }
+                if (checkUser != '') {
+                    vars["checkUser"] = checkUser;
+                }
+                if (payStartDate != '') {
+                    vars["payStartTime"] = payStartDate;
+                }
+                if (payEndDate != '') {
+                    vars["payEndTime"] = payEndDate;
+                }
+                if (payUser != '') {
+                    vars["payUser"] = payUser;
+                }
+                var params = {};
+                params["vars"] = vars;
+                $.ajax({
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "POST",
+                    "url": url,
+                    "data": JSON.stringify(params),
+                    "success": function (resp) {
+                        if (resp.errorCode == 0) {
+                            var data = resp.data;
+                            var iTotalRecords = data.count || 0;
+                            var iTotalDisplayRecords = iTotalRecords;
+                            var aaData = showTableInfo(data);
+                            data = {
+                                "aaData": aaData,
+                                "iTotalRecords": (iTotalRecords || 0),
+                                "iTotalDisplayRecords": (iTotalDisplayRecords || 0)
+                            };
+                            fnCallback(data);
+                        } else {
+                            showCommonNoticeDialog('失败', 'icon-warning-sign',
+                                    generateNoticeMsg(resp.errorMessage), 300);
+                        }
+                    },
+                    error: function () {
+                        showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                    }
+                });
+            },
+            "fnDrawCallback": function () {
+                if (!oTable) {
+                    return;
+                }
+
+                $("#search").unbind("click");
+                $("#search").on("click", function (e) {
+                    showApproveTableInfo("oa/admin_search");
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+                oTable.$('tr.row_selected').removeClass('row_selected');
+                oTable.$("tr").unbind('click');
+                oTable.$("tr").click({
+                    oTable: oTable
+                }, function (e) {
+                    if ($(this).hasClass('row_selected')) {
+                        $(this).removeClass('row_selected');
+                    }
+                    else {
+                        e.data.oTable.$('tr.row_selected').removeClass('row_selected');
+                        $(this).addClass('row_selected');
+                        var id = e.data.oTable.fnGetData(this)[0];
+                        showApproveHistoryDetailsList(id);
+
+                    }
+                });
+            },
+            fnInitComplete: function () {
+                $('#current-approve-table-select-all').prop('checked', false);
+                $('#current-approve-table-select-all').attr('checked', false);
+                toggleCheck(oTable);
+            }
+        })
+    }
+
+    function showTableInfo(data) {
+        var aaData = [];
+        var needData = data.tableInfos;
+        var d_len = needData.length;
+        for (var i = 0; i < d_len; i++) {
+            var money = parseFloat(needData[i][7]);
+            money /= 100;
+            var map = $.parseStr("<a href='javascript:void(0);' " +
+            "onclick='showEditDialog(%s,%s);'><i class='icon-link'></i></a>", needData[i][0]);
+            aaData.push([needData[i][0], money.toFixed(2), needData[i][1], needData[i][2], needData[i][3], needData[i][4], needData[i][8], map]);
+        }
+        return aaData;
+    }
+
+    function showTime() {
+        WdatePicker({dateFmt: 'yyyy-MM-dd'});
+    }
+    
+
+    function showApproveHistoryDetailsList(id) {
+        if (id == undefined || id == '') {
+            $("#history-approve-details-list").html('');
+            return;
+        }
+        var params = {
+            "vars": {
+                formId: id
+            }
+        };
+        $.ajax({
+            "contentType": "application/json; charset=utf-8",
+            "url": "oa/approve_info",
+            "type": "POST",
+            "data": JSON.stringify(params),
+            success: function (resp) {
+                if (resp.errorCode == 0) {
+                    if (resp.data.length != 0) {
+                        try {
+                            var details = resp.data;
+                            var html = '';
+                            //html += __generateDetailHtml('当前审批状态', 'icon-eye-open', ["审批完成"], true);
+                            html += __generateDetailHtml('审批历史', 'icon-book', details, true);
+                            $("#history-approve-details-list").html(html);
+                        } catch (e) {
+                        }
+                    } else {
+                        $("#history-approve-details-list").html('无详细信息');
+                    }
+                } else {
+                    $("#history-approve-details-list").html(resp.errorMessage);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                showCommonNoticeDialog('网络错误', 'icon-warning-sign',
+                        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+            }
+        })
+    }
+    function toggleCheck(oTable) {
+        $('input', oTable.fnGetNodes()).unbind("click");
+        $('input', oTable.fnGetNodes()).on("click", function () {
+            $(this).prop('checked', this.checked);
+            $(this).attr('checked', this.checked);
+        });
+        $('#current-approve-table-select-all').unbind("click");
+        $('#current-approve-table-select-all').on("click", function () {
+            $('input', oTable.fnGetNodes()).prop('checked', this.checked);
+            $('input', oTable.fnGetNodes()).attr('checked', this.checked);
+        });
+    }
+
+
+</script>
