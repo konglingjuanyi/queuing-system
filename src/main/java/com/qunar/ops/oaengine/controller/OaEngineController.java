@@ -738,6 +738,23 @@ public class OaEngineController {
 				logger.warn(e.getMessage());
 			}
 		}
+		if(formInfo.getId() != null){
+			FormInfo _info = null;
+			try {
+				_info = this.ioaEngineService.getFormInfo(null, null, ""+formInfo.getId());
+			} catch (FormNotFoundException e) {
+			}
+			if(_info == null){
+				String errorMsg = "没有任何报销内容";
+				logger.warn(errorMsg);
+				return BaseResult.getErrorResult(-1, errorMsg);
+			}
+			if(!this.groupManager.inGroups(new String[] {"fin_check"}, userId) && !userId.equals(_info.getStartMemberId())){
+				String errorMsg = "您无权修改此申请";
+				logger.warn(errorMsg);
+				return BaseResult.getErrorResult(-1, errorMsg);
+			}
+		}
 		if (flag) {
 			try {
 				if (formInfo.getId() != null) {
