@@ -16,48 +16,51 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="col-xs-9">
+        <form action="oa/search_export" method="post">
         <span class="input-icon input-icon-right">
-            <input class="date" id="date-from" type="text" style="width: 186px" onclick="showTime()" placeholder="申请时间..."/>
+            <input class="date" name="startTime" id="date-from" type="text" style="width: 186px" onclick="showTime()" placeholder="申请时间..."/>
             <i class="icon-calendar green"></i>
           	  到
-            <input class="date" id="date-to" type="text" style="width: 186px" onclick="showTime()" placeholder="申请时间..."/>
+            <input class="date" name="endTime" id="date-to" type="text" style="width: 186px" onclick="showTime()" placeholder="申请时间..."/>
             <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">
-            <input id="approve-user" type="text" placeholder="申请人..." style="width: 100px"/>
+            <input name="approveUser" id="approve-user" type="text" placeholder="申请人..." style="width: 100px"/>
         </span>
         <span class="input-icon input-icon-right">
-            <input id="approve-no" type="text" placeholder="申请人编号..." style="width: 100px"/>
+            <input name="approveNo" id="approve-no" type="text" placeholder="申请人编号..." style="width: 100px"/>
         </span>
         <br/>
         <span class="input-icon input-icon-right">
-            <input class="date" id="check-from" type="text" style="width: 186px" onclick="showTime()" placeholder="报销审核时间..."/>
+            <input class="date" name="checkStartTime" id="check-from" type="text" style="width: 186px" onclick="showTime()" placeholder="报销审核时间..."/>
             <i class="icon-calendar green"></i>
           	  到
-            <input class="date" id="check-to" type="text" style="width: 186px" onclick="showTime()" placeholder="报销审核时间..."/>
+            <input class="date"  name="checkEndTime" id="check-to" type="text" style="width: 186px" onclick="showTime()" placeholder="报销审核时间..."/>
             <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">
-            <input id="check-user" type="text" placeholder="报销审核人..." style="width: 100px"/>
+            <input name="checkUser" id="check-user" type="text" placeholder="报销审核人..." style="width: 100px"/>
         </span>
         <br/>
         <span class="input-icon input-icon-right">
-            <input class="date" id="pay-from" type="text" style="width: 186px" onclick="showTime()" placeholder="出纳办理时间..."/>
+            <input class="date" name="payStartTime" id="pay-from" type="text" style="width: 186px" onclick="showTime()" placeholder="出纳办理时间..."/>
             <i class="icon-calendar green"></i>
           	  到
-            <input class="date" id="pay-to" type="text" style="width: 186px" onclick="showTime()" placeholder="出纳办理时间..."/>
+            <input class="date" name="payEndTime" id="pay-to" type="text" style="width: 186px" onclick="showTime()" placeholder="出纳办理时间..."/>
             <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">
-            <input id="pay-user" type="text" placeholder="出纳办理..." style="width: 100px"/>
+            <input id="pay-user" name="payUser" type="text" placeholder="出纳办理..." style="width: 100px"/>
         </span>
         <br/>
-            <button id="search"
+            <input type="button" id="search"
                     style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
-                    class="btn btn-minier btn-primary">
-                查询
-            </button>
+                    class="btn btn-minier btn-primary" value="查询">
+            <input type="submit" id="export"
+                    style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                    class="btn btn-minier btn-primary" value="导出">
         </div>
+        </form>
     </div>
     <div class="col-xs-12">
         <div class="col-xs-9">

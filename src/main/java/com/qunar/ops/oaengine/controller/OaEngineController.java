@@ -296,10 +296,10 @@ public class OaEngineController {
 		String userId = QUtils.getUsername(request);
 		boolean inGroups = this.groupManager.inGroups(new String[] {"fin_check", "cashier"}, userId);
 		ModelAndView mav = null;
-		if(inGroups){
+		if(inGroups || OAControllerUtils.isDebug()){
 			mav = new ModelAndView("oa/search");
 		}else{
-			mav = new ModelAndView("oa/search");
+			mav = new ModelAndView("oa/forbidden");
 		}
 		return mav;
 	}
@@ -1598,6 +1598,306 @@ public class OaEngineController {
 					OAEngineConst.ACL_LIMIT_ERROR_MSG);
 		}
 		return BaseResult.getSuccessResult(dataResult);
+	}
+	
+	
+	/**
+	 * 综合查询导出
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/search_export")
+	public void searchExport(HttpServletRequest request, HttpServletResponse response) {
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		int pageSize = Integer.MAX_VALUE;
+		int pageNo = 0;
+		String startTime = request.getParameter("startTime");//vars.get("startTime");
+		String endTime = request.getParameter("endTime");//vars.get("endTime");
+		String approveUser = request.getParameter("approveUser");//vars.get("approveUser");
+		String approveNo = request.getParameter("approveNo");//vars.get("approveNo");
+		String checkStartTime = request.getParameter("checkStartTime");//vars.get("checkStartTime");
+		String checkEndTime = request.getParameter("checkEndTime");//vars.get("checkEndTime");
+		String checkUser = request.getParameter("checkUser");//vars.get("checkUser");
+		String payStartTime = request.getParameter("payStartTime");//vars.get("payStartTime");
+		String payEndTime = request.getParameter("payEndTime");//vars.get("payEndTime");
+		String payUser = request.getParameter("payUser");//vars.get("payUser");
+		Date _startTime = null;
+		Date _endTime = null;
+		Date _checkStartTime = null;
+		Date _checkEndTime = null;
+		Date _payStartTime = null;
+		Date _payEndTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (endTime != null) {
+			try {
+				_endTime = sdf.parse(endTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (checkStartTime != null) {
+			try {
+				_checkStartTime = sdf.parse(checkStartTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (checkEndTime != null) {
+			try {
+				_checkEndTime = sdf.parse(checkEndTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (payStartTime != null) {
+			try {
+				_payStartTime = sdf.parse(payStartTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (payEndTime != null) {
+			try {
+				_payEndTime = sdf.parse(payEndTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				logger.warn(OAEngineConst.DATE_FORMAT_ERROR_MSG);
+			}
+		}
+		if (OAControllerUtils.isNull(approveUser)) {
+			approveUser = null;
+		}
+		if (OAControllerUtils.isNull(approveNo)) {
+			approveNo = null;
+		}
+		if (OAControllerUtils.isNull(checkUser)) {
+			checkUser = null;
+		}
+		if (OAControllerUtils.isNull(payUser)) {
+			payUser = null;
+		}
+		FormInfoList formInfoList = null;
+		formInfoList = ioaEngineService.search(approveUser, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, pageNo, pageSize);
+
+		File file = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			HSSFWorkbook wb = new HSSFWorkbook();  
+			HSSFSheet sheet = wb.createSheet("sheet1");  
+			// 设置excel每列宽度  
+		    sheet.setColumnWidth(0, 4000);  
+		    sheet.setColumnWidth(1, 3500);  
+		  
+		    // 创建字体样式  
+		    HSSFFont font = wb.createFont();  
+		    font.setFontName("Verdana");  
+		    font.setBoldweight((short) 100);  
+		    font.setFontHeight((short) 300);  
+		  
+		    // 创建单元格样式  
+		    HSSFCellStyle style = wb.createCellStyle();  
+		    style.setAlignment(HSSFCellStyle.ALIGN_CENTER);  
+		    style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);  
+		  
+		    // 设置边框  
+		    //style.setBottomBorderColor(HSSFColor.RED.index);  
+		    //style.setBorderBottom(HSSFCellStyle.BORDER_THIN);  
+		    //style.setBorderLeft(HSSFCellStyle.BORDER_THIN);  
+		    //style.setBorderRight(HSSFCellStyle.BORDER_THIN);  
+		    //style.setBorderTop(HSSFCellStyle.BORDER_THIN);  
+		  
+		    style.setFont(font);// 设置字体 
+		    
+		    // 创建Excel的sheet的一行  
+		    HSSFRow row = sheet.createRow(0);  
+		    row.setHeight((short) 500);// 设定行的高度  
+		    // 创建一个Excel的单元格  
+		    HSSFCell cell = row.createCell(0);  
+		  
+		    // 合并单元格(startRow，endRow，startColumn，endColumn)  
+		    sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 27));  
+		  
+		    // 给Excel的单元格设置样式和赋值  
+		    cell.setCellStyle(style);  
+		    cell.setCellValue("日常费用报销查询-"+sdf.format(new Date()));  
+		  
+		    // 设置单元格内容格式  
+		    //HSSFCellStyle style1 = wb.createCellStyle(); 
+		  
+		    row = sheet.createRow(1);  
+		    cell = row.createCell(0);  
+		    cell.setCellValue("RTX_ID");
+		    cell = row.createCell(1);  
+		    cell.setCellValue("部门编号");
+		    cell = row.createCell(2);  
+		    cell.setCellValue("一级部门");
+		    cell = row.createCell(3);  
+		    cell.setCellValue("二级部门");
+		    cell = row.createCell(4);  
+		    cell.setCellValue("三级部门");
+		    cell = row.createCell(5);  
+		    cell.setCellValue("四级部门");
+		    cell = row.createCell(6);  
+		    cell.setCellValue("五级部门");
+		    cell = row.createCell(7);  
+		    cell.setCellValue("人员编号");
+		    cell = row.createCell(8);  
+		    cell.setCellValue("申请人");
+		    cell = row.createCell(9);  
+		    cell.setCellValue("银行卡号");
+		    cell = row.createCell(10);  
+		    cell.setCellValue("开户银行");
+		    cell = row.createCell(11);  
+		    cell.setCellValue("开户所在地");
+		    cell = row.createCell(12);  
+		    cell.setCellValue("申请日期");
+		    cell = row.createCell(13);  
+		    cell.setCellValue("借款单流水号");
+		    cell = row.createCell(14);  
+		    cell.setCellValue("是否有借款");
+		    cell = row.createCell(15);  
+		    cell.setCellValue("借款金额");
+		    cell = row.createCell(16);  
+		    cell.setCellValue("流水号");
+		    cell = row.createCell(17);  
+		    cell.setCellValue("金额总计");
+		    cell = row.createCell(18);  
+		    cell.setCellValue("通信费金额总计");
+		    cell = row.createCell(19);  
+		    cell.setCellValue("其他费用金额总计");
+		    cell = row.createCell(20);  
+		    cell.setCellValue("加班餐费金额总计");
+		    cell = row.createCell(21);  
+		    cell.setCellValue("招待费金额总计");
+		    cell = row.createCell(22);  
+		    cell.setCellValue("员工关系费金额总计");
+		    cell = row.createCell(23);  
+		    cell.setCellValue("出租车费金额总计");
+		    cell = row.createCell(24);  
+		    cell.setCellValue("财务确认总计");
+		    cell = row.createCell(25);  
+		    cell.setCellValue("财务审核签字时间");
+		    cell = row.createCell(26);  
+		    cell.setCellValue("出纳办理签字");
+		    cell = row.createCell(27);  
+		    cell.setCellValue("出纳办理签字日期");
+		    
+		    int no = 2;
+		    if(formInfoList != null)for(FormInfo info : formInfoList.getFormInfos()){
+		    	row = sheet.createRow(no);  
+			    cell = row.createCell(0);  
+			    cell.setCellValue(info.getStartMemberId());
+			    cell = row.createCell(1);  
+			    cell.setCellValue("");
+			    cell = row.createCell(2);  
+			    cell.setCellValue(info.getFirstDep());
+			    cell = row.createCell(3);  
+			    cell.setCellValue(info.getSecDep());
+			    cell = row.createCell(4);  
+			    cell.setCellValue(info.getThridDep());
+			    cell = row.createCell(5);  
+			    cell.setCellValue(info.getFourthDep());
+			    cell = row.createCell(6);  
+			    cell.setCellValue(info.getFivethDep());
+			    cell = row.createCell(7);  
+			    cell.setCellValue(info.getSerialNumber());
+			    cell = row.createCell(8);  
+			    cell.setCellValue(info.getApplyUser());
+			    cell = row.createCell(9);  
+			    cell.setCellValue(info.getBankNumber());
+			    cell = row.createCell(10);  
+			    cell.setCellValue(info.getBankName());
+			    cell = row.createCell(11);  
+			    cell.setCellValue(info.getBankCity());
+			    cell = row.createCell(12);  
+			    cell.setCellValue(sdf.format(info.getApplyDate()));
+			    String borrowInfo = info.getBorrowSN();
+			    String borrowSn = "";
+			    double borrowBillBalance = 0;
+			    /*if(borrowInfo != null)for(String _info : borrowInfo.split(";")){
+			    	 String[] _tmpinfo = _info.split(",");
+			    	 borrowSn += _tmpinfo[0];
+			    	 String b = _tmpinfo[3];
+					if( NumberUtils.isNumber(b)){
+						borrowBillBalance += NumberUtils.toDouble(b);
+					}
+			    }*/
+			    cell = row.createCell(13);  
+			    cell.setCellValue(borrowSn);
+			    cell = row.createCell(14);  
+			    cell.setCellValue(borrowSn.length()==0?"否":"有");
+			    cell = row.createCell(15);  
+			    cell.setCellValue(borrowBillBalance);
+			    cell = row.createCell(16);  
+			    cell.setCellValue(info.getId());
+			    cell = row.createCell(17);  
+			    cell.setCellValue(info.getSumFinancialNotify()==null?OAControllerUtils.centMoneyToYuan(info.getMoneyAmount()):OAControllerUtils.centMoneyToYuan(info.getSumFinancialNotify()));
+			    cell = row.createCell(18);  
+			    cell.setCellValue(info.getCommunicationNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getCommunicationCosts()):OAControllerUtils.centMoneyToYuan(info.getCommunicationNotifyAmount()));
+			    cell = row.createCell(19);  
+			    cell.setCellValue(info.getOtherNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getSumOtherAmount()):OAControllerUtils.centMoneyToYuan(info.getOtherNotifyAmount()));
+			    cell = row.createCell(20);  
+			    cell.setCellValue(info.getOvertimeMealsNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getSumOvertimeMealsAmount()):OAControllerUtils.centMoneyToYuan(info.getOvertimeMealsNotifyAmount()));
+			    cell = row.createCell(21);  
+			    cell.setCellValue(info.getHospitalityNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getSumHospitalityAmount()):OAControllerUtils.centMoneyToYuan(info.getHospitalityNotifyAmount()));
+			    cell = row.createCell(22);  
+			    cell.setCellValue(info.getEmRelationsFeesNotify()==null?OAControllerUtils.centMoneyToYuan(info.getSumEmployeeRelationsFees()):OAControllerUtils.centMoneyToYuan(info.getEmRelationsFeesNotify()));
+			    cell = row.createCell(23);  
+			    cell.setCellValue(info.getTaxiFaresNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getSumTaxiFaresAmount()):OAControllerUtils.centMoneyToYuan(info.getTaxiFaresNotifyAmount()));
+			    cell = row.createCell(24);  
+			    cell.setCellValue(info.getSumFinancialNotify()==null?"":OAControllerUtils.centMoneyToYuan(info.getSumFinancialNotify()));
+			    cell = row.createCell(25);  
+			    cell.setCellValue(info.getFinancialDate()==null?"":sdf.format(info.getFinancialDate()));
+			    cell = row.createCell(26);  
+			    cell.setCellValue(info.getCashierSign()==null?"":info.getCashierSign());
+			    cell = row.createCell(27);  
+			    cell.setCellValue(info.getCashierDate()==null?"":sdf.format(info.getCashierDate()));
+			    no++;
+		    }
+		    
+            file = File.createTempFile("日常报销", ".xls");
+            FileOutputStream os = new FileOutputStream(file);
+            wb.write(os);  
+            wb.close();
+		    os.close();
+            InputStream fis = new BufferedInputStream(new FileInputStream(file.getAbsolutePath()));  
+            byte[] buffer = new byte[fis.available()];  
+            fis.read(buffer);  
+            fis.close();  
+            response.reset();  
+            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode("日常费用报销查询-"+sdf.format(new Date()), "UTF-8"));  
+            response.addHeader("Content-Length", "" + file.length());  
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());  
+            response.setContentType("application/vnd.ms-excel;charset=utf-8");  
+            toClient.write(buffer);  
+            toClient.flush();  
+            toClient.close();
+		  
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			if(file != null){
+				file.deleteOnExit();
+			}
+		}
 	}
 	
 	/**
