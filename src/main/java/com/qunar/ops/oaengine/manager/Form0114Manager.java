@@ -529,10 +529,10 @@ public class Form0114Manager {
 			criteria.andField0008Like("%"+approveNo+"%");
 		}
 		if(approvtStartTime != null){
-			criteria.andStartDateGreaterThanOrEqualTo(approvtStartTime);
+			criteria.andField0005GreaterThanOrEqualTo(approvtStartTime);
 		}
 		if(approveEndTime != null){
-			criteria.andStartDateLessThanOrEqualTo(approvtStartTime);
+			criteria.andField0005LessThanOrEqualTo(approvtStartTime);
 		}
 		if(checkUser != null){
 			criteria.andField0072Like("%"+checkUser+"%");
