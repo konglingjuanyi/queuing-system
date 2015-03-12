@@ -770,7 +770,7 @@ public class OaEngineController {
 						OAEngineConst.MANAGER_LOCK_ERROR,
 						OAEngineConst.MANAGER_LOCK_ERROR_MSG);
 			}
-		} else {
+		} else {//暂存
 			if (formInfo.getId() != null) {
 				try {
 					ioaEngineService.updateFormInfo(processKey, userId, cname, ""
@@ -2370,8 +2370,7 @@ public class OaEngineController {
 		long taxiSum = 0;
 		long taxiRatify = 0;
 		for (int i = 0; i < len; i++) {
-			if ("".equals(table[i][0]) || "".equals(table[i][7])
-					|| "0".equals(table[i][7])) {
+			if ("".equals(table[i][0])) {
 				continue;
 			}
 			TaxiFaresInfo taxiInfo = new TaxiFaresInfo();
@@ -2409,8 +2408,7 @@ public class OaEngineController {
 		long overSum = 0;
 		long overRatify = 0;
 		for (int i = 0; i < len; i++) {
-			if ("".equals(table[i][0]) || "".equals(table[i][4])
-					|| "0".equals(table[i][4])) {
+			if ("".equals(table[i][0])) {
 				continue;
 			}
 			OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
