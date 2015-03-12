@@ -215,7 +215,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			to_mail[i] = to[i] + "@qunar.com";
 		}
 		String title = userId + "请你尽快处理日常报销，附言：" + memo;
-		mailSenderService.sender("oa@qunar.com", to_mail, null, title, title+"[http://baoxiao.qunar.corp.com]");
+		mailSenderService.sender("oa@qunar.com", to_mail, null, title, title+"[http://baoxiao.corp.qunar.com]");
 		return nextCandidates;
 	}
 
@@ -321,7 +321,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			mailSenderService.sender(form, new String[]{e.getKey()+"@qunar.com"}, null, e.getValue(), e.getValue());
 		}
 		for(Map.Entry<String, String> e : approver.entrySet()){
-			mailSenderService.sender(form, new String[]{e.getKey()+"@qunar.com"}, null, e.getValue(), e.getValue()+"[http://baoxiao.qunar.corp.com]");
+			mailSenderService.sender(form, new String[]{e.getKey()+"@qunar.com"}, null, e.getValue(), e.getValue()+"[http://baoxiao.corp.qunar.com]");
 		}
 		return errorFormIds;
 	}
@@ -493,7 +493,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			if(memo != null){
 				content += " 附言:"+memo;
 			}
-			mailSenderService.sender(form, to.toArray(new String[]{}), null, content, content+"[http://baoxiao.qunar.corp.com]");
+			mailSenderService.sender(form, to.toArray(new String[]{}), null, content, content+"[http://baoxiao.corp.qunar.com]");
 		}
 	}
 
