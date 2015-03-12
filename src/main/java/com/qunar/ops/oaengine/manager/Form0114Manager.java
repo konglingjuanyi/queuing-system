@@ -532,7 +532,7 @@ public class Form0114Manager {
 			criteria.andField0005GreaterThanOrEqualTo(approvtStartTime);
 		}
 		if(approveEndTime != null){
-			criteria.andField0005LessThanOrEqualTo(approvtStartTime);
+			criteria.andField0005LessThanOrEqualTo(approveEndTime);
 		}
 		if(checkUser != null){
 			criteria.andField0072Like("%"+checkUser+"%");
