@@ -513,74 +513,201 @@ public class Form0114Manager {
 	public FormInfoList search(String approveUser, String approveNo,
 			Date approvtStartTime, Date approveEndTime, String checkUser,
 			Date checkStartTime, Date checkEndTime, String payUser,
-			Date payStartTime, Date payEndTime, int pageNo, int pageSize) {
+			Date payStartTime, Date payEndTime, String status, int pageNo, int pageSize) {
 		
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
 		
 		FormInfoList formInfoList = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
-		Formmain0114Example example = new Formmain0114Example();
-		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
-		if(approveUser != null){
-			criteria.andStartMemberIdLike("%"+approveUser+"%");
+		
+		if("doing".equals(status)){
+			Formmain0114Example example = new Formmain0114Example();
+			com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+			if(approveUser != null){
+				criteria.andStartMemberIdLike("%"+approveUser+"%");
+			}
+			if(approveNo != null){
+				criteria.andField0008Like("%"+approveNo+"%");
+			}
+			if(approvtStartTime != null){
+				criteria.andField0005GreaterThanOrEqualTo(approvtStartTime);
+			}
+			if(approveEndTime != null){
+				criteria.andField0005LessThanOrEqualTo(approveEndTime);
+			}
+			if(checkUser != null){
+				criteria.andField0072Like("%"+checkUser+"%");
+			}
+			if(checkStartTime != null){
+				criteria.andField0073GreaterThanOrEqualTo(checkStartTime);
+			}
+			if(checkEndTime != null){
+				criteria.andField0073LessThanOrEqualTo(checkEndTime);
+			}
+			if(payUser != null){
+				criteria.andField0028Like("%"+payUser+"%");
+			}
+			if(payStartTime != null){
+				criteria.andField0029GreaterThanOrEqualTo(payStartTime);
+			}
+			if(payEndTime != null){
+				criteria.andField0029LessThanOrEqualTo(payEndTime);
+			}
+			int count = formmain0114Mapper.countByExample(example);
+			example.setOffset((pageNo - 1) * pageSize);
+			example.setLimit(pageSize);
+			example.setOrderByClause("id desc");
+			List<Formmain0114> formmain0114s = formmain0114Mapper.selectByExample(example);
+			FormInfo formInfo;
+			for(int i = 0; i < formmain0114s.size(); i++){
+				formInfo = new FormInfo();
+				BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+				
+				Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+				formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+						.get("overtimeMealsInfos"));
+				formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+						.get("hospitalityInfos"));
+				formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+						.get("otherCostsInfos"));
+				formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+						.get("employeeRelationsFeesInfos"));
+				formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+						.get("taxiFaresInfos"));
+				
+				formInfos.add(formInfo);
+			}
+			formInfoList.setCount(count);
+			formInfoList.setPageSize(pageSize);
+			formInfoList.setPageNo(pageNo);
+			formInfoList.setFormInfos(formInfos);
 		}
-		if(approveNo != null){
-			criteria.andField0008Like("%"+approveNo+"%");
+		
+		if("doing".equals(status)){
+			Formmain0114Example example = new Formmain0114Example();
+			com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
+			if(approveUser != null){
+				criteria.andStartMemberIdLike("%"+approveUser+"%");
+			}
+			if(approveNo != null){
+				criteria.andField0008Like("%"+approveNo+"%");
+			}
+			if(approvtStartTime != null){
+				criteria.andField0005GreaterThanOrEqualTo(approvtStartTime);
+			}
+			if(approveEndTime != null){
+				criteria.andField0005LessThanOrEqualTo(approveEndTime);
+			}
+			if(checkUser != null){
+				criteria.andField0072Like("%"+checkUser+"%");
+			}
+			if(checkStartTime != null){
+				criteria.andField0073GreaterThanOrEqualTo(checkStartTime);
+			}
+			if(checkEndTime != null){
+				criteria.andField0073LessThanOrEqualTo(checkEndTime);
+			}
+			if(payUser != null){
+				criteria.andField0028Like("%"+payUser+"%");
+			}
+			if(payStartTime != null){
+				criteria.andField0029GreaterThanOrEqualTo(payStartTime);
+			}
+			if(payEndTime != null){
+				criteria.andField0029LessThanOrEqualTo(payEndTime);
+			}
+			int count = formmain0114Mapper.countByExample(example);
+			example.setOffset((pageNo - 1) * pageSize);
+			example.setLimit(pageSize);
+			example.setOrderByClause("id desc");
+			List<Formmain0114> formmain0114s = formmain0114Mapper.selectByExample(example);
+			FormInfo formInfo;
+			for(int i = 0; i < formmain0114s.size(); i++){
+				formInfo = new FormInfo();
+				BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+				
+				Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+				formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+						.get("overtimeMealsInfos"));
+				formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+						.get("hospitalityInfos"));
+				formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+						.get("otherCostsInfos"));
+				formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+						.get("employeeRelationsFeesInfos"));
+				formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+						.get("taxiFaresInfos"));
+				
+				formInfos.add(formInfo);
+			}
+			formInfoList.setCount(count);
+			formInfoList.setPageSize(pageSize);
+			formInfoList.setPageNo(pageNo);
+			formInfoList.setFormInfos(formInfos);
 		}
-		if(approvtStartTime != null){
-			criteria.andField0005GreaterThanOrEqualTo(approvtStartTime);
+		if("done".equals(status)){
+			Formmain0114HistoryExample example = new Formmain0114HistoryExample();
+			com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria criteria = example.createCriteria();
+			if(approveUser != null){
+				criteria.andStartMemberIdLike("%"+approveUser+"%");
+			}
+			if(approveNo != null){
+				criteria.andField0008Like("%"+approveNo+"%");
+			}
+			if(approvtStartTime != null){
+				criteria.andField0005GreaterThanOrEqualTo(approvtStartTime);
+			}
+			if(approveEndTime != null){
+				criteria.andField0005LessThanOrEqualTo(approveEndTime);
+			}
+			if(checkUser != null){
+				criteria.andField0072Like("%"+checkUser+"%");
+			}
+			if(checkStartTime != null){
+				criteria.andField0073GreaterThanOrEqualTo(checkStartTime);
+			}
+			if(checkEndTime != null){
+				criteria.andField0073LessThanOrEqualTo(checkEndTime);
+			}
+			if(payUser != null){
+				criteria.andField0028Like("%"+payUser+"%");
+			}
+			if(payStartTime != null){
+				criteria.andField0029GreaterThanOrEqualTo(payStartTime);
+			}
+			if(payEndTime != null){
+				criteria.andField0029LessThanOrEqualTo(payEndTime);
+			}
+			int count = formmain0114HistoryMapper.countByExample(example);
+			example.setOffset((pageNo - 1) * pageSize);
+			example.setLimit(pageSize);
+			example.setOrderByClause("id desc");
+			List<Formmain0114History> formmain0114s = formmain0114HistoryMapper.selectByExample(example);
+			FormInfo formInfo;
+			for(int i = 0; i < formmain0114s.size(); i++){
+				formInfo = new FormInfo();
+				BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+				
+				Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+				formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+						.get("overtimeMealsInfos"));
+				formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+						.get("hospitalityInfos"));
+				formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+						.get("otherCostsInfos"));
+				formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+						.get("employeeRelationsFeesInfos"));
+				formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+						.get("taxiFaresInfos"));
+				
+				formInfos.add(formInfo);
+			}
+			formInfoList.setCount(count);
+			formInfoList.setPageSize(pageSize);
+			formInfoList.setPageNo(pageNo);
+			formInfoList.setFormInfos(formInfos);
 		}
-		if(approveEndTime != null){
-			criteria.andField0005LessThanOrEqualTo(approveEndTime);
-		}
-		if(checkUser != null){
-			criteria.andField0072Like("%"+checkUser+"%");
-		}
-		if(checkStartTime != null){
-			criteria.andField0073GreaterThanOrEqualTo(checkStartTime);
-		}
-		if(checkEndTime != null){
-			criteria.andField0073LessThanOrEqualTo(checkEndTime);
-		}
-		if(payUser != null){
-			criteria.andField0028Like("%"+payUser+"%");
-		}
-		if(payStartTime != null){
-			criteria.andField0029GreaterThanOrEqualTo(payStartTime);
-		}
-		if(payEndTime != null){
-			criteria.andField0029LessThanOrEqualTo(payEndTime);
-		}
-		int count = formmain0114Mapper.countByExample(example);
-
-		example.setOffset((pageNo - 1) * pageSize);
-		example.setLimit(pageSize);
-		example.setOrderByClause("id desc");
-		List<Formmain0114> formmain0114s = formmain0114Mapper.selectByExample(example);
-		FormInfo formInfo;
-		for(int i = 0; i < formmain0114s.size(); i++){
-			formInfo = new FormInfo();
-			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
-			
-			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
-			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
-					.get("overtimeMealsInfos"));
-			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
-					.get("hospitalityInfos"));
-			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
-					.get("otherCostsInfos"));
-			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
-					.get("employeeRelationsFeesInfos"));
-			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
-					.get("taxiFaresInfos"));
-			
-			formInfos.add(formInfo);
-		}
-		formInfoList.setCount(count);
-		formInfoList.setPageSize(pageSize);
-		formInfoList.setPageNo(pageNo);
-		formInfoList.setFormInfos(formInfos);
 		return formInfoList;
 	}
 	

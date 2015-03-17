@@ -539,11 +539,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 	public FormInfoList search(String approveUser, String approveNo,
 			Date approvtStartTime, Date approveEndTime, String checkUser,
 			Date checkStartTime, Date checkEndTime, String payUser,
-			Date payStartTime, Date payEndTime, int pageNo, int pageSize) {
+			Date payStartTime, Date payEndTime, String status, int pageNo, int pageSize) {
 		return this.form0114Manager.search(approveUser, approveNo,
 				approvtStartTime, approveEndTime, checkUser,
 				checkStartTime, checkEndTime, payUser,
-				payStartTime, payEndTime, pageNo, pageSize);
+				payStartTime, payEndTime, status, pageNo, pageSize);
 	}
 
 }

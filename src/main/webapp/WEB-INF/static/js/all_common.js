@@ -142,7 +142,7 @@ function tableZeroNameDic() {
 function tableHeadForm(headName) {
     var tableHead = '';
     tableHead += '<div style="border:solid 1px; background-color: #f0f0f0;text-align: center;">';
-    tableHead += $.parseStr('<span style="font-size:18px">%s</span>', headName);
+    tableHead += $.parseStr('<span style="font-size:18px"><b>%s</b></span>', headName);
     tableHead += '</div>';
     return tableHead;
 }

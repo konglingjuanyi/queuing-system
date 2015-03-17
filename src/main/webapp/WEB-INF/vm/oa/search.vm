@@ -53,6 +53,13 @@
             <input id="pay-user" name="payUser" type="text" placeholder="出纳办理..." style="width: 100px"/>
         </span>
         <br/>
+        <span class="input-icon input-icon-right">
+        	<select name="status" id="status">
+        	<option value="doing">未完成</option>
+        	<option value="done">已完成</option>
+        	</select>
+        </span>
+        <br/>
             <input type="button" id="search"
                     style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
                     class="btn btn-minier btn-primary" value="查询">
@@ -174,6 +181,7 @@
                 var payStartDate = $.trim($('#pay-from').val());
                 var payEndDate = $.trim($('#pay-to').val());
                 var payUser = $.trim($('#pay-user').val());
+                var status = $.trim($('#status').val());
                 var start = 0;
                 var length = 0;
                 for (var i = 0; i < aDataSet.length; i++) {
@@ -217,6 +225,7 @@
                 if (payUser != '') {
                     vars["payUser"] = payUser;
                 }
+                vars["status"] = status;
                 var params = {};
                 params["vars"] = vars;
                 $.ajax({

@@ -882,9 +882,17 @@ public class OaEngineController {
 		String[] approveInfo;
 		try {
 			formInfo = ioaEngineService.getFormInfo(processKey, userId, formId);
+			if(formInfo == null){
+				logger.warn(userId+"没有找到申请："+formId);
+				return BaseResult.getErrorResult(-1, "申请未找到");
+			} 
+			if(!this.groupManager.inGroups(new String[] {"fin_check", "fin_check_mdd" }, userId) 
+					&& !userId.equals(formInfo.getStartMemberId())){
+				logger.warn(userId+"无权查看"+formInfo.getStartMemberId()+"申请");
+				return BaseResult.getErrorResult(-1, "您无权查看此申请");
+			}
 			approveInfo = this._getApproveInfo(processKey, formId);
 		} catch (FormNotFoundException e) {
-			e.printStackTrace();
 			logger.error(e.getMessage());
 			return BaseResult.getErrorResult(OAEngineConst.FORM_NOT_FOUND_ERROR, OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
 		}
@@ -1348,14 +1356,14 @@ public class OaEngineController {
 			    String borrowInfo = info.getBorrowSN();
 			    String borrowSn = "";
 			    double borrowBillBalance = 0;
-			    /*if(borrowInfo != null)for(String _info : borrowInfo.split(";")){
+			    if(borrowInfo != null && borrowInfo.length() > 0)for(String _info : borrowInfo.split(";")){
 			    	 String[] _tmpinfo = _info.split(",");
 			    	 borrowSn += _tmpinfo[0];
 			    	 String b = _tmpinfo[3];
 					if( NumberUtils.isNumber(b)){
 						borrowBillBalance += NumberUtils.toDouble(b);
 					}
-			    }*/
+			    }
 			    cell = row.createCell(13);  
 			    cell.setCellValue(borrowSn);
 			    cell = row.createCell(14);  
@@ -1519,6 +1527,7 @@ public class OaEngineController {
 		String payStartTime = vars.get("payStartTime");
 		String payEndTime = vars.get("payEndTime");
 		String payUser = vars.get("payUser");
+		String status = vars.get("status");
 		Date _startTime = null;
 		Date _endTime = null;
 		Date _checkStartTime = null;
@@ -1604,7 +1613,7 @@ public class OaEngineController {
 			payUser = null;
 		}
 		FormInfoList formInfoList = null;
-		formInfoList = ioaEngineService.search(approveUser, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, pageNo, pageSize);
+		formInfoList = ioaEngineService.search(approveUser, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, status, pageNo, pageSize);
 		DataResult dataResult;
 		try {
 			dataResult = getAllTableInfos(formInfoList, userId, 6);
@@ -1633,16 +1642,17 @@ public class OaEngineController {
 		}
 		int pageSize = Integer.MAX_VALUE;
 		int pageNo = 0;
-		String startTime = request.getParameter("startTime");//vars.get("startTime");
-		String endTime = request.getParameter("endTime");//vars.get("endTime");
-		String approveUser = request.getParameter("approveUser");//vars.get("approveUser");
-		String approveNo = request.getParameter("approveNo");//vars.get("approveNo");
-		String checkStartTime = request.getParameter("checkStartTime");//vars.get("checkStartTime");
-		String checkEndTime = request.getParameter("checkEndTime");//vars.get("checkEndTime");
-		String checkUser = request.getParameter("checkUser");//vars.get("checkUser");
-		String payStartTime = request.getParameter("payStartTime");//vars.get("payStartTime");
-		String payEndTime = request.getParameter("payEndTime");//vars.get("payEndTime");
-		String payUser = request.getParameter("payUser");//vars.get("payUser");
+		String startTime = request.getParameter("startTime");
+		String endTime = request.getParameter("endTime");
+		String approveUser = request.getParameter("approveUser");
+		String approveNo = request.getParameter("approveNo");
+		String checkStartTime = request.getParameter("checkStartTime");
+		String checkEndTime = request.getParameter("checkEndTime");
+		String checkUser = request.getParameter("checkUser");
+		String payStartTime = request.getParameter("payStartTime");
+		String payEndTime = request.getParameter("payEndTime");
+		String payUser = request.getParameter("payUser");
+		String status = request.getParameter("status");
 		Date _startTime = null;
 		Date _endTime = null;
 		Date _checkStartTime = null;
@@ -1710,7 +1720,7 @@ public class OaEngineController {
 			payUser = null;
 		}
 		FormInfoList formInfoList = null;
-		formInfoList = ioaEngineService.search(approveUser, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, pageNo, pageSize);
+		formInfoList = ioaEngineService.search(approveUser, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, status, pageNo, pageSize);
 
 		File file = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -2742,6 +2752,18 @@ public class OaEngineController {
 					String.valueOf(formInfo.getMoneyAmount()) 
 					};
 		} else if (id == 6) {
+			String stat = "审批中";
+			if(formInfo.getFinishedflag() == 1){
+				stat = "已完成";
+			}else if(formInfo.getFinishedflag() == 3){
+				stat = "主动删除";
+			}else if(formInfo.getFinishedflag() == 5){
+				stat = "草稿";
+			}else if(formInfo.getFinishedflag() == 6){
+				stat = "被拒绝";
+			}else if(formInfo.getFinishedflag() == 7){
+				stat = "主动取消";
+			}
 			tableInfo = new String[] { 
 					String.valueOf(formInfo.getId()),
 					formInfo.getApplyUser(),
@@ -2751,7 +2773,7 @@ public class OaEngineController {
 					formInfo.getCashierSign(),
 					OAControllerUtils.dateToStrII(formInfo.getCashierDate()),
 					String.valueOf(formInfo.getMoneyAmount()),
-					formInfo.getFinishedflag() == 0?"审批中":"已结束"
+					stat
 					};
 		}
 		return tableInfo;
