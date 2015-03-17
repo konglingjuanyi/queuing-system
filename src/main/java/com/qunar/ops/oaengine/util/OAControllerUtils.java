@@ -54,6 +54,22 @@ public class OAControllerUtils {
         double sMoney = (double) money / 100;
         return ndf.format(sMoney);
     }
+    
+    public static float centMoneyToYuanII(Long money) {
+        if (money == null) {
+            return 0;
+        }
+        try{
+	        DecimalFormat ndf = new DecimalFormat("##0.00");
+	        double sMoney = (double) money / 100;
+	        //return Float.valueOf(ndf.format(sMoney));
+	        BigDecimal b = new BigDecimal(Float.valueOf(ndf.format(sMoney))); 
+	        return b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue(); 
+	        
+        }catch(Exception e){
+        	return 0;
+        }
+    }
 
     /**
      * 将页面传递过来的值转为人民币单位分
@@ -75,6 +91,8 @@ public class OAControllerUtils {
         	throw new NumberFormatException("数字格式错误！");
         }
     }
+    
+
 
     /**
      * 将获取到的workHour转为BigDecimal

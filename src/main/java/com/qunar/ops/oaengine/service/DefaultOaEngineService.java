@@ -40,6 +40,7 @@ import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
 import com.qunar.ops.oaengine.util.Constants;
+import com.qunar.ops.oaengine.util.OAControllerUtils;
 
 
 
@@ -60,6 +61,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private MailSenderService mailSenderService;
 	@Autowired
 	private EmployeeInfoService employeeInfoService;
+	@Autowired
+	private PaymentService paymentService;
 
 	
 	@Override
@@ -331,8 +334,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, cname, formId, "pass", tr, memo);
 		if(tr.isFinished()){
-			this.form0114Manager.recordKeyOperation(cname+"("+userId+")", "cashier", formId);
+			this.form0114Manager.recordKeyOperation("出纳(出纳)", "cashier", formId);
 			this.form0114Manager.deleteFormInfo(userId, formId, Constants.PROC_END);
+			//if(!OAControllerUtils.isDebug()){
+				paymentService.payment(formId);
+			//}
 		}else if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
 			this.form0114Manager.recordKeyOperation(cname+"("+userId+")", "check", formId);
 		}

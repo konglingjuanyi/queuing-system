@@ -85,6 +85,7 @@ public class GroupManager {
 		return infos;
 	}
 	
+	
 	@Read
 	public boolean inGroups(String[] groupKeys, String userId){
 		GroupMemberExample ge = new GroupMemberExample();
