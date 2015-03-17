@@ -886,11 +886,11 @@ public class OaEngineController {
 				logger.warn(userId+"没有找到申请："+formId);
 				return BaseResult.getErrorResult(-1, "申请未找到");
 			} 
-			if(!this.groupManager.inGroups(new String[] {"fin_check", "fin_check_mdd" }, userId) 
+			/*if(!this.groupManager.inGroups(new String[] {"fin_check", "fin_check_mdd" }, userId) 
 					&& !userId.equals(formInfo.getStartMemberId())){
 				logger.warn(userId+"无权查看"+formInfo.getStartMemberId()+"申请");
 				return BaseResult.getErrorResult(-1, "您无权查看此申请");
-			}
+			}*/
 			approveInfo = this._getApproveInfo(processKey, formId);
 		} catch (FormNotFoundException e) {
 			logger.error(e.getMessage());
