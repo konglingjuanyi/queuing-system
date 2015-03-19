@@ -211,7 +211,9 @@ function table6BodyForm(vars) {
 }
 
 function table0BodyForm(table0, vars) {
+	var date = new Date();
     var form = '';
+    form += tableHeadForm("金额:"+vars["ratify"]+" 日常报销单 ("+table0[0][0]+"-"+date.pattern("yyyy-MM-dd hh:mm:ss")+")");
     form += tableHeadForm("个人基本信息");
     form += '<table id="table" frame="vsides" rules="all" style="width: 1067px;">';
     var list1 = ["申请人", "人员编号", "申请日期"];
