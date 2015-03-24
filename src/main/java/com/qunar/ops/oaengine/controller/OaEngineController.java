@@ -2343,9 +2343,11 @@ public class OaEngineController {
 		ApprovalInfo approveInfo = null;
 		if(size > 0){
 			approveInfo = infos.get(0);
-			result[k++] = "<b>当前审批节点: " + approveInfo.getNextTaskName() + "</b>";
-			result[k++] = "<b>审批人: " + approveInfo.getNextCandidate() + "</b>";
-			result[k++] = "";
+			if(approveInfo.getNextTaskId() != null){
+				result[k++] = "<b>当前审批节点: " + approveInfo.getNextTaskName() + "</b>";
+				result[k++] = "<b>审批人: " + approveInfo.getNextCandidate() + "</b>";
+				result[k++] = "";
+			}
 		}
 		for (int i = 0; i < size; i++) {
 			approveInfo = infos.get(i);

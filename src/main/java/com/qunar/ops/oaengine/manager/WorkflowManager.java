@@ -116,7 +116,7 @@ public class WorkflowManager {
 		if(owner != null){
 			query.processVariableValueLike("cname", "%"+owner+"%");
 		}
-		
+		query.orderByTaskCreateTime().desc();
 		long count = query.count();
 		List<Task> tasks = query.listPage((pageNo - 1) * pageSize, pageSize);
 		ListInfo<TaskInfo> infos = new ListInfo<TaskInfo>();

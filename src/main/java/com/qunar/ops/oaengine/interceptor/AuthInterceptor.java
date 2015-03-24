@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.qunar.ops.oaengine.util.QUtils;
+
 public class AuthInterceptor implements HandlerInterceptor {
 	
 	@Override
@@ -14,7 +16,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		if(request.getRequestURI().endsWith("index.html") || request.getRequestURI().endsWith("login")) {
 			return true;
 		}
-		String userId = (String)request.getSession().getAttribute("USER_ID");
+		String userId = QUtils.getAdmin(request);//(String)request.getSession().getAttribute("USER_ID");
 		if(userId != null) return true;
 		response.sendRedirect(request.getContextPath()+"/admin/index.html");
 		return false;

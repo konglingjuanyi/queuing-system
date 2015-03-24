@@ -115,6 +115,24 @@ public class QUtils {
 		return null;
 	}
 	
+	public static String getAdmin(HttpServletRequest request){
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null)for(Cookie cookie : cookies){
+			if("ADMIN_ID".equals(cookie.getName())){
+				String name = cookie.getValue();
+				if(name == null || name.length() == 0) return null;
+				name = decrypt(name, "qunar-opsdev-1qaz2wsx-123456");
+				try {
+					return URLDecoder.decode(name, "utf-8");
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+	
+	
 	public static String setUsername(HttpServletResponse response, String name, String value, boolean encrypt){
 		if(value != null){
 			try {

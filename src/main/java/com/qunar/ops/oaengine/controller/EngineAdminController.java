@@ -38,6 +38,7 @@ import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
 import com.qunar.ops.oaengine.result.BaseResult;
 import com.qunar.ops.oaengine.result.CommonRequest;
 import com.qunar.ops.oaengine.util.OAEngineConst;
+import com.qunar.ops.oaengine.util.QUtils;
 
 @Controller
 public class EngineAdminController {
@@ -68,7 +69,7 @@ public class EngineAdminController {
 	 * @return
 	 */
 	@RequestMapping(value = "/admin/login")
-	public String login(HttpServletRequest request) {
+	public String login(HttpServletRequest request, HttpServletResponse response2) {
 		HttpClient client = HttpClientBuilder.create().build();
 		String token = request.getParameter("token");
 		HttpGet method = new HttpGet(
@@ -89,7 +90,8 @@ public class EngineAdminController {
 				if(!isAdmin(userId)){
 					return "redirect:/admin/index.html";
 				}
-				request.getSession().setAttribute("USER_ID", userId);
+				//request.getSession().setAttribute("USER_ID", userId);
+				QUtils.setUsername(response2, "ADMIN_ID", userId, true);
 			} else {
 				return "redirect:/admin/index.html";
 			}

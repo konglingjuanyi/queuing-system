@@ -487,7 +487,7 @@ public class Form0114Manager {
 
 		e.setOffset((pageNo - 1) * pageSize);
 		e.setLimit(pageSize);
-		e.setOrderByClause("form_id desc");
+		e.setOrderByClause("ts desc");
 		List<FormApproveLog> logs = formApproveLogMapper.selectDistinctFromIds(e);
 		for(int i = 0; i < logs.size(); i++){
 			FormInfo formInfo = null;

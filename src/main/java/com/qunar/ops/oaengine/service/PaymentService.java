@@ -3,6 +3,7 @@ package com.qunar.ops.oaengine.service;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
@@ -46,72 +47,74 @@ public class PaymentService {
 		if(info == null) return;
 		
 		PaymentInfo paymentInfo = new PaymentInfo();
-		paymentInfo.setInvoice_category(1);
-		paymentInfo.setInvoice_type(3);
-		paymentInfo.setInvoice_date(sdf.format(info.getField0005()));
-		paymentInfo.setBill_id(info.getOid());
-		paymentInfo.setBill_no(info.getOid());
-		paymentInfo.setAmount(OAControllerUtils.centMoneyToYuanII(info.getField0069()));
-		paymentInfo.setInvoice_date(sdf.format(info.getField0029()));
-		paymentInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0069()));
-		paymentInfo.setRtx_id(info.getStartMemberId());
-		paymentInfo.setRtx_name(info.getField0004());
+		paymentInfo.setInvoiceCategory(1);
+		paymentInfo.setInvoiceType(3);
+		paymentInfo.setInvoiceDate(info.getField0005().getTime());
+		paymentInfo.setBillId(info.getOid());
+		paymentInfo.setAmount(OAControllerUtils.centMoneyToYuan(info.getField0069()));
+		//paymentInfo.setFinishDate(sdf.format(info.getField0029()));
+		paymentInfo.setFinishDate(new Date().getTime());
+		//paymentInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0069()));
+		paymentInfo.setRtxId(info.getStartMemberId());
+		paymentInfo.setRtxName(info.getField0004());
 		
-		String dep = info.getField0001()+","+info.getField0002()+","+info.getField0003()+","+info.getField0009()+","+info.getField0100();
+		String dep = info.getField0001()+"."+info.getField0002()+"."+info.getField0003()+"."+info.getField0009()+"."+info.getField0100();
 		
 		SubPaymentInfo taxiInfo = new SubPaymentInfo();
-		taxiInfo.setExpense_type(110);
-		taxiInfo.setAmount(OAControllerUtils.centMoneyToYuanII(info.getField0068()));
-		taxiInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0068()));
-		taxiInfo.setBill_id(info.getOid());
-		taxiInfo.setDepartment_code(dep);
-		paymentInfo.getSubInfos().add(taxiInfo);
-		
-		SubPaymentInfo overInfo = new SubPaymentInfo();
-		overInfo.setExpense_type(112);
-		overInfo.setAmount(OAControllerUtils.centMoneyToYuanII(info.getField0065()));
-		overInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0065()));
-		overInfo.setBill_id(info.getOid());
-		overInfo.setDepartment_code(dep);
-		paymentInfo.getSubInfos().add(overInfo);
-		
-		SubPaymentInfo hosInfo = new SubPaymentInfo();
-		hosInfo.setExpense_type(113);
-		hosInfo.setAmount(OAControllerUtils.centMoneyToYuanII(info.getField0066()));
-		hosInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0066()));
-		hosInfo.setBill_id(info.getOid());
-		hosInfo.setDepartment_code(dep);
-		paymentInfo.getSubInfos().add(hosInfo);
-		
-		SubPaymentInfo otherInfo = new SubPaymentInfo();
-		otherInfo.setExpense_type(115);
-		otherInfo.setAmount(OAControllerUtils.centMoneyToYuanII(info.getField0070()));
-		otherInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0070()));
-		otherInfo.setBill_id(info.getOid());
-		otherInfo.setDepartment_code(dep);
-		paymentInfo.getSubInfos().add(otherInfo);
-		
-		SubPaymentInfo employInfo = new SubPaymentInfo();
-		employInfo.setExpense_type(114);
-		employInfo.setAmount(OAControllerUtils.centMoneyToYuanII(info.getField0067()));
-		employInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0067()));
-		employInfo.setBill_id(info.getOid());
-		employInfo.setDepartment_code(dep);
-		paymentInfo.getSubInfos().add(employInfo);
+		taxiInfo.setExpenseType(4);
+		taxiInfo.setAmount(OAControllerUtils.centMoneyToYuan(info.getField0068()));
+		taxiInfo.setDepartmentCode(dep);
+		taxiInfo.setBillId(info.getOid());
+		paymentInfo.getBillDetail().add(taxiInfo);
 		
 		SubPaymentInfo commInfo = new SubPaymentInfo();
-		commInfo.setExpense_type(111);
-		commInfo.setAmount(OAControllerUtils.centMoneyToYuanII(info.getField0099()));
-		commInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0099()));
-		commInfo.setBill_id(info.getOid());
-		commInfo.setDepartment_code(dep);
-		paymentInfo.getSubInfos().add(commInfo);
+		commInfo.setExpenseType(5);
+		commInfo.setAmount(OAControllerUtils.centMoneyToYuan(info.getField0099()));
+		commInfo.setDepartmentCode(dep);
+		commInfo.setBillId(info.getOid());
+		paymentInfo.getBillDetail().add(commInfo);
+		
+		SubPaymentInfo overInfo = new SubPaymentInfo();
+		overInfo.setExpenseType(6);
+		overInfo.setAmount(OAControllerUtils.centMoneyToYuan(info.getField0065()));
+		overInfo.setDepartmentCode(dep);
+		overInfo.setBillId(info.getOid());
+		paymentInfo.getBillDetail().add(overInfo);
+		
+		SubPaymentInfo hosInfo = new SubPaymentInfo();
+		hosInfo.setExpenseType(7);
+		hosInfo.setAmount(OAControllerUtils.centMoneyToYuan(info.getField0066()));
+		hosInfo.setDepartmentCode(dep);
+		hosInfo.setBillId(info.getOid());
+		paymentInfo.getBillDetail().add(hosInfo);
+		
+		SubPaymentInfo employInfo = new SubPaymentInfo();
+		employInfo.setExpenseType(8);
+		employInfo.setAmount(OAControllerUtils.centMoneyToYuan(info.getField0067()));
+		employInfo.setDepartmentCode(dep);
+		employInfo.setBillId(info.getOid());
+		paymentInfo.getBillDetail().add(employInfo);
+		
+		SubPaymentInfo otherInfo = new SubPaymentInfo();
+		otherInfo.setExpenseType(9);
+		otherInfo.setAmount(OAControllerUtils.centMoneyToYuan(info.getField0070()));
+		otherInfo.setDepartmentCode(dep);
+		otherInfo.setBillId(info.getOid());
+		paymentInfo.getBillDetail().add(otherInfo);
 		
 		try {
-			this.invokePostApi(this.qssUrl, paymentInfo);
+			JSONObject ret = this.invokePostApi(this.qssUrl, paymentInfo);
+			if(!ret.getBoolean("ret")){
+				logger.error("调用qss支付接口错误："+ret.getString("errmsg")+" id:"+formId);
+			}else{
+				logger.warn("调用qss支付接口成功");
+			}
 		} catch (RemoteAccessException e) {
 			e.printStackTrace();
-			logger.error("调用qss支付接口错误："+e.getMessage());
+			logger.error("调用qss支付接口失败："+e.getMessage()+" id:"+formId);
+		}catch (Exception e) {
+			e.printStackTrace();
+			logger.error("调用qss支付接口失败："+e.getMessage()+" id:"+formId);
 		}
 	}
 	
@@ -163,122 +166,100 @@ public class PaymentService {
 	
 	
 	class PaymentInfo{
-		private int invoice_category;
-		private int invoice_type;
-		private String invoice_date;
-		private String bill_id;
-		private String bill_no;
-		private float amount;
-		private String finish_date;
-		private float deduction_amount;
-		private String rtx_id;
-		private String rtx_name;
-		private List<SubPaymentInfo> subInfos = new ArrayList<PaymentService.SubPaymentInfo>();
-		public int getInvoice_category() {
-			return invoice_category;
+		private int invoiceCategory;
+		private int invoiceType;
+		private long invoiceDate;
+		private String billId;
+		private String amount;
+		private long finishDate;
+		private String rtxId;
+		private String rtxName;
+		private List<SubPaymentInfo> billDetail = new ArrayList<PaymentService.SubPaymentInfo>();
+		public int getInvoiceCategory() {
+			return invoiceCategory;
 		}
-		public void setInvoice_category(int invoice_category) {
-			this.invoice_category = invoice_category;
+		public void setInvoiceCategory(int invoiceCategory) {
+			this.invoiceCategory = invoiceCategory;
 		}
-		public int getInvoice_type() {
-			return invoice_type;
+		public int getInvoiceType() {
+			return invoiceType;
 		}
-		public void setInvoice_type(int invoice_type) {
-			this.invoice_type = invoice_type;
+		public void setInvoiceType(int invoiceType) {
+			this.invoiceType = invoiceType;
 		}
-		public String getInvoice_date() {
-			return invoice_date;
+		public long getInvoiceDate() {
+			return invoiceDate;
 		}
-		public void setInvoice_date(String invoice_date) {
-			this.invoice_date = invoice_date;
+		public void setInvoiceDate(long invoiceDate) {
+			this.invoiceDate = invoiceDate;
 		}
-		public String getBill_id() {
-			return bill_id;
+		public String getBillId() {
+			return billId;
 		}
-		public void setBill_id(String bill_id) {
-			this.bill_id = bill_id;
+		public void setBillId(String billId) {
+			this.billId = billId;
 		}
-		public String getBill_no() {
-			return bill_no;
-		}
-		public void setBill_no(String bill_no) {
-			this.bill_no = bill_no;
-		}
-		public float getAmount() {
+		public String getAmount() {
 			return amount;
 		}
-		public void setAmount(float amount) {
+		public void setAmount(String amount) {
 			this.amount = amount;
 		}
-		public String getFinish_date() {
-			return finish_date;
+		public long getFinishDate() {
+			return finishDate;
 		}
-		public void setFinish_date(String finish_date) {
-			this.finish_date = finish_date;
+		public void setFinishDate(long finishDate) {
+			this.finishDate = finishDate;
 		}
-		public float getDeduction_amount() {
-			return deduction_amount;
+		public String getRtxId() {
+			return rtxId;
 		}
-		public void setDeduction_amount(float deduction_amount) {
-			this.deduction_amount = deduction_amount;
+		public void setRtxId(String rtxId) {
+			this.rtxId = rtxId;
 		}
-		public String getRtx_id() {
-			return rtx_id;
+		public String getRtxName() {
+			return rtxName;
 		}
-		public void setRtx_id(String rtx_id) {
-			this.rtx_id = rtx_id;
+		public void setRtxName(String rtxName) {
+			this.rtxName = rtxName;
 		}
-		public String getRtx_name() {
-			return rtx_name;
+		public List<SubPaymentInfo> getBillDetail() {
+			return billDetail;
 		}
-		public void setRtx_name(String rtx_name) {
-			this.rtx_name = rtx_name;
+		public void setBillDetail(List<SubPaymentInfo> billDetail) {
+			this.billDetail = billDetail;
 		}
-		public List<SubPaymentInfo> getSubInfos() {
-			return subInfos;
-		}
-		public void setSubInfos(List<SubPaymentInfo> subInfos) {
-			this.subInfos = subInfos;
-		}
-		
 		
 	}
 	
 	class SubPaymentInfo{
-		private int expense_type;
-		private float amount;
-		private float deduction_amount;
-		private String bill_id;
-		private String department_code;
-		public int getExpense_type() {
-			return expense_type;
+		private int expenseType;
+		private String amount;
+		private String departmentCode;
+		private String billId;
+		public int getExpenseType() {
+			return expenseType;
 		}
-		public void setExpense_type(int expense_type) {
-			this.expense_type = expense_type;
+		public void setExpenseType(int expenseType) {
+			this.expenseType = expenseType;
 		}
-		public float getAmount() {
+		public String getAmount() {
 			return amount;
 		}
-		public void setAmount(float amount) {
+		public void setAmount(String amount) {
 			this.amount = amount;
 		}
-		public float getDeduction_amount() {
-			return deduction_amount;
+		public String getDepartmentCode() {
+			return departmentCode;
 		}
-		public void setDeduction_amount(float deduction_amount) {
-			this.deduction_amount = deduction_amount;
+		public void setDepartmentCode(String departmentCode) {
+			this.departmentCode = departmentCode;
 		}
-		public String getBill_id() {
-			return bill_id;
+		public String getBillId() {
+			return billId;
 		}
-		public void setBill_id(String bill_id) {
-			this.bill_id = bill_id;
-		}
-		public String getDepartment_code() {
-			return department_code;
-		}
-		public void setDepartment_code(String department_code) {
-			this.department_code = department_code;
+		public void setBillId(String billId) {
+			this.billId = billId;
 		}
 		
 	}
