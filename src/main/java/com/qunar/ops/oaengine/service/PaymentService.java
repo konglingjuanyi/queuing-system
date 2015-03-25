@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
+import com.qunar.flight.qmonitor.QMonitor;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.Form0114Manager;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
@@ -102,19 +103,24 @@ public class PaymentService {
 		otherInfo.setBillId(info.getOid());
 		paymentInfo.getBillDetail().add(otherInfo);
 		
+		final long startTime = System.currentTimeMillis();
 		try {
 			JSONObject ret = this.invokePostApi(this.qssUrl, paymentInfo);
 			if(!ret.getBoolean("ret")){
 				logger.error("调用qss支付接口错误："+ret.getString("errmsg")+" id:"+formId);
+				QMonitor.recordOne("call_qss_error", System.currentTimeMillis() - startTime);
 			}else{
+				QMonitor.recordOne("call_qss_success", System.currentTimeMillis() - startTime);
 				logger.warn("调用qss支付接口成功");
 			}
 		} catch (RemoteAccessException e) {
 			e.printStackTrace();
 			logger.error("调用qss支付接口失败："+e.getMessage()+" id:"+formId);
-		}catch (Exception e) {
+			QMonitor.recordOne("call_qss_fail", System.currentTimeMillis() - startTime);
+		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error("调用qss支付接口失败："+e.getMessage()+" id:"+formId);
+			QMonitor.recordOne("call_qss_fail", System.currentTimeMillis() - startTime);
 		}
 	}
 	
