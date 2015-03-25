@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -58,7 +59,19 @@ public class PaymentService {
 		paymentInfo.setRtxId(info.getStartMemberId());
 		paymentInfo.setRtxName(info.getField0004());
 		
-		String dep = info.getField0001()+"."+info.getField0002()+"."+info.getField0003()+"."+info.getField0009()+"."+info.getField0100();
+		String dep = info.getField0001();
+		if(!StringUtils.isEmpty(info.getField0002())){
+			dep += "." + info.getField0002();
+		}
+		if(!StringUtils.isEmpty(info.getField0003())){
+			dep += "." + info.getField0003();
+		}
+		if(!StringUtils.isEmpty(info.getField0009())){
+			dep += "." + info.getField0009();
+		}
+		if(!StringUtils.isEmpty(info.getField0100())){
+			dep += "." + info.getField0100();
+		}
 		
 		SubPaymentInfo taxiInfo = new SubPaymentInfo();
 		taxiInfo.setExpenseType(4);
