@@ -3,6 +3,7 @@ package com.qunar.ops.oaengine.controller;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.*;
 import java.util.zip.ZipInputStream;
 
@@ -33,10 +34,16 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.qunar.ops.oaengine.dao.Formmain0114HistoryMapper;
 import com.qunar.ops.oaengine.manager.GroupManager;
 import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
+import com.qunar.ops.oaengine.model.Formmain0114History;
+import com.qunar.ops.oaengine.model.Formmain0114HistoryExample;
 import com.qunar.ops.oaengine.result.BaseResult;
 import com.qunar.ops.oaengine.result.CommonRequest;
+import com.qunar.ops.oaengine.service.IOAEngineService;
+import com.qunar.ops.oaengine.service.PaymentService;
+import com.qunar.ops.oaengine.util.Constants;
 import com.qunar.ops.oaengine.util.OAEngineConst;
 import com.qunar.ops.oaengine.util.QUtils;
 
@@ -57,6 +64,12 @@ public class EngineAdminController {
 	protected ProcessEngineFactoryBean processEngine;
 	@Autowired
 	private GroupManager goupManager;
+	@Autowired
+	private IOAEngineService ioaEngineService;
+	@Autowired(required=true)
+	private Formmain0114HistoryMapper formmain0114HistoryMapper;
+	@Autowired
+	private PaymentService paymentService;
 	
 	private boolean isAdmin(String userId){
 		return goupManager.inGroups(new String[]{"admin"}, userId);
@@ -393,5 +406,25 @@ public class EngineAdminController {
 		}
 		this.goupManager.removeMember(groupKey, memberId);
 		return res;
+	}
+	
+	@RequestMapping(value = "/admin/push", method = RequestMethod.GET)
+	@ResponseBody
+	public BaseResult push(HttpServletRequest request) {
+		try{
+			Formmain0114HistoryExample e = new Formmain0114HistoryExample();
+			com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria c = e.createCriteria();
+			c.andFinishedflagEqualTo(Constants.PROC_END);
+			List<Formmain0114History> list = formmain0114HistoryMapper.selectByExample(e);
+			for(Formmain0114History info : list){
+				String oid = info.getOid();
+				paymentService.payment(Long.valueOf(oid));
+			}
+			return BaseResult.getSuccessResult("ok");
+		}catch(Exception e){
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(-500, e.getMessage());
+		}
 	}
 }

@@ -1000,7 +1000,14 @@ public class Form0114Manager {
 	@Read
 	public List<Object> findHistoryForm(Date start, Date end){
 		Formmain0114HistoryExample e = new Formmain0114HistoryExample();
-		e.createCriteria().andFinishedflagEqualTo(Constants.PROC_END).andField0029GreaterThan(start).andField0029LessThanOrEqualTo(end);
+		com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria c = e.createCriteria();
+		c.andFinishedflagEqualTo(Constants.PROC_END);
+		if(start != null){
+			c.andField0029GreaterThan(start);
+		}
+		if(end != null){
+			c.andField0029LessThanOrEqualTo(end);
+		}
 		List<Formmain0114History> list = formmain0114HistoryMapper.selectByExample(e);
 		
 		List<Object> result = new ArrayList<Object>();

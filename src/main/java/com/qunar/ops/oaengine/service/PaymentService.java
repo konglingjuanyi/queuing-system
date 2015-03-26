@@ -137,7 +137,6 @@ public class PaymentService {
 			String infoJson = JSONObject.toJSONString(info);
 			StringEntity se = new StringEntity(infoJson, "UTF-8");
 			se.setContentType(new BasicHeader(HTTP.CONTENT_TYPE, "application/json; charset=UTF-8"));
-			//se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json; charset=UTF-8"));
 			HttpPost httppost = new HttpPost(apiUrl);
 			httppost.setHeader("Content-Type", "application/json; charset=UTF-8");
 			httppost.setEntity(se);
