@@ -2399,19 +2399,24 @@ public class OaEngineController {
 		long taxiSum = 0;
 		long taxiRatify = 0;
 		for (int i = 0; i < len; i++) {
-			if ("".equals(table[i][0])) {
-				continue;
+			Date day = null;
+			BigDecimal workhour = new BigDecimal(0);
+			if (!"".equals(table[i][0])) {
+				day = OAControllerUtils.strToDate(table[i][0]);
+			}
+			if (!"".equals(table[i][6])) {
+				workhour = new BigDecimal(table[i][6]);
 			}
 			TaxiFaresInfo taxiInfo = new TaxiFaresInfo();
 			taxiInfo.setFormmain0114id(formInfo.getId());
-			taxiInfo.setTaxiFaresDate(OAControllerUtils.strToDate(table[i][0]));
+			taxiInfo.setTaxiFaresDate(day);
 			taxiInfo.setTaxiFaresAddr(table[i][1]);
 			taxiInfo.setTaxiFaresDest(table[i][2]);
 			taxiInfo.setTaxiFaresTime(table[i][3]);
 			taxiInfo.setTaxiFaresTimeNew(table[i][3]);
 			taxiInfo.setTaxiFaresUse(table[i][4]);
 			taxiInfo.setTaxiFaresPeerPeople(table[i][5]);
-			taxiInfo.setTaxiFaresWorkhour(new BigDecimal(table[i][6]));
+			taxiInfo.setTaxiFaresWorkhour(workhour);
 			taxiInfo.setTaxiFaresAmount(OAControllerUtils.yuanMoneyToCent(table[i][7]));
 			if (ratify) {
 				taxiInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][8]));
@@ -2422,7 +2427,7 @@ public class OaEngineController {
 			if (table[i][10].length() > 0) {
 				taxiInfo.setId(Long.valueOf(table[i][10]));
 			}
-			
+			taxiInfo.setSort(i);
 			taxiSum += taxiInfo.getTaxiFaresAmount();
 			taxiRatify += taxiInfo.getRatify()==null?0:taxiInfo.getRatify();
 			list1.add(taxiInfo);
@@ -2437,12 +2442,13 @@ public class OaEngineController {
 		long overSum = 0;
 		long overRatify = 0;
 		for (int i = 0; i < len; i++) {
-			if ("".equals(table[i][0])) {
-				continue;
+			Date day = null;
+			if (!"".equals(table[i][0])) {
+				day = OAControllerUtils.strToDate(table[i][0]);
 			}
 			OvertimeMealsInfo overInfo = new OvertimeMealsInfo();
 			overInfo.setFormmain0114id(formInfo.getId());
-			overInfo.setOvertimeMealsDate(OAControllerUtils.strToDate(table[i][0]));
+			overInfo.setOvertimeMealsDate(day);
 			overInfo.setMealsAddr(table[i][1]);
 			overInfo.setOvertimeMealsPeerPeople(table[i][2]);
 			overInfo.setMealsPersonNum(OAControllerUtils.strToLong(table[i][3]));
@@ -2459,6 +2465,7 @@ public class OaEngineController {
 			if (table[i][10].length() > 0) {
 				overInfo.setId(Long.valueOf(table[i][10]));
 			}
+			overInfo.setSort(i);
 			overSum += overInfo.getOvertimeMealsAmount();
 			overRatify += overInfo.getRatify()==null?0:overInfo.getRatify();
 			list2.add(overInfo);
@@ -2474,12 +2481,13 @@ public class OaEngineController {
 		long hosSum = 0;
 		long hosRatify = 0;
 		for (int i = 0; i < len; i++) {
-			if ("".equals(table[i][0]) || "".equals(table[i][6])) {
-				continue;
+			Date day = null;
+			if (!"".equals(table[i][0])) {
+				day = OAControllerUtils.strToDate(table[i][0]);
 			}
 			HospitalityInfo hosInfo = new HospitalityInfo();
 			hosInfo.setFormmain0114id(formInfo.getId());
-			hosInfo.setHospitalityDate(OAControllerUtils.strToDate(table[i][0]));
+			hosInfo.setHospitalityDate(day);
 			hosInfo.setHospitalityAddr(table[i][1]);
 			hosInfo.setBusinessPurpose(table[i][2]);
 			hosInfo.setCustomCompany(table[i][3]);
@@ -2495,6 +2503,7 @@ public class OaEngineController {
 			if (table[i][9].length() > 0) {
 				hosInfo.setId(Long.valueOf(table[i][9]));
 			}
+			hosInfo.setSort(i);
 			hosSum += hosInfo.getHospitalityAmount();
 			hosRatify += hosInfo.getRatify()==null?0:hosInfo.getRatify();
 			list3.add(hosInfo);
@@ -2509,12 +2518,13 @@ public class OaEngineController {
 		long employSum = 0;
 		long employRatify = 0;
 		for (int i = 0; i < len; i++) {
-			if ("".equals(table[i][0]) || "".equals(table[i][4])) {
-				continue;
+			Date day = null;
+			if (!"".equals(table[i][0]) ) {
+				day = OAControllerUtils.strToDate(table[i][0]);
 			}
 			EmployeeRelationsFeesInfo employInfo = new EmployeeRelationsFeesInfo();
 			employInfo.setFormmain0114id(formInfo.getId());
-			employInfo.setEmRelationsDate(OAControllerUtils.strToDate(table[i][0]));
+			employInfo.setEmRelationsDate(day);
 			employInfo.setEmRelationsAddress(table[i][1]);
 			employInfo.setEmRelationsPeerPeople(table[i][2]);
 			employInfo.setActDest(table[i][3]);
@@ -2528,6 +2538,7 @@ public class OaEngineController {
 			if (table[i][7].length() > 0) {
 				employInfo.setId(Long.valueOf(table[i][7]));
 			}
+			employInfo.setSort(i);
 			employSum += employInfo.getEmRelationsFees();
 			employRatify += employInfo.getRatify()==null?0:employInfo.getRatify();
 			list4.add(employInfo);
@@ -2545,7 +2556,7 @@ public class OaEngineController {
 		long otherRatify = 0;
 		for (int i = 0; i < len; i++) {
 			if ("".equals(table[i][0]) || "".equals(table[i][1])) {
-				continue;
+				//continue;
 			}
 			OtherCostsInfo otherInfo = new OtherCostsInfo();
 			otherInfo.setFormmain0114id(formInfo.getId());
@@ -2560,6 +2571,7 @@ public class OaEngineController {
 			if (table[i][4].length() > 0) {
 				otherInfo.setId(Long.valueOf(table[i][4]));
 			}
+			otherInfo.setSort(i);
 			otherSum += otherInfo.getOtherCostAmount();
 			otherRatify += otherInfo.getRatify()==null?0:otherInfo.getRatify();
 			list5.add(otherInfo);

@@ -1563,6 +1563,7 @@ public class Form0114Manager {
 		Map<String, Object> res = new HashMap<String, Object>();
 		Formson0115Example example115 = new Formson0115Example();
 		example115.createCriteria().andFormmain0114idEqualTo(formId);
+		example115.setOrderByClause("sort, id");
 		List<Formson0115> formson0115s = formson0115Mapper
 				.selectByExample(example115);
 		OvertimeMealsInfo[] overtimeMealsInfos = new OvertimeMealsInfo[formson0115s
@@ -1576,6 +1577,7 @@ public class Form0114Manager {
 
 		Formson0116Example example116 = new Formson0116Example();
 		example116.createCriteria().andFormmain0114idEqualTo(formId);
+		example116.setOrderByClause("sort, id");
 		List<Formson0116> formson0116s = formson0116Mapper
 				.selectByExample(example116);
 		HospitalityInfo[] hospitalityInfos = new HospitalityInfo[formson0116s
@@ -1588,6 +1590,7 @@ public class Form0114Manager {
 
 		Formson0117Example example117 = new Formson0117Example();
 		example117.createCriteria().andFormmain0114idEqualTo(formId);
+		example117.setOrderByClause("sort, id");
 		List<Formson0117> formson0117s = formson0117Mapper
 				.selectByExample(example117);
 		OtherCostsInfo[] otherCostsInfos = new OtherCostsInfo[formson0117s
@@ -1600,6 +1603,7 @@ public class Form0114Manager {
 
 		Formson0118Example example118 = new Formson0118Example();
 		example118.createCriteria().andFormmain0114idEqualTo(formId);
+		example118.setOrderByClause("sort, id");
 		List<Formson0118> formson0118s = formson0118Mapper
 				.selectByExample(example118);
 		EmployeeRelationsFeesInfo[] employeeRelationsFeesInfos = new EmployeeRelationsFeesInfo[formson0118s
@@ -1613,6 +1617,7 @@ public class Form0114Manager {
 
 		Formson0119Example example119 = new Formson0119Example();
 		example119.createCriteria().andFormmain0114idEqualTo(formId);
+		example119.setOrderByClause("sort,id");
 		List<Formson0119> formson0119s = formson0119Mapper
 				.selectByExample(example119);
 		TaxiFaresInfo[] taxiFaresInfos = new TaxiFaresInfo[formson0119s.size()];
@@ -1629,6 +1634,7 @@ public class Form0114Manager {
 		Map<String, Object> res = new HashMap<String, Object>();
 		Formson0115HistoryExample example115History = new Formson0115HistoryExample();
 		example115History.createCriteria().andFormmain0114idEqualTo(formId);
+		example115History.setOrderByClause("sort, id");
 		List<Formson0115History> formson0115Historys = formson0115HistoryMapper
 				.selectByExample(example115History);
 		OvertimeMealsInfo[] overtimeMealsInfos = new OvertimeMealsInfo[formson0115Historys
@@ -1642,6 +1648,7 @@ public class Form0114Manager {
 
 		Formson0116HistoryExample example116History = new Formson0116HistoryExample();
 		example116History.createCriteria().andFormmain0114idEqualTo(formId);
+		example116History.setOrderByClause("sort, id");
 		List<Formson0116History> formson0116Historys = formson0116HistoryMapper
 				.selectByExample(example116History);
 		HospitalityInfo[] hospitalityInfos = new HospitalityInfo[formson0116Historys
@@ -1654,6 +1661,7 @@ public class Form0114Manager {
 
 		Formson0117HistoryExample example117History = new Formson0117HistoryExample();
 		example117History.createCriteria().andFormmain0114idEqualTo(formId);
+		example117History.setOrderByClause("sort, id");
 		List<Formson0117History> formson0117Historys = formson0117HistoryMapper
 				.selectByExample(example117History);
 		OtherCostsInfo[] otherCostsInfos = new OtherCostsInfo[formson0117Historys
@@ -1666,6 +1674,7 @@ public class Form0114Manager {
 
 		Formson0118HistoryExample example118History = new Formson0118HistoryExample();
 		example118History.createCriteria().andFormmain0114idEqualTo(formId);
+		example118History.setOrderByClause("sort, id");
 		List<Formson0118History> formson0118Historys = formson0118HistoryMapper
 				.selectByExample(example118History);
 		EmployeeRelationsFeesInfo[] employeeRelationsFeesInfos = new EmployeeRelationsFeesInfo[formson0118Historys
@@ -1679,6 +1688,7 @@ public class Form0114Manager {
 
 		Formson0119HistoryExample example119History = new Formson0119HistoryExample();
 		example119History.createCriteria().andFormmain0114idEqualTo(formId);
+		example119History.setOrderByClause("sort, id");
 		List<Formson0119History> formson0119Historys = formson0119HistoryMapper
 				.selectByExample(example119History);
 		TaxiFaresInfo[] taxiFaresInfos = new TaxiFaresInfo[formson0119Historys.size()];

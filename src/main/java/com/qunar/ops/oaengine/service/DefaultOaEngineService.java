@@ -334,8 +334,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, cname, formId, "pass", tr, memo);
 		if(tr.isFinished()){
-			this.form0114Manager.recordKeyOperation("出纳(出纳)", "cashier", formId);
-			//this.form0114Manager.recordKeyOperation(cname+"("+userId+")", "cashier", formId);
+			if(this.groupManager.inGroups(new String[]{"cashier"}, userId)){
+				this.form0114Manager.recordKeyOperation(cname+"("+userId+")", "cashier", formId);
+			}else{
+				this.form0114Manager.recordKeyOperation("出纳(出纳)", "cashier", formId);
+			}
 			this.form0114Manager.deleteFormInfo(userId, formId, Constants.PROC_END);
 			paymentService.payment(formId);
 		}else if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
