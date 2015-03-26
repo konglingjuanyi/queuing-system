@@ -84,4 +84,12 @@ public class EmployeeRelationsFeesInfo extends Formson0118 implements
 		super.setField0089(emRelationsFeesComment);
 		this.emRelationsFeesComment = emRelationsFeesComment;
 	}
+	private Integer sort;
+	public Integer getSort() {
+		return super.getSort();
+	}
+	public void setSort(Integer sort) {
+		super.setSort(sort);
+		this.sort = sort;
+	}
 }

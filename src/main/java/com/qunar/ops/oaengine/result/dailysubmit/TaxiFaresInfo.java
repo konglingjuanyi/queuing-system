@@ -32,6 +32,7 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 	private BigDecimal taxiFaresWorkhour;
 	// 备注
 	private String comment;
+	private Integer sort;
 	
 	private Long ratify;
 	public Long getRatify(){
@@ -129,5 +130,14 @@ public class TaxiFaresInfo extends Formson0119 implements Serializable {
 	public void setComment(String comment) {
 		super.setField0098(comment);
 		this.comment = comment;
+	}
+	
+	public Integer getSort() {
+		return super.getSort();
+	}
+
+	public void setSort(Integer sort) {
+		super.setSort(sort);
+		this.sort = sort;
 	}
 }

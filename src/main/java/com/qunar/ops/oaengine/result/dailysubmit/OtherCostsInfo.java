@@ -49,5 +49,12 @@ public class OtherCostsInfo extends Formson0117 implements Serializable {
 		super.setField0050(otherCostProject);
 		this.otherCostProject = otherCostProject;
 	}
-
+	private Integer sort;
+	public Integer getSort() {
+		return super.getSort();
+	}
+	public void setSort(Integer sort) {
+		super.setSort(sort);
+		this.sort = sort;
+	}
 }

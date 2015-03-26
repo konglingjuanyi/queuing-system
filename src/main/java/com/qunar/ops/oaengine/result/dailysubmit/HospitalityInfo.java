@@ -105,4 +105,12 @@ public class HospitalityInfo extends Formson0116 implements Serializable {
 		super.setMemo(memo);
 		this.memo = memo;
 	}
+	private Integer sort;
+	public Integer getSort() {
+		return super.getSort();
+	}
+	public void setSort(Integer sort) {
+		super.setSort(sort);
+		this.sort = sort;
+	}
 }
