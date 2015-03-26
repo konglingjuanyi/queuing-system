@@ -229,7 +229,7 @@ public class OaEngineController {
 				String adname = parseObject.getJSONObject("data").getJSONObject("userInfo").getString("ad_cn");
 				JSONArray dept = parseObject.getJSONObject("data").getJSONObject("userInfo").getJSONArray("dept");
 				String departmentI = dept.getString(0);
-				if(!"技术部".equals(departmentI) && !"财务部".equals(departmentI)){
+				if(!"技术部".equals(departmentI) && !"财务部".equals(departmentI)&& !"内审部".equals(departmentI)){
 					return welcom(request, "本系统目前只对技术部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
 				QUtils.setUsername(response2, "un", userId, true);
