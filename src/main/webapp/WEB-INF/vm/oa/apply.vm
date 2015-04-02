@@ -42,10 +42,7 @@
                 </tr>
                 <tr>
                     <td>是否直接向VP汇报</td>
-                    <td>
-                    <input name="Fruit" type="radio" checked="false" style="width:10% !important" value="是"/>是
-                    <input name="Fruit" type="radio" checked="true" style="width:10% !important" value="否"/>否
-                    </td>
+                    <td><input name="Fruit" type="radio" checked="false" style="width:10% !important" value="是"/>是<input name="Fruit" type="radio" checked="true" style="width:10% !important" value="否"/>否</td>
                     <td>银行卡号</td>
                     <td><input type="text" readonly="readonly"></td>
                     <td>银行开户行</td>
@@ -1060,7 +1057,7 @@
     }
     
     function isNumber(cell, field){
-    	if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(cell.value)) {
+    	if (cell.value != '' && !(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(cell.value)) {
 			alert(field + "格式错误");
 			cell.value = "";
 			return false;
