@@ -521,68 +521,6 @@ public class Form0114Manager {
 		FormInfoList formInfoList = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		
-		if("doing".equals(status)){
-			Formmain0114Example example = new Formmain0114Example();
-			com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example.createCriteria();
-			if(approveUser != null){
-				criteria.andStartMemberIdLike("%"+approveUser+"%");
-			}
-			if(approveNo != null){
-				criteria.andField0008Like("%"+approveNo+"%");
-			}
-			if(approvtStartTime != null){
-				criteria.andField0005GreaterThanOrEqualTo(approvtStartTime);
-			}
-			if(approveEndTime != null){
-				criteria.andField0005LessThanOrEqualTo(approveEndTime);
-			}
-			if(checkUser != null){
-				criteria.andField0072Like("%"+checkUser+"%");
-			}
-			if(checkStartTime != null){
-				criteria.andField0073GreaterThanOrEqualTo(checkStartTime);
-			}
-			if(checkEndTime != null){
-				criteria.andField0073LessThanOrEqualTo(checkEndTime);
-			}
-			if(payUser != null){
-				criteria.andField0028Like("%"+payUser+"%");
-			}
-			if(payStartTime != null){
-				criteria.andField0029GreaterThanOrEqualTo(payStartTime);
-			}
-			if(payEndTime != null){
-				criteria.andField0029LessThanOrEqualTo(payEndTime);
-			}
-			int count = formmain0114Mapper.countByExample(example);
-			example.setOffset((pageNo - 1) * pageSize);
-			example.setLimit(pageSize);
-			example.setOrderByClause("id desc");
-			List<Formmain0114> formmain0114s = formmain0114Mapper.selectByExample(example);
-			FormInfo formInfo;
-			for(int i = 0; i < formmain0114s.size(); i++){
-				formInfo = new FormInfo();
-				BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
-				
-				Map<String, Object> formson = getFormsonInfo(formInfo.getId());
-				formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
-						.get("overtimeMealsInfos"));
-				formInfo.setHospitalityInfo((HospitalityInfo[]) formson
-						.get("hospitalityInfos"));
-				formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
-						.get("otherCostsInfos"));
-				formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
-						.get("employeeRelationsFeesInfos"));
-				formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
-						.get("taxiFaresInfos"));
-				
-				formInfos.add(formInfo);
-			}
-			formInfoList.setCount(count);
-			formInfoList.setPageSize(pageSize);
-			formInfoList.setPageNo(pageNo);
-			formInfoList.setFormInfos(formInfos);
-		}
 		
 
 		if("done".equals(status)){
@@ -1509,6 +1447,7 @@ public class Form0114Manager {
 		Map<String, Object> res = new HashMap<String, Object>();
 		Formson0115Example example115 = new Formson0115Example();
 		example115.createCriteria().andFormmain0114idEqualTo(formId);
+		example115.setOrderByClause("sort, id");
 		List<Formson0115> formson0115s = formson0115Mapper
 				.selectByExample(example115);
 		OvertimeMealsInfo[] overtimeMealsInfos = new OvertimeMealsInfo[formson0115s
@@ -1522,6 +1461,7 @@ public class Form0114Manager {
 
 		Formson0116Example example116 = new Formson0116Example();
 		example116.createCriteria().andFormmain0114idEqualTo(formId);
+		example116.setOrderByClause("sort, id");
 		List<Formson0116> formson0116s = formson0116Mapper
 				.selectByExample(example116);
 		HospitalityInfo[] hospitalityInfos = new HospitalityInfo[formson0116s
@@ -1534,6 +1474,7 @@ public class Form0114Manager {
 
 		Formson0117Example example117 = new Formson0117Example();
 		example117.createCriteria().andFormmain0114idEqualTo(formId);
+		example117.setOrderByClause("sort, id");
 		List<Formson0117> formson0117s = formson0117Mapper
 				.selectByExample(example117);
 		OtherCostsInfo[] otherCostsInfos = new OtherCostsInfo[formson0117s
@@ -1546,6 +1487,7 @@ public class Form0114Manager {
 
 		Formson0118Example example118 = new Formson0118Example();
 		example118.createCriteria().andFormmain0114idEqualTo(formId);
+		example118.setOrderByClause("sort, id");
 		List<Formson0118> formson0118s = formson0118Mapper
 				.selectByExample(example118);
 		EmployeeRelationsFeesInfo[] employeeRelationsFeesInfos = new EmployeeRelationsFeesInfo[formson0118s
@@ -1559,6 +1501,7 @@ public class Form0114Manager {
 
 		Formson0119Example example119 = new Formson0119Example();
 		example119.createCriteria().andFormmain0114idEqualTo(formId);
+		example119.setOrderByClause("sort,id");
 		List<Formson0119> formson0119s = formson0119Mapper
 				.selectByExample(example119);
 		TaxiFaresInfo[] taxiFaresInfos = new TaxiFaresInfo[formson0119s.size()];
@@ -1575,6 +1518,7 @@ public class Form0114Manager {
 		Map<String, Object> res = new HashMap<String, Object>();
 		Formson0115HistoryExample example115History = new Formson0115HistoryExample();
 		example115History.createCriteria().andFormmain0114idEqualTo(formId);
+		example115History.setOrderByClause("sort, id");
 		List<Formson0115History> formson0115Historys = formson0115HistoryMapper
 				.selectByExample(example115History);
 		OvertimeMealsInfo[] overtimeMealsInfos = new OvertimeMealsInfo[formson0115Historys
@@ -1588,6 +1532,7 @@ public class Form0114Manager {
 
 		Formson0116HistoryExample example116History = new Formson0116HistoryExample();
 		example116History.createCriteria().andFormmain0114idEqualTo(formId);
+		example116History.setOrderByClause("sort, id");
 		List<Formson0116History> formson0116Historys = formson0116HistoryMapper
 				.selectByExample(example116History);
 		HospitalityInfo[] hospitalityInfos = new HospitalityInfo[formson0116Historys
@@ -1600,6 +1545,7 @@ public class Form0114Manager {
 
 		Formson0117HistoryExample example117History = new Formson0117HistoryExample();
 		example117History.createCriteria().andFormmain0114idEqualTo(formId);
+		example117History.setOrderByClause("sort, id");
 		List<Formson0117History> formson0117Historys = formson0117HistoryMapper
 				.selectByExample(example117History);
 		OtherCostsInfo[] otherCostsInfos = new OtherCostsInfo[formson0117Historys
@@ -1612,6 +1558,7 @@ public class Form0114Manager {
 
 		Formson0118HistoryExample example118History = new Formson0118HistoryExample();
 		example118History.createCriteria().andFormmain0114idEqualTo(formId);
+		example118History.setOrderByClause("sort, id");
 		List<Formson0118History> formson0118Historys = formson0118HistoryMapper
 				.selectByExample(example118History);
 		EmployeeRelationsFeesInfo[] employeeRelationsFeesInfos = new EmployeeRelationsFeesInfo[formson0118Historys
@@ -1625,6 +1572,7 @@ public class Form0114Manager {
 
 		Formson0119HistoryExample example119History = new Formson0119HistoryExample();
 		example119History.createCriteria().andFormmain0114idEqualTo(formId);
+		example119History.setOrderByClause("sort, id");
 		List<Formson0119History> formson0119Historys = formson0119HistoryMapper
 				.selectByExample(example119History);
 		TaxiFaresInfo[] taxiFaresInfos = new TaxiFaresInfo[formson0119Historys.size()];

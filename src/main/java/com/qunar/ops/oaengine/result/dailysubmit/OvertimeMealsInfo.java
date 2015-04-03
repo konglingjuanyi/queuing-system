@@ -117,4 +117,12 @@ public class OvertimeMealsInfo extends Formson0115 implements Serializable {
 		super.setField0094(overtimeMealsWorkhours);
 		this.overtimeMealsWorkhours = overtimeMealsWorkhours;
 	}
+	private Integer sort;
+	public Integer getSort() {
+		return super.getSort();
+	}
+	public void setSort(Integer sort) {
+		super.setSort(sort);
+		this.sort = sort;
+	}
 }

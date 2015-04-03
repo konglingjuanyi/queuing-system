@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.ctc.wstx.util.StringUtil;
+import com.qunar.flight.qmonitor.QMonitor;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
@@ -55,6 +56,7 @@ public class EmployeeInfoService {
 		String apiUrl = backyardUrl + "?require=info&rtx_id=" + userId;
 		JSONObject json = invokeGetApi(apiUrl);
 		if (json.containsKey("err_id")) {
+			
 			throw new RemoteAccessException(json.getString("msg"),
 					EmployeeInfoService.class);
 		} else {
@@ -73,16 +75,13 @@ public class EmployeeInfoService {
 			eInfo.setDepartmentIV((String) data.get("dept_level4"));
 			eInfo.setDepartmentV((String) data.get("dept_level5"));
 
-			// VP INFO
 			eInfo.setVp((String) data.get("vp"));
 			eInfo.setVpMail((String) data.get("vp_mail"));
 			
 			eInfo.setEnable(data.getIntValue("enable"));
 			eInfo.setCompany(data.getString("company"));
 
-			// 银行卡号qunar.it暂时没有，看是否直接调用coreHr的API。
-			// eInfo.setBankCardNo((String)data.get(""));
-			// eInfo.setBankName((String)data.get(""));
+			QMonitor.recordOne("call_qunarit_success");
 		}
 		return eInfo;
 	}
@@ -104,10 +103,10 @@ public class EmployeeInfoService {
 					EmployeeInfoService.class);
 		} else {
 			JSONObject data = json.getJSONObject("data");
-
 			eInfo.setBankCardNo((String)data.get("bank_card"));
 			eInfo.setBankName((String)data.get("bank_class"));
 			eInfo.setBankCity((String)data.get("bank_city"));
+			QMonitor.recordOne("call_qunarit_success");
 		}
 		return eInfo;
 	}
@@ -168,6 +167,7 @@ public class EmployeeInfoService {
 				String user = (String) vp;
 				users.add(user.split("@")[0]);
 			}
+			QMonitor.recordOne("call_qunarit_success");
 		}
 		return users;
 	}
@@ -197,6 +197,7 @@ public class EmployeeInfoService {
 				String user = (String) u;
 				users.add(user.split("@")[0]);
 			}
+			QMonitor.recordOne("call_qunarit_success");
 		}
 		return users;
 	}
@@ -272,6 +273,7 @@ public class EmployeeInfoService {
 			if(leader.length() == 0) continue;
 			users.add(leader);
 		}
+		QMonitor.recordOne("call_qunarit_success");
 		return users;
 	}
 
@@ -295,9 +297,8 @@ public class EmployeeInfoService {
 					EmployeeInfoService.class);
 		} else {
 			JSONObject data = json.getJSONObject("data");
-			// EmployeeInfo eInfo = JSONObject.toJavaObject(data,
-			// EmployeeInfo.class);
 			hours = data.getFloatValue("hours");
+			QMonitor.recordOne("call_qunarit_success");
 		}
 		return hours;
 	}
@@ -322,6 +323,7 @@ public class EmployeeInfoService {
 						return entity != null ? EntityUtils.toString(entity)
 								: null;
 					} else {
+						QMonitor.recordOne("call_qunarit_fail");
 						throw new ClientProtocolException(
 								"Unexpected response status: " + status);
 					}
@@ -336,6 +338,7 @@ public class EmployeeInfoService {
 			}
 			return json;
 		} catch (IOException e) {
+			QMonitor.recordOne("call_qunarit_fail");
 			e.printStackTrace();
 			throw new RemoteAccessException(e.getMessage(),
 					EmployeeInfoService.class);
@@ -371,6 +374,7 @@ public class EmployeeInfoService {
 						return entity != null ? EntityUtils.toString(entity)
 								: null;
 					} else {
+						QMonitor.recordOne("call_qunarit_fail");
 						throw new ClientProtocolException(
 								"Unexpected response status: " + status);
 					}
@@ -385,6 +389,7 @@ public class EmployeeInfoService {
 			}
 			return json;
 		} catch (IOException e) {
+			QMonitor.recordOne("call_qunarit_fail");
 			e.printStackTrace();
 			throw new RemoteAccessException(e.getMessage(),
 					EmployeeInfoService.class);

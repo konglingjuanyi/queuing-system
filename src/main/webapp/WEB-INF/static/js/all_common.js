@@ -212,7 +212,7 @@ function table6BodyForm(vars) {
 
 function table0BodyForm(table0, vars) {
 	var date = new Date();
-    var form = '';
+    var form = '<br/><br/>';
     form += tableHeadForm("金额:"+vars["ratify"]+" 日常报销单 ("+table0[0][2]+")");
     form += tableHeadForm("个人基本信息");
     form += '<table id="table" frame="vsides" rules="all" style="width: 1067px;">';

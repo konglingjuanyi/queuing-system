@@ -308,6 +308,12 @@
             <artifactId>disruptor</artifactId>
             <version>3.3.0</version>
         </dependency>
+        
+        <dependency>
+            <groupId>com.qunar.flight</groupId>
+            <artifactId>qmonitor</artifactId>
+            <version>1.0.4</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

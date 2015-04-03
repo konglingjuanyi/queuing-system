@@ -126,8 +126,8 @@
                     <td bgcolor="#96E0E2">核定金额</td>
                     <td bgcolor="#96E0E2">备注</td>
                     <td bgcolor="#96E0E2" width="0"></td>
-                    <td bgcolor="#96E0E2" style="width:20px !important">
-                        <input type="button" name="Submit" value="添加报销" onclick=addRow("table1")>
+                    <td bgcolor="#96E0E2" style="width:150px !important">
+                       		 操作
                     </td>
                 </tr>
                 <tr>
@@ -145,7 +145,7 @@
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
                     <td><input type='hidden' value=''></td>
-
+					<td><div align='center' style='width:150px'><a href='javascript:;' onclick="deleteRow('table1',this)">删除</a>|<a href='javascript:;' onclick="copyRow('table1',this,true)">复制</a>|<a href='javascript:;' onclick="copyRow('table1',this,false)">添加</a></div></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
@@ -209,8 +209,7 @@
                     <td bgcolor="#96E0E2">核定金额</td>
                     <td bgcolor="#96E0E2">备注</td>
                     <td bgcolor="#96E0E2" width="0"></td>
-                    <td bgcolor="#96E0E2"><input type="button" name="Submit" value="添加报销"
-                                                 onclick=addRow("table2")></td>
+                    <td bgcolor="#96E0E2" style="width:150px !important"> 操作</td>
                 </tr>
                 <tr>
                     <td><span class="input-icon input-icon-right">
@@ -227,6 +226,7 @@
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
                     <td><input type='hidden' value=''></td>
+                    <td><div align='center' style='width:150px'><a href='javascript:;' onclick="deleteRow('table2',this)">删除</a>|<a href='javascript:;' onclick="copyRow('table2',this,true)">复制</a>|<a href='javascript:;' onclick="copyRow('table2',this,false)">添加</a></div></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
@@ -260,8 +260,7 @@
                     <td bgcolor="#96E0E2">核定金额</td>
                     <td bgcolor="#96E0E2">备注</td>
                     <td bgcolor="#96E0E2" width="0"></td>
-                    <td bgcolor="#96E0E2"><input type="button" name="Submit" value="添加报销"
-                                                 onclick=addRow("table3")></td>
+                    <td bgcolor="#96E0E2" style="width:150px !important"> 操作</td>
                 </tr>
                 <tr>
                     <td><span class="input-icon input-icon-right">
@@ -277,6 +276,7 @@
                     <td><input type="text" class="table3" disabled="disabled"></td>
                     <td><input type="text" class="table3"></td>
                     <td><input type='hidden' value=''></td>
+                    <td><div align='center' style='width:150px'><a href='javascript:;' onclick="deleteRow('table3',this)">删除</a>|<a href='javascript:;' onclick="copyRow('table3',this,true)">复制</a>|<a href='javascript:;' onclick="copyRow('table3',this,false)">添加</a></div></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
@@ -307,8 +307,7 @@
                     <td bgcolor="#96E0E2">核定金额</td>
                     <td bgcolor="#96E0E2">备注</td>
                     <td bgcolor="#96E0E2" width="0"></td>
-                    <td bgcolor="#96E0E2"><input type="button" name="Submit" value="添加报销"
-                                                 onclick=addRow("table4") class="table4"></td>
+                    <td bgcolor="#96E0E2" style="width:150px !important"> 操作</td>
                 </tr>
                 <tr>
                     <td><span class="input-icon input-icon-right">
@@ -322,6 +321,7 @@
                     <td><input type="text" disabled="disabled" class="table4"></td>
                     <td><input type="text" class="table4"></td>
                     <td><input type='hidden' value='' class="table4"></td>
+                    <td><div align='center' style='width:150px'><a href='javascript:;' onclick="deleteRow('table4',this)">删除</a>|<a href='javascript:;' onclick="copyRow('table4',this,true)">复制</a>|<a href='javascript:;' onclick="copyRow('table4',this,false)">添加</a></div></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
@@ -350,8 +350,7 @@
                     <td bgcolor="#96E0E2">核定金额</td>
                     <td bgcolor="#96E0E2">备注</td>
                     <td bgcolor="#96E0E2" width="0"></td>
-                    <td bgcolor="#96E0E2"><input type="button" name="Submit" value="添加报销"
-                                                 onclick=addRow("table5")></td>
+                    <td bgcolor="#96E0E2" style="width:150px !important"> 操作</td>
                 </tr>
                 <tr>
                 	<td><input type="text"></td>
@@ -359,6 +358,7 @@
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text"></td>
                     <td><input type='hidden' value=''></td>
+                    <td><div align='center' style='width:150px'><a href='javascript:;' onclick="deleteRow('table5',this)">删除</a>|<a href='javascript:;' onclick="copyRow('table5',this,true)">复制</a>|<a href='javascript:;' onclick="copyRow('table5',this,false)">添加</a></div></td>
                 </tr>
             </table>
             <table style="border-collapse:collapse;" border="1" class="col-xs-12">
@@ -555,8 +555,10 @@
                 cell = nRow.insertCell(coLen - 2);
                 cell.innerHTML = "<input type='hidden' value='"+tableInfo[j][100]+"'>";
                 cell = nRow.insertCell(coLen - 1);
-                cell.innerHTML = "<div align='center' style='width:40px'><a href='javascript:;' " +
-                "onclick=\"deleteRow('" + tableId + "',this)\">删除</a></div>";
+                cell.innerHTML = "<div align='center' style='width:150px'><a href='javascript:;' " +
+                "onclick=\"deleteRow('" + tableId + "',this)\">删除</a>|<a href='javascript:;' " +
+                "onclick=\"copyRow('" + tableId + "',this,true)\">复制</a>|<a href='javascript:;' " +
+                "onclick=\"copyRow('" + tableId + "',this,false)\">添加</a></div>";
                 rowLen += 1;
             }
             table.deleteRow(1);//删掉第一行.
@@ -652,8 +654,36 @@
         var cell = nRow.insertCell(coLen - 2);
         cell.innerHTML = "<input type='hidden' value=''>";
         cell = nRow.insertCell(coLen - 1);
-        cell.innerHTML = "<input type='hidden' value=''><div align='center' style='width:40px'><a href='javascript:;' " +
-        "onclick=\"deleteRow('" + tableId + "',this)\">删除</a></div>";
+        cell.innerHTML = "<div align='center' style='width:150px'><a href='javascript:;' " +
+        "onclick=\"deleteRow('" + tableId + "',this)\">删除</a>|<a href='javascript:;' " +
+        "onclick=\"copyRow('" + tableId + "',this,true)\">复制</a>|<a href='javascript:;' " +
+        "onclick=\"copyRow('" + tableId + "',this,false)\">添加</a></div>";
+        addMoney(tableId);
+    }
+    
+    function copyRow(tableId, srcRow, isCopy) { 
+    	var table = document.getElementById(tableId);
+    	var rowId = srcRow.parentNode.parentNode.parentNode.rowIndex;
+    	var coLen = table.rows[rowId].cells.length;
+    	var nRow = table.insertRow(rowId+1);
+        for (var i = 0; i < coLen - 2; i++) {
+            var cell = nRow.insertCell(i);
+           	cell.innerHTML = table.rows[rowId].cells[i].innerHTML;
+           	if(isCopy){
+		       	if(i == 0 && tableId != 'table5'){
+		       		cell.childNodes[0].childNodes[1].value = table.rows[rowId].cells[i].childNodes[0].childNodes[1].value;
+		       	}else{
+		       		cell.childNodes[0].value = table.rows[rowId].cells[i].childNodes[0].value;
+				}
+           	}
+        }
+        var cell = nRow.insertCell(coLen - 2);
+        cell.innerHTML = "<input type='hidden' value=''>";
+        cell = nRow.insertCell(coLen - 1);
+        cell.innerHTML = "<div align='center' style='width:150px'><a href='javascript:;' " +
+        "onclick=\"deleteRow('" + tableId + "',this)\">删除</a>|<a href='javascript:;' " +
+        "onclick=\"copyRow('" + tableId + "',this,true)\">复制</a>|<a href='javascript:;' " +
+        "onclick=\"copyRow('" + tableId + "',this,false)\">添加</a></div>";
         addMoney(tableId);
     }
 
@@ -662,12 +692,19 @@
     function deleteRow(tableId, curRow) {
         var table = document.getElementById(tableId);
         var rowLen = table.rows.length;
+        var rowId = curRow.parentNode.parentNode.parentNode.rowIndex;
         if(rowLen == 2){
-            showCommonNoticeDialog('失败', 'icon-warning-sign',
-                    generateNoticeMsg("啊哦,就剩一行了,不能删除了!"), 300);
+	    	var coLen = table.rows[rowId].cells.length;
+	        for (var i = 0; i < coLen - 2; i++) {
+			       	if(i == 0 && tableId != 'table5'){
+			       		table.rows[rowId].cells[i].childNodes[0].childNodes[1].value = '';
+			       	}else{
+			       		table.rows[rowId].cells[i].childNodes[0].value = '';
+					}
+	        }
             return;
         }
-        var rowId = curRow.parentNode.parentNode.parentNode.rowIndex;
+        
         table.deleteRow(rowId);
         addMoney(tableId);
     }
