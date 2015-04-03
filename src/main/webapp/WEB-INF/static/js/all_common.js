@@ -109,7 +109,7 @@ function fixedTableInfo(tableMap, vars) {
     tableForm += table0BodyForm(tableMap["table"], vars); //这里应该先加table信息
     for (var i = 0; i < 7; i++) {
         tableForm += tableHeadForm(tableHeadList[i]);
-        tableForm += $.parseStr('<table frame="vsides" id="%s" style="width: 1067px;">', tableList[i]);
+        tableForm += $.parseStr('<table frame="vsides" id="%s" style="border-collapse:collapse;width: 1067px;" border="1" >', tableList[i]);
         var num2 = i;
         if(i > 2) num2 = i-1;
         if (tableList[i] == "table6") {
@@ -181,8 +181,7 @@ function tableBodyForm(tableMap, tableId, num) {
                     value = "";
                 }
                 bodyForm += '<td>';
-                bodyForm += $.parseStr('<input type="text" style="width: 100%;color:#000000" ' +
-                'readonly="readonly" value="%s">', value.replace(new RegExp("<", "gm"), "&lt;").replace(new RegExp(">", "gm"), "&gt;").replace(new RegExp('"', "gm"), "&quot;"));
+                bodyForm += $.parseStr('<div>%s</div>', value.replace(new RegExp("<", "gm"), "&lt;").replace(new RegExp(">", "gm"), "&gt;").replace(new RegExp('"', "gm"), "&quot;"));
                 bodyForm += '</td>';
             }
             bodyForm += '</tr>';
