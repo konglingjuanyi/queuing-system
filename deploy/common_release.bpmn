@@ -42,7 +42,7 @@
     </userTask>
     <exclusiveGateway id="exclusivegateway18" name="Exclusive Gateway"></exclusiveGateway>
     <userTask id="fin_director" name="财务总监" activiti:candidateUsers="susan.wang">
-      <documentation>nuby.zhang@qunar.com</documentation>
+      <documentation>susan.wang@qunar.com</documentation>
       <extensionElements>
         <activiti:taskListener event="create" delegateExpression="${notificationListener}"></activiti:taskListener>
       </extensionElements>
