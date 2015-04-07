@@ -30,6 +30,9 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         <!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
+        <table tableName="t_files" domainObjectName="Files" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('t_files_id_seq')"/>
+        </table>
         <!-- 
         <table tableName="form_approve_log" domainObjectName="FormApproveLog" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('form_approve_log_id_seq')"/>
@@ -40,14 +43,12 @@
         <table tableName="form_appmain" domainObjectName="FormAppmain" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('form_appmain_id_seq')"/>
         </table>
-        -->
         <table tableName="formmain_0114" domainObjectName="Formmain0114" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('formmain_0114_id_seq')"/>
         </table>
         <table tableName="formmain_0114_history" domainObjectName="Formmain0114History" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('formmain_0114_history_id_seq')"/>
         </table>
-        <!-- 
         <table tableName="formson_0115" domainObjectName="Formson0115" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('formson_0115_id_seq')"/>
         </table>

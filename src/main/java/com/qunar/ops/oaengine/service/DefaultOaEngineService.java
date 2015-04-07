@@ -72,6 +72,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		info.setStartMemberId(userId);
 		info.setFinishedflag(Constants.PROC_GRIFT);
 		form0114Manager.createFormInfo(userId, info);
+		formInfo.setId(info.getId());
 		return info.getId();
 	}
 

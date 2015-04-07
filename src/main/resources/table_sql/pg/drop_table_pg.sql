@@ -21,6 +21,7 @@ drop table formson_0119_log;
 drop table t_delegation;
 drop table t_group;
 drop table t_group_member;
+drop table t_files;
 drop sequence form_approve_log_id_seq;
 drop sequence form_update_log_id_seq;
 drop sequence form_appmain_id_seq;
@@ -44,7 +45,7 @@ drop sequence formson_0119_log_id_seq;
 drop sequence t_delegation_id_seq;
 drop sequence t_group_id_seq;
 drop sequence t_group_member_id_seq;
-
+drop sequence t_files_id_seq;
 
 delete from form_approve_log;
 delete from form_update_log;
@@ -66,3 +67,4 @@ delete from formson_0116_log;
 delete from formson_0117_log;
 delete from formson_0118_log;
 delete from formson_0119_log;
+delete from t_files;

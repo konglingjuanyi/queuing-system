@@ -1,3 +1,21 @@
+--附件表
+CREATE SEQUENCE t_files_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE t_files(
+  id bigint DEFAULT nextval('t_files_id_seq'),
+  form_id bigint,
+  file_name varchar(30),
+  content bytea,
+  owner varchar(30),
+  ts timestamp with time zone,
+  dob date,
+  PRIMARY KEY (id)
+);
+
 --审批日志表
 CREATE SEQUENCE form_approve_log_id_seq
 START WITH 1

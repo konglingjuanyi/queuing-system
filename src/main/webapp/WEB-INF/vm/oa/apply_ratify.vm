@@ -362,7 +362,14 @@
     </div>
     
 </div>
-
+<div class="row">
+        <div style="margin-top:20px;margin-bottom:10px; margin-right:10%;">
+		<input type="button" id="upload" value="上传附件"
+                        style="width: 80px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                        class="btn btn-minier btn-primary">
+        </div>
+        <div style="margin-top:20px;margin-bottom:10px; margin-right:10%;" id="files"></div>
+</div>
 
 <div id="dialog-confirm" class="hide">
     <form class="form-horizontal">
@@ -391,6 +398,13 @@
 	var taskId = "$taskId";
     jQuery(function ($) {
     	createEditApplyTable(formId);
+    	
+    	$("#upload").unbind("click");
+        $("#upload").on("click", function (e) {
+        	showUploadDialog();
+		}).on("dblclick", function (e) {
+			e.preventDefault();
+        });
     });
     
 	function generateNoticeMsg(msg) {
@@ -414,8 +428,9 @@
                     var data = resp.data;
                     var tableMap = data.tableMap;
                     var vars = data.vars;
+                    var files = data.files;
                     getDataToEditDialog(tableMap, vars);
-
+					getDataToFiles(files);
                 } else {
                     showCommonNoticeDialog('失败', 'icon-warning-sign',
                             generateNoticeMsg(resp.errorMessage), 300);
@@ -428,7 +443,17 @@
         });
     }
 
-
+    function getDataToFiles(files) {
+        for(var i = 0; i < files.length; i++){
+        	var file = files[i];
+        	var name = file['fileName'];
+        	var owner = file['owner'];
+        	var ts = file['ts'];
+        	var id = file['id'];
+        	$("#files").append('<div id="file_'+id+'"><b><a href="oa/download_file?fileId='+id+'">'+name+'</a></b> <a href="javascript:void(0)" onclick="removeFile('+id+')">[删除]</a></div>');
+        }
+    }
+    
     function constructTable0Info(tableMap) {
         var table0 = tableMap["table"];
         var table = document.getElementById("table");
@@ -1160,4 +1185,100 @@
     		return false;
     	}
     }
+    
+    
+    var fileData = new FormData()
+	function showUploadDialog() {
+	    var form = '<div style="padding: 10px 0px">'
+	        + '<form id="upload_configure_form">'
+	        + '<input type="file" name="file"/>'
+	        + '</form>'
+	        + $.parseStr(
+	            '<div id="upload_configure_msg" style="%s"></div>',
+	            'width: 100%; line-height: 18px; font-size: 14px; font-weight: bold; padding: 15px 5px 5px 5px'
+	        );
+	    $("#approve-msg-dialog").html(form);
+	    title_html_str = '<div class="dialog_title">上传附件</div>'
+	    var dialog = $("#approve-msg-dialog").removeClass('hide').dialog({
+	        modal: true,
+	        width: 450,
+	        resizable: false,
+	        title: title_html_str,
+	        title_html: true,
+	        buttons: [
+	            {
+	                text: "确认上传",
+	                "class": "btn btn-danger btn-xs",
+	                click: function () {
+	                    fileData = new FormData();
+	                    fileData.append('file', $('#upload_configure_form input[name=file]').get(0).files[0]);
+	                    if(formId == ''){
+	                    	subTableInfos(false, true);
+	                    }else{
+	                    	fileData.append('formId', formId);
+		                    $.ajax({
+		                        url: 'oa/upload_file',
+		                        contentType: false,
+		                        data: fileData,
+		                        processData: false,
+		                        type: 'POST',
+		                        success: function (resp) {
+		                            var data = resp || {};
+		                            if (data.errorCode == 0) {
+		                            	$("#approve-msg-dialog").dialog("close");
+		                            	fn = data.data.fileName;
+		                            	fid = data.data.id;
+		                            	$("#files").append('<div id="file_'+fid+'"><b><a href="oa/download_file?fileId='+fid+'">'+fn+'</a></b> <a href="javascript:void(0)" onclick="removeFile('+fid+')">[删除]</a></div>');
+		                            }else{
+		                            	var msg_dom = '<div style="color: red">'
+		                                        + $.parseStr('<p>%s</p>', data.errorMessage || '')
+		                                        + '</div>';
+		                                    $("#upload_configure_msg").html(msg_dom);
+		                            }
+		                        },
+		                        error: function () {
+		                            $("#upload_configure_msg").html('<div style="color: red"><p>网络错误</p></div>');
+		                        }
+		                    });
+						}
+	                }
+	            },
+	            {
+	                text: "取消",
+	                "class": "btn btn-xs",
+	                click: function () {
+	                    $("#approve-msg-dialog").dialog("close");
+	                }
+	            }
+	        ],
+	        close: function () {
+	            $("#approve-msg-dialog").empty()
+	            $("#approve-msg-dialog").dialog('destroy')
+	        }
+	    });
+	}
+	
+	function removeFile(id) {
+		var formData = new FormData();
+		formData.append('fileId', id);
+		$.ajax({
+			url: 'oa/remove_file',
+			contentType: false,
+			data: formData,
+			processData: false,
+			type: 'POST',
+			success: function (data) {
+					if (data.errorCode == 0) {
+						 $("#file_"+id).remove();
+		            }else{
+						showCommonNoticeDialog('删除文件错误', 'icon-warning-sign', generateNoticeMsg(data.errorMessage), 300);
+                        return;
+		            }
+				},
+			error: function () {
+				showCommonNoticeDialog('网络错误', 'icon-warning-sign',
+                        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+			}
+		});
+	}
 </script>

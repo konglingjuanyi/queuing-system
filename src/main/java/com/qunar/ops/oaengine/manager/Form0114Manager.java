@@ -6,12 +6,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.qunar.ops.oaengine.dao.FilesMapper;
 import com.qunar.ops.oaengine.dao.FormAppmainMapper;
 import com.qunar.ops.oaengine.dao.FormApproveLogMapper;
 import com.qunar.ops.oaengine.dao.FormUpdateLogMapper;
@@ -35,6 +37,8 @@ import com.qunar.ops.oaengine.dao.Formson0119Mapper;
 import com.qunar.ops.oaengine.datasource.Read;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.model.Files;
+import com.qunar.ops.oaengine.model.FilesExample;
 import com.qunar.ops.oaengine.model.FormApproveLog;
 import com.qunar.ops.oaengine.model.FormApproveLogExample;
 import com.qunar.ops.oaengine.model.FormApproveLogExample.Criteria;
@@ -136,6 +140,8 @@ public class Form0114Manager {
 	private FormUpdateLogMapper formUpdateLogMapper;
 	@Autowired(required=true)
 	private LogManager logManager;
+	@Autowired(required=true)
+	private FilesMapper filesMapper;
 
 	// --------------------------表单相关----------------------------
 	/**
@@ -995,6 +1001,42 @@ public class Form0114Manager {
 		res.setCount(count);
 
 		return res;
+	}
+	
+	public Files saveFile(Long formId, String owner, String fileName, byte[] file){
+		Files f = new Files();
+		f.setContent(file);
+		f.setFormId(formId);
+		f.setFileName(fileName);
+		f.setOwner(owner);
+		f.setTs(new Date());
+		f.setDob(new Date());
+		this.filesMapper.insert(f);
+		return f;
+	}
+	
+	public List<Files> getFiles(Long formId){
+		FilesExample e = new FilesExample();
+		e.createCriteria().andFormIdEqualTo(formId);
+		return this.filesMapper.selectByExampleWithBLOBs(e);
+	}
+	
+	public void removeFile(Long fileId, String owner) throws Exception{
+		Files f = this.filesMapper.selectByPrimaryKey(fileId);
+		if(f != null && !owner.equals(f.getOwner())){
+			throw new Exception("不能删除他人上传的附件");
+		}
+		this.filesMapper.deleteByPrimaryKey(fileId);
+	}
+	
+	public List<Files> findFilesByFormId(Long formId){
+		FilesExample e = new FilesExample();
+		e.createCriteria().andFormIdEqualTo(formId);
+		return this.filesMapper.selectByExample(e);
+	}
+	
+	public Files getFileById(Long formId){
+		return this.filesMapper.selectByPrimaryKey(formId);
 	}
 
 	private void updateFormson115Info(Long formId, FormInfo formInfo)

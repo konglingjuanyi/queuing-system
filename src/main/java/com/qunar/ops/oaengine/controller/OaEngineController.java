@@ -72,11 +72,13 @@ import com.qunar.ops.oaengine.exception.FormNotFoundException;
 import com.qunar.ops.oaengine.exception.ManagerFormException;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
 import com.qunar.ops.oaengine.manager.DelegationManager;
+import com.qunar.ops.oaengine.manager.Form0114Manager;
 import com.qunar.ops.oaengine.manager.GroupManager;
 import com.qunar.ops.oaengine.manager.LogManager;
 import com.qunar.ops.oaengine.manager.LoginManager;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
+import com.qunar.ops.oaengine.model.Files;
 import com.qunar.ops.oaengine.result.BaseResult;
 import com.qunar.ops.oaengine.result.CommonRequest;
 import com.qunar.ops.oaengine.result.DataResult;
@@ -127,6 +129,8 @@ public class OaEngineController {
 	private LoginManager loginManager;
 	@Autowired
 	private WorkflowManager workflowManager;
+	@Autowired
+	private Form0114Manager form0114Manager;
 	@Autowired
 	private EmployeeInfoService employeeInfoService;
 	private String processKey = "oa_common";
@@ -821,7 +825,7 @@ public class OaEngineController {
 				ioaEngineService.createForm(processKey, userId, formInfo);
 			}
 		}
-		return BaseResult.getSuccessResult(String.valueOf(id));
+		return BaseResult.getSuccessResult(String.valueOf(formInfo.getId()));
 	}
 
 	/**
@@ -1494,6 +1498,101 @@ public class OaEngineController {
 					OAEngineConst.ACL_LIMIT_ERROR_MSG);
 		}
 		return BaseResult.getSuccessResult(dataResult);
+	}
+	
+	@RequestMapping(value="oa/upload_file",method=RequestMethod.POST)
+	@ResponseBody
+    public BaseResult uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException{
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		String fileName = file.getOriginalFilename();
+		Files f = form0114Manager.saveFile(Long.parseLong(request.getParameter("formId")), userId, fileName, file.getBytes());
+		return BaseResult.getSuccessResult(f);
+    }
+	
+	@RequestMapping(value="oa/remove_file",method=RequestMethod.POST)
+	@ResponseBody
+    public BaseResult removeFile(HttpServletRequest request) throws IOException{
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		String fileId = request.getParameter("fileId");
+		try {
+			form0114Manager.removeFile(NumberUtils.toLong(fileId, 0), userId);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+			logger.warn(e.getMessage());
+			return BaseResult.getErrorResult(-1, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.warn(e.getMessage());
+			return BaseResult.getErrorResult(-1, e.getMessage());
+		}
+		return BaseResult.getSuccessResult("");
+    }
+	
+	@RequestMapping(value="oa/get_file",method=RequestMethod.POST)
+	@ResponseBody
+    public BaseResult getFile(HttpServletRequest request, @RequestBody CommonRequest commonRequest) throws IOException{
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
+					OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		Map<String, String> vars = commonRequest.getVars();
+		vars.get("formId");
+		String formId = vars.get("formId");
+		List<Files> list = form0114Manager.findFilesByFormId(Long.parseLong(formId));
+		return BaseResult.getSuccessResult(list);
+    }
+	
+	@RequestMapping(value = "oa/download_file",method=RequestMethod.GET)
+	public void downloadFile(HttpServletRequest request, HttpServletResponse response) {
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return;
+		}
+		String fileId = request.getParameter("fileId");
+		Files file = this.form0114Manager.getFileById(NumberUtils.toLong(fileId));
+		if(file == null){
+			return;
+		}
+		File tfile = null;
+		try {
+			String fn = file.getFileName();
+			tfile = File.createTempFile(fn, ".tmp");
+			FileOutputStream os = new FileOutputStream(tfile);
+			//wb.write(os);  
+			os.write(file.getContent());
+			os.close();
+			InputStream fis = new BufferedInputStream(new FileInputStream(tfile.getAbsolutePath()));  
+			byte[] buffer = new byte[fis.available()];  
+			fis.read(buffer);  
+			fis.close();  
+			response.reset();  
+			response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode(file.getFileName(), "UTF-8"));  
+			response.addHeader("Content-Length", "" + tfile.length());  
+			OutputStream toClient = new BufferedOutputStream(response.getOutputStream());  
+			response.setContentType("application/vnd.ms-excel;charset=utf-8");  
+			toClient.write(buffer);  
+			toClient.flush();  
+			toClient.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if(tfile != null){
+				tfile.deleteOnExit();
+			}
+		}
 	}
 	
 	
@@ -2993,8 +3092,10 @@ public class OaEngineController {
 			aInfo += info + "<br/>";
 		}
 		vars.put("approveInfo", aInfo);
+		
+		formRequest.setFiles(this.form0114Manager.getFiles(formInfo.getId()));
+		
 		return formRequest;
-
 	}
 
 	/**
