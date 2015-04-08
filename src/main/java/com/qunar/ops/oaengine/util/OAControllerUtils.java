@@ -83,10 +83,10 @@ public class OAControllerUtils {
             return 0l;
         }
         try{
-        Float fMoney = Float.valueOf(money);
-        int iMoney = (int) (fMoney * 100);
-        String sMoney = String.valueOf(iMoney);
-        return Long.valueOf(sMoney);
+        	Double fMoney = Double.valueOf(money);
+	        long iMoney = (long) (fMoney * 100);
+	        String sMoney = String.valueOf(iMoney);
+	        return Long.valueOf(sMoney);
         }catch(Exception e){
         	throw new NumberFormatException("数字格式错误！");
         }

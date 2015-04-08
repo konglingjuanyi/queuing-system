@@ -2518,6 +2518,7 @@ public class OaEngineController {
 			taxiInfo.setTaxiFaresWorkhour(workhour);
 			taxiInfo.setTaxiFaresAmount(OAControllerUtils.yuanMoneyToCent(table[i][7]));
 			if (ratify) {
+				long yuanMoneyToCent = OAControllerUtils.yuanMoneyToCent(table[i][8]);
 				taxiInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][8]));
 			} else {
 				//taxiInfo.setRatify(OAControllerUtils.yuanMoneyToCent(table[i][7]));
@@ -2718,7 +2719,8 @@ public class OaEngineController {
 			formInfo.setOtherNotifyAmount(otherRatify);
 		}
 		long ratifyAmount = taxiRatify + overRatify + hosRatify + employRatify + otherRatify + commRatify;
-		formInfo.setPayAmount(OAControllerUtils.yuanMoneyToCent(vars.get("payAmount")));
+		long payAmount = OAControllerUtils.yuanMoneyToCent(vars.get("payAmount"));
+		formInfo.setPayAmount(payAmount);
 		if (ratify) {
 			formInfo.setSumFinancialNotify(ratifyAmount);
 			if(formInfo.getSumFinancialNotify() > formInfo.getMoneyAmount()){
