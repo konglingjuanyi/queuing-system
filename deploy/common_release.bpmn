@@ -54,6 +54,7 @@
     <exclusiveGateway id="exclusivegateway19" name="Exclusive Gateway"></exclusiveGateway>
     <exclusiveGateway id="exclusivegateway20" name="Exclusive Gateway"></exclusiveGateway>
     <userTask id="cfo" name="CFO" activiti:candidateUsers="sam.sun">
+      <documentation>sam.sun@qunar.com</documentation>
       <multiInstanceLoopCharacteristics isSequential="true">
         <loopCardinality>1000</loopCardinality>
         <completionCondition>${complete == true}</completionCondition>
