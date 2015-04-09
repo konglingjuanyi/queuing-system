@@ -148,6 +148,40 @@ public class WorkflowManager {
 		}
 		return infos;
 	}
+	@Read
+	public ListInfo<TaskInfo> todoList(String processKey, String userId, int start, int length){
+		
+		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
+		query.orderByTaskCreateTime().desc();
+		long count = query.count();
+		List<Task> tasks = query.listPage(start, length);
+		ListInfo<TaskInfo> infos = new ListInfo<TaskInfo>();
+		infos.setCount(count);
+		if(tasks != null)for(Task task : tasks){
+			TaskInfo info = new TaskInfo();
+			Request request = (Request)task.getProcessVariables().get("request");
+			if(request == null){
+				info.setOid("");
+			}else{
+				info.setOid(request.getOid());
+			}
+			info.setProcessInstanceId(task.getProcessInstanceId());
+			info.setTaskId(task.getId());
+			info.setTaskKey(task.getTaskDefinitionKey());
+			info.setTaskName(task.getName());
+			info.setTaskCreateTime(task.getCreateTime());
+			Map<String, Object> taskLocalVariables = task.getTaskLocalVariables();
+			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
+			if(nrOfInstances == null || nrOfInstances <= 0){
+				info.setEndorse(false);
+			}else{
+				info.setEndorse(true);
+			}
+
+			infos.getInfos().add(info);
+		}
+		return infos;
+	}
 	
 	/**
 	 * 审批历史批列表

@@ -267,6 +267,7 @@ public interface IOAEngineService {
 	 * @throws FormNotFoundException 
 	 */
 	public FormInfoList todoList(String processKey, String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException;
+	public FormInfoList todoList(String processKey, String userId, int start, int length) throws FormNotFoundException;
 	
 	/**
 	 * 参与审批的历史工单列表

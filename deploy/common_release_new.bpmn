@@ -42,7 +42,7 @@
     </userTask>
     <exclusiveGateway id="exclusivegateway18" name="Exclusive Gateway"></exclusiveGateway>
     <userTask id="fin_director" name="财务总监" activiti:candidateUsers="susan.wang">
-      <documentation>nuby.zhang@qunar.com</documentation>
+      <documentation>susan.wang@qunar.com</documentation>
       <extensionElements>
         <activiti:taskListener event="create" delegateExpression="${notificationListener}"></activiti:taskListener>
       </extensionElements>
@@ -54,6 +54,7 @@
     <exclusiveGateway id="exclusivegateway19" name="Exclusive Gateway"></exclusiveGateway>
     <exclusiveGateway id="exclusivegateway20" name="Exclusive Gateway"></exclusiveGateway>
     <userTask id="cfo" name="CFO" activiti:candidateUsers="sam.sun">
+      <documentation>sam.sun@qunar.com</documentation>
       <multiInstanceLoopCharacteristics isSequential="true">
         <loopCardinality>1000</loopCardinality>
         <completionCondition>${complete == true}</completionCondition>
