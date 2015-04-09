@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
+import com.qunar.ops.oaengine.exception.RemoteAccessException;
+import com.qunar.ops.oaengine.result.AppNoVarsRequest;
 import com.qunar.ops.oaengine.result.AppRequest;
 import com.qunar.ops.oaengine.result.AppResult;
+import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfoList;
 import com.qunar.ops.oaengine.service.IOAEngineService;
@@ -41,7 +44,7 @@ public class AppAPIController {
 	
 	@RequestMapping(value = "oa/app/count")
 	@ResponseBody
-	public AppResult getCount(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+	public AppResult getCount(HttpServletRequest request, @RequestBody AppNoVarsRequest appRequest) {
 		String userId = appRequest.getRtx_id();
 		int count = 0;
 		try {
@@ -87,7 +90,7 @@ public class AppAPIController {
 	@ResponseBody
 	public AppResult pass(HttpServletRequest request, @RequestBody AppRequest appRequest) {
 		String userId = appRequest.getRtx_id();
-		String cname = QUtils.getAdname(request);
+		String cname = this.getAdname(userId);
 		Map<String, String> vars = appRequest.getVars();
 		String oids = vars.get("taskIds");
 		String reason = vars.get("reason");
@@ -100,7 +103,7 @@ public class AppAPIController {
 			formIdList.add(NumberUtils.toLong(tmp[0], 0));
 			taskIdList.add(tmp[1]);
 		}
-		ioaEngineService.batchPass(processKey, userId, cname, formIdList, taskIdList, reason);
+		ioaEngineService.batchPass(processKey, userId, cname, formIdList, taskIdList, reason==null?"":reason);
 		return AppResult.getSuccessResult(new Object[]{});
 	}
 	
@@ -108,7 +111,7 @@ public class AppAPIController {
 	@ResponseBody
 	public AppResult reject(HttpServletRequest request, @RequestBody AppRequest appRequest) {
 		String userId = appRequest.getRtx_id();
-		String cname = QUtils.getAdname(request);
+		String cname = this.getAdname(userId);
 		Map<String, String> vars = appRequest.getVars();
 		String oids = vars.get("taskIds");
 		String reason = vars.get("reason");
@@ -119,7 +122,7 @@ public class AppAPIController {
 				if(tmp.length != 2) continue;
 				long formId = NumberUtils.toLong(tmp[0], 0);
 				String taskId = tmp[1];
-				ioaEngineService.refuse(processKey, userId, cname, formId, taskId, reason);
+				ioaEngineService.refuse(processKey, userId, cname, formId, taskId, reason==null?"":reason);
 			} catch (FormNotFoundException e) {
 				e.printStackTrace();
 				logger.error(e.getMessage());
@@ -181,6 +184,18 @@ public class AppAPIController {
 		AppResult successResult = AppResult.getSuccessResult(items);
 		successResult.setSum(count);
 		return successResult;
+	}
+	
+	private String getAdname(String userId){
+		try {
+			EmployeeInfo employeeInfo = this.ioaEngineService.getEmployeeInfo(userId);
+			if(employeeInfo != null){
+				return employeeInfo.getAdName();
+			}
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+		}
+		return "";
 	}
 
 }
