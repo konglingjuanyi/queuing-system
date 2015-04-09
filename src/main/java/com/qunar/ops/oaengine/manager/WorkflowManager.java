@@ -149,9 +149,12 @@ public class WorkflowManager {
 		return infos;
 	}
 	@Read
-	public ListInfo<TaskInfo> todoList(String processKey, String userId, int start, int length){
+	public ListInfo<TaskInfo> todoList(String processKey, String userId, String owner, int start, int length){
 		
 		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
+		if(owner != null){
+			query.processVariableValueLike("cname", "%"+owner+"%");
+		}
 		query.orderByTaskCreateTime().desc();
 		long count = query.count();
 		List<Task> tasks = query.listPage(start, length);

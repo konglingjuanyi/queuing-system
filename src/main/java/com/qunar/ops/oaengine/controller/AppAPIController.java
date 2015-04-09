@@ -42,11 +42,7 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/count")
 	@ResponseBody
 	public AppResult getCount(HttpServletRequest request, @RequestBody AppRequest appRequest) {
-		String userId = QUtils.getUsername(request);
-		if (userId == null || userId.length() == 0) {
-			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-			return AppResult.getErrorResult(10001);
-		}
+		String userId = appRequest.getRtx_id();
 		int count = 0;
 		try {
 			FormInfoList todoList = ioaEngineService.todoList(processKey, userId, null, null, null, 0, Integer.MAX_VALUE);
@@ -62,18 +58,14 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/fetch")
 	@ResponseBody
 	public AppResult getTodo(HttpServletRequest request, @RequestBody AppRequest appRequest) {
-		String userId = QUtils.getUsername(request);
-		if (userId == null || userId.length() == 0) {
-			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-			return AppResult.getErrorResult(10001);
-		}
+		String userId = appRequest.getRtx_id();
 		Map<String, String> vars = appRequest.getVars();
 		int length = NumberUtils.toInt(vars.get("length"), 50);
 		int start = NumberUtils.toInt(vars.get("start"), 0);
 		int count = 0;
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
 		try {
-			FormInfoList todoList = ioaEngineService.todoList(processKey, userId, start, length);
+			FormInfoList todoList = ioaEngineService.todoList(processKey, userId, null, start, length);
 			count = todoList.getCount();
 			for(FormInfo info : todoList.getFormInfos()){
 				Map<String, String> item = new HashMap<String, String>();
@@ -94,12 +86,7 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/approve")
 	@ResponseBody
 	public AppResult pass(HttpServletRequest request, @RequestBody AppRequest appRequest) {
-		String userId = QUtils.getUsername(request);
-		if (userId == null || userId.length() == 0) {
-			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-			return AppResult.getErrorResult(10001);
-		}
-		
+		String userId = appRequest.getRtx_id();
 		String cname = QUtils.getAdname(request);
 		Map<String, String> vars = appRequest.getVars();
 		String oids = vars.get("taskIds");
@@ -120,11 +107,7 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/reject")
 	@ResponseBody
 	public AppResult reject(HttpServletRequest request, @RequestBody AppRequest appRequest) {
-		String userId = QUtils.getUsername(request);
-		if (userId == null || userId.length() == 0) {
-			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
-			return AppResult.getErrorResult(10001);
-		}
+		String userId = appRequest.getRtx_id();
 		String cname = QUtils.getAdname(request);
 		Map<String, String> vars = appRequest.getVars();
 		String oids = vars.get("taskIds");
@@ -143,6 +126,61 @@ public class AppAPIController {
 			}
 		}
 		return AppResult.getSuccessResult(new Object[]{});
+	}
+	
+	@RequestMapping(value = "oa/app/details")
+	@ResponseBody
+	public AppResult details(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		String userId = appRequest.getRtx_id();
+		Map<String, String> vars = appRequest.getVars();
+		String oid = vars.get("taskIds");
+		String oidArray[] = oid.split(":");
+		if(oidArray.length != 2) return AppResult.getErrorResult(-100, "报销详情没有找到");
+		String formId = oidArray[0];
+		final FormInfo info;
+		try {
+			info = this.ioaEngineService.getFormInfo(null, null, formId);
+		} catch (FormNotFoundException e) {
+			return AppResult.getErrorResult(-100, e.getMessage());
+		}
+		if(info == null) return AppResult.getErrorResult(-100, "报销详情没有找到");
+		List<Map<String, String>> data = new ArrayList<Map<String, String>>();
+		data.add(new HashMap(){{put("出租车费", OAControllerUtils.centMoneyToYuan(info.getSumTaxiFaresAmount())+"元");}});
+		data.add(new HashMap(){{put("通信费", OAControllerUtils.centMoneyToYuan(info.getCommunicationCosts())+"元");}});
+		data.add(new HashMap(){{put("餐费", OAControllerUtils.centMoneyToYuan(info.getSumOvertimeMealsAmount())+"元");}});
+		data.add(new HashMap(){{put("招待费", OAControllerUtils.centMoneyToYuan(info.getSumHospitalityAmount())+"元");}});
+		data.add(new HashMap(){{put("员工关系费", OAControllerUtils.centMoneyToYuan(info.getSumEmployeeRelationsFees())+"元");}});
+		data.add(new HashMap(){{put("其他", OAControllerUtils.centMoneyToYuan(info.getSumOtherAmount())+"元");}});
+		return AppResult.getSuccessResult(data);
+	}
+	
+	@RequestMapping(value = "oa/app/filter")
+	@ResponseBody
+	public AppResult getTodoByFilter(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		String userId = appRequest.getRtx_id();
+		Map<String, String> vars = appRequest.getVars();
+		int length = NumberUtils.toInt(vars.get("length"), 50);
+		int start = NumberUtils.toInt(vars.get("start"), 0);
+		String user = vars.get("user");
+		int count = 0;
+		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
+		try {
+			FormInfoList todoList = ioaEngineService.todoList(processKey, userId, user, start, length);
+			count = todoList.getCount();
+			for(FormInfo info : todoList.getFormInfos()){
+				Map<String, String> item = new HashMap<String, String>();
+				item.put("oid", info.getId() + ":" + info.getTaskId());
+				item.put("user", info.getApplyUser());
+				item.put("time", sdf.format(info.getStartDate()));
+				item.put("sum", "总金额: " + OAControllerUtils.centMoneyToYuan(info.getMoneyAmount()) + "元");
+				items.add(item);
+			}
+		} catch (FormNotFoundException e) {
+			logger.warn(e.getMessage(), e);
+		}
+		AppResult successResult = AppResult.getSuccessResult(items);
+		successResult.setSum(count);
+		return successResult;
 	}
 
 }

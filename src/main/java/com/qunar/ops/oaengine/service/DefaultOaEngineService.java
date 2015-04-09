@@ -281,8 +281,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 		return res;
 	}
 	
-	public FormInfoList todoList(String processKey, String userId, int start, int length) throws FormNotFoundException {
-		ListInfo<TaskInfo> taskInfos = workflowManager.todoList(processKey, userId, start, length);
+	public FormInfoList todoList(String processKey, String userId, String owner, int start, int length) throws FormNotFoundException {
+		ListInfo<TaskInfo> taskInfos = workflowManager.todoList(processKey, userId, owner, start, length);
 		List<TaskInfo> _taskInfos = taskInfos.getInfos();
 		FormInfoList res = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();

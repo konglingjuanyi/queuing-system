@@ -7,6 +7,7 @@ package com.qunar.ops.oaengine.result;
 public class AppRequest extends CommonRequest{
 	private static final long serialVersionUID = -1740742078764095210L;
 	private String system;
+	private String rtx_id;
 
 	public String getSystem() {
 		return system;
@@ -14,6 +15,14 @@ public class AppRequest extends CommonRequest{
 
 	public void setSystem(String system) {
 		this.system = system;
+	}
+
+	public String getRtx_id() {
+		return rtx_id;
+	}
+
+	public void setRtx_id(String rtx_id) {
+		this.rtx_id = rtx_id;
 	}
 
 }
