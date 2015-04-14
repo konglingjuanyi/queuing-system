@@ -791,7 +791,7 @@
       <include refid="Example_Where_Clause" />
     </if>
     union
-    select count(*) a from formmain_0114
+    select count(*) a from formmain_0114_history
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
