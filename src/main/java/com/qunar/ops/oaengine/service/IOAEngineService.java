@@ -280,6 +280,7 @@ public interface IOAEngineService {
 	 * @return FormInfoList 工单列表
 	 */
 	public FormInfoList historyList(String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize);
+	public FormInfoList historyListII(String userId, Date startTime, Date endTime, String owner, int start, int length);
 	
 	
 	/**

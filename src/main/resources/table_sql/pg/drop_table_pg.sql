@@ -46,6 +46,7 @@ drop sequence t_delegation_id_seq;
 drop sequence t_group_id_seq;
 drop sequence t_group_member_id_seq;
 drop sequence t_files_id_seq;
+drop sequence t_acl_id_seq;
 
 delete from form_approve_log;
 delete from form_update_log;
@@ -68,3 +69,4 @@ delete from formson_0117_log;
 delete from formson_0118_log;
 delete from formson_0119_log;
 delete from t_files;
+delete from t_acl;

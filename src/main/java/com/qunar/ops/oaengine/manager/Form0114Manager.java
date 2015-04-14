@@ -513,6 +513,51 @@ public class Form0114Manager {
 		
 		return formInfoList;
 	}
+	@Read
+	public FormInfoList historyListII(String userId, Date startTime, Date endTime, String owner, int start, int length) {
+		
+		FormInfoList formInfoList = new FormInfoList();
+		List<FormInfo> formInfos = new ArrayList<FormInfo>();
+		FormApproveLogExample e = new FormApproveLogExample();
+		Criteria criteria = e.createCriteria();
+		criteria.andApproveUserEqualTo(userId);
+		criteria.andOwnerNotEqualTo(userId);
+		if(startTime != null){
+			criteria = criteria.andTsGreaterThanOrEqualTo(startTime);
+		}
+		if(endTime != null){
+			criteria = criteria.andTsLessThanOrEqualTo(endTime);
+		}
+		if(owner != null){
+			criteria = criteria.andOwnerCnameLike("%"+owner+"%");
+			if(owner.indexOf(".") > 0){
+				criteria = criteria.andOwnerLike("%"+owner+"%");
+			}else{
+				criteria = criteria.andOwnerCnameLike("%"+owner+"%");
+			}
+		}
+		int count = formApproveLogMapper.distinctCountByExample(e);
+
+		e.setOffset(start);
+		e.setLimit(length);
+		e.setOrderByClause("ts desc");
+		List<FormApproveLog> logs = formApproveLogMapper.selectDistinctFromIds(e);
+		for(int i = 0; i < logs.size(); i++){
+			FormInfo formInfo = null;
+			FormApproveLog log = logs.get(i);
+			formInfo = this.getFormInfo(log.getFormId());
+			if(formInfo == null) continue;
+			if(formInfo.getOid() != null){
+				formInfo.setId(Long.valueOf(formInfo.getOid()));
+			}
+			formInfo.setTaskCreateTime(log.getTs());
+			formInfos.add(formInfo);
+		}
+		formInfoList.setCount(count);
+		formInfoList.setFormInfos(formInfos);
+		
+		return formInfoList;
+	}
 	
 	
 	@Read

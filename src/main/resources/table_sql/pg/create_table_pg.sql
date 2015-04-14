@@ -1,3 +1,20 @@
+--ACL
+CREATE SEQUENCE t_acl_id_seq
+START WITH 1
+INCREMENT BY 1
+NO MINVALUE
+NO MAXVALUE
+CACHE 1;
+CREATE TABLE t_acl(
+  id bigint DEFAULT nextval('t_acl_id_seq'),
+  ip varchar(30),
+  memo varchar(30),
+  ts timestamp with time zone,
+  dob date,
+  PRIMARY KEY (id)
+);
+
+
 --附件表
 CREATE SEQUENCE t_files_id_seq
 START WITH 1

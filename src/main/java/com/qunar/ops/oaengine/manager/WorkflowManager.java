@@ -153,7 +153,11 @@ public class WorkflowManager {
 		
 		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
 		if(owner != null){
-			query.processVariableValueLike("cname", "%"+owner+"%");
+			if(owner.indexOf(".") > 0){
+				query.processVariableValueLike("owner", "%"+owner+"%");
+			}else{
+				query.processVariableValueLike("cname", "%"+owner+"%");
+			}
 		}
 		query.orderByTaskCreateTime().desc();
 		long count = query.count();

@@ -12,6 +12,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -148,12 +149,12 @@ public class AppAPIController {
 		}
 		if(info == null) return AppResult.getErrorResult(-100, "报销详情没有找到");
 		List<Map<String, String>> data = new ArrayList<Map<String, String>>();
-		data.add(new HashMap(){{put("出租车费", OAControllerUtils.centMoneyToYuan(info.getSumTaxiFaresAmount())+"元");}});
-		data.add(new HashMap(){{put("通信费", OAControllerUtils.centMoneyToYuan(info.getCommunicationCosts())+"元");}});
-		data.add(new HashMap(){{put("餐费", OAControllerUtils.centMoneyToYuan(info.getSumOvertimeMealsAmount())+"元");}});
-		data.add(new HashMap(){{put("招待费", OAControllerUtils.centMoneyToYuan(info.getSumHospitalityAmount())+"元");}});
-		data.add(new HashMap(){{put("员工关系费", OAControllerUtils.centMoneyToYuan(info.getSumEmployeeRelationsFees())+"元");}});
-		data.add(new HashMap(){{put("其他", OAControllerUtils.centMoneyToYuan(info.getSumOtherAmount())+"元");}});
+		data.add(new HashMap(){{put("k", "出租车费"); put("v", OAControllerUtils.centMoneyToYuan(info.getSumTaxiFaresAmount())+"元");}});
+		data.add(new HashMap(){{put("k", "通信费"); put("v", OAControllerUtils.centMoneyToYuan(info.getCommunicationCosts())+"元");}});
+		data.add(new HashMap(){{put("k", "餐费"); put("v", OAControllerUtils.centMoneyToYuan(info.getSumOvertimeMealsAmount())+"元");}});
+		data.add(new HashMap(){{put("k", "招待费"); put("v", OAControllerUtils.centMoneyToYuan(info.getSumHospitalityAmount())+"元");}});
+		data.add(new HashMap(){{put("k", "员工关系费"); put("v", OAControllerUtils.centMoneyToYuan(info.getSumEmployeeRelationsFees())+"元");}});
+		data.add(new HashMap(){{put("k", "其他"); put("v", OAControllerUtils.centMoneyToYuan(info.getSumOtherAmount())+"元");}});
 		return AppResult.getSuccessResult(data);
 	}
 	
@@ -165,6 +166,7 @@ public class AppAPIController {
 		int length = NumberUtils.toInt(vars.get("length"), 50);
 		int start = NumberUtils.toInt(vars.get("start"), 0);
 		String user = vars.get("user");
+		if(user !=null && user.length() == 0) user = null;
 		int count = 0;
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
 		try {
@@ -186,6 +188,33 @@ public class AppAPIController {
 		return successResult;
 	}
 	
+	@RequestMapping(value = "oa/app/history")
+	@ResponseBody
+	public AppResult getHistory(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		String userId = appRequest.getRtx_id();
+		Map<String, String> vars = appRequest.getVars();
+		int length = NumberUtils.toInt(vars.get("length"), 50);
+		int start = NumberUtils.toInt(vars.get("start"), 0);
+		String user = vars.get("user");
+		if(user !=null && user.length() == 0) user = null;
+		int count = 0;
+		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
+		FormInfoList list = ioaEngineService.historyList(userId, null, null, user, start, length);
+		count = list.getCount();
+		for(FormInfo info : list.getFormInfos()){
+			Map<String, String> item = new HashMap<String, String>();
+			item.put("oid", info.getId() + ":" + info.getTaskId());
+			item.put("user", info.getApplyUser());
+			item.put("time", sdf.format(info.getStartDate()));
+			item.put("sum", "总金额: " + OAControllerUtils.centMoneyToYuan(info.getMoneyAmount()) + "元");
+			items.add(item);
+		}
+		AppResult successResult = AppResult.getSuccessResult(items);
+		successResult.setSum(count);
+		return successResult;
+	}
+	
+	@Cacheable(value = { "employee.adname" }, key="#userId")
 	private String getAdname(String userId){
 		try {
 			EmployeeInfo employeeInfo = this.ioaEngineService.getEmployeeInfo(userId);

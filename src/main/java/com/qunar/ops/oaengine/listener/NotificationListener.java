@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.service.MailSenderService;
+import com.qunar.ops.oaengine.util.OAControllerUtils;
 
 public class NotificationListener implements TaskListener{
 	private static final long serialVersionUID = 1L;
@@ -68,7 +69,7 @@ public class NotificationListener implements TaskListener{
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm");
 		String now = sdf.format(new Date());
-		String content = "["+now+"]<"+owner+">发起《日常报销申请》 报销总金额："+(request.getAmountMoney()/100)+"元";
+		String content = "["+now+"]<"+owner+">发起《日常报销申请》 报销总金额："+(OAControllerUtils.centMoneyToYuan(request.getAmountMoney()))+"元";
 		this.mailSenderService.sender(from, to, null, content, content);
 		
 	}

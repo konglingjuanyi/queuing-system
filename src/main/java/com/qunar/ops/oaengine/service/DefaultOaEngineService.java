@@ -112,7 +112,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			logManager.appendApproveLog(userId, cname, formInfo.getId(), "start", tr, "");
 			//修改状态同时回写进程ID
 			form0114Manager.updateFormFinishedFlag(userId, info.getId(), Constants.PROCESSING, processInstanceId, true);
-			this.sendMail(null, null, userId, tr.getNextTasks(), null);
+			this.sendMail(null, null, userId, tr.getNextTasks(), null, OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount()));
 		}
 	}
 
@@ -308,7 +308,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Transactional(rollbackFor=Exception.class)
 	public void pass(String processKey, String userId, String cname, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
 		TaskResult tr = this._pass(processKey, userId, cname, formId, taskId, memo);
-		this.sendMail(userId, "同意", tr.getOwner(), tr.getNextTasks(), memo);
+		FormInfo formInfo = form0114Manager.getFormInfo(Long.valueOf(formId));
+		this.sendMail(userId, "同意", tr.getOwner(), tr.getNextTasks(), memo, OAControllerUtils.centMoneyToYuan(formInfo!=null?formInfo.getMoneyAmount():0));
 	}
 	
 	@Override
@@ -323,9 +324,10 @@ public class DefaultOaEngineService implements IOAEngineService {
 			String taskId = taskIds.get(i);
 			long formId = formIds.get(i);
 			try{
-				//taskService.claim(taskId, userId);
+				FormInfo formInfo = form0114Manager.getFormInfo(formId);
+				String amount = OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount());
 				TaskResult tr = this._pass(processKey, userId, cname, formId, taskId, memo);
-				String content = userId+" 于 ["+now+"]处理了《"+tr.getOwner()+"-日常报销》 [同意]";
+				String content = userId+" 于 ["+now+"]处理了《"+tr.getOwner()+"-日常报销  总计:"+amount+"元》 [同意]";
 				if(memo != null) content += " 附言:"+memo;
 				owner.put(tr.getOwner(), content);
 				
@@ -334,7 +336,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 					if(candidate == null) continue;
 					for(String c : candidate.split(",")){
 						if(StringUtils.trim(c).length() == 0) continue;
-						approver.put(StringUtils.trim(c), "您有《日常报销》申请需要处理");
+						approver.put(StringUtils.trim(c), "您有《日常报销  总计:"+amount+"元》申请需要处理");
 					}
 				}
 				
@@ -406,7 +408,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		if(memo == null) memo = "";
 		memo += "[加签给："+assignees+"]";
 		this.logManager.appendApproveLog(userId, cname, formId, "endorse", tr, memo);
-		this.sendMail(userId, "加签", tr.getOwner(), tr.getNextTasks(), memo);
+		this.sendMail(userId, "加签", tr.getOwner(), tr.getNextTasks(), memo, OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount()));
 	}
 	
 	@Override
@@ -447,7 +449,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		}else{
 			throw new FormNotFoundException("任务没有找到", this.getClass());
 		}
-		this.sendMail(userId, "拒绝", tr.getOwner(), null, refuseReason);
+		this.sendMail(userId, "拒绝", tr.getOwner(), null, refuseReason, OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount()));
 		
 	}
 
@@ -494,14 +496,14 @@ public class DefaultOaEngineService implements IOAEngineService {
 		
 	}
 	
-	private void sendMail(String userId, String action, String owner, List<TaskInfo> infos, String memo){
+	private void sendMail(String userId, String action, String owner, List<TaskInfo> infos, String memo, String amount){
 		if(owner == null) return;
 		String form = "oa@qunar.com";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String now = sdf.format(new Date());
 		String content = "";
 		if(userId != null && action != null){
-			content = userId+" 于 ["+now+"]处理了《"+owner+"-日常报销》 ["+action+"]";
+			content = userId+" 于 ["+now+"]处理了《"+owner+"-日常报销   总计:"+amount+"元》 ["+action+"]";
 			if(memo != null){
 				content += " 附言:"+memo;
 			}
@@ -520,7 +522,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			}
 		}
 		if(to != null){
-			content = "["+now+"]您有《"+owner+"-日常报销》 需要处理"+tn;
+			content = "["+now+"]您有《"+owner+"-日常报销  总计:"+amount+"元》 需要处理"+tn;
 			if(memo != null){
 				content += " 附言:"+memo;
 			}
@@ -564,6 +566,9 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	public FormInfoList historyList(String userId, Date startTime, Date endTime, String owner, int pageNo, int pageSize) {
 		return this.form0114Manager.historyList(userId, startTime, endTime, owner, pageNo, pageSize);
+	}
+	public FormInfoList historyListII(String userId, Date startTime, Date endTime, String owner, int start, int length) {
+		return this.form0114Manager.historyListII(userId, startTime, endTime, owner, start, length);
 	}
 
 	@Override

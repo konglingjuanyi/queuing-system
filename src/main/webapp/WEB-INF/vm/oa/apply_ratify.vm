@@ -141,15 +141,15 @@
             <input type="text" disabled="disabled" onclick="showTimeAndLabor('table1', this)"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" onblur="addMoney('table1')"></td>
-                    <td><input type="text" ></td>
+                    <td><textarea style='resize:none' rows="1" cols="12"></textarea></td>
                     <td><input value='' type='hidden'></td>
 
                 </tr>
@@ -210,15 +210,15 @@
             <input disabled="disabled" type="text" onclick="showTimeAndLabor('table2', this)"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" onblur="addMoney('table2')"></td>
-                    <td><input type="text"></td>
+                    <td><textarea style='resize:none' rows="1" ></textarea></td>
                     <td><input type='hidden' value=''></td>
                 </tr>
             </table>
@@ -259,14 +259,14 @@
             <input disabled="disabled" type="text" onclick="showTime()"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="12" disabled="disabled"></textarea></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" onblur="addMoney('table3')"></td>
-                    <td><input type="text"></td>
+                    <td><textarea style='resize:none;' rows="1" cols="12"></textarea></td>
                     <td><input type='hidden' value=''></td>
                 </tr>
             </table>
@@ -304,12 +304,12 @@
             <input disabled="disabled" type="text" onclick="showTime()"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
-                    <td><input type="text" disabled="disabled"></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="20" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="20" disabled="disabled"></textarea></td>
+                    <td><textarea style='resize:none;background:#eeeeee;' rows="1" cols="20" disabled="disabled"></textarea></td>
                     <td><input type="text" disabled="disabled"></td>
                     <td><input type="text" onblur="addMoney('table4')"></td>
-                    <td><input type="text"></td>
+                    <td><textarea style='resize:none;' rows="1" cols="12"></textarea></td>
                     <td><input type='hidden' value=''></td>
                 </tr>
             </table>
@@ -505,10 +505,13 @@
                     var cell = nRow.insertCell(k);
                     cell.innerHTML = table.rows[rowLen - 1].cells[k].innerHTML;
                     if(k == 0 && i < 5){
-                        console.log(cell.childNodes[0].childNodes);
                         cell.childNodes[0].childNodes[1].value = value;
                     }else{
-                        cell.childNodes[0].value = value;
+                    	if(cell.childNodes[0].tagName == 'DIV' || cell.childNodes[0].tagName == 'TEXTAREA'){
+                    		cell.childNodes[0].innerHTML = value;
+                    	}else{
+                        	cell.childNodes[0].value = value;
+                        }
                     }
                 }
                 cell = nRow.insertCell(coLen - 1);
