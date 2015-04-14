@@ -762,7 +762,7 @@ public class Form0114Manager {
 			if (payEndTime != null) {
 				criteria.andField0029LessThanOrEqualTo(payEndTime);
 			}
-			int count = formmain0114Mapper.countByExample(example);
+			int count = formmain0114Mapper.countUnionByExample(example);
 			example.setOffset((pageNo - 1) * pageSize);
 			example.setLimit(pageSize);
 			example.setOrderByClause("id desc");

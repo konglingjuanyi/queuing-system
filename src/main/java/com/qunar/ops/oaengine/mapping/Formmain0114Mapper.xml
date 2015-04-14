@@ -784,6 +784,19 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <select id="countUnionByExample" parameterType="com.qunar.ops.oaengine.model.Formmain0114Example" resultType="java.lang.Integer" >
+    select sum(a) from (
+    select count(*) a from formmain_0114
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    union
+    select count(*) a from formmain_0114
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    ) t
+  </select>
   <update id="updateByExampleSelective" parameterType="map" >
     update formmain_0114
     <set >

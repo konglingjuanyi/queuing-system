@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 
 public interface Formmain0114Mapper {
     int countByExample(Formmain0114Example example);
+    
+    int countUnionByExample(Formmain0114Example example);
 
     int deleteByExample(Formmain0114Example example);
 
