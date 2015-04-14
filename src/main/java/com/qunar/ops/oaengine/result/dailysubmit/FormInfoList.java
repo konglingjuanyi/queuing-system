@@ -1,5 +1,6 @@
 package com.qunar.ops.oaengine.result.dailysubmit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
@@ -28,7 +29,7 @@ public class FormInfoList {
 		this.count = count;
 	}
 	public List<FormInfo> getFormInfos() {
-		return formInfos;
+		return formInfos==null?new ArrayList<FormInfo>():formInfos;
 	}
 	public void setFormInfos(List<FormInfo> formInfos) {
 		this.formInfos = formInfos;

@@ -57,6 +57,7 @@
         	<select name="status" id="status">
         	<option value="doing">未完成</option>
         	<option value="done">已完成</option>
+        	<option value="all">全部</option>
         	</select>
         </span>
         <br/>
