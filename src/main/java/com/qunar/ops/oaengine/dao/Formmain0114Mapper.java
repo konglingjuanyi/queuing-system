@@ -17,6 +17,8 @@ public interface Formmain0114Mapper {
     int insertSelective(Formmain0114 record);
 
     List<Formmain0114> selectByExample(Formmain0114Example example);
+    
+    List<Formmain0114> selectUnionByExample(Formmain0114Example example);
 
     Formmain0114 selectByPrimaryKey(Long id);
 

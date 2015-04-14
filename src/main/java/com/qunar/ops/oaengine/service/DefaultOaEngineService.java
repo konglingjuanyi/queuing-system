@@ -358,6 +358,9 @@ public class DefaultOaEngineService implements IOAEngineService {
 		TaskResult tr = this.workflowManager.pass(taskId, userId);
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, cname, formId, "pass", tr, memo);
+		if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
+			this.form0114Manager.recordKeyOperation(cname+"("+userId+")", "check", formId);
+		}
 		if(tr.isFinished()){
 			if(this.groupManager.inGroups(new String[]{"cashier"}, userId)){
 				this.form0114Manager.recordKeyOperation(cname+"("+userId+")", "cashier", formId);
@@ -366,8 +369,6 @@ public class DefaultOaEngineService implements IOAEngineService {
 			}
 			this.form0114Manager.deleteFormInfo(userId, formId, Constants.PROC_END);
 			paymentService.payment(formId);
-		}else if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
-			this.form0114Manager.recordKeyOperation(cname+"("+userId+")", "check", formId);
 		}
 		return tr;
 	}

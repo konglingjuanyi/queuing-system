@@ -604,7 +604,8 @@ public class Form0114Manager {
 
 		FormInfoList formInfoList = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
-
+		
+		
 		if ("done".equals(status)) {
 			Formmain0114HistoryExample example = new Formmain0114HistoryExample();
 			com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria criteria = example.createCriteria();
@@ -648,8 +649,8 @@ public class Form0114Manager {
 			for (int i = 0; i < formmain0114s.size(); i++) {
 				formInfo = new FormInfo();
 				BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
-
-				Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+				formInfo.setId(NumberUtils.toLong(formInfo.getOid()));
+				Map<String, Object> formson = getFormsonInfoHistory(NumberUtils.toLong(formInfo.getOid()));
 				formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
 						.get("overtimeMealsInfos"));
 				formInfo.setHospitalityInfo((HospitalityInfo[]) formson
@@ -667,9 +668,7 @@ public class Form0114Manager {
 			formInfoList.setPageSize(pageSize);
 			formInfoList.setPageNo(pageNo);
 			formInfoList.setFormInfos(formInfos);
-		}
-
-		if ("doing".equals(status)) {
+		} else if ("doing".equals(status)) {
 			Formmain0114Example example = new Formmain0114Example();
 			com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example
 					.createCriteria();
@@ -713,6 +712,72 @@ public class Form0114Manager {
 				formInfo = new FormInfo();
 				BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
 				Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+				formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+				.get("overtimeMealsInfos"));
+				formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+				.get("hospitalityInfos"));
+				formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+				.get("otherCostsInfos"));
+				formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+				.get("employeeRelationsFeesInfos"));
+				formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+				.get("taxiFaresInfos"));
+				formInfos.add(formInfo);
+			}
+			formInfoList.setCount(count);
+			formInfoList.setPageSize(pageSize);
+			formInfoList.setPageNo(pageNo);
+			formInfoList.setFormInfos(formInfos);
+		} else if ("all".equals(status)) {
+			Formmain0114Example example = new Formmain0114Example();
+			com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example
+					.createCriteria();
+			if (approveUser != null) {
+				criteria.andStartMemberIdLike("%" + approveUser + "%");
+			}
+			if (approveNo != null) {
+				criteria.andField0008Like("%" + approveNo + "%");
+			}
+			if (approvtStartTime != null) {
+				criteria.andField0005GreaterThanOrEqualTo(approvtStartTime);
+			}
+			if (approveEndTime != null) {
+				criteria.andField0005LessThanOrEqualTo(approveEndTime);
+			}
+			if (checkUser != null) {
+				criteria.andField0072Like("%" + checkUser + "%");
+			}
+			if (checkStartTime != null) {
+				criteria.andField0073GreaterThanOrEqualTo(checkStartTime);
+			}
+			if (checkEndTime != null) {
+				criteria.andField0073LessThanOrEqualTo(checkEndTime);
+			}
+			if (payUser != null) {
+				criteria.andField0028Like("%" + payUser + "%");
+			}
+			if (payStartTime != null) {
+				criteria.andField0029GreaterThanOrEqualTo(payStartTime);
+			}
+			if (payEndTime != null) {
+				criteria.andField0029LessThanOrEqualTo(payEndTime);
+			}
+			int count = formmain0114Mapper.countByExample(example);
+			example.setOffset((pageNo - 1) * pageSize);
+			example.setLimit(pageSize);
+			example.setOrderByClause("id desc");
+			List<Formmain0114> formmain0114s = formmain0114Mapper.selectUnionByExample(example);
+			FormInfo formInfo;
+			for (int i = 0; i < formmain0114s.size(); i++) {
+				formInfo = new FormInfo();
+				BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+				Map<String, Object> formson = null;
+				if(formInfo.getOid() != null && formInfo.getOid().length() > 0){
+					formInfo.setId(NumberUtils.toLong(formInfo.getOid()));
+					formson = getFormsonInfoHistory(NumberUtils.toLong(formInfo.getOid()));
+				}else{
+					formson = getFormsonInfo(formInfo.getId());
+				}
 				formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
 				.get("overtimeMealsInfos"));
 				formInfo.setHospitalityInfo((HospitalityInfo[]) formson

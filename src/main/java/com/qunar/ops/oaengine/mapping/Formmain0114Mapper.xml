@@ -174,6 +174,37 @@
       limit ${limit} offset ${offset}
     </if>
   </select>
+  <select id="selectUnionByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.oaengine.model.Formmain0114Example" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from formmain_0114
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    
+    union
+    
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from formmain_0114_history
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limit >= 0" >
+      limit ${limit} offset ${offset}
+    </if>
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
