@@ -336,7 +336,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 					if(candidate == null) continue;
 					for(String c : candidate.split(",")){
 						if(StringUtils.trim(c).length() == 0) continue;
-						approver.put(StringUtils.trim(c), "您有《日常报销  总计:"+amount+"元》申请需要处理");
+						approver.put(StringUtils.trim(c), "您有《"+tr.getOwner()+"-日常报销  总计:"+amount+"元》申请需要处理");
 					}
 				}
 				
