@@ -12,7 +12,10 @@ import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,10 +34,14 @@ import com.qunar.ops.oaengine.util.OAControllerUtils;
 import com.qunar.ops.oaengine.util.OAEngineConst;
 import com.qunar.ops.oaengine.util.QUtils;
 
+@Component
 @Controller
 public class AppAPIController {
 	
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	@Value("${api.acl}")
+	String acl;
 	
 	@Autowired
 	private IOAEngineService ioaEngineService;
@@ -46,6 +53,9 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/count")
 	@ResponseBody
 	public AppResult getCount(HttpServletRequest request, @RequestBody AppNoVarsRequest appRequest) {
+		if(!this.checkAcl(request.getRemoteAddr())){
+			return AppResult.getErrorResult(-100, "ACL禁止");
+		}
 		String userId = appRequest.getRtx_id();
 		int count = 0;
 		try {
@@ -62,6 +72,9 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/fetch")
 	@ResponseBody
 	public AppResult getTodo(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		if(!this.checkAcl(request.getRemoteAddr())){
+			return AppResult.getErrorResult(-100, "ACL禁止");
+		}
 		String userId = appRequest.getRtx_id();
 		Map<String, String> vars = appRequest.getVars();
 		int length = NumberUtils.toInt(vars.get("length"), 50);
@@ -90,6 +103,9 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/approve")
 	@ResponseBody
 	public AppResult pass(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		if(!this.checkAcl(request.getRemoteAddr())){
+			return AppResult.getErrorResult(-100, "ACL禁止");
+		}
 		String userId = appRequest.getRtx_id();
 		String cname = this.getAdname(userId);
 		Map<String, String> vars = appRequest.getVars();
@@ -111,6 +127,9 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/reject")
 	@ResponseBody
 	public AppResult reject(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		if(!this.checkAcl(request.getRemoteAddr())){
+			return AppResult.getErrorResult(-100, "ACL禁止");
+		}
 		String userId = appRequest.getRtx_id();
 		String cname = this.getAdname(userId);
 		Map<String, String> vars = appRequest.getVars();
@@ -135,6 +154,9 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/details")
 	@ResponseBody
 	public AppResult details(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		if(!this.checkAcl(request.getRemoteAddr())){
+			return AppResult.getErrorResult(-100, "ACL禁止");
+		}
 		String userId = appRequest.getRtx_id();
 		Map<String, String> vars = appRequest.getVars();
 		String oid = vars.get("taskIds");
@@ -161,6 +183,9 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/filter")
 	@ResponseBody
 	public AppResult getTodoByFilter(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		if(!this.checkAcl(request.getRemoteAddr())){
+			return AppResult.getErrorResult(-100, "ACL禁止");
+		}
 		String userId = appRequest.getRtx_id();
 		Map<String, String> vars = appRequest.getVars();
 		int length = NumberUtils.toInt(vars.get("length"), 50);
@@ -191,6 +216,9 @@ public class AppAPIController {
 	@RequestMapping(value = "oa/app/history")
 	@ResponseBody
 	public AppResult getHistory(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		if(!this.checkAcl(request.getRemoteAddr())){
+			return AppResult.getErrorResult(-100, "ACL禁止");
+		}
 		String userId = appRequest.getRtx_id();
 		Map<String, String> vars = appRequest.getVars();
 		int length = NumberUtils.toInt(vars.get("length"), 50);
@@ -225,6 +253,13 @@ public class AppAPIController {
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	private boolean checkAcl(String ip){
+		if(this.acl == null || this.acl.length() == 0) return true;
+		if("*".equals(this.acl)) return true;
+		if(this.acl.indexOf(ip) >= 0) return true;
+		return false;
 	}
 
 }
