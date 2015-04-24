@@ -2159,13 +2159,29 @@ public class OaEngineController {
 		if(assignees==null || assignees.length() == 0){
 			return BaseResult.getErrorResult(-1, "加签人不能为空");
 		}
-		try {
-			EmployeeInfo einfo = this.ioaEngineService.getEmployeeInfo(assignees);
-			if(einfo == null || einfo.getEnable() == 0){
+		EmployeeInfo einfo = null;
+		if(assignees.indexOf(".") < 0){
+			List<EmployeeInfo> infos = this.employeeInfoService.getEmployeeByCname(assignees);
+			if(infos.size() == 1){
+				einfo = infos.get(0);
+				assignees = einfo.getUserId();
+			}else if(infos.size() > 1){
+				String s = "请选择准确的rtx_id:<br/>";
+				for(EmployeeInfo i : infos){
+					s += i.getAdName()+"("+i.getUserId()+")<br/>";
+				}
+				return BaseResult.getErrorResult(-202, s);
+			}
+		}else{
+			try {
+				einfo = this.ioaEngineService.getEmployeeInfo(assignees);
+				
+			} catch (RemoteAccessException e1) {
+				e1.printStackTrace();
 				return BaseResult.getErrorResult(-1, "被加签人没有找到，或已经离职");
 			}
-		} catch (RemoteAccessException e1) {
-			e1.printStackTrace();
+		}
+		if(einfo == null || einfo.getEnable() == 0){
 			return BaseResult.getErrorResult(-1, "被加签人没有找到，或已经离职");
 		}
 		if(userId.equals(assignees)){
@@ -2383,6 +2399,23 @@ public class OaEngineController {
 			logger.error(e.getMessage());
 			return BaseResult.getErrorResult(-500, e.getMessage());
 		}
+	}
+	
+	@RequestMapping(value = "oa/get_ems")
+	@ResponseBody
+	public BaseResult getEmployees(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		String key = vars.get("key");
+		List<EmployeeInfo> employeeByCname = this.employeeInfoService.getEmployeeByCname(key);
+		List<Map<String, String>> kvs = new ArrayList<Map<String, String>>();
+		for(EmployeeInfo info : employeeByCname){
+			HashMap<String, String> kv = new HashMap<String, String>();
+			kv.put("value", info.getUserId());
+			kv.put("label", info.getAdName());
+			kvs.add(kv);
+		}
+		return BaseResult.getSuccessResult(kvs);
 	}
 	
 	/**

@@ -43,6 +43,66 @@ public class EmployeeInfoService {
 	String oadUrl;
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	
+	/**
+	 * 获取员工信息
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws RemoteAccessException
+	 */
+	public List<EmployeeInfo> getEmployeeByCname(String cname) {
+		if(cname == null) cname = "";
+		cname = cname.trim();
+		List<EmployeeInfo> eInfos = new ArrayList<EmployeeInfo>();
+		String apiUrl = backyardUrl + "?require=search_em";
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("full_name", cname));
+		JSONObject json;
+		try {
+			json = invokePostApi(apiUrl, params);
+		} catch (RemoteAccessException e) {
+			return eInfos;
+		}
+		if (json.containsKey("error_id") && json.getInteger("err_id") > 0) {
+			return eInfos;
+		} else {
+			JSONArray datas = json.getJSONArray("data");
+			if(datas.size() == 0){				return eInfos;
+			}
+			for(int i=0; i<datas.size(); i++){
+				EmployeeInfo eInfo = new EmployeeInfo();
+				JSONObject data = datas.getJSONObject(i);
+				eInfo.setUserId((String) data.get("rtx_id"));
+				eInfo.setUserMail((String) data.get("email"));
+				
+				String manager_email = data.getString("manager_email");
+				eInfo.setManagerMail(manager_email);
+				String manager = "";
+				if(manager_email != null){
+					manager = manager_email.substring(0, manager_email.indexOf("@"));
+				}
+				eInfo.setManager(manager);
+				eInfo.setSn((String) data.get("sn"));
+				eInfo.setAdName((String) data.get("cn"));
+				eInfo.setDepartmentI((String) data.get("dep1"));
+				eInfo.setDepartmentII((String) data.get("dep2"));
+				eInfo.setDepartmentIII((String) data.get("dep3"));
+				eInfo.setDepartmentIV((String) data.get("dep4"));
+				eInfo.setDepartmentV((String) data.get("dep5"));
+	
+				//eInfo.setVp((String) data.get("vp"));
+				//eInfo.setVpMail((String) data.get("vp_mail"));
+				
+				eInfo.setEnable(1);
+				eInfo.setCompany(data.getString("company"));
+				eInfos.add(eInfo);
+			}
+
+			QMonitor.recordOne("call_qunarit_success");
+		}
+		return eInfos;
+	}
 
 	/**
 	 * 获取员工信息

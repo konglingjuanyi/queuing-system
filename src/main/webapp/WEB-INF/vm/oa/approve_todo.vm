@@ -104,7 +104,6 @@
 <div id="approve-msg-dialog" class="hide"></div>
 <div id="back-msg-dialog" class="hide"></div>
 <div id="endorse-msg-dialog" class="hide"></div>
-
 <div id="common-notice-dialog" class="hide"></div>
 
 <script src="static/js/utils.js">
@@ -125,7 +124,32 @@
     jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
         showApproveTableInfo("oa/approve_todo", null);
-    });
+        
+    	$('#rtx_id').autocomplete({
+	        source: function (request, response) {
+	    		var params = {};
+	    		var vars = {};
+                params["vars"] = vars;
+                vars["key"] = $('#rtx_id').val();
+                $.ajax({
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "POST",
+                    "url": "oa/get_ems",
+                    "data": JSON.stringify(params),
+                    "success": function (resp) {
+                    	var data = resp.data;
+						response($.map(data, function(item){
+						                          return item;
+						                      }));
+                    },
+                    error: function () {
+                        showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                    }
+                });
+	    	}
+	    });
+	});	
+	
 
     function showApproveTableInfo(url, fids) {
         var ex = document.getElementById("approve_todo");
@@ -438,7 +462,7 @@
                     generateNoticeMsg('网络错误，请刷新后重试!'), 300);
         }
     }
-
+    
     function approveEndorse(oTable) {
     	if($("input:checked", oTable.fnGetNodes()).size()==0){
     		showApproveResultDialog('审批', 'icon-lightbulb',
@@ -515,6 +539,8 @@
                     }
                 ]
             });
+            
+            
         } catch (e) {
             showCommonNoticeDialog('网络错误', 'icon-warning-sign',
                     generateNoticeMsg('网络错误，请刷新后重试!'), 300);
@@ -655,10 +681,9 @@
     function createEndorseMsgForm(msg) {
         var tips = msg;
         var form = '<form style="width: 100%; background-color: white"> ';
-
         form += '<div class="form-group">';
         form += '<label>加签给：</label>';
-        form += $.parseStr('<input class="form-control" id="rtx_id" placeholder="%s">', "请输入rtx_id, 不能为空");
+        form += $.parseStr('<input class="form-control input-mask-date ui-autocomplete-input" id="rtx_id" placeholder="%s" autocomplete="off">', "请输入rtx_id, 不能为空");
         form += '</div>';
         form += '<div class="space-4"></div>';
         form += '<div>';
