@@ -438,6 +438,31 @@ public class DefaultOaEngineService implements IOAEngineService {
 		reason += "[召回："+userId+"]";
 		this.logManager.appendApproveLog(userId, cname, formId, "recall", tr, reason);
 	}
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public void back(String processKey, String userId, String cname, String fromTaskId, long formId, String reason) throws Exception {
+		
+		FormInfo formInfo = form0114Manager.getFormInfo(formId);
+		if(formInfo == null) throw new FormNotFoundException("工单没有找到", this.getClass());
+		
+		if(formInfo.getFinishedflag() > 0){
+			throw new FormNotFoundException("流程已经结束，不能退回", this.getClass());
+		}
+		
+		FormApproveLog log = this.logManager.getLastPassApproveLog(formId, userId);
+		if(log == null){
+			throw new FormNotFoundException("没有找到上级节点，不能退回", this.getClass());
+		}
+		TaskResult tr = this.workflowManager.drag(userId, fromTaskId, log.getTaskId(), log.getApproveUser(), reason);
+		
+		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+		if(reason == null) reason = "";
+		this.logManager.appendApproveLog(userId, cname, formId, "back", tr, reason);
+		
+		this.sendMail(userId, "回退", tr.getOwner(), tr.getNextTasks(), reason, OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount()));
+		
+	}
 
 	@Override
 	@Transactional(rollbackFor=Exception.class)

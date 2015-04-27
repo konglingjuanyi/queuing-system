@@ -2244,6 +2244,35 @@ public class OaEngineController {
 		} 
 		return BaseResult.getSuccessResult("召回成功");
 	}
+	
+	/**
+	 * 退回
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/approve_back")
+	@ResponseBody
+	public BaseResult approveBack(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+		String userId = QUtils.getUsername(request);
+		if (userId == null || userId.length() == 0) {
+			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
+			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL, OAEngineConst.RTX_ID_IS_NULL_MSG);
+		}
+		String cname = QUtils.getAdname(request);
+		Map<String, String> vars = commonRequest.getVars();
+		String formId = vars.get("formIds");
+		String taskId = vars.get("taskIds");
+		String msg = vars.get("memo");
+		try {
+			ioaEngineService.back(processKey, userId, cname, taskId, Long.parseLong(formId), msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return BaseResult.getErrorResult(-1, e.getMessage());
+		} 
+		return BaseResult.getSuccessResult("退回成功");
+	}
 
 	/**
 	 * 催办动作

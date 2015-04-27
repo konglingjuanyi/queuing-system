@@ -102,6 +102,31 @@ public class LogManager {
 	}
 	
 	@Read
+	public FormApproveLog getLastPassApproveLog(long formId, String userId){
+		FormApproveLogExample example = new FormApproveLogExample();
+		example.createCriteria().andFormIdEqualTo(formId);
+		example.setOrderByClause("ts desc");
+		example.setOffset(0);
+		example.setLimit(1);
+		List<FormApproveLog> logs = formApproveLogMapper.selectByExample(example);
+		if(logs.size() == 0) return null;
+		FormApproveLog log = logs.get(0);
+		
+		if("pass".equals(log.getManagerType())){
+			return log;
+		}else{
+			FormApproveLogExample e = new FormApproveLogExample();
+			e.createCriteria().andFormIdEqualTo(formId).andManagerTypeEqualTo("pass").andNextTaskIdEqualTo(log.getTaskId());
+			example.setOrderByClause("ts desc");
+			example.setOffset(0);
+			example.setLimit(1);
+			logs = formApproveLogMapper.selectByExample(e);
+			if(logs.size() == 0) return null;
+			return logs.get(0);
+		}
+	}
+	
+	@Read
 	public ApprovalInfo getApprovalInfo(long approveId){
 		ApprovalInfo info = new ApprovalInfo();
 		BeanUtils.copyProperties(formApproveLogMapper.selectByPrimaryKey(approveId), info);

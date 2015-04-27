@@ -328,29 +328,34 @@ public class WorkflowManager {
 	}
 	
 	/**
-	 * 退回
-	 * @param taskId
-	 * @param turnback_reason
+	 * 拽单
+	 * @param userId
+	 * @param fromTaskId
+	 * @param toTaskId
+	 * @param assignee
+	 * @param reason
+	 * @return
+	 * @throws ActivitiException
 	 */
-	public TaskResult back(String userId, String taskId, String turnback_reason)  throws ActivitiException {
-		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
+	public TaskResult drag(String userId, String fromTaskId, String toTaskId, String assignee, String reason)  throws ActivitiException {
+		Task task = this.taskService.createTaskQuery().taskId(fromTaskId).taskCandidateOrAssigned(userId).singleResult();
 		if(task == null) {
-			logger.warn("任务没有找到{}", taskId);
+			logger.warn("任务没有找到{}", fromTaskId);
 			return null;
 		}
-		List<HistoricActivityInstance> lastActs = this.findLastTasks(task);
-		TaskServiceImpl taskService = (TaskServiceImpl)this.taskService;
-		Map<String, String> destinationTasks = new HashMap<String, String>();
-		for(HistoricActivityInstance lastAct : lastActs){
-			destinationTasks.put(lastAct.getActivityId(), lastAct.getAssignee());
+		ActivityImpl currActivity = findActivitiImpl(task.getId(), null);
+		List<PvmTransition> oriPvmTransitionList = clearTransition(currActivity);
+		TransitionImpl newTransition = currActivity.createOutgoingTransition();
+		ActivityImpl pointActivity = findActivitiImpl(task.getId(), toTaskId);
+		newTransition.setDestination(pointActivity);
+		taskService.complete(task.getId());
+		pointActivity.getIncomingTransitions().remove(newTransition);
+		restoreTransition(currActivity, oriPvmTransitionList);
+		List<TaskInfo> currentTasks = this.getCurrentTasks(task.getProcessInstanceId());
+		for(TaskInfo info : currentTasks){
+			taskService.setAssignee(info.getTaskId(), assignee);
 		}
-		if(destinationTasks.isEmpty()){
-			logger.warn("无法回退{}", taskId);
-			throw new ActivitiIllegalArgumentException("没有前置审批节点，无法回退，请选择拒绝");
-		}
-		Map<String, String> findFlowActivity = this.findFlowActivity(lastActs, task.getProcessDefinitionId());
-		taskService.getCommandExecutor().execute(new TurnBackTaskCmd(task.getId(), destinationTasks, findFlowActivity, turnback_reason));
-		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()),task, this.getCurrentTasks(task.getProcessInstanceId()));
+		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, currentTasks);
 	}
 	
 	/**
