@@ -352,7 +352,10 @@ public class WorkflowManager {
 		TransitionImpl newTransition = currActivity.createOutgoingTransition();
 		ActivityImpl pointActivity = findActivitiImpl(task.getId(), toTaskId);
 		newTransition.setDestination(pointActivity);
-		taskService.complete(task.getId());
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("complete", true);
+		vars.put("candidates", null);
+		taskService.complete(task.getId(), vars);
 		pointActivity.getIncomingTransitions().remove(newTransition);
 		restoreTransition(currActivity, oriPvmTransitionList);
 		List<TaskInfo> currentTasks = this.getCurrentTasks(task.getProcessInstanceId());
@@ -528,8 +531,7 @@ public class WorkflowManager {
 
 	private void restoreTransition(ActivityImpl activityImpl,
 			List<PvmTransition> oriPvmTransitionList) {
-		List<PvmTransition> pvmTransitionList = activityImpl
-				.getOutgoingTransitions();
+		List<PvmTransition> pvmTransitionList = activityImpl.getOutgoingTransitions();
 		pvmTransitionList.clear();
 		for (PvmTransition pvmTransition : oriPvmTransitionList) {
 			pvmTransitionList.add(pvmTransition);
