@@ -2197,7 +2197,7 @@ public class OaEngineController {
 						&& !userId.equals(formInfo.getStartMemberId()) 
 						&& !assignees.equals(formInfo.getStartMemberId()) 
 						&& !this.groupManager.inGroups(new String[] {tk}, assignees)) {
-					return BaseResult.getErrorResult(-1, "加签人对象 必须是同组成员");
+					//return BaseResult.getErrorResult(-1, "加签人对象 必须是同组成员");
 				}
 				ioaEngineService.endorse(processKey, userId, cname, Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
 			} catch (FormNotFoundException e) {
