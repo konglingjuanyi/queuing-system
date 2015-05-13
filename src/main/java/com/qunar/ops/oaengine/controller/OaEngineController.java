@@ -231,8 +231,10 @@ public class OaEngineController {
 			if (ret.equals("true")) {
 				String userId = parseObject.getJSONObject("data").getString("userId");
 				String adname = parseObject.getJSONObject("data").getJSONObject("userInfo").getString("ad_cn");
-				JSONArray dept = parseObject.getJSONObject("data").getJSONObject("userInfo").getJSONArray("dept");
-				String departmentI = dept.getString(0);
+				//JSONArray dept = parseObject.getJSONObject("data").getJSONObject("userInfo").getJSONArray("dept");
+				//String departmentI = dept.getString(0);
+				EmployeeInfo employee = this.employeeInfoService.getEmployee(userId);
+				String departmentI = employee.getDepartmentI();
 				if(!"技术部".equals(departmentI) && !"财务部".equals(departmentI)&& !"内审部".equals(departmentI)){
 					return welcom(request, "本系统目前只对技术部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
