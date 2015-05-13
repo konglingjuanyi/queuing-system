@@ -367,7 +367,8 @@ public class EngineAdminController {
 	@RequestMapping(value = "/admin/group/add_member")
 	@ResponseBody
 	public BaseResult addGroupMember(HttpServletRequest request, @RequestBody CommonRequest commonRequestt) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("ADMIN_ID");
+		String userId = QUtils.getAdmin(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
@@ -389,7 +390,8 @@ public class EngineAdminController {
 	@RequestMapping(value = "/admin/group/remove_member")
 	@ResponseBody
 	public BaseResult removeGroupMember(HttpServletRequest request, @RequestBody CommonRequest commonRequestt) {
-		String userId = (String) request.getSession().getAttribute("USER_ID");
+		//String userId = (String) request.getSession().getAttribute("ADMIN_ID");
+		String userId = QUtils.getAdmin(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
 			return BaseResult.getErrorResult(OAEngineConst.RTX_ID_IS_NULL,
