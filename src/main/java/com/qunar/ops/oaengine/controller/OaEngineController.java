@@ -79,6 +79,7 @@ import com.qunar.ops.oaengine.manager.LoginManager;
 import com.qunar.ops.oaengine.manager.WorkflowManager;
 import com.qunar.ops.oaengine.model.Delegation;
 import com.qunar.ops.oaengine.model.Files;
+import com.qunar.ops.oaengine.model.FormApproveLog;
 import com.qunar.ops.oaengine.result.BaseResult;
 import com.qunar.ops.oaengine.result.CommonRequest;
 import com.qunar.ops.oaengine.result.DataResult;
@@ -231,8 +232,10 @@ public class OaEngineController {
 			if (ret.equals("true")) {
 				String userId = parseObject.getJSONObject("data").getString("userId");
 				String adname = parseObject.getJSONObject("data").getJSONObject("userInfo").getString("ad_cn");
-				JSONArray dept = parseObject.getJSONObject("data").getJSONObject("userInfo").getJSONArray("dept");
-				String departmentI = dept.getString(0);
+				//JSONArray dept = parseObject.getJSONObject("data").getJSONObject("userInfo").getJSONArray("dept");
+				//String departmentI = dept.getString(0);
+				EmployeeInfo employee = this.employeeInfoService.getEmployee(userId);
+				String departmentI = employee.getDepartmentI();
 				if(!"技术部".equals(departmentI) && !"财务部".equals(departmentI)&& !"内审部".equals(departmentI)){
 					return welcom(request, "本系统目前只对技术部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
@@ -329,6 +332,26 @@ public class OaEngineController {
 		mav.addObject("loans", loans);
 		mav.addObject("formId", request.getParameter("formId"));
 		mav.addObject("taskId", request.getParameter("taskId"));
+		String tk = this.workflowManager.getTaskKey(request.getParameter("taskId"));
+		List<FormApproveLog> listPass=logManager.formAppreoveLogAllPassByFormId(
+				Long.parseLong(request.getParameter("formId").toString()),tk,"pass");
+		String approveUser="";
+		
+		//保存退回人的rtx_id
+		List<String> backMemberArray = new ArrayList<String>();
+		if(listPass!=null && listPass.size()>0) {
+			for(int i=0;i<listPass.size();i++){
+				//退回人去重
+				if(approveUser.equals(listPass.get(i).getApproveUser())){
+						continue;
+				}
+				String msg = listPass.get(i).getApproveUser()
+						+"("+listPass.get(i).getApproveCname()+")";
+				backMemberArray.add(msg);
+				approveUser=listPass.get(i).getApproveUser();
+			}
+		}
+		mav.addObject("backMemberArray",backMemberArray);
 		return mav;
 	}
 
@@ -369,6 +392,10 @@ public class OaEngineController {
 	public ModelAndView approveTodo(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("oa/approve_todo");
 		mav.addObject("debug", OAControllerUtils.isDebug());
+		String nowUserId = QUtils.getUsername(request);
+		//获取当前用户是否为fin_check里的成员
+	    Boolean  nowFlag=this.groupManager.inGroups(new String[] {"fin_check"}, nowUserId) ;
+		mav.addObject("nowFlag",nowFlag);
 		return mav;
 	}
 
@@ -2190,15 +2217,15 @@ public class OaEngineController {
 		
 		for (int i = 0; i < len; i++) {
 			try {
-				FormInfo formInfo = ioaEngineService.getFormInfo(processKey, userId, formMsg[i]);
+				/*FormInfo formInfo = ioaEngineService.getFormInfo(processKey, userId, formMsg[i]);
 				String tk = this.workflowManager.getTaskKey(taskMsg[i]);
 				if (tk != null 
-						&& (tk.equals("fin_check") || tk.equals("cashier"))
+						&&  tk.equals("direct_manager")
 						&& !userId.equals(formInfo.getStartMemberId()) 
 						&& !assignees.equals(formInfo.getStartMemberId()) 
 						&& !this.groupManager.inGroups(new String[] {tk}, assignees)) {
-					//return BaseResult.getErrorResult(-1, "加签人对象 必须是同组成员");
-				}
+					return BaseResult.getErrorResult(-1, "加签人必须是同组");
+				}*/
 				ioaEngineService.endorse(processKey, userId, cname, Long.valueOf(formMsg[i]), taskMsg[i], assignees, memo);
 			} catch (FormNotFoundException e) {
 				e.printStackTrace();
@@ -2264,8 +2291,76 @@ public class OaEngineController {
 		String formId = vars.get("formIds");
 		String taskId = vars.get("taskIds");
 		String msg = vars.get("memo");
+		String assignees = vars.get("rtx_id");
+		
+		
+		if(assignees==null || assignees.length() == 0){
+			return BaseResult.getErrorResult(-1, "退回人不能为空");
+		}
+		if(assignees.equals("backMemberFlag")){
+			List<FormApproveLog> listPass=logManager.formAppreoveLogAllPassByFormId(
+					Long.parseLong(request.getParameter("formId").toString()),userId,"pass");
+			//保存退回人的rtx_id
+			if (listPass==null || listPass.size()<0){
+				return BaseResult.getErrorResult(-1, "不可退回");
+			}else {
+				assignees=listPass.get(0).getApproveUser();
+				}
+		}else{
+			assignees=assignees.substring(0,assignees.lastIndexOf("("));
+		}
+		EmployeeInfo einfo = null;
+		if(assignees.indexOf(".") < 0){
+			List<EmployeeInfo> infos = this.employeeInfoService.getEmployeeByCname(assignees);
+			if(infos.size() == 1){
+				einfo = infos.get(0);
+				assignees = einfo.getUserId();
+			}else if(infos.size() > 1){
+				String s = "请选择准确的rtx_id:<br/>";
+				for(EmployeeInfo i : infos){
+					s += i.getAdName()+"("+i.getUserId()+")<br/>";
+				}
+				return BaseResult.getErrorResult(-202, s);
+			}
+		}else{
+			try {
+				einfo = this.ioaEngineService.getEmployeeInfo(assignees);
+				
+			} catch (RemoteAccessException e1) {
+				e1.printStackTrace();
+				return BaseResult.getErrorResult(-1, "被退回人没有找到，或已经离职");
+			}
+		}
+		if(einfo == null || einfo.getEnable() == 0){
+			return BaseResult.getErrorResult(-1, "被退回人没有找到，或已经离职");
+		}
+		if(userId.equals(assignees)){
+			return BaseResult.getErrorResult(-1, "退回人对象不能是自己");
+		}
+		
+		FormInfo formInfo;
 		try {
-			ioaEngineService.back(processKey, userId, cname, taskId, Long.parseLong(formId), msg);
+			Boolean passFlag=logManager.formAppreoveLogPass(Long.parseLong(formId),assignees);
+			formInfo = ioaEngineService.getFormInfo(processKey, userId, formId);
+			String tk = this.workflowManager.getTaskKey(taskId);
+			if (tk != null 
+					&& (tk.equals("fin_check") || tk.equals("cashier"))
+					&& !userId.equals(formInfo.getStartMemberId()) 
+					&& !assignees.equals(formInfo.getStartMemberId()) 
+					&& !passFlag) {
+				return BaseResult.getErrorResult(-1, "退回对象 必须是发起人或审批通过的成员");
+			}
+			
+		} catch (FormNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			logger.error(e1.getMessage());
+			return BaseResult.getErrorResult(
+					OAEngineConst.FORM_NOT_FOUND_ERROR,
+					OAEngineConst.FORM_NOT_FOUND_ERROR_MSG);
+		}
+		try {
+				ioaEngineService.back(processKey, userId, cname, taskId, Long.parseLong(formId), msg,assignees);	
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -3245,7 +3340,6 @@ public class OaEngineController {
 		}
 		return depart;
 	}
-	
 	
 
 }

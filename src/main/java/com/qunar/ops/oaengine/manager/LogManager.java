@@ -13,6 +13,8 @@ import com.qunar.ops.oaengine.dao.FormApproveLogMapper;
 import com.qunar.ops.oaengine.datasource.Read;
 import com.qunar.ops.oaengine.model.FormApproveLog;
 import com.qunar.ops.oaengine.model.FormApproveLogExample;
+import com.qunar.ops.oaengine.model.GroupMember;
+import com.qunar.ops.oaengine.model.GroupMemberExample;
 import com.qunar.ops.oaengine.model.FormApproveLogExample.Criteria;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.TaskInfo;
@@ -151,6 +153,47 @@ public class LogManager {
 		Criteria c = e.createCriteria();
 		c.andFormIdEqualTo(formId);
 		formApproveLogMapper.deleteByExample(e);
+	}
+	
+	@Read
+	public boolean formAppreoveLogPass(long formId,String assignees){
+		FormApproveLogExample ge = new FormApproveLogExample();
+		Criteria c = ge.createCriteria();
+		c.andFormIdEqualTo(formId);
+		c.andManagerTypeEqualTo("pass");
+		c.andApproveUserEqualTo(assignees);
+		List<FormApproveLog> list = this.formApproveLogMapper.selectByExample(ge);
+		if(list!=null && list.size()>0){
+			return true;
+		}
+		return false;
+	}
+	
+	@Read
+	public List<FormApproveLog> formAppreoveLogAllPassByFormId(long formId,String tk,String managertTpe){
+		FormApproveLogExample ge = new FormApproveLogExample();
+		Criteria c = ge.createCriteria();
+		c.andFormIdEqualTo(formId);
+		c.andManagerTypeEqualTo(managertTpe);
+		c.andNextTaskIdEqualTo(tk);
+		List<FormApproveLog> list = this.formApproveLogMapper.selectByExample(ge);
+		if(list !=null && list.size()>0){
+			 return list;
+		}
+		return null;
+		
+	}
+	
+	@Read
+	public FormApproveLog getFirstApproveLog(long formId, String userId){
+		FormApproveLogExample example = new FormApproveLogExample();
+		example.createCriteria().andFormIdEqualTo(formId).andApproveUserEqualTo(userId);
+		example.setOrderByClause("ts ASC");
+		example.setOffset(0);
+		example.setLimit(1);
+		List<FormApproveLog> logs = formApproveLogMapper.selectByExample(example);
+		if(logs.size() == 0) return null;
+		return logs.get(0);
 	}
 	
 }
