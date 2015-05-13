@@ -10,7 +10,7 @@ import org.springframework.cache.support.SimpleValueWrapper;
 import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 
-public class GuavaCacheAdapter implements Cache, BeanNameAware, InitializingBean {
+public class GuavaCacheAdapter implements Cache, BeanNameAware, InitializingBean { 
 	  private String name;
 	  private com.google.common.cache.Cache<Object, Optional<Object>> cache;
 	  private Long maximumSize;
