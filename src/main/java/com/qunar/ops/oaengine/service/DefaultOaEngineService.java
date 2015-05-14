@@ -356,6 +356,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 	
 	private TaskResult _pass(String processKey, String userId, String cname, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
 		TaskResult tr = this.workflowManager.pass(taskId, userId);
+		
+		FormApproveLog formApproveLog =this.logManager.getFirstApproveLog(formId,tr.getOwner());
+		if(!formApproveLog.getNextCandidate().contains(userId)){
+			tr.getCurrentTask().setName("加签操作");
+		}
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, cname, formId, "pass", tr, memo);
 		if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
@@ -396,20 +401,45 @@ public class DefaultOaEngineService implements IOAEngineService {
 		}else{
 			request.setReport2vp(false);
 		}
-		request.setAmountMoney(formInfo.getMoneyAmount());
-		request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
-		request.setHosMoney(formInfo.getSumHospitalityAmount());
-		request.setDepartment(formInfo.getFirstDep());
-		request.setDepartmentII(formInfo.getSecDep());
-		request.setDepartmentIII(formInfo.getThridDep());
-		request.setDepartmentIV(formInfo.getFourthDep());
-		request.setDepartmentV(formInfo.getFivethDep());
-		TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees, request);
-		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
-		if(memo == null) memo = "";
-		memo += "[加签给："+assignees+"]";
-		this.logManager.appendApproveLog(userId, cname, formId, "endorse", tr, memo);
-		this.sendMail(userId, "加签", tr.getOwner(), tr.getNextTasks(), memo, OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount()));
+		
+		String tk = this.workflowManager.getTaskKey(taskId);
+		//被加签人为非同组成员，同意后，还需加签人再次同意
+		if(tk != null 
+				&& (tk.equals("fin_check"))
+				&& !userId.equals(formInfo.getStartMemberId()) 
+				&& !assignees.equals(formInfo.getStartMemberId()) 
+				&& !this.groupManager.inGroups(new String[] {tk}, assignees)){
+			
+			FormApproveLog log = this.logManager.getLastPassApproveLog(formId, assignees);
+			if(log == null){
+				throw new FormNotFoundException("没有找到上级节点，不能加签", this.getClass());
+			}
+			TaskResult tr = this.workflowManager.dragNew(userId,taskId, log.getTaskId(), assignees, memo,"加签操作");
+			if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+			if(memo == null) memo = "";
+			memo += "[加签给："+assignees+"]";
+			this.logManager.appendApproveLog(userId, cname, formId, "endorse", tr, memo);
+			this.sendMail(userId, "加签", tr.getOwner(), tr.getNextTasks(), memo, OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount()));	
+		}
+		//被加签人为同组成员，同意后 跳过加签人
+		else{
+			
+			request.setAmountMoney(formInfo.getMoneyAmount());
+			request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
+			request.setHosMoney(formInfo.getSumHospitalityAmount());
+			request.setDepartment(formInfo.getFirstDep());
+			request.setDepartmentII(formInfo.getSecDep());
+			request.setDepartmentIII(formInfo.getThridDep());
+			request.setDepartmentIV(formInfo.getFourthDep());
+			request.setDepartmentV(formInfo.getFivethDep());
+			
+			TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees, request);
+			if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+			if(memo == null) memo = "";
+			memo += "[加签给："+assignees+"]";
+			this.logManager.appendApproveLog(userId, cname, formId, "endorse", tr, memo);
+			this.sendMail(userId, "加签", tr.getOwner(), tr.getNextTasks(), memo, OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount()));
+		}
 	}
 	
 	@Override
@@ -437,11 +467,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 		if(reason == null) reason = "";
 		reason += "[召回："+userId+"]";
 		this.logManager.appendApproveLog(userId, cname, formId, "recall", tr, reason);
+		
+		
 	}
 	
 	@Override
 	@Transactional(rollbackFor=Exception.class)
-	public void back(String processKey, String userId, String cname, String fromTaskId, long formId, String reason) throws Exception {
+	public void back(String processKey, String userId, String cname, String fromTaskId, long formId, String reason,String assignees) throws Exception {
 		
 		FormInfo formInfo = form0114Manager.getFormInfo(formId);
 		if(formInfo == null) throw new FormNotFoundException("工单没有找到", this.getClass());
@@ -449,18 +481,27 @@ public class DefaultOaEngineService implements IOAEngineService {
 		if(formInfo.getFinishedflag() > 0){
 			throw new FormNotFoundException("流程已经结束，不能退回", this.getClass());
 		}
-		
-		FormApproveLog log = this.logManager.getLastPassApproveLog(formId, userId);
+		FormApproveLog log = this.logManager.getLastPassApproveLog(formId, assignees);
 		if(log == null){
 			throw new FormNotFoundException("没有找到上级节点，不能退回", this.getClass());
 		}
-		TaskResult tr = this.workflowManager.drag(userId, fromTaskId, log.getTaskId(), log.getApproveUser(), reason);
+		String tk = this.workflowManager.getTaskKey(fromTaskId);
 		
-		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+		TaskResult tr;
+		if(tk != null 
+				&& (tk.equals("fin_check"))){
+			 tr = this.workflowManager.dragNew(userId,fromTaskId, log.getTaskId(), assignees, reason,"退回操作");
+		}else{
+			 tr = this.workflowManager.drag(userId,fromTaskId, log.getTaskId(), assignees, reason);
+		}
+		
+		
 		if(reason == null) reason = "";
+		reason += "[退回给："+assignees+"]";
+		
 		this.logManager.appendApproveLog(userId, cname, formId, "back", tr, reason);
 		
-		this.sendMail(userId, "回退", tr.getOwner(), tr.getNextTasks(), reason, OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount()));
+		this.sendMail(userId, "回退", tr.getOwner(), tr.getNextTasks(), reason, OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount()));	
 		
 	}
 

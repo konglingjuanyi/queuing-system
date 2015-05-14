@@ -1156,7 +1156,17 @@
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#endorse-msg-dialog").empty();
-            $("#endorse-msg-dialog").append(createBackMsgForm('Tips: 请输入回退理由'));
+            $("#endorse-msg-dialog").append(createBackMsgForm('Tips: 退回原因请不要超过100个字符'));
+            var mySelect = document.getElementById("mySelect");
+            
+            var backMemberArray="$backMemberArray";
+            backMemberArray=backMemberArray.replace("[","").replace("]","").replace(" ","");
+            var arr=backMemberArray.split(","); 
+	        for (i=0;i<arr.length ;i++ ){
+	        	document.getElementById("mySelect").value=arr[i];
+				//var opp = new Option(arr[i],arr[i]);
+				//mySelect.add(opp);
+		    } 
             var dialog = $("#endorse-msg-dialog").removeClass('hide').dialog({
                 modal: true,
                 width: dialog_width,
@@ -1178,6 +1188,13 @@
                                 var this_form = $("#endorse-msg-dialog").find("form");
                                 var postData = this_form.serializeArray();
                                 var msg = "";
+                                
+                                 if( $("#mySelect").val() == '-----请选择-----'){
+                                	showCommonNoticeDialog('回退错误', 'icon-warning-sign',
+                                                    generateNoticeMsg('回退对象不能为空'), 300);
+                                    return;
+                                }
+                                
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
                                         if (postData[i]['value'].length >= 100) {
@@ -1194,7 +1211,7 @@
                                         }
                                     }
                                 }
-                                approveProxy(url, msg, "回退");
+                                approveProxy(url, msg, "回退",$("#mySelect").val());
                                 e.preventDefault(); //STOP default action
                                 $(this).dialog("close");
                             } catch (e) {
@@ -1251,7 +1268,10 @@
         var form = '<form style="width: 100%; background-color: white"> ';
         form += '<div class="space-4"></div>';
         form += '<div>';
-        form += $.parseStr('<textarea class="form-control" name="msg" style="height: 100px;" placeholder="%s"></textarea>', tips);
+          form += '<label>回退给：</label>';
+     	form += $.parseStr('<input type="text" id="mySelect" readonly style="font-size:16px"></input>', tips);
+     	 form += '<div class="space-4"></div>';
+        form += $.parseStr('<textarea class="form-control" name="msg"  style="height: 100px;" placeholder="%s"></textarea>', tips);
         form += '</div>';
         form += '</form>';
         return form;

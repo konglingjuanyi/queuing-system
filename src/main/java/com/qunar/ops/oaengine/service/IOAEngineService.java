@@ -372,7 +372,7 @@ public interface IOAEngineService {
 	
 	public void recall(String processKey, String userId, String cname, long formId, String reason) throws Exception;
 	
-	public void back(String processKey, String userId, String cname, String taskId, long formId, String reason) throws Exception;
+	public void back(String processKey, String userId, String cname, String taskId, long formId, String reason,String assignees) throws Exception;
 	
 	/****************************************************
 	 *  Setting页面：
