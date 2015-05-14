@@ -371,7 +371,7 @@ public class WorkflowManager {
 		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, currentTasks);
 	}
 	
-	public TaskResult dragNew(String userId, String fromTaskId, String toTaskId, String assignee, String reason)  throws ActivitiException {
+	public TaskResult dragNew(String userId, String fromTaskId, String toTaskId, String assignee, String reason,String msg)  throws ActivitiException {
 		Task task = this.taskService.createTaskQuery().taskId(fromTaskId).taskCandidateOrAssigned(userId).singleResult();
 		if(task == null) {
 			logger.warn("任务没有找到{}", fromTaskId);
@@ -388,7 +388,7 @@ public class WorkflowManager {
 		taskService.complete(task.getId(), vars);
 		pointActivity.getIncomingTransitions().remove(newTransition);
 		restoreTransition(currActivity, oriPvmTransitionList);
-		List<TaskInfo> currentTasks = this.getCurrentTasksNew(task.getProcessInstanceId(),assignee);
+		List<TaskInfo> currentTasks = this.getCurrentTasksNew(task.getProcessInstanceId(),assignee, msg);
 		for(TaskInfo info : currentTasks){
 			taskService.setAssignee(info.getTaskId(), assignee);
 		}
@@ -617,7 +617,7 @@ public class WorkflowManager {
 		return taskInfos;
 	}
 	
-	private List<TaskInfo> getCurrentTasksNew(String processInstanceId,String assignee) {
+	private List<TaskInfo> getCurrentTasksNew(String processInstanceId,String assignee,String msg) {
 		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
 		List<TaskInfo> taskInfos = new ArrayList<TaskInfo>();
 		if(assignee!=null ){}
@@ -639,7 +639,7 @@ public class WorkflowManager {
 				tinfo.setTaskKey(_task.getTaskDefinitionKey());
 				tinfo.setCandidate(assignee);
 				tinfo.setTaskId(_task.getId());
-				tinfo.setTaskName("加签操作");
+				tinfo.setTaskName(msg);
 				tinfo.setTaskKey(_task.getTaskDefinitionKey());
 				Integer nrOfInstances = this.runtimeService.getVariable(_task.getExecutionId(), "nrOfInstances", Integer.class);
 				if(nrOfInstances == null || nrOfInstances <= 0){

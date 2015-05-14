@@ -414,7 +414,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			if(log == null){
 				throw new FormNotFoundException("没有找到上级节点，不能加签", this.getClass());
 			}
-			TaskResult tr = this.workflowManager.dragNew(userId,taskId, log.getTaskId(), assignees, memo);
+			TaskResult tr = this.workflowManager.dragNew(userId,taskId, log.getTaskId(), assignees, memo,"加签操作");
 			if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 			if(memo == null) memo = "";
 			memo += "[加签给："+assignees+"]";
@@ -486,11 +486,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 			throw new FormNotFoundException("没有找到上级节点，不能退回", this.getClass());
 		}
 		String tk = this.workflowManager.getTaskKey(fromTaskId);
-		//被加签人为非同组成员，同意后，还需加签人再次同意
+		
 		TaskResult tr;
 		if(tk != null 
 				&& (tk.equals("fin_check"))){
-			 tr = this.workflowManager.dragNew(userId,fromTaskId, log.getTaskId(), assignees, reason);
+			 tr = this.workflowManager.dragNew(userId,fromTaskId, log.getTaskId(), assignees, reason,"退回操作");
 		}else{
 			 tr = this.workflowManager.drag(userId,fromTaskId, log.getTaskId(), assignees, reason);
 		}
