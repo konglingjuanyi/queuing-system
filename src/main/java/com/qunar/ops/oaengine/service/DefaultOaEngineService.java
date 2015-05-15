@@ -13,6 +13,8 @@ import java.util.TreeMap;
 
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +48,7 @@ import com.qunar.ops.oaengine.util.OAControllerUtils;
 
 @Component
 public class DefaultOaEngineService implements IOAEngineService {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private WorkflowManager workflowManager;
@@ -259,22 +262,29 @@ public class DefaultOaEngineService implements IOAEngineService {
 	public FormInfoList todoList(String processKey, String userId,
 			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
 		ListInfo<TaskInfo> taskInfos = workflowManager.todoList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
+		
 		List<TaskInfo> _taskInfos = taskInfos.getInfos();
 		FormInfoList res = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		FormInfo formInfo;
+		int tc = 0;
 		for(int i = 0; i < _taskInfos.size(); i++){
 			TaskInfo taskInfo = _taskInfos.get(i);
 			String proc_inst_id = taskInfo.getProcessInstanceId();
 			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
-			if(formInfo == null) continue;
+			if(formInfo == null) {
+				tc++;
+				logger.error(
+						"form0114Manager.getFormInfoByInst = null proc_inst_id=" + proc_inst_id);
+				continue;
+			}
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfo.setTaskKey(taskInfo.getTaskKey());
 			formInfo.setIsEndorse(taskInfo.isEndorse());
 			formInfo.setTaskCreateTime(taskInfo.getTaskCreateTime());
 			formInfos.add(formInfo);
 		}
-		res.setCount((int)taskInfos.getCount());
+		res.setCount((int)taskInfos.getCount() - tc);
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
 		res.setFormInfos(formInfos);

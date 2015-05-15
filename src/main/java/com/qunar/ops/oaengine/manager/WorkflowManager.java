@@ -114,7 +114,8 @@ public class WorkflowManager {
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
 		
-		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
+		TaskQuery query = this.taskService.createTaskQuery()
+				.processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
 		if(startTime != null){
 			//query.taskCreatedAfter(startTime);
 			query.processVariableValueGreaterThanOrEqual("startTime", startTime);
@@ -128,35 +129,41 @@ public class WorkflowManager {
 		}
 		query.orderByTaskCreateTime().desc();
 		long count = query.count();
-		if(owner ==null){count=0;}
 		List<Task> tasks = query.listPage((pageNo - 1) * pageSize, pageSize);
+		
 		ListInfo<TaskInfo> infos = new ListInfo<TaskInfo>();
 		infos.setCount(count);
 		infos.setPageNo(pageNo);
 		infos.setPageSize(pageSize);
-		if(tasks != null)for(Task task : tasks){
-			TaskInfo info = new TaskInfo();
-			Request request = (Request)task.getProcessVariables().get("request");
-			if(request == null){
-				info.setOid("");
-			}else{
-				info.setOid(request.getOid());
-			}
-			info.setProcessInstanceId(task.getProcessInstanceId());
-			info.setTaskId(task.getId());
-			info.setTaskKey(task.getTaskDefinitionKey());
-			info.setTaskName(task.getName());
-			info.setTaskCreateTime(task.getCreateTime());
-			Map<String, Object> taskLocalVariables = task.getTaskLocalVariables();
-			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
-			if(nrOfInstances == null || nrOfInstances <= 0){
-				info.setEndorse(false);
-			}else{
-				info.setEndorse(true);
-			}
-
-			infos.getInfos().add(info);
-		}
+		if(tasks != null){
+			for(Task task : tasks){
+				TaskInfo info = new TaskInfo();
+				Request request = (Request)task.getProcessVariables().get("request");
+				if(request == null){
+					info.setOid("");
+				}else{
+					info.setOid(request.getOid());
+				}
+				info.setProcessInstanceId(task.getProcessInstanceId());
+				info.setTaskId(task.getId());
+				info.setTaskKey(task.getTaskDefinitionKey());
+				info.setTaskName(task.getName());
+				info.setTaskCreateTime(task.getCreateTime());
+				
+				Map<String, Object> taskLocalVariables = task.getTaskLocalVariables();
+				Integer nrOfInstances = this.runtimeService.getVariable(
+						task.getExecutionId(), "nrOfInstances", Integer.class);
+				if(nrOfInstances == null 
+						|| nrOfInstances <= 0)
+				{
+					info.setEndorse(false);
+				}else{
+					info.setEndorse(true);
+				}
+	
+				infos.getInfos().add(info);
+			}//end for(Task task : tasks)
+		}//end if(tasks != null)
 		return infos;
 	}
 	@Read
