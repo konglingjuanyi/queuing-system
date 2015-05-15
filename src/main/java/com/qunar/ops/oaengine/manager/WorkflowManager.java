@@ -128,6 +128,7 @@ public class WorkflowManager {
 		}
 		query.orderByTaskCreateTime().desc();
 		long count = query.count();
+		if(owner ==null){count=0;}
 		List<Task> tasks = query.listPage((pageNo - 1) * pageSize, pageSize);
 		ListInfo<TaskInfo> infos = new ListInfo<TaskInfo>();
 		infos.setCount(count);
