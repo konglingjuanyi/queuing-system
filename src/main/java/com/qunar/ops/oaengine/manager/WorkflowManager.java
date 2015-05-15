@@ -38,11 +38,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.oaengine.datasource.Read;
+import com.qunar.ops.oaengine.exception.RemoteAccessException;
+import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.ListInfo;
 import com.qunar.ops.oaengine.result.ProcessInstanceInfo;
 import com.qunar.ops.oaengine.result.Request;
 import com.qunar.ops.oaengine.result.TaskInfo;
 import com.qunar.ops.oaengine.result.TaskResult;
+import com.qunar.ops.oaengine.service.EmployeeInfoService;
 
 @Component
 public class WorkflowManager {
@@ -58,6 +61,9 @@ public class WorkflowManager {
 	protected RepositoryService repositoryService;
 	@Autowired
 	protected IdentityService identityService;
+	
+	@Autowired
+	private EmployeeInfoService employeeInfoService;
 	
 	@Read
 	public String getTaskKey(String taskId){
@@ -108,7 +114,8 @@ public class WorkflowManager {
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
 		
-		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
+		TaskQuery query = this.taskService.createTaskQuery()
+				.processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
 		if(startTime != null){
 			//query.taskCreatedAfter(startTime);
 			query.processVariableValueGreaterThanOrEqual("startTime", startTime);
@@ -123,33 +130,40 @@ public class WorkflowManager {
 		query.orderByTaskCreateTime().desc();
 		long count = query.count();
 		List<Task> tasks = query.listPage((pageNo - 1) * pageSize, pageSize);
+		
 		ListInfo<TaskInfo> infos = new ListInfo<TaskInfo>();
 		infos.setCount(count);
 		infos.setPageNo(pageNo);
 		infos.setPageSize(pageSize);
-		if(tasks != null)for(Task task : tasks){
-			TaskInfo info = new TaskInfo();
-			Request request = (Request)task.getProcessVariables().get("request");
-			if(request == null){
-				info.setOid("");
-			}else{
-				info.setOid(request.getOid());
-			}
-			info.setProcessInstanceId(task.getProcessInstanceId());
-			info.setTaskId(task.getId());
-			info.setTaskKey(task.getTaskDefinitionKey());
-			info.setTaskName(task.getName());
-			info.setTaskCreateTime(task.getCreateTime());
-			Map<String, Object> taskLocalVariables = task.getTaskLocalVariables();
-			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
-			if(nrOfInstances == null || nrOfInstances <= 0){
-				info.setEndorse(false);
-			}else{
-				info.setEndorse(true);
-			}
-
-			infos.getInfos().add(info);
-		}
+		if(tasks != null){
+			for(Task task : tasks){
+				TaskInfo info = new TaskInfo();
+				Request request = (Request)task.getProcessVariables().get("request");
+				if(request == null){
+					info.setOid("");
+				}else{
+					info.setOid(request.getOid());
+				}
+				info.setProcessInstanceId(task.getProcessInstanceId());
+				info.setTaskId(task.getId());
+				info.setTaskKey(task.getTaskDefinitionKey());
+				info.setTaskName(task.getName());
+				info.setTaskCreateTime(task.getCreateTime());
+				
+				Map<String, Object> taskLocalVariables = task.getTaskLocalVariables();
+				Integer nrOfInstances = this.runtimeService.getVariable(
+						task.getExecutionId(), "nrOfInstances", Integer.class);
+				if(nrOfInstances == null 
+						|| nrOfInstances <= 0)
+				{
+					info.setEndorse(false);
+				}else{
+					info.setEndorse(true);
+				}
+	
+				infos.getInfos().add(info);
+			}//end for(Task task : tasks)
+		}//end if(tasks != null)
 		return infos;
 	}
 	@Read
@@ -371,6 +385,30 @@ public class WorkflowManager {
 		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, currentTasks);
 	}
 	
+	public TaskResult dragNew(String userId, String fromTaskId, String toTaskId, String assignee, String reason,String msg)  throws ActivitiException {
+		Task task = this.taskService.createTaskQuery().taskId(fromTaskId).taskCandidateOrAssigned(userId).singleResult();
+		if(task == null) {
+			logger.warn("任务没有找到{}", fromTaskId);
+			return null;
+		}
+		ActivityImpl currActivity = findActivitiImpl(task.getId(), null);
+		List<PvmTransition> oriPvmTransitionList = clearTransition(currActivity);
+		TransitionImpl newTransition = currActivity.createOutgoingTransition();
+		ActivityImpl pointActivity = findActivitiImpl(task.getId(), toTaskId);
+		newTransition.setDestination(pointActivity);
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("complete", true);
+		vars.put("candidates", null);
+		taskService.complete(task.getId(), vars);
+		pointActivity.getIncomingTransitions().remove(newTransition);
+		restoreTransition(currActivity, oriPvmTransitionList);
+		List<TaskInfo> currentTasks = this.getCurrentTasksNew(task.getProcessInstanceId(),assignee, msg);
+		for(TaskInfo info : currentTasks){
+			taskService.setAssignee(info.getTaskId(), assignee);
+		}
+		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, currentTasks);
+	}
+	
 	/**
 	 * 加签
 	 * @param taskId
@@ -580,6 +618,48 @@ public class WorkflowManager {
 				tinfo.setCandidate(candidate);
 				tinfo.setTaskId(_task.getId());
 				tinfo.setTaskName(_task.getName());
+				tinfo.setTaskKey(_task.getTaskDefinitionKey());
+				Integer nrOfInstances = this.runtimeService.getVariable(_task.getExecutionId(), "nrOfInstances", Integer.class);
+				if(nrOfInstances == null || nrOfInstances <= 0){
+					tinfo.setEndorse(false);
+				}else{
+					tinfo.setEndorse(true);
+				}
+				taskInfos.add(tinfo);
+			}
+		else {
+			TaskInfo tinfo = new TaskInfo();
+			tinfo.setCandidate(null);
+			tinfo.setTaskId(null);
+			tinfo.setTaskName(null);
+			taskInfos.add(tinfo);
+		}
+		return taskInfos;
+	}
+	
+	private List<TaskInfo> getCurrentTasksNew(String processInstanceId,String assignee,String msg) {
+		List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstanceId).list();
+		List<TaskInfo> taskInfos = new ArrayList<TaskInfo>();
+		if(assignee!=null ){}
+		if (tasks.size() > 0)
+			for (Task _task : tasks) {
+				String candidate = "";
+				List<IdentityLink> ids = taskService.getIdentityLinksForTask(_task.getId());
+				for (IdentityLink id : ids) {
+					if (IdentityLinkType.CANDIDATE.equals(id.getType())) {
+						if(id.getUserId() != null){
+							candidate += id.getUserId() + ",";
+						}
+					}
+				}
+				if (candidate.length() > 0) {
+					candidate = candidate.substring(0, candidate.length() - 1);
+				}
+				TaskInfo tinfo = new TaskInfo();
+				tinfo.setTaskKey(_task.getTaskDefinitionKey());
+				tinfo.setCandidate(assignee);
+				tinfo.setTaskId(_task.getId());
+				tinfo.setTaskName(msg);
 				tinfo.setTaskKey(_task.getTaskDefinitionKey());
 				Integer nrOfInstances = this.runtimeService.getVariable(_task.getExecutionId(), "nrOfInstances", Integer.class);
 				if(nrOfInstances == null || nrOfInstances <= 0){
