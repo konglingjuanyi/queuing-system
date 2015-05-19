@@ -104,6 +104,17 @@ public class LogManager {
 	}
 	
 	@Read
+	public FormApproveLog getLastApproveLog(long formId){
+		FormApproveLogExample example = new FormApproveLogExample();
+		example.createCriteria().andFormIdEqualTo(formId).andTaskIdIsNotNull();
+		example.setOrderByClause("ts desc");
+		List<FormApproveLog> logs = formApproveLogMapper.selectByExample(example);
+		if(logs!=null && logs.size() >0) return logs.get(0);
+		return null;
+		
+	}
+	
+	@Read
 	public FormApproveLog getLastPassApproveLog(long formId, String userId){
 		FormApproveLogExample example = new FormApproveLogExample();
 		example.createCriteria().andFormIdEqualTo(formId);
@@ -167,6 +178,20 @@ public class LogManager {
 			return true;
 		}
 		return false;
+	}
+	
+	@Read
+	public List<FormApproveLog> formAppreoveLogPassList(long formId,String assignees){
+		FormApproveLogExample ge = new FormApproveLogExample();
+		Criteria c = ge.createCriteria();
+		c.andFormIdEqualTo(formId);
+		c.andManagerTypeEqualTo("pass");
+		c.andApproveUserEqualTo(assignees);
+		List<FormApproveLog> list = this.formApproveLogMapper.selectByExample(ge);
+		if(list!=null && list.size()>0){
+			list.get(0);
+		}
+		return null;
 	}
 	
 	@Read

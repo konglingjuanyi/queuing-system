@@ -267,24 +267,19 @@ public class DefaultOaEngineService implements IOAEngineService {
 		FormInfoList res = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
 		FormInfo formInfo;
-		int tc = 0;
 		for(int i = 0; i < _taskInfos.size(); i++){
 			TaskInfo taskInfo = _taskInfos.get(i);
 			String proc_inst_id = taskInfo.getProcessInstanceId();
 			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
-			if(formInfo == null) {
-				tc++;
-				logger.error(
-						"form0114Manager.getFormInfoByInst = null proc_inst_id=" + proc_inst_id);
+			if(formInfo == null)
 				continue;
-			}
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfo.setTaskKey(taskInfo.getTaskKey());
 			formInfo.setIsEndorse(taskInfo.isEndorse());
 			formInfo.setTaskCreateTime(taskInfo.getTaskCreateTime());
 			formInfos.add(formInfo);
 		}
-		res.setCount((int)taskInfos.getCount() - tc);
+		res.setCount((int)taskInfos.getCount());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
 		res.setFormInfos(formInfos);
@@ -367,10 +362,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 	private TaskResult _pass(String processKey, String userId, String cname, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
 		TaskResult tr = this.workflowManager.pass(taskId, userId);
 		
-		FormApproveLog formApproveLog =this.logManager.getFirstApproveLog(formId,tr.getOwner());
-		if(!formApproveLog.getNextCandidate().contains(userId)){
-			tr.getCurrentTask().setName("加签操作");
+		FormApproveLog formApproveLog =this.logManager.getLastApproveLog(formId);
+		if(formApproveLog!=null){
+			if("加签操作".equals(formApproveLog.getNextTaskName())){
+				tr.getCurrentTask().setName("加签操作");
+			}
 		}
+		
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, cname, formId, "pass", tr, memo);
 		if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
