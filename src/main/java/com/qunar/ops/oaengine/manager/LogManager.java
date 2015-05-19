@@ -106,7 +106,7 @@ public class LogManager {
 	@Read
 	public FormApproveLog getLastApproveLog(long formId){
 		FormApproveLogExample example = new FormApproveLogExample();
-		example.createCriteria().andFormIdEqualTo(formId).andTaskIdIsNotNull();
+		example.createCriteria().andFormIdEqualTo(formId);
 		example.setOrderByClause("ts desc");
 		List<FormApproveLog> logs = formApproveLogMapper.selectByExample(example);
 		if(logs!=null && logs.size() >0) return logs.get(0);

@@ -415,7 +415,6 @@ public class DefaultOaEngineService implements IOAEngineService {
 		if(tk != null 
 				&& (tk.equals("fin_check"))
 				&& !userId.equals(formInfo.getStartMemberId()) 
-				&& !assignees.equals(formInfo.getStartMemberId()) 
 				&& !this.groupManager.inGroups(new String[] {tk}, assignees)){
 			
 			FormApproveLog log = this.logManager.getLastPassApproveLog(formId, assignees);
