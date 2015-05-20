@@ -360,12 +360,17 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 	
 	private TaskResult _pass(String processKey, String userId, String cname, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
-		TaskResult tr = this.workflowManager.pass(taskId, userId);
+		
 		
 		FormApproveLog formApproveLog =this.logManager.getLastApproveLog(formId);
+		TaskResult tr = null;
 		if(formApproveLog!=null){
 			if("加签操作".equals(formApproveLog.getNextTaskName())){
+				tr = this.workflowManager.passNew(taskId, userId,formApproveLog.getApproveUser());
 				tr.getCurrentTask().setName("加签操作");
+				
+			}else{
+				tr= this.workflowManager.pass(taskId, userId);
 			}
 		}
 		
@@ -414,6 +419,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		//被加签人为非同组成员，同意后，还需加签人再次同意
 		if(tk != null 
 				&& (tk.equals("fin_check"))
+				&& !assignees.equals(formInfo.getStartMemberId())
 				&& !userId.equals(formInfo.getStartMemberId()) 
 				&& !this.groupManager.inGroups(new String[] {tk}, assignees)){
 			
@@ -442,6 +448,9 @@ public class DefaultOaEngineService implements IOAEngineService {
 			
 			TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees, request);
 			if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+			if(tr.getNextTasks().get(0).getCandidate().equals(assignees) && !userId.equals(tr.getOwner())){
+				tr.getNextTasks().get(0).setTaskName("加签操作");
+			}
 			if(memo == null) memo = "";
 			memo += "[加签给："+assignees+"]";
 			this.logManager.appendApproveLog(userId, cname, formId, "endorse", tr, memo);

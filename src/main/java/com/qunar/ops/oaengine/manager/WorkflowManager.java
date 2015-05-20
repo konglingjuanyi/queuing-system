@@ -346,6 +346,28 @@ public class WorkflowManager {
 	}
 	
 	/**
+	 * 审批通过
+	 * @param taskId
+	 * @param userId
+	 * @return List<TaskInfo> 当前任务信息
+	 */
+	public TaskResult passNew(String taskId, String userId,String candidate) throws ActivitiException{
+		identityService.setAuthenticatedUserId(userId);
+		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
+		if(task == null) {
+			logger.warn("任务没有找到{}", taskId);
+			return null;
+		}
+		String owner = getOwner(task.getProcessInstanceId());
+		String cname = getCname(task.getProcessInstanceId());
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("complete", true);
+		vars.put("candidates", candidate);
+		taskService.complete(taskId, vars);
+		return new TaskResult(owner, cname, task, this.getCurrentTasks(task.getProcessInstanceId()));
+	}
+	
+	/**
 	 * 拽单
 	 * @param userId
 	 * @param fromTaskId
