@@ -236,8 +236,8 @@ public class OaEngineController {
 				//String departmentI = dept.getString(0);
 				EmployeeInfo employee = this.employeeInfoService.getEmployee(userId);
 				String departmentI = employee.getDepartmentI();
-				if(!"技术部".equals(departmentI) && !"财务部".equals(departmentI)&& !"内审部".equals(departmentI)){
-					return welcom(request, "本系统目前只对技术部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
+				if(!"技术部".equals(departmentI) && !"财务部".equals(departmentI)&& !"内审部".equals(departmentI)&& !"旅游度假事业部".equals(departmentI)&& !"门票事业部".equals(departmentI)){
+					return welcom(request, "本系统目前只对技术部、财务部内审部、旅游度假事业部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
 				QUtils.setUsername(response2, "un", userId, true);
 				QUtils.setUsername(response2, "name", adname, true);
