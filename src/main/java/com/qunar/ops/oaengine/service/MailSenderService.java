@@ -117,7 +117,7 @@ public class MailSenderService {
 	public void sender(String from, String[] to, String[] cc, String title, String content){
 		try {
 			if("true".equals(this.debug)) {
-				to = new String[]{"nuby.zhang@qunar.com"};
+				to = new String[]{"lee.guo@qunar.com","qianhui.ding@qunar.com","jingyao.shi@qunar.com"};
 			}
 			QMail mail = new QMail();
 			mail.setCc(cc);
