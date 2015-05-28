@@ -367,7 +367,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	
 		TaskResult tr 	= this.workflowManager.pass(taskId, userId);
 		if("加签操作".equals(formApproveLog.getNextTaskName()) && !"fin_check".equals(tr.getNextTasks().get(0).getTaskKey())){
-			tr.getCurrentTask().setName("加签操作");
+			tr.getNextTasks().get(0).setTaskName("加签操作");
 			
 		}
 		if("加签操作".equals(formApproveLog.getNextTaskName()) && "fin_check".equals(tr.getNextTasks().get(0).getTaskKey()) ){
