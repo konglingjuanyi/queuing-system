@@ -175,7 +175,7 @@
                 </ul>
             </li>
             <li>
-                <a href="javascript:void(0);" onclick="window.location.href='mailto:nuby.zhang@qunar.com?subject=【吐槽】【日常报销】'">
+                <a href="javascript:void(0);" onclick="window.location.href='mailto:is@qunar.com?subject=【吐槽】【日常报销】'">
                     <span class="menu-text"> <b>我要吐槽</b> </span>
                 </a>
             </li>

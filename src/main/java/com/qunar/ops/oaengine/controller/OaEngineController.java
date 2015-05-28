@@ -242,8 +242,7 @@ public class OaEngineController {
 						&& !"内审部".equals(departmentI)
 						&& !"旅游度假事业部".equals(departmentI)
 						&& !"门票事业部".equals(departmentI)){
-					return welcom(request,
-							"本系统目前只对技术部、财务部内审部、旅游度假事业部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
+					return welcom(request,"本系统目前只对技术部、财务部内审部、旅游度假事业和门票事业部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
 				QUtils.setUsername(response2, "un", userId, true);
 				QUtils.setUsername(response2, "name", adname, true);
@@ -1445,7 +1444,7 @@ public class OaEngineController {
             fis.read(buffer);  
             fis.close();  
             response.reset();  
-            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode("日常费用报销查询-"+sdf.format(new Date()), "UTF-8"));  
+            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode("日常费用报销查询-"+sdf.format(new Date())+".xls", "UTF-8"));  
             response.addHeader("Content-Length", "" + file.length());  
             OutputStream toClient = new BufferedOutputStream(response.getOutputStream());  
             response.setContentType("application/vnd.ms-excel;charset=utf-8");  
@@ -2607,7 +2606,16 @@ public class OaEngineController {
 			approveInfo = infos.get(0);
 			if(approveInfo.getNextTaskId() != null){
 				result[k++] = "<b>当前审批节点: " + approveInfo.getNextTaskName() + "</b>";
-				result[k++] = "<b>审批人: " + approveInfo.getNextCandidate() + "</b>";
+				//result[k++] = "<b>审批人: " + approveInfo.getNextCandidate() + "</b>";
+				StringBuilder str = new StringBuilder();
+				str.append("<b>审批人: </br>");
+				String[] ApproverRTX = approveInfo.getNextCandidate().split(",");
+				for (int i = 0 ; i < ApproverRTX.length ; i++ ) {
+					str.append(ApproverRTX[i]+"  ");
+					if((i+1)%3==0)str.append("</br>");
+				}
+				str.append("</b>");
+				result[k++] = str.toString();
 				result[k++] = "";
 			}
 		}

@@ -21,6 +21,12 @@
 		<tr>
 			<td height="30px" style="color:red; font-size: 20px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >[请使用Chrome或FireFox浏览器]</td>
 		</tr>
+#if("$!{message}"!="")
+		<tr>
+			<td height="30px" style="color:red; font-size: 20px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >$message</td>
+		</tr>	
+#end
+		
 		<tr>
 			<td height="40px"
 				style="font-size: 23px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >工作流引擎控制台</td>
