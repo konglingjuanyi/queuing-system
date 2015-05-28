@@ -363,17 +363,21 @@ public class DefaultOaEngineService implements IOAEngineService {
 		
 		
 		FormApproveLog formApproveLog =this.logManager.getLastApproveLog(formId);
-		TaskResult tr = null;
-		if(formApproveLog!=null){
-			if("加签操作".equals(formApproveLog.getNextTaskName())){
-				tr = this.workflowManager.passNew(taskId, userId,formApproveLog.getApproveUser());
-				tr.getCurrentTask().setName("加签操作");
-				
-			}else{
-				tr= this.workflowManager.pass(taskId, userId);
-			}
+		String fincheckUser=this.logManager.getFinCheckedUser(formId,"财务报销审核组");
+	
+		TaskResult tr 	= this.workflowManager.pass(taskId, userId);
+		if("加签操作".equals(formApproveLog.getNextTaskName()) && !"fin_check".equals(tr.getNextTasks().get(0).getTaskKey())){
+			tr.getNextTasks().get(0).setTaskName("加签操作");
+			
 		}
-		
+		if("加签操作".equals(formApproveLog.getNextTaskName()) && "fin_check".equals(tr.getNextTasks().get(0).getTaskKey()) ){
+			tr.getCurrentTask().setName("加签操作");
+			
+		}
+		if(!"".equals(fincheckUser)){
+			tr.getNextTasks().get(0).setCandidate(fincheckUser);
+		}
+				
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, cname, formId, "pass", tr, memo);
 		if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
@@ -428,6 +432,10 @@ public class DefaultOaEngineService implements IOAEngineService {
 				throw new FormNotFoundException("没有找到上级节点，不能加签", this.getClass());
 			}
 			TaskResult tr = this.workflowManager.dragNew(userId,taskId, log.getTaskId(), assignees, memo,"加签操作");
+			FormApproveLog formApproveLog =this.logManager.getLastApproveLog(formId);
+			if("加签操作".equals(formApproveLog.getNextTaskName())){
+				tr.getCurrentTask().setName("加签操作");
+			}
 			if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 			if(memo == null) memo = "";
 			memo += "[加签给："+assignees+"]";
@@ -447,6 +455,12 @@ public class DefaultOaEngineService implements IOAEngineService {
 			request.setDepartmentV(formInfo.getFivethDep());
 			
 			TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees, request);
+			FormApproveLog formApproveLog =this.logManager.getLastApproveLog(formId);
+			if(formApproveLog!=null && !"".equals(formApproveLog)){
+				if("加签操作".equals(formApproveLog.getNextTaskName())){
+					tr.getCurrentTask().setName("加签操作");
+				}
+			}
 			if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 			if(tr.getNextTasks().get(0).getCandidate().equals(assignees) && !userId.equals(tr.getOwner())){
 				tr.getNextTasks().get(0).setTaskName("加签操作");
