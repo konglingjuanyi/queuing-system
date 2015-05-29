@@ -220,5 +220,19 @@ public class LogManager {
 		if(logs.size() == 0) return null;
 		return logs.get(0);
 	}
+	@Read
+	public String getFinCheckedUser(long formId, String taskName){
+		FormApproveLogExample example = new FormApproveLogExample();
+		example.createCriteria().andFormIdEqualTo(formId).andTaskNameEqualTo(taskName);
+		example.setOrderByClause("ts ASC");
+		example.setOffset(0);
+		example.setLimit(1);
+		List<FormApproveLog> logs = formApproveLogMapper.selectByExample(example);
+		if(null!=logs && logs.size() > 0){
+			return logs.get(0).getApproveUser();
+		}
+		return "";
+		
+	}
 	
 }
