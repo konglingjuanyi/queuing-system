@@ -332,9 +332,6 @@ public class DefaultOaEngineService implements IOAEngineService {
 				FormInfo formInfo = form0114Manager.getFormInfo(formId);
 				String amount = OAControllerUtils.centMoneyToYuan(formInfo.getMoneyAmount());
 				TaskResult tr = this._pass(processKey, userId, cname, formId, taskId, memo);
-				if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
-					formInfo.setBorrowAmount(Long.parseLong(amount));
-				}
 				String content = userId+" 于 ["+now+"]处理了《"+tr.getOwner()+"-日常报销  总计:"+amount+"元》 [同意]";
 				if(memo != null) content += " 附言:"+memo;
 				owner.put(tr.getOwner(), content);
