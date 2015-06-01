@@ -408,6 +408,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void endorse(String processKey, String userId, String cname, long formId, String taskId, String assignees, String memo) throws FormNotFoundException, ActivitiException {
+		//获取到表单信息  --lee.guo
 		FormInfo formInfo = form0114Manager.getFormInfo(formId);
 		if(formInfo == null) throw new FormNotFoundException("工单没有找到", this.getClass());
 		
@@ -420,7 +421,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		}
 		
 		String tk = this.workflowManager.getTaskKey(taskId);
-		//被加签人为非同组成员，同意后，还需加签人再次同意
+		//被加签人为非(fin_check)同组成员，非同意后，还需加签人再次同意
 		if(tk != null 
 				&& (tk.equals("fin_check"))
 				&& !assignees.equals(formInfo.getStartMemberId())
