@@ -53,7 +53,13 @@ public class PaymentService {
 		paymentInfo.setInvoiceType(3);
 		paymentInfo.setInvoiceDate(info.getField0005().getTime());
 		paymentInfo.setBillId(info.getOid());
+		
 		paymentInfo.setAmount(OAControllerUtils.centMoneyToYuan(info.getField0069()));
+		//paymentInfo.setAmount(OAControllerUtils.centMoneyToYuan(info.getField0011()));
+		//System.out.println("000000:"+OAControllerUtils.centMoneyToYuan(info.getField0011()));
+		//if(true)
+			//return;
+		
 		//paymentInfo.setFinishDate(sdf.format(info.getField0029()));
 		paymentInfo.setFinishDate(new Date().getTime());
 		//paymentInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0069()));

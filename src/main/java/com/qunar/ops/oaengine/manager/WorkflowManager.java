@@ -391,12 +391,18 @@ public class WorkflowManager {
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", true);
 		vars.put("candidates", null);
-		taskService.complete(task.getId(), vars);
-		pointActivity.getIncomingTransitions().remove(newTransition);
-		restoreTransition(currActivity, oriPvmTransitionList);
-		List<TaskInfo> currentTasks = this.getCurrentTasks(task.getProcessInstanceId());
-		for(TaskInfo info : currentTasks){
-			taskService.setAssignee(info.getTaskId(), assignee);
+		List<TaskInfo> currentTasks = new ArrayList<TaskInfo>();
+		try {
+			taskService.complete(task.getId(), vars);
+		} catch (Exception e) {
+			throw new ActivitiException(e.getMessage());
+		} finally{
+			pointActivity.getIncomingTransitions().remove(newTransition);
+			restoreTransition(currActivity, oriPvmTransitionList);
+			currentTasks = this.getCurrentTasks(task.getProcessInstanceId());
+			for(TaskInfo info : currentTasks){
+				taskService.setAssignee(info.getTaskId(), assignee);
+			}
 		}
 		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, currentTasks);
 	}
@@ -566,13 +572,19 @@ public class WorkflowManager {
 		TransitionImpl newTransition = currActivity.createOutgoingTransition();
 		ActivityImpl pointActivity = findActivitiImpl(task.getId(), activityId);
 		newTransition.setDestination(pointActivity);
-		taskService.complete(task.getId());
-		pointActivity.getIncomingTransitions().remove(newTransition);
-		restoreTransition(currActivity, oriPvmTransitionList);
-		List<TaskInfo> currentTasks = this.getCurrentTasks(task.getProcessInstanceId());
-		for(TaskInfo info : currentTasks){
-			if(activityId.equals(info.getTaskKey())){
-				taskService.setAssignee(info.getTaskId(), assignee);
+		List<TaskInfo> currentTasks = new ArrayList<TaskInfo>();
+		try {
+			taskService.complete(task.getId());
+		}catch (Exception e) {
+			throw new ActivitiException(e.getMessage());
+		} finally{
+			pointActivity.getIncomingTransitions().remove(newTransition);
+			restoreTransition(currActivity, oriPvmTransitionList);
+			currentTasks = this.getCurrentTasks(task.getProcessInstanceId());
+			for(TaskInfo info : currentTasks){
+				if(activityId.equals(info.getTaskKey())){
+					taskService.setAssignee(info.getTaskId(), assignee);
+				}
 			}
 		}
 		return new TaskResult(getOwner(task.getProcessInstanceId()), getCname(task.getProcessInstanceId()), task, currentTasks);

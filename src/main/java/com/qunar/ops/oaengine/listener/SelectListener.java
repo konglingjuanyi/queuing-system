@@ -43,7 +43,7 @@ public class SelectListener implements TaskListener  {
 		String owner = (String)vars.get("owner");
 		if(owner == null){
 			logger.error("发起人为空: pid= {} taskkey={} taskId={}", delegateTask.getProcessInstanceId(), delegateTask.getTaskDefinitionKey(), delegateTask.getId());
-			throw new ActivitiException("审批候选人为空");
+			throw new ActivitiException("发起人为空,可能已经离职");
 		}
 		if(vars.containsKey("candidates") && vars.get("candidates") != null){//手工指定
 			Set<IdentityLink> cs = delegateTask.getCandidates();

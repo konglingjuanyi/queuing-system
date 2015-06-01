@@ -1,0 +1,32 @@
+#set($layout = "layout/oa_layout.vm")
+<style type="text/css">
+    td input {
+        width: 100%;
+        text-align: center;
+        color: red;
+        font-size: larger;
+    }
+
+    td {
+        text-align: center;
+    }
+
+
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="col-xs-9">
+            <div class="widget-box">
+                <div class="widget-header header-color-blue" style="text-align:center">
+#if("$!{message}"!="")
+		$message
+#end
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
