@@ -36,6 +36,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -86,6 +87,8 @@ import com.qunar.ops.oaengine.result.DataResult;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.FormRequest;
 import com.qunar.ops.oaengine.result.ListInfo;
+import com.qunar.ops.oaengine.result.TaskInfo;
+import com.qunar.ops.oaengine.result.TaskResult;
 import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.EmployeeRelationsFeesInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
@@ -337,7 +340,6 @@ public class OaEngineController {
 			String ret = parseObject.getString("ret");
 			if (ret.equals("true")) {
 				String userId = parseObject.getJSONObject("data").getString("userId");
-				System.out.println(userId);
 				String adname = parseObject.getJSONObject("data").getJSONObject("userInfo").getString("ad_cn");
 				//JSONArray dept = parseObject.getJSONObject("data").getJSONObject("userInfo").getJSONArray("dept");
 				//String departmentI = dept.getString(0);
@@ -3463,6 +3465,28 @@ public class OaEngineController {
 		}
 		return depart;
 	}
+	/**
+	 * 测试邮件
+	 * @author lee.guo
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/sendTestMail")
+	@ResponseBody
+	public BaseResult sendTestMail(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		String addressee = vars.get("addressee");
+		String ccAddressee = vars.get("ccAddressee");
+		String form = "oa@qunar.com";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String now = sdf.format(new Date());
+		String content = addressee+"，这是一封测试邮件，请忽略。";
+		mailSenderService.sender(form, new String[]{addressee+"@qunar.com"}, new String[]{ccAddressee+"@qunar.com"}, null,"[http://qunar.it]");
+		return BaseResult.getSuccessResult("");
+	}
+
 	
 
 }
