@@ -65,6 +65,8 @@ public class PaymentService {
 		//paymentInfo.setDeduction_amount(OAControllerUtils.centMoneyToYuanII(info.getField0069()));
 		paymentInfo.setRtxId(info.getStartMemberId());
 		paymentInfo.setRtxName(info.getField0004());
+		//财务审核RTXID   --lee.guo
+		paymentInfo.setFin_rtxId(((info.getField0072()).toString()).split("\\(")[1].split("\\)")[0]);
 		
 		String dep = info.getField0001();
 		if(!StringUtils.isEmpty(info.getField0002())){
@@ -200,6 +202,8 @@ public class PaymentService {
 		private String rtxId;
 		private String rtxName;
 		private List<SubPaymentInfo> billDetail = new ArrayList<PaymentService.SubPaymentInfo>();
+		//财务审核rtxid  --lee.guo
+		private String fin_rtxId;
 		public int getInvoiceCategory() {
 			return invoiceCategory;
 		}
@@ -253,6 +257,12 @@ public class PaymentService {
 		}
 		public void setBillDetail(List<SubPaymentInfo> billDetail) {
 			this.billDetail = billDetail;
+		}
+		public String getFin_rtxId() {
+			return fin_rtxId;
+		}
+		public void setFin_rtxId(String fin_rtxId) {
+			this.fin_rtxId = fin_rtxId;
 		}
 		
 	}
