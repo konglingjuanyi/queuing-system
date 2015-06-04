@@ -3381,7 +3381,7 @@ public class OaEngineController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String now = sdf.format(new Date());
 		String content = addressee+"，这是一封测试邮件，请忽略。";
-		mailSenderService.sender(form, new String[]{addressee+"@qunar.com"}, new String[]{ccAddressee+"@qunar.com"}, null,"[http://qunar.it]");
+		mailSenderService.sender(form, new String[]{addressee+"@qunar.com"}, new String[]{ccAddressee+"@qunar.com"}, addressee+"，测试邮件，如有打扰尽请见谅",content+"[http://qunar.it]");
 		return BaseResult.getSuccessResult("");
 	}
 
