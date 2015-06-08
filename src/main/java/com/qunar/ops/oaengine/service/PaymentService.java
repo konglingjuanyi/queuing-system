@@ -66,7 +66,9 @@ public class PaymentService {
 		paymentInfo.setRtxId(info.getStartMemberId());
 		paymentInfo.setRtxName(info.getField0004());
 		//财务审核RTXID   --lee.guo
-		paymentInfo.setFin_rtxId(((info.getField0072()).toString()).split("\\(")[1].split("\\)")[0]);
+		if(info.getField0072()!=null){
+			paymentInfo.setFin_rtxId(((info.getField0072()).toString()).split("\\(")[1].split("\\)")[0]);
+		}
 		
 		String dep = info.getField0001();
 		if(!StringUtils.isEmpty(info.getField0002())){

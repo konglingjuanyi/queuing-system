@@ -1147,6 +1147,10 @@
         params["vars"] = vars;
         params["tableMap"] = tableMap;
         params["flag"] = flag;
+        if($("#sum").val()==0&&flag==true){
+    	 showCommonNoticeDialog('提示信息', 'icon-bolt', generateNoticeMsg('客官您的报销申请金额为零,无须申请~'), 320);
+    		return null;
+    	}
         $.ajax({
             contentType: "application/json; charset=utf-8",
             url: "oa/data",

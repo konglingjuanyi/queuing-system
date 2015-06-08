@@ -411,6 +411,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		
 		Request request = new Request();
 		request.setOid(""+formInfo.getId());
+		//是否直接向vp汇报
 		if("是".equals(formInfo.getIsDirectVp())){
 			request.setReport2vp(true);
 		}else{
@@ -438,10 +439,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 		}
 		//被加签人为同组成员，同意后 跳过加签人
 		else{
-			
+			//金额总计
 			request.setAmountMoney(formInfo.getMoneyAmount());
+			//员工关系费合计
 			request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
+			//招待费合计
 			request.setHosMoney(formInfo.getSumHospitalityAmount());
+			//一级部门
 			request.setDepartment(formInfo.getFirstDep());
 			request.setDepartmentII(formInfo.getSecDep());
 			request.setDepartmentIII(formInfo.getThridDep());
@@ -450,6 +454,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 			
 			TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees, request);
 			if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+			
 			if(tr.getNextTasks().get(0).getCandidate().equals(assignees) && !userId.equals(tr.getOwner())){
 				tr.getNextTasks().get(0).setTaskName("加签操作");
 			}

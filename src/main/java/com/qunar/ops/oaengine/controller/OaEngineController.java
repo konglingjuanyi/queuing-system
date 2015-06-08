@@ -2196,7 +2196,7 @@ public class OaEngineController {
 		String taskMsg[] = taskIds.split(",");
 		// 其实这里就是附言
 		String memo = vars.get("memo");
-		String assignees = vars.get("rtx_id");
+		String assignees = vars.get("rtx_id").trim();
 		if(assignees==null || assignees.length() == 0){
 			return BaseResult.getErrorResult(-1, "加签人不能为空");
 		}
@@ -3377,7 +3377,7 @@ public class OaEngineController {
 		Map<String, String> vars = commonRequest.getVars();
 		String addressee = vars.get("addressee");
 		String ccAddressee = vars.get("ccAddressee");
-		String form = "oa@qunar.com";
+		String form = "baoxiao@qunar.com";
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String now = sdf.format(new Date());
 		String content = addressee+"，这是一封测试邮件，请忽略。";
