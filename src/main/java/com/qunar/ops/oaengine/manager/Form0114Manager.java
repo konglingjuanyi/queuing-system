@@ -1612,12 +1612,61 @@ public class Form0114Manager {
 		formUpdateLogMapper.insert(updateLog);
 	}
 
+	/***
+	 * 主表的数据到历史
+	 * @author lee.guo
+	 * @param formId
+	 * @param finishedFlag
+	 */
 	private void copyFormInfoToHistory(Long formId, int finishedFlag) {
-		// 主表的数据到历史
 		Formmain0114 formmain0114 = formmain0114Mapper
 				.selectByPrimaryKey(formId);
 		Formmain0114History formmain0114History = new Formmain0114History();
+		//如果移动前财务审核字段为空，默认为等于申请金额 --lee.guo 
 		BeanUtils.copyProperties(formmain0114, formmain0114History);
+		Long f70 = formmain0114History.getField0070();
+		Long f65 = formmain0114History.getField0065();
+		Long f66 = formmain0114History.getField0066();
+		Long f67 = formmain0114History.getField0067();
+		Long f68 = formmain0114History.getField0068();
+		Long f99 = formmain0114History.getField0099();
+		Long sum = (long) 000 ;
+		if(f70==null){
+			formmain0114History.setField0070(formmain0114.getField0010());//其他费用金额合计==>其他财务核实金额
+			f70 = formmain0114History.getField0070();
+		}
+		if(f65==null){
+			formmain0114History.setField0065(formmain0114.getField0030());//加班餐费金额合计==>加班餐费财务核实金额
+			f65 = formmain0114History.getField0065();
+		}
+		if(f66==null){
+			formmain0114History.setField0066(formmain0114.getField0031());//招待费金额合计==>招待费财务核实金额
+			 f66 = formmain0114History.getField0066();
+		}
+		if(f67==null){
+			formmain0114History.setField0067(formmain0114.getField0032());//员工关系费金额合计==>员工关系费财务核实金额
+			 f67 = formmain0114History.getField0067();
+		}
+		if(f68==null){
+			formmain0114History.setField0068(formmain0114.getField0033());//出租车费金额合计==>出租车财务核实金额
+			f68 = formmain0114History.getField0068();
+		}
+		if(f99==null){
+			formmain0114History.setField0099(formmain0114.getField0086());//通信费金额==>通信费财务核实金额
+			f99 = formmain0114History.getField0099();
+		}
+		List<Long> sumArray = new ArrayList<Long>();
+		sumArray.add(f65);
+		sumArray.add(f66);
+		sumArray.add(f67);
+		sumArray.add(f68);
+		sumArray.add(f70);
+		sumArray.add(f99);
+		
+		for (Long long1 : sumArray) {
+			if(long1!=null) sum+=long1.longValue();
+		}
+		formmain0114History.setField0069(sum);
 		formmain0114History.setOid("" + formId);
 		formmain0114History.setFinishedflag(finishedFlag);
 		formmain0114HistoryMapper.insert(formmain0114History);

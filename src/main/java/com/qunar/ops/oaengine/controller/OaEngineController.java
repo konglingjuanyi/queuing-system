@@ -36,6 +36,7 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -86,6 +87,8 @@ import com.qunar.ops.oaengine.result.DataResult;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.FormRequest;
 import com.qunar.ops.oaengine.result.ListInfo;
+import com.qunar.ops.oaengine.result.TaskInfo;
+import com.qunar.ops.oaengine.result.TaskResult;
 import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.EmployeeRelationsFeesInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
@@ -97,6 +100,7 @@ import com.qunar.ops.oaengine.result.dailysubmit.TaxiFaresInfo;
 import com.qunar.ops.oaengine.service.EmployeeInfoService;
 import com.qunar.ops.oaengine.service.IOAEngineService;
 import com.qunar.ops.oaengine.service.MailSenderService;
+import com.qunar.ops.oaengine.service.PaymentService;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
 import com.qunar.ops.oaengine.util.OAEngineConst;
 import com.qunar.ops.oaengine.util.QUtils;
@@ -138,6 +142,9 @@ public class OaEngineController {
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+	@Autowired
+	protected PaymentService paymentService;
+	
 	/**
 	 * 修改登陆的用户名
 	 * 
@@ -236,9 +243,16 @@ public class OaEngineController {
 				//String departmentI = dept.getString(0);
 				EmployeeInfo employee = this.employeeInfoService.getEmployee(userId);
 				String departmentI = employee.getDepartmentI();
-				if(!"技术部".equals(departmentI) && !"财务部".equals(departmentI)&& !"内审部".equals(departmentI)){
-					return welcom(request, "本系统目前只对技术部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
+				if(!"技术部".equals(departmentI) 
+						&& !"财务部".equals(departmentI)
+						&& !"内审部".equals(departmentI)
+						&& !"旅游度假事业部".equals(departmentI)
+						&& !"门票事业部".equals(departmentI)
+						&& !"liangliang.dou".equals(userId)
+						){
+					return welcom(request,"本系统目前只对技术部、财务部内审部、旅游度假事业和门票事业部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
+
 				QUtils.setUsername(response2, "un", userId, true);
 				QUtils.setUsername(response2, "name", adname, true);
 				QUtils.setUsername(response2, "test-userid", userId, false);
@@ -1439,7 +1453,7 @@ public class OaEngineController {
             fis.read(buffer);  
             fis.close();  
             response.reset();  
-            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode("日常费用报销查询-"+sdf.format(new Date()), "UTF-8"));  
+            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode("日常费用报销查询-"+sdf.format(new Date())+".xls", "UTF-8"));  
             response.addHeader("Content-Length", "" + file.length());  
             OutputStream toClient = new BufferedOutputStream(response.getOutputStream());  
             response.setContentType("application/vnd.ms-excel;charset=utf-8");  
@@ -2034,7 +2048,7 @@ public class OaEngineController {
             fis.read(buffer);  
             fis.close();  
             response.reset();  
-            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode("日常费用报销查询-"+sdf.format(new Date()), "UTF-8"));  
+            response.addHeader("Content-Disposition", "attachment;filename=" + java.net.URLEncoder.encode("日常费用报销查询-"+sdf.format(new Date())+".xls", "UTF-8"));  
             response.addHeader("Content-Length", "" + file.length());  
             OutputStream toClient = new BufferedOutputStream(response.getOutputStream());  
             response.setContentType("application/vnd.ms-excel;charset=utf-8");  
@@ -2182,7 +2196,7 @@ public class OaEngineController {
 		String taskMsg[] = taskIds.split(",");
 		// 其实这里就是附言
 		String memo = vars.get("memo");
-		String assignees = vars.get("rtx_id");
+		String assignees = vars.get("rtx_id").trim();
 		if(assignees==null || assignees.length() == 0){
 			return BaseResult.getErrorResult(-1, "加签人不能为空");
 		}
@@ -2601,7 +2615,16 @@ public class OaEngineController {
 			approveInfo = infos.get(0);
 			if(approveInfo.getNextTaskId() != null){
 				result[k++] = "<b>当前审批节点: " + approveInfo.getNextTaskName() + "</b>";
-				result[k++] = "<b>审批人: " + approveInfo.getNextCandidate() + "</b>";
+				//result[k++] = "<b>审批人: " + approveInfo.getNextCandidate() + "</b>";
+				StringBuilder str = new StringBuilder();
+				str.append("<b>审批人: </br>");
+				String[] ApproverRTX = approveInfo.getNextCandidate().split(",");
+				for (int i = 0 ; i < ApproverRTX.length ; i++ ) {
+					str.append(ApproverRTX[i]+"  ");
+					if((i+1)%3==0)str.append("</br>");
+				}
+				str.append("</b>");
+				result[k++] = str.toString();
 				result[k++] = "";
 			}
 		}
@@ -3340,6 +3363,28 @@ public class OaEngineController {
 		}
 		return depart;
 	}
+	/**
+	 * 测试邮件
+	 * @author lee.guo
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/sendTestMail")
+	@ResponseBody
+	public BaseResult sendTestMail(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		String addressee = vars.get("addressee");
+		String ccAddressee = vars.get("ccAddressee");
+		String form = "baoxiao@qunar.com";
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		String now = sdf.format(new Date());
+		String content = addressee+"，这是一封测试邮件，请忽略。";
+		mailSenderService.sender(form, new String[]{addressee+"@qunar.com"}, new String[]{ccAddressee+"@qunar.com"}, addressee+"，测试邮件，如有打扰尽请见谅",content+"[http://qunar.it]");
+		return BaseResult.getSuccessResult("");
+	}
+
 	
 
 }

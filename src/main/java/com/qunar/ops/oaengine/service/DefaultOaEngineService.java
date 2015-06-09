@@ -13,6 +13,8 @@ import java.util.TreeMap;
 
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +48,7 @@ import com.qunar.ops.oaengine.util.OAControllerUtils;
 
 @Component
 public class DefaultOaEngineService implements IOAEngineService {
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
 	private WorkflowManager workflowManager;
@@ -259,6 +262,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 	public FormInfoList todoList(String processKey, String userId,
 			Date startTime, Date endTime, String owner, int pageNo, int pageSize) throws FormNotFoundException {
 		ListInfo<TaskInfo> taskInfos = workflowManager.todoList(processKey, userId, startTime, endTime, owner, pageNo, pageSize);
+		
 		List<TaskInfo> _taskInfos = taskInfos.getInfos();
 		FormInfoList res = new FormInfoList();
 		List<FormInfo> formInfos = new ArrayList<FormInfo>();
@@ -267,7 +271,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 			TaskInfo taskInfo = _taskInfos.get(i);
 			String proc_inst_id = taskInfo.getProcessInstanceId();
 			formInfo = form0114Manager.getFormInfoByInst(proc_inst_id);
-			if(formInfo == null) continue;
+			if(formInfo == null)
+				continue;
 			formInfo.setTaskId(taskInfo.getTaskId());
 			formInfo.setTaskKey(taskInfo.getTaskKey());
 			formInfo.setIsEndorse(taskInfo.isEndorse());
@@ -355,12 +360,21 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 	
 	private TaskResult _pass(String processKey, String userId, String cname, long formId, String taskId, String memo) throws FormNotFoundException, ActivitiException, IllegalAccessException, InvocationTargetException, CompareModelException {
-		TaskResult tr = this.workflowManager.pass(taskId, userId);
-		
-		FormApproveLog formApproveLog =this.logManager.getFirstApproveLog(formId,tr.getOwner());
-		if(!formApproveLog.getNextCandidate().contains(userId)){
-			tr.getCurrentTask().setName("加签操作");
+		FormApproveLog formApproveLog =this.logManager.getLastApproveLog(formId);
+		String fincheckUser=this.logManager.getFinCheckedUser(formId,"财务报销审核组");
+		TaskResult tr = null;
+		if(formApproveLog!=null){
+			if( !"".equals(fincheckUser)&& "加签操作".equals(formApproveLog.getNextTaskName())){
+				
+				formApproveLog.setApproveUser(fincheckUser);
+				tr = this.workflowManager.passNew(taskId, userId,formApproveLog.getApproveUser());
+				tr.getCurrentTask().setName("加签操作");
+				
+			}else{
+				tr= this.workflowManager.pass(taskId, userId);
+			}
 		}
+				
 		if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
 		this.logManager.appendApproveLog(userId, cname, formId, "pass", tr, memo);
 		if("fin_check".equals(tr.getCurrentTask().getTaskDefinitionKey()) || "fin_check_mdd".equals(tr.getCurrentTask().getTaskDefinitionKey())){
@@ -391,11 +405,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 	@Override
 	@Transactional(rollbackFor=Exception.class)
 	public void endorse(String processKey, String userId, String cname, long formId, String taskId, String assignees, String memo) throws FormNotFoundException, ActivitiException {
+		//获取到表单信息  --lee.guo
 		FormInfo formInfo = form0114Manager.getFormInfo(formId);
 		if(formInfo == null) throw new FormNotFoundException("工单没有找到", this.getClass());
 		
 		Request request = new Request();
 		request.setOid(""+formInfo.getId());
+		//是否直接向vp汇报
 		if("是".equals(formInfo.getIsDirectVp())){
 			request.setReport2vp(true);
 		}else{
@@ -403,11 +419,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 		}
 		
 		String tk = this.workflowManager.getTaskKey(taskId);
-		//被加签人为非同组成员，同意后，还需加签人再次同意
+		//被加签人为非(fin_check)同组成员，非同意后，还需加签人再次同意
 		if(tk != null 
 				&& (tk.equals("fin_check"))
+				&& !assignees.equals(formInfo.getStartMemberId())
 				&& !userId.equals(formInfo.getStartMemberId()) 
-				&& !assignees.equals(formInfo.getStartMemberId()) 
 				&& !this.groupManager.inGroups(new String[] {tk}, assignees)){
 			
 			FormApproveLog log = this.logManager.getLastPassApproveLog(formId, assignees);
@@ -423,10 +439,13 @@ public class DefaultOaEngineService implements IOAEngineService {
 		}
 		//被加签人为同组成员，同意后 跳过加签人
 		else{
-			
+			//金额总计
 			request.setAmountMoney(formInfo.getMoneyAmount());
+			//员工关系费合计
 			request.setTbMoney(formInfo.getSumEmployeeRelationsFees());
+			//招待费合计
 			request.setHosMoney(formInfo.getSumHospitalityAmount());
+			//一级部门
 			request.setDepartment(formInfo.getFirstDep());
 			request.setDepartmentII(formInfo.getSecDep());
 			request.setDepartmentIII(formInfo.getThridDep());
@@ -435,6 +454,10 @@ public class DefaultOaEngineService implements IOAEngineService {
 			
 			TaskResult tr = this.workflowManager.endorse(taskId, userId, assignees, request);
 			if(tr == null) throw new FormNotFoundException("任务没有找到", this.getClass());
+			
+			if(tr.getNextTasks().get(0).getCandidate().equals(assignees) && !userId.equals(tr.getOwner())){
+				tr.getNextTasks().get(0).setTaskName("加签操作");
+			}
 			if(memo == null) memo = "";
 			memo += "[加签给："+assignees+"]";
 			this.logManager.appendApproveLog(userId, cname, formId, "endorse", tr, memo);

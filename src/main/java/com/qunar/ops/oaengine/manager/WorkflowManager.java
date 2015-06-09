@@ -114,7 +114,8 @@ public class WorkflowManager {
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
 		
-		TaskQuery query = this.taskService.createTaskQuery().processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
+		TaskQuery query = this.taskService.createTaskQuery()
+				.processDefinitionKey(processKey).taskCandidateOrAssigned(userId);
 		if(startTime != null){
 			//query.taskCreatedAfter(startTime);
 			query.processVariableValueGreaterThanOrEqual("startTime", startTime);
@@ -129,33 +130,40 @@ public class WorkflowManager {
 		query.orderByTaskCreateTime().desc();
 		long count = query.count();
 		List<Task> tasks = query.listPage((pageNo - 1) * pageSize, pageSize);
+		
 		ListInfo<TaskInfo> infos = new ListInfo<TaskInfo>();
 		infos.setCount(count);
 		infos.setPageNo(pageNo);
 		infos.setPageSize(pageSize);
-		if(tasks != null)for(Task task : tasks){
-			TaskInfo info = new TaskInfo();
-			Request request = (Request)task.getProcessVariables().get("request");
-			if(request == null){
-				info.setOid("");
-			}else{
-				info.setOid(request.getOid());
-			}
-			info.setProcessInstanceId(task.getProcessInstanceId());
-			info.setTaskId(task.getId());
-			info.setTaskKey(task.getTaskDefinitionKey());
-			info.setTaskName(task.getName());
-			info.setTaskCreateTime(task.getCreateTime());
-			Map<String, Object> taskLocalVariables = task.getTaskLocalVariables();
-			Integer nrOfInstances = this.runtimeService.getVariable(task.getExecutionId(), "nrOfInstances", Integer.class);
-			if(nrOfInstances == null || nrOfInstances <= 0){
-				info.setEndorse(false);
-			}else{
-				info.setEndorse(true);
-			}
-
-			infos.getInfos().add(info);
-		}
+		if(tasks != null){
+			for(Task task : tasks){
+				TaskInfo info = new TaskInfo();
+				Request request = (Request)task.getProcessVariables().get("request");
+				if(request == null){
+					info.setOid("");
+				}else{
+					info.setOid(request.getOid());
+				}
+				info.setProcessInstanceId(task.getProcessInstanceId());
+				info.setTaskId(task.getId());
+				info.setTaskKey(task.getTaskDefinitionKey());
+				info.setTaskName(task.getName());
+				info.setTaskCreateTime(task.getCreateTime());
+				
+				Map<String, Object> taskLocalVariables = task.getTaskLocalVariables();
+				Integer nrOfInstances = this.runtimeService.getVariable(
+						task.getExecutionId(), "nrOfInstances", Integer.class);
+				if(nrOfInstances == null 
+						|| nrOfInstances <= 0)
+				{
+					info.setEndorse(false);
+				}else{
+					info.setEndorse(true);
+				}
+	
+				infos.getInfos().add(info);
+			}//end for(Task task : tasks)
+		}//end if(tasks != null)
 		return infos;
 	}
 	@Read
@@ -333,6 +341,28 @@ public class WorkflowManager {
 		Map<String, Object> vars = new HashMap<String, Object>();
 		vars.put("complete", true);
 		vars.put("candidates", null);
+		taskService.complete(taskId, vars);
+		return new TaskResult(owner, cname, task, this.getCurrentTasks(task.getProcessInstanceId()));
+	}
+	
+	/**
+	 * 审批通过
+	 * @param taskId
+	 * @param userId
+	 * @return List<TaskInfo> 当前任务信息
+	 */
+	public TaskResult passNew(String taskId, String userId,String candidate) throws ActivitiException{
+		identityService.setAuthenticatedUserId(userId);
+		Task task = this.taskService.createTaskQuery().taskId(taskId).taskCandidateOrAssigned(userId).singleResult();
+		if(task == null) {
+			logger.warn("任务没有找到{}", taskId);
+			return null;
+		}
+		String owner = getOwner(task.getProcessInstanceId());
+		String cname = getCname(task.getProcessInstanceId());
+		Map<String, Object> vars = new HashMap<String, Object>();
+		vars.put("complete", true);
+		vars.put("candidates", candidate);
 		taskService.complete(taskId, vars);
 		return new TaskResult(owner, cname, task, this.getCurrentTasks(task.getProcessInstanceId()));
 	}
