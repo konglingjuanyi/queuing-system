@@ -45,9 +45,18 @@ public class LogManager {
 			log.setOwner(tr.getOwner());
 			log.setOwnerCname(tr.getCname());
 			Task currentTask = tr.getCurrentTask();
-			if(currentTask != null){
-				log.setTaskId(currentTask.getTaskDefinitionKey());
-				log.setTaskName(currentTask.getName());
+			//获取前一条日志信息，判断上一条是否加签过来的消息，如果是加签，记录便是加签操作，否则记录正常节点 --lee.guo
+			if (currentTask != null) {
+				List<FormApproveLog> logList = this.formApproveLogMapper.selectLogByFormId(log.getFormId());
+				String lastMemo = logList.get(0).getMemo();
+				int lastMemoLength = lastMemo.split("\\[加签给：").length;
+				if (lastMemoLength == 2) {
+					log.setTaskId(currentTask.getTaskDefinitionKey());
+					log.setTaskName("加签操作");
+				} else {
+					log.setTaskId(currentTask.getTaskDefinitionKey());
+					log.setTaskName(currentTask.getName());
+				}
 			}
 			List<TaskInfo> nextTasks = tr.getNextTasks();
 			if(nextTasks != null && nextTasks.size() > 0){

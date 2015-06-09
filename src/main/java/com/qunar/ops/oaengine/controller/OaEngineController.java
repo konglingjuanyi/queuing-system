@@ -623,6 +623,8 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/batch_labor")
 	@ResponseBody
 	public BaseResult webBatchLaborHour(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+		int nowY = Integer.parseInt(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).toString().split("-")[0]);
+		int nowM = Integer.parseInt(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).toString().split("-")[1]);
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -631,24 +633,44 @@ public class OaEngineController {
 		Map<String, String> vars = commonRequest.getVars();
 		String start = vars.get("start");
 		String end = vars.get("end");
+		int startY = Integer.parseInt(start.split("-")[0]);
+		int startM = Integer.parseInt(start.split("-")[1]);
+		int endY = Integer.parseInt(end.split("-")[0]);
+		int endM = Integer.parseInt(end.split("-")[1]);
+		if (startY != nowY && startY != (nowY - 1)) {
+			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
+		}
+		if (  endY != nowY && endY != (nowY + 1) ) {
+			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
+		}
+		if (startM < (nowM - 3) || startM > nowM ) {
+			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
+		}
+		if(endM > (nowM + 3) || endM < nowM - 3){
+			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
+		}
 		DateTime startDate = DateTime.parse(start);
 		DateTime endDate = DateTime.parse(end);
-		List<String> infos = new ArrayList<String>();// laborHour = 0;
-		int days = Days.daysBetween(startDate, endDate).getDays();
-		for(int i=0; i<=days; i++){
-			try {
-				DateTime date = startDate.plusDays(i);
-				float laborHour = ioaEngineService.getLaborHour(userId, date.toDate());
-				if(laborHour >= 11.5){
-					infos.add(date.toString("yyyy-MM-dd")+":"+laborHour);
+		if(startDate!=null||endDate!=null){
+			List<String> infos = new ArrayList<String>();// laborHour = 0;
+			int days = Days.daysBetween(startDate, endDate).getDays();
+			for(int i=0; i<=days; i++){
+				try {
+					DateTime date = startDate.plusDays(i);
+					float laborHour = ioaEngineService.getLaborHour(userId, date.toDate());
+					if(laborHour >= 11.5){
+						infos.add(date.toString("yyyy-MM-dd")+":"+laborHour);
+					}
+				} catch (RemoteAccessException e) {
+					e.printStackTrace();
+					logger.error(e.getMessage());
+					continue;
 				}
-			} catch (RemoteAccessException e) {
-				e.printStackTrace();
-				logger.error(e.getMessage());
-				continue;
 			}
+			return BaseResult.getSuccessResult(infos);
+		}else{
+			return BaseResult.getErrorResult(0, "区间范围不能为null");
 		}
-		return BaseResult.getSuccessResult(infos);
 	}
 
 	/**

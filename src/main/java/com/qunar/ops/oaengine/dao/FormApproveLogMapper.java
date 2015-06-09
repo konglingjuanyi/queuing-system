@@ -31,4 +31,6 @@ public interface FormApproveLogMapper {
     List<FormApproveLog> selectDistinctFromIds(FormApproveLogExample example);
     
     int distinctCountByExample(FormApproveLogExample example);
+    
+    List<FormApproveLog> selectLogByFormId(Long id);
 }
