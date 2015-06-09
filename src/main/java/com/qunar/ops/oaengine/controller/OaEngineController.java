@@ -638,16 +638,16 @@ public class OaEngineController {
 		int endY = Integer.parseInt(end.split("-")[0]);
 		int endM = Integer.parseInt(end.split("-")[1]);
 		if (startY != nowY && startY != (nowY - 1)) {
-			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
+			return BaseResult.getErrorResult(1, "时间不在报销时间范围内");
 		}
 		if (  endY != nowY && endY != (nowY + 1) ) {
-			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
+			return BaseResult.getErrorResult(1, "时间不在报销时间范围内");
 		}
 		if (startM < (nowM - 3) || startM > nowM ) {
-			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
+			return BaseResult.getErrorResult(1, "时间不在报销时间范围内");
 		}
 		if(endM > (nowM + 3) || endM < nowM - 3){
-			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
+			return BaseResult.getErrorResult(1, "时间不在报销时间范围内");
 		}
 		DateTime startDate = DateTime.parse(start);
 		DateTime endDate = DateTime.parse(end);
@@ -669,7 +669,7 @@ public class OaEngineController {
 			}
 			return BaseResult.getSuccessResult(infos);
 		}else{
-			return BaseResult.getErrorResult(0, "区间范围不能为null");
+			return BaseResult.getErrorResult(1, "区间范围不能为空");
 		}
 	}
 
