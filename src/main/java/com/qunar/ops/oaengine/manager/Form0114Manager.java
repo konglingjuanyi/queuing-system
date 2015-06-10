@@ -867,6 +867,49 @@ public class Form0114Manager {
 		return formInfoList;
 	}
 
+	@Read
+	public FormInfoList getUserApplyList(String userId, int start, int length) {
+
+
+		FormInfoList formInfoList = new FormInfoList();
+		List<FormInfo> formInfos = new ArrayList<FormInfo>();
+		Formmain0114Example example = new Formmain0114Example();
+		com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example
+				.createCriteria();
+		criteria.andFinishedflagNotEqualTo(Constants.PROC_GRIFT);
+		criteria.andFinishedflagNotEqualTo(Constants.REFUSE);
+		criteria.andStartMemberIdEqualTo(userId);
+		int count = formmain0114Mapper.countByExample(example);
+		example.setOffset(start);
+		example.setLimit(length);
+		example.setOrderByClause("start_date desc");
+		List<Formmain0114> formmain0114s = formmain0114Mapper
+				.selectByExample(example);
+		FormInfo formInfo;
+		for (int i = 0; i < formmain0114s.size(); i++) {
+			formInfo = new FormInfo();
+			BeanUtils.copyProperties(formmain0114s.get(i), formInfo);
+
+			Map<String, Object> formson = getFormsonInfo(formInfo.getId());
+			formInfo.setOvertimeMealsInfo((OvertimeMealsInfo[]) formson
+					.get("overtimeMealsInfos"));
+			formInfo.setHospitalityInfo((HospitalityInfo[]) formson
+					.get("hospitalityInfos"));
+			formInfo.setOtherCostsInfo((OtherCostsInfo[]) formson
+					.get("otherCostsInfos"));
+			formInfo.setEmployeeRelationsFeesInfo((EmployeeRelationsFeesInfo[]) formson
+					.get("employeeRelationsFeesInfos"));
+			formInfo.setTaxiFaresInfo((TaxiFaresInfo[]) formson
+					.get("taxiFaresInfos"));
+
+			formInfos.add(formInfo);
+		}
+		formInfoList.setCount(count);
+		formInfoList.setFormInfos(formInfos);
+
+		return formInfoList;
+	}
+
 	/**
 	 * 获取用户申请草稿状态的总数
 	 * 

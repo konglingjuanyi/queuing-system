@@ -227,7 +227,7 @@ public class AppAPIController {
 		if(user !=null && user.length() == 0) user = null;
 		int count = 0;
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
-		FormInfoList list = ioaEngineService.historyList(userId, null, null, user, start, length);
+		FormInfoList list = ioaEngineService.historyListII(userId, null, null, user, start, length);
 		count = list.getCount();
 		for(FormInfo info : list.getFormInfos()){
 			Map<String, String> item = new HashMap<String, String>();
@@ -241,6 +241,35 @@ public class AppAPIController {
 		successResult.setSum(count);
 		return successResult;
 	}
+	
+	@RequestMapping(value = "oa/app/myapply")
+	@ResponseBody
+	public AppResult getMyApply(HttpServletRequest request, @RequestBody AppRequest appRequest) {
+		if(!this.checkAcl(request.getRemoteAddr())){
+			//return AppResult.getErrorResult(-100, "ACL禁止");
+		}
+		String userId = appRequest.getRtx_id();
+		Map<String, String> vars = appRequest.getVars();
+		int length = NumberUtils.toInt(vars.get("length"), 50);
+		int start = NumberUtils.toInt(vars.get("start"), 0);
+		String user = vars.get("user");
+		if(user !=null && user.length() == 0) user = null;
+		int count = 0;
+		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
+		FormInfoList list = ioaEngineService.getUserApplyList(processKey, userId, start, length);
+		count = list.getCount();
+		for(FormInfo info : list.getFormInfos()){
+			Map<String, String> item = new HashMap<String, String>();
+			item.put("oid", info.getId() + ":" + info.getTaskId());
+			item.put("user", info.getApplyUser());
+			item.put("time", sdf.format(info.getStartDate()));
+			item.put("sum", "总金额: " + OAControllerUtils.centMoneyToYuan(info.getMoneyAmount()) + "元");
+			items.add(item);
+		}
+		AppResult successResult = AppResult.getSuccessResult(items);
+		successResult.setSum(count);
+		return successResult;
+	}	
 	
 	@Cacheable(value = { "employee.adname" }, key="#userId")
 	private String getAdname(String userId){

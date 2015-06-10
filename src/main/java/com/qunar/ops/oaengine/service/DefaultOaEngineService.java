@@ -251,6 +251,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 			Date startTime, Date endTime, int pageNo, int pageSize) {
 		return form0114Manager.getUserApplyList(userId, startTime, endTime, pageNo, pageSize);
 	}
+	
+	@Override
+	public FormInfoList getUserApplyList(String processKey, String userId, int start, int length) {
+		return form0114Manager.getUserApplyList(userId, start, length);
+	}
 
 	@Override
 	public FormInfoList getUserApplyHisList(String processKey, String userId,

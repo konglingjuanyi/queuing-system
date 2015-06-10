@@ -232,7 +232,7 @@ public interface IOAEngineService {
 	 * 
 	 */
 	public FormInfoList getUserApplyList(String processKey, String userId, Date startTime, Date endTime, int pageNo, int pageSize);
-	
+	public FormInfoList getUserApplyList(String processKey, String userId, int start, int length);
 	/**
 	 * 获取表单审批信息列表
 	 * @param processKey
