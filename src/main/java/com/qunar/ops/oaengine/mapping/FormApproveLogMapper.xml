@@ -393,4 +393,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <select id="selectLogByFormId" parameterType="com.qunar.ops.oaengine.model.FormApproveLog" resultType="com.qunar.ops.oaengine.model.FormApproveLog" >
+    SELECT <include refid="Base_Column_List" /> FROM form_approve_log where form_id = #{id,jdbcType=VARCHAR} order by id desc
+  </select>
 </mapper>
