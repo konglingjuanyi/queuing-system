@@ -249,6 +249,7 @@ public class OaEngineController {
 						&& !"旅游度假事业部".equals(departmentI)
 						&& !"门票事业部".equals(departmentI)
 						&& !"liangliang.dou".equals(userId)
+						&& !"tao.luo".equals(userId)
 						){
 					return welcom(request,"本系统目前只对技术部、财务部内审部、旅游度假事业和门票事业部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
@@ -623,8 +624,9 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/batch_labor")
 	@ResponseBody
 	public BaseResult webBatchLaborHour(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
-		int nowY = Integer.parseInt(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).toString().split("-")[0]);
-		int nowM = Integer.parseInt(new SimpleDateFormat("yyyy-MM-dd").format(new Date()).toString().split("-")[1]);
+		String nowDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		long scope = 125;
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -633,44 +635,39 @@ public class OaEngineController {
 		Map<String, String> vars = commonRequest.getVars();
 		String start = vars.get("start");
 		String end = vars.get("end");
-		int startY = Integer.parseInt(start.split("-")[0]);
-		int startM = Integer.parseInt(start.split("-")[1]);
-		int endY = Integer.parseInt(end.split("-")[0]);
-		int endM = Integer.parseInt(end.split("-")[1]);
-		if (startY != nowY && startY != (nowY - 1)) {
-			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
-		}
-		if (  endY != nowY && endY != (nowY + 1) ) {
-			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
-		}
-		if (startM < (nowM - 3) || startM > nowM ) {
-			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
-		}
-		if(endM > (nowM + 3) || endM < nowM - 3){
-			return BaseResult.getErrorResult(0, "时间不在报销时间范围内");
-		}
 		DateTime startDate = DateTime.parse(start);
 		DateTime endDate = DateTime.parse(end);
-		if(startDate!=null||endDate!=null){
-			List<String> infos = new ArrayList<String>();// laborHour = 0;
-			int days = Days.daysBetween(startDate, endDate).getDays();
-			for(int i=0; i<=days; i++){
-				try {
-					DateTime date = startDate.plusDays(i);
-					float laborHour = ioaEngineService.getLaborHour(userId, date.toDate());
-					if(laborHour >= 11.5){
-						infos.add(date.toString("yyyy-MM-dd")+":"+laborHour);
+		long entryStartScope = 100;
+		long entryEndScope = 100;
+		try {
+			 entryStartScope =(format.parse(nowDate).getTime()-format.parse(start).getTime())/(24*60*60*1000)+1;
+			 entryEndScope =(format.parse(end).getTime()-format.parse(nowDate).getTime())/(24*60*60*1000)+1;
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		if(startDate!=null&&endDate!=null){
+			if(scope > entryStartScope && entryStartScope >= 0){
+				if(scope > entryEndScope && entryEndScope >= -60){
+					List<String> infos = new ArrayList<String>();// laborHour = 0;
+					int days = Days.daysBetween(startDate, endDate).getDays();
+					for(int i=0; i<=days; i++){
+						try {
+							DateTime date = startDate.plusDays(i);
+							float laborHour = ioaEngineService.getLaborHour(userId, date.toDate());
+							if(laborHour >= 11.5){
+								infos.add(date.toString("yyyy-MM-dd")+":"+laborHour);
+							}
+						} catch (RemoteAccessException e) {
+							e.printStackTrace();
+							logger.error(e.getMessage());
+							continue;
+						}
 					}
-				} catch (RemoteAccessException e) {
-					e.printStackTrace();
-					logger.error(e.getMessage());
-					continue;
+					return BaseResult.getSuccessResult(infos);
 				}
 			}
-			return BaseResult.getSuccessResult(infos);
-		}else{
-			return BaseResult.getErrorResult(0, "区间范围不能为null");
 		}
+		return BaseResult.getErrorResult(-1, "时间太过久远，请保持三个月范围内。");
 	}
 
 	/**
@@ -828,6 +825,7 @@ public class OaEngineController {
 					ioaEngineService.updateFormInfo(processKey, userId, cname, ""
 							+ formInfo.getId(), formInfo, true);
 				} else {
+					//创建工单并发起流程
 					ioaEngineService.createFormAndstart(processKey, userId, cname, formInfo);
 				}
 			} catch (RemoteAccessException e) {
