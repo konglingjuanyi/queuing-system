@@ -81,7 +81,11 @@ public class SelectListener implements TaskListener  {
 					if(request == null){
 						throw new RemoteAccessException("request is null, 请联系ops", this.getClass());
 					}
-					users = this.employeeInfoService.findDirector(request.getDepartment(), request.getDepartmentII(), request.getDepartmentIII(), request.getDepartmentIV(), request.getDepartmentV());
+					users = this.employeeInfoService.findDirector(owner,request.getDepartment(), request.getDepartmentII(), request.getDepartmentIII(), request.getDepartmentIV(), request.getDepartmentV());
+					//处理掉自己审批后 如果没有部门总监审批 则由总监上级审批 --lee.guo
+					if(users.size()==0){
+						users = this.employeeInfoService.findManager(owner);
+					}
 				}else if(delegateTask.getTaskDefinitionKey().indexOf("vp") >= 0){
 					users = this.employeeInfoService.findVP(owner);
 				}

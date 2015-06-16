@@ -264,6 +264,7 @@ public class EmployeeInfoService {
 
 	/**
 	 * 获取员工上上级主管； 如果员工上上级主管是VP，返回上级主管； 如果以上条件均没有获取到，返回VP，如果VP没找到返回空list
+	 * @param owner 
 	 * 
 	 * @param userId
 	 * @return
@@ -307,7 +308,7 @@ public class EmployeeInfoService {
 		return users;
 	}
 	 */
-	public List<String> findDirector(String dep1, String dep2, String dep3, String dep4, String dep5) throws RemoteAccessException {
+	public List<String> findDirector(String owner,String dep1, String dep2, String dep3, String dep4, String dep5) throws RemoteAccessException {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("dep1", dep1==null?"":dep1));
 		params.add(new BasicNameValuePair("dep2", dep2==null?"":dep2));
@@ -331,7 +332,7 @@ public class EmployeeInfoService {
 		}
 		for(String leader : leaders.split(",")){
 			if(leader.length() == 0) continue;
-			users.add(leader);
+			if(!owner.equals(leader))users.add(leader);//如果组内有自己审批人是自己的情况 不添加 --lee.guo
 		}
 		QMonitor.recordOne("call_qunarit_success");
 		return users;

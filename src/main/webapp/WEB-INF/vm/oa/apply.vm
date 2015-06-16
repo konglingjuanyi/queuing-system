@@ -963,6 +963,11 @@
 			cell.value = "";
 			return false;
 		}
+		if(cell.value==0){
+			alert(field + "不能为0");
+			cell.value = "";
+			return false;
+		}
     }
     
     function createOperateMsgForm(msg) {
