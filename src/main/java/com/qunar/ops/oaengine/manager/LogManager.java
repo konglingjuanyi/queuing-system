@@ -232,7 +232,8 @@ public class LogManager {
 	@Read
 	public String getFinCheckedUser(long formId, String taskName){
 		FormApproveLogExample example = new FormApproveLogExample();
-		example.createCriteria().andFormIdEqualTo(formId).andTaskNameEqualTo(taskName);
+		//增加新条件 不是召回操作  --lee.guo
+		example.createCriteria().andFormIdEqualTo(formId).andTaskNameEqualTo(taskName).andManagerTypeNotEqualTo("recall");
 		example.setOrderByClause("ts ASC");
 		example.setOffset(0);
 		example.setLimit(1);
