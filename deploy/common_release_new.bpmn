@@ -55,6 +55,9 @@
     <exclusiveGateway id="exclusivegateway20" name="Exclusive Gateway"></exclusiveGateway>
     <userTask id="cfo" name="CFO" activiti:candidateUsers="sam.sun">
       <documentation>sam.sun@qunar.com</documentation>
+      <extensionElements>
+        <activiti:taskListener event="create" delegateExpression="${selectListener}"></activiti:taskListener>
+      </extensionElements>
       <multiInstanceLoopCharacteristics isSequential="true">
         <loopCardinality>1000</loopCardinality>
         <completionCondition>${complete == true}</completionCondition>

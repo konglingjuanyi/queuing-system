@@ -41,6 +41,7 @@ public class SelectListener implements TaskListener  {
 		//候选人优先级：手工指定->流程设定->根据规则从骆驼帮获取
 		Map<String, Object> vars = delegateTask.getExecution().getVariables();
 		String owner = (String)vars.get("owner");
+		owner = owner.toLowerCase();
 		if(owner == null){
 			logger.error("发起人为空: pid= {} taskkey={} taskId={}", delegateTask.getProcessInstanceId(), delegateTask.getTaskDefinitionKey(), delegateTask.getId());
 			throw new ActivitiException("发起人为空,可能已经离职");
@@ -48,12 +49,18 @@ public class SelectListener implements TaskListener  {
 		if(vars.containsKey("candidates") && vars.get("candidates") != null){//手工指定
 			Set<IdentityLink> cs = delegateTask.getCandidates();
 			if(cs != null)for(IdentityLink c : delegateTask.getCandidates()){
-				delegateTask.deleteCandidateUser(c.getUserId());
+				if(c.getUserId()!=null){
+					delegateTask.deleteCandidateUser(c.getUserId().toLowerCase());
+				}else{
+					delegateTask.deleteCandidateUser(c.getUserId());
+				}
+				
 			}
 			String _candidates = (String)vars.get("candidates");
+			_candidates = _candidates.toLowerCase();
 			for(String _candidate : _candidates.split(",")){
-				delegateTask.addCandidateUser(_candidate);
-				candidates.add(_candidate);
+				delegateTask.addCandidateUser(_candidate.toLowerCase());
+				candidates.add(_candidate.toLowerCase());
 			}
 		}else if(!delegateTask.getCandidates().isEmpty()){//流程指定
 			for(IdentityLink _candidate : delegateTask.getCandidates()){
@@ -62,12 +69,23 @@ public class SelectListener implements TaskListener  {
 				}
 				String groupId = _candidate.getGroupId();
 				if(groupId != null && groupId.length() > 0){
-					for(GroupInfo info : this.groupManager.getGroup(groupId)){
-						delegateTask.deleteCandidateGroup(info.getGroupKey());
-						for(GroupMember mem : info.getMembers()){
-							candidates.add(mem.getMemberUserId());
-							delegateTask.addCandidateUser(mem.getMemberUserId());
+					if("hrbp_tb".equals(groupId)){
+						try {
+							Request request = (Request)vars.get("request");
+							if(request == null){
+								throw new RemoteAccessException("request is null, 请联系ops", this.getClass());
+							}
+							List<String> hrbpList = employeeInfoService.getEmployeeHRBP(owner,request.getDepartment(),this.groupManager.getGroup(groupId));
+							for (String hrbp_rtx : hrbpList) {
+								candidates.add(hrbp_rtx.toLowerCase());
+								delegateTask.addCandidateUser(hrbp_rtx.toLowerCase());
+							}
+						} catch (RemoteAccessException e) {
+							e.printStackTrace();
+							getHRBPGroup(groupId,delegateTask,candidates);
 						}
+					}else{
+						getHRBPGroup(groupId,delegateTask,candidates);
 					}
 				}
 			}
@@ -81,7 +99,9 @@ public class SelectListener implements TaskListener  {
 					if(request == null){
 						throw new RemoteAccessException("request is null, 请联系ops", this.getClass());
 					}
-					users = this.employeeInfoService.findDirector(owner,request.getDepartment(), request.getDepartmentII(), request.getDepartmentIII(), request.getDepartmentIV(), request.getDepartmentV());
+					//换新接口 ， 7.3变更 ，一个月之内没问题可删除注释代码   ----lee.guo
+					//users = this.employeeInfoService.findDirector(owner,request.getDepartment(), request.getDepartmentII(), request.getDepartmentIII(), request.getDepartmentIV(), request.getDepartmentV());
+					users = this.employeeInfoService.findDirector(owner);
 					//处理掉自己审批后 如果没有部门总监审批 则由总监上级审批 --lee.guo
 					if(users.size()==0){
 						users = this.employeeInfoService.findManager(owner);
@@ -90,8 +110,8 @@ public class SelectListener implements TaskListener  {
 					users = this.employeeInfoService.findVP(owner);
 				}
 				if(users != null)for(String userId : users){
-					delegateTask.addCandidateUser(userId);
-					candidates.add(userId);
+					delegateTask.addCandidateUser(userId.toLowerCase());
+					candidates.add(userId.toLowerCase());
 				}
 			} catch (RemoteAccessException e) {
 				this.logger.error(e.getMessage(), e);
@@ -104,10 +124,28 @@ public class SelectListener implements TaskListener  {
 			throw new ActivitiException("审批候选人为空");
 		}
 		for(String _candidate : candidates){
-			List<Delegation> agents = delegationManager.findDelegationByMaster(_candidate);
+			List<Delegation> agents = delegationManager.findDelegationByMaster(_candidate.toLowerCase());
 			if(agents != null)for(Delegation agent : agents){
-				delegateTask.addCandidateUser(agent.getAgentUserId());
+				delegateTask.addCandidateUser(agent.getAgentUserId().toLowerCase());
 			}
 		}
 	}
+
+	private void getHRBPGroup(String groupId, DelegateTask delegateTask, List<String> candidates) {
+		for(GroupInfo info : this.groupManager.getGroup(groupId)){
+			delegateTask.deleteCandidateGroup(info.getGroupKey());
+			for(GroupMember mem : info.getMembers()){
+				if(mem.getMemberUserId()!=null){
+					candidates.add(mem.getMemberUserId().toLowerCase());
+					delegateTask.addCandidateUser(mem.getMemberUserId().toLowerCase());
+				}else{
+					candidates.add(mem.getMemberUserId());
+					delegateTask.addCandidateUser(mem.getMemberUserId());
+				}
+				
+			}
+		}
+	}
+	
+	
 }

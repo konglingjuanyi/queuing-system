@@ -44,7 +44,7 @@
     <userTask id="fin_director" name="财务总监" activiti:candidateUsers="susan.wang">
       <documentation>susan.wang@qunar.com</documentation>
       <extensionElements>
-        <activiti:taskListener event="create" delegateExpression="${notificationListener}"></activiti:taskListener>
+        <activiti:taskListener event="create" delegateExpression="${selectListener}"></activiti:taskListener>
       </extensionElements>
       <multiInstanceLoopCharacteristics isSequential="true">
         <loopCardinality>1000</loopCardinality>
@@ -55,6 +55,9 @@
     <exclusiveGateway id="exclusivegateway20" name="Exclusive Gateway"></exclusiveGateway>
     <userTask id="cfo" name="CFO" activiti:candidateUsers="sam.sun">
       <documentation>sam.sun@qunar.com</documentation>
+      <extensionElements>
+        <activiti:taskListener event="create" delegateExpression="${selectListener}"></activiti:taskListener>
+      </extensionElements>
       <multiInstanceLoopCharacteristics isSequential="true">
         <loopCardinality>1000</loopCardinality>
         <completionCondition>${complete == true}</completionCondition>
@@ -122,9 +125,6 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${request.tbMoney > 0}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow89" sourceRef="exclusivegateway26" targetRef="exclusivegateway13"></sequenceFlow>
-    <manualTask id="cashier" name="报销出纳"></manualTask>
-    <sequenceFlow id="flow90" sourceRef="exclusivegateway21" targetRef="cashier"></sequenceFlow>
-    <sequenceFlow id="flow91" sourceRef="cashier" targetRef="endevent2"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway26" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow92" sourceRef="hrbp_tb" targetRef="exclusivegateway26"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway27" name="Exclusive Gateway"></exclusiveGateway>
@@ -145,6 +145,17 @@
       </multiInstanceLoopCharacteristics>
     </userTask>
     <sequenceFlow id="flow99" sourceRef="empty_1" targetRef="exclusivegateway13"></sequenceFlow>
+    <userTask id="cashier" name="出纳">
+      <extensionElements>
+        <activiti:taskListener event="create" class="com.qunar.ops.oaengine.listener.CashierListener"></activiti:taskListener>
+      </extensionElements>
+      <multiInstanceLoopCharacteristics isSequential="true">
+        <loopCardinality>1000</loopCardinality>
+        <completionCondition>${complete == true}</completionCondition>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <sequenceFlow id="flow100" sourceRef="exclusivegateway21" targetRef="cashier"></sequenceFlow>
+    <sequenceFlow id="flow101" sourceRef="cashier" targetRef="endevent2"></sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_oa_common">
     <bpmndi:BPMNPlane bpmnElement="oa_common" id="BPMNPlane_oa_common">
@@ -188,13 +199,13 @@
         <omgdc:Bounds height="40.0" width="40.0" x="1352.0" y="167.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="endevent2" id="BPMNShape_endevent2">
-        <omgdc:Bounds height="35.0" width="35.0" x="1532.0" y="170.0"></omgdc:Bounds>
+        <omgdc:Bounds height="35.0" width="35.0" x="1590.0" y="170.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="empty_1" id="BPMNShape_empty_1">
         <omgdc:Bounds height="55.0" width="105.0" x="190.0" y="100.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="empty_5" id="BPMNShape_empty_5">
-        <omgdc:Bounds height="55.0" width="105.0" x="1248.0" y="219.0"></omgdc:Bounds>
+        <omgdc:Bounds height="55.0" width="105.0" x="1258.0" y="218.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="empty_4" id="BPMNShape_empty_4">
         <omgdc:Bounds height="55.0" width="105.0" x="1016.0" y="100.0"></omgdc:Bounds>
@@ -214,9 +225,6 @@
       <bpmndi:BPMNShape bpmnElement="exclusivegateway25" id="BPMNShape_exclusivegateway25">
         <omgdc:Bounds height="40.0" width="40.0" x="716.0" y="167.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="cashier" id="BPMNShape_cashier">
-        <omgdc:Bounds height="55.0" width="105.0" x="1407.0" y="160.0"></omgdc:Bounds>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusivegateway26" id="BPMNShape_exclusivegateway26">
         <omgdc:Bounds height="40.0" width="40.0" x="320.0" y="238.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
@@ -225,6 +233,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="tb_check" id="BPMNShape_tb_check">
         <omgdc:Bounds height="67.0" width="105.0" x="190.0" y="175.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="cashier" id="BPMNShape_cashier">
+        <omgdc:Bounds height="55.0" width="105.0" x="1430.0" y="160.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="flow35" id="BPMNEdge_flow35">
         <omgdi:waypoint x="54.0" y="187.0"></omgdi:waypoint>
@@ -266,10 +277,10 @@
       <bpmndi:BPMNEdge bpmnElement="flow71" id="BPMNEdge_flow71">
         <omgdi:waypoint x="1228.0" y="207.0"></omgdi:waypoint>
         <omgdi:waypoint x="1228.0" y="246.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1248.0" y="246.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1258.0" y="245.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow72" id="BPMNEdge_flow72">
-        <omgdi:waypoint x="1353.0" y="246.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1363.0" y="245.0"></omgdi:waypoint>
         <omgdi:waypoint x="1371.0" y="244.0"></omgdi:waypoint>
         <omgdi:waypoint x="1372.0" y="207.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
@@ -341,14 +352,6 @@
         <omgdi:waypoint x="370.0" y="254.0"></omgdi:waypoint>
         <omgdi:waypoint x="370.0" y="207.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow90" id="BPMNEdge_flow90">
-        <omgdi:waypoint x="1392.0" y="187.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1407.0" y="187.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="flow91" id="BPMNEdge_flow91">
-        <omgdi:waypoint x="1512.0" y="187.0"></omgdi:waypoint>
-        <omgdi:waypoint x="1532.0" y="187.0"></omgdi:waypoint>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow92" id="BPMNEdge_flow92">
         <omgdi:waypoint x="295.0" y="302.0"></omgdi:waypoint>
         <omgdi:waypoint x="341.0" y="303.0"></omgdi:waypoint>
@@ -373,6 +376,14 @@
         <omgdi:waypoint x="295.0" y="127.0"></omgdi:waypoint>
         <omgdi:waypoint x="369.0" y="127.0"></omgdi:waypoint>
         <omgdi:waypoint x="370.0" y="167.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow100" id="BPMNEdge_flow100">
+        <omgdi:waypoint x="1392.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1430.0" y="187.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow101" id="BPMNEdge_flow101">
+        <omgdi:waypoint x="1535.0" y="187.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1590.0" y="187.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

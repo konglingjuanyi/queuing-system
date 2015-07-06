@@ -27,6 +27,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.ctc.wstx.util.StringUtil;
 import com.qunar.flight.qmonitor.QMonitor;
 import com.qunar.ops.oaengine.exception.RemoteAccessException;
+import com.qunar.ops.oaengine.manager.GroupManager.GroupInfo;
+import com.qunar.ops.oaengine.model.GroupMember;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
 
@@ -38,6 +40,9 @@ public class EmployeeInfoService {
 	
 	@Value("${backyard.apihost.bank}")
 	String backyardBankUrl;
+	
+	@Value("${backyard.drt_vp}")
+	String backyardDrt_vpUrl;
 	
 	@Value("${oa.apihost}")
 	String oadUrl;
@@ -225,7 +230,7 @@ public class EmployeeInfoService {
 			Object vp = data.get("vp_mail");
 			if (vp != null) {
 				String user = (String) vp;
-				users.add(user.split("@")[0]);
+				users.add(user.split("@")[0].toLowerCase());
 			}
 			QMonitor.recordOne("call_qunarit_success");
 		}
@@ -255,7 +260,7 @@ public class EmployeeInfoService {
 			}
 			if (u != null) {
 				String user = (String) u;
-				users.add(user.split("@")[0]);
+				users.add(user.split("@")[0].toLowerCase());
 			}
 			QMonitor.recordOne("call_qunarit_success");
 		}
@@ -332,8 +337,44 @@ public class EmployeeInfoService {
 		}
 		for(String leader : leaders.split(",")){
 			if(leader.length() == 0) continue;
-			if(!owner.equals(leader))users.add(leader);//如果组内有自己审批人是自己的情况 不添加 --lee.guo
+			if(!owner.equals(leader))users.add(leader.toLowerCase());//如果组内有自己审批人是自己的情况 不添加 --lee.guo
 		}
+		QMonitor.recordOne("call_qunarit_success");
+		return users;
+	}
+	/***
+	 * 
+	 * @param owner
+	 * @param dep1
+	 * @param dep2
+	 * @param dep3
+	 * @param dep4
+	 * @param dep5
+	 * @param dep6
+	 * @return
+	 * @throws RemoteAccessException
+	 */
+	public List<String> findDirector(String owner) throws RemoteAccessException {
+		List<String> users = new ArrayList<String>();
+		String apiUrl = backyardDrt_vpUrl + "?require=drt_vp&rtx_id=" + owner;
+		//String apiUrl = "http://l-backyard1.ops.dev.cn6.qunar.com:8899/api/employees/" + "?require=get_tree_dep";
+		JSONObject json = invokeGetApi(apiUrl);
+		if ("false".equals(json.getString("ret"))) {
+			throw new RemoteAccessException(json.getString("msg"), EmployeeInfoService.class);
+		}
+		JSONArray datas = json.getJSONArray("data");
+		List<String> drt_rtxList = new ArrayList<String>();
+		for(int i=0; i<datas.size(); i++){
+			JSONObject data = datas.getJSONObject(i);
+			drt_rtxList .add(data.getString("drt_rtx").trim());
+		}
+		for (String drt_rtxs : drt_rtxList) {
+			for(String leader : drt_rtxs.split(",")){
+				if(leader.length() == 0) continue;
+				if(!owner.equals(leader))users.add(leader.toLowerCase().trim());//如果组内有自己审批人是自己的情况 不添加 --lee.guo
+			}
+		}
+		
 		QMonitor.recordOne("call_qunarit_success");
 		return users;
 	}
@@ -481,5 +522,52 @@ public class EmployeeInfoService {
 		params.add(new BasicNameValuePair("dep5", ""));
 		JSONObject json = employeeInfoService.invokePostApi("http://l-backyard1.ops.dev.cn6.qunar.com:8899/api/employees/?require=get_tree_dep", params);
 		System.out.println(json.toJSONString());
+	}
+	
+	
+	
+	/**
+	 * 获取员工信息HRBP
+	 * 
+	 * @param userId
+	 * @param hrbpList 
+	 * @param string 
+	 * @return
+	 * @throws RemoteAccessException
+	 */
+	public List<String> getEmployeeHRBP(String userId, String dep1, List<GroupInfo> hrbpGroupList) throws RemoteAccessException {
+		List<String> hrbpList = new ArrayList<String>();
+		for (GroupInfo groupInfo : hrbpGroupList) {
+			for(GroupMember mem : groupInfo.getMembers()){
+				if(dep1.equals(getEmployee(mem.getMemberUserId().toLowerCase()).getDepartmentI())){
+					hrbpList.add(mem.getMemberUserId().toLowerCase());
+				};
+			}
+		}
+		if(hrbpList.size()>0)return hrbpList;
+		
+		String apiUrl = backyardUrl + "?require=info_mask&userId=" + userId;
+		JSONObject json = invokeGetApi(apiUrl);
+		String hrbp_rtxs;
+		if (json.containsKey("err_id")) {
+			
+			throw new RemoteAccessException(json.getString("msg"),
+					EmployeeInfoService.class);
+		} else {
+			JSONObject data = json.getJSONObject("data");
+			// EmployeeInfo eInfo = JSONObject.toJavaObject(data,
+			// EmployeeInfo.class);
+			hrbp_rtxs = (String) data.get("hrbp");
+			if(hrbp_rtxs!=null&&"".equals(hrbp_rtxs)){
+				for(String htbp : hrbp_rtxs.split(",")){
+					hrbpList.add(htbp);
+				}
+			}
+			
+			QMonitor.recordOne("call_qunarit_success");
+		}
+		
+		if(hrbpList.size()==0)hrbpList.add(hrbp_rtxs);
+		return hrbpList;
 	}
 }

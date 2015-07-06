@@ -379,7 +379,7 @@
                                         }
                                     }
                                 }
-                                approveProxy(oTable, url, msg, "审批通过");
+                                approveProxy(oTable, url, msg, "通过");
                                 e.preventDefault(); //STOP default action
                                 $(this).dialog("close");
                             } catch (e) {

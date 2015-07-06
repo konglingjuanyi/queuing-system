@@ -36,7 +36,6 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -65,7 +64,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.qunar.ops.oaengine.exception.AgentAlreadyExistsException;
 import com.qunar.ops.oaengine.exception.CompareModelException;
@@ -87,8 +85,6 @@ import com.qunar.ops.oaengine.result.DataResult;
 import com.qunar.ops.oaengine.result.EmployeeInfo;
 import com.qunar.ops.oaengine.result.FormRequest;
 import com.qunar.ops.oaengine.result.ListInfo;
-import com.qunar.ops.oaengine.result.TaskInfo;
-import com.qunar.ops.oaengine.result.TaskResult;
 import com.qunar.ops.oaengine.result.dailysubmit.ApprovalInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.EmployeeRelationsFeesInfo;
 import com.qunar.ops.oaengine.result.dailysubmit.FormInfo;
@@ -100,6 +96,7 @@ import com.qunar.ops.oaengine.result.dailysubmit.TaxiFaresInfo;
 import com.qunar.ops.oaengine.service.EmployeeInfoService;
 import com.qunar.ops.oaengine.service.IOAEngineService;
 import com.qunar.ops.oaengine.service.MailSenderService;
+import com.qunar.ops.oaengine.service.PaymentQscheduleService;
 import com.qunar.ops.oaengine.service.PaymentService;
 import com.qunar.ops.oaengine.util.OAControllerUtils;
 import com.qunar.ops.oaengine.util.OAEngineConst;
@@ -145,6 +142,9 @@ public class OaEngineController {
 	@Autowired
 	protected PaymentService paymentService;
 	
+	@Autowired
+	protected PaymentQscheduleService paymentQscheduleService;
+	
 	/**
 	 * 修改登陆的用户名
 	 * 
@@ -160,9 +160,9 @@ public class OaEngineController {
 		EmployeeInfo employeeInfo;
 		try {
 			employeeInfo = ioaEngineService.getEmployeeInfo(userId);
-			QUtils.setUsername(response, "un", userId, true);
+			QUtils.setUsername(response, "un", userId.toLowerCase(), true);
 			QUtils.setUsername(response, "name", employeeInfo.getAdName(), true);
-			QUtils.setUsername(response, "test-userid", userId, false);
+			QUtils.setUsername(response, "test-userid", userId.toLowerCase(), false);
 		} catch (RemoteAccessException e) {
 			e.printStackTrace();
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
@@ -254,9 +254,9 @@ public class OaEngineController {
 					return welcom(request,"本系统目前只对技术部、财务部内审部、旅游度假事业和门票事业部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
 
-				QUtils.setUsername(response2, "un", userId, true);
+				QUtils.setUsername(response2, "un", userId.toLowerCase(), true);
 				QUtils.setUsername(response2, "name", adname, true);
-				QUtils.setUsername(response2, "test-userid", userId, false);
+				QUtils.setUsername(response2, "test-userid", userId.toLowerCase(), false);
 				return myApplyTodo(request);
 			}
 		} catch (Exception e) {
@@ -2216,7 +2216,7 @@ public class OaEngineController {
 		String taskMsg[] = taskIds.split(",");
 		// 其实这里就是附言
 		String memo = vars.get("memo");
-		String assignees = vars.get("rtx_id").trim();
+		String assignees = vars.get("rtx_id").trim().toLowerCase();
 		if(assignees==null || assignees.length() == 0){
 			return BaseResult.getErrorResult(-1, "加签人不能为空");
 		}
@@ -3405,6 +3405,55 @@ public class OaEngineController {
 		return BaseResult.getSuccessResult("");
 	}
 
+	@RequestMapping(value = "oa/payTest")
+	@ResponseBody
+	public BaseResult test() {
+		String a = paymentQscheduleService.execute();
+		System.out.println(a);
+		return BaseResult.getSuccessResult("");
+	}
 	
-
+	/**
+	 * 出纳自动审批
+	 * @param ioaEngineService2 
+	 * 
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "oa/auto")
+	@ResponseBody
+	public  DataResult auto() {
+		String userId = "出纳";
+		// 默认一页显示50条数据
+		int pageSize = 1000;
+		int pageNo = 1;
+		FormInfoList formInfoList = null;
+		try {
+			formInfoList = ioaEngineService.todoList(processKey, userId, null, null, null, pageNo, pageSize);
+		} catch (FormNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+		}
+		DataResult dataResult = null;
+		try {
+			dataResult = getAllTableInfos(formInfoList, userId, 2);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+		}
+		return dataResult;
+	}
+	
+	/**
+	 * 出纳批量完成任务
+	 * 
+	 * @param 
+	 */
+	@ResponseBody
+	public void approvePass(List<Long> formIdList,List<String> taskIdList) {
+		List<Long> errorFormIds = ioaEngineService.batchPass(processKey,
+				"出纳", "出纳", formIdList, taskIdList, "出纳审批完成");
+		//int size = errorFormIds.size();
+	}
 }
