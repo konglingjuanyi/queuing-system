@@ -18,7 +18,9 @@ import com.qunar.ops.oaengine.result.DataResult;
 public class PaymentQscheduleService {
 	    private TaskMonitor monitor;
 	    private static int SIZE = 3;
-	    private Logger logger = LoggerFactory.getLogger(this.getClass());
+	    //private Logger logger = LoggerFactory.getLogger(this.getClass());
+        Logger logger;
+
 	    
 	    
 	    @Autowired
