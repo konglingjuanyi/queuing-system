@@ -13,6 +13,6 @@
     <!-- qschedule采用注解的方式写 -->
     <!--<context:property-placeholder location="classpath:appConfig.properties" ignore-unresolvable="true"/>-->
     <qschedule:config address="${qschedule.zkAddress}" port="${qschedule.port}"/>
-    <context:component-scan base-package="com.qunar.ops.oaengine.controller"/>
+    <context:component-scan base-package="com.qunar.ops.oaengine.task"/>
 
 </beans>
