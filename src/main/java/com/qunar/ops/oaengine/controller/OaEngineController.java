@@ -248,10 +248,12 @@ public class OaEngineController {
 						&& !"内审部".equals(departmentI)
 						&& !"旅游度假事业部".equals(departmentI)
 						&& !"门票事业部".equals(departmentI)
+						&& !"机票事业群".equals(departmentI)
+						&& !"无线事业群".equals(departmentI)
 						&& !"liangliang.dou".equals(userId)
 						&& !"tao.luo".equals(userId)
 						){
-					return welcom(request,"本系统目前只对技术部、财务部内审部、旅游度假事业和门票事业部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
+					return welcom(request,"本系统目前只对技术部、财务部、内审部、旅游度假事业、门票事业部、机票事业群和无线事业群员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
 
 				QUtils.setUsername(response2, "un", userId.toLowerCase(), true);
