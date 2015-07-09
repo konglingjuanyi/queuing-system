@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -65,6 +67,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.qunar.flight.qmonitor.QMonitor;
 import com.qunar.ops.oaengine.exception.AgentAlreadyExistsException;
 import com.qunar.ops.oaengine.exception.CompareModelException;
 import com.qunar.ops.oaengine.exception.FormNotFoundException;
@@ -3457,5 +3460,21 @@ public class OaEngineController {
 		List<Long> errorFormIds = ioaEngineService.batchPass(processKey,
 				"出纳", "出纳", formIdList, taskIdList, "出纳审批完成");
 		//int size = errorFormIds.size();
+	}
+	
+	@RequestMapping("oa/qmonitor.jsp")
+	public String qmonitor(HttpServletResponse response)
+            throws Exception {
+		PrintWriter out = response.getWriter(); 
+		for (Entry<String, Long> entry : QMonitor.getValues().entrySet()) {
+
+			String name = entry.getKey();
+
+			Long value = entry.getValue();
+
+			out.print(name + "=" + value + "\n");
+
+			}
+		return "qmonitor";
 	}
 }
