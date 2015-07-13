@@ -42,12 +42,12 @@
             </div>
         </div>
         
-        <form action="oa/approve_todo_export" method="post">
+        <form id="export_form" action="oa/approve_todo_export" method="post">
         <div class="col-xs-7">
             <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
         <span class="input-icon input-icon-right">
             <input name="startTime" class="date" id="date-from" type="text" style="width: 100px" onclick="showTime()"
-                   placeholder="发起时间..."/>
+                    placeholder="发起时间..."/>
                    <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">
@@ -61,7 +61,7 @@
                 <input type="button" id="search" value="查询"
                         style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
                         class="btn btn-minier btn-primary">
-                <input type="submit" id="export"
+                <input type="button" id="export" onclick="this.form.submit()"
                         style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
                         class="btn btn-minier btn-primary" value="导出">
                 <input type="button" id="import" value="批量查询"
@@ -270,7 +270,21 @@
             "fnDrawCallback": function () {
                 if (!oTable) {
                 }
-
+                $("#date-from").keydown(function(e){
+				if(e.keyCode==13){
+				   showApproveTableInfo(url, null);
+				}
+				});
+                $("#date-to").keydown(function(e){
+				if(e.keyCode==13){
+				   showApproveTableInfo(url, null);
+				}
+				});
+                $("#approve-user").keydown(function(e){
+				if(e.keyCode==13){
+				   showApproveTableInfo(url, null);
+				}
+				});
                 $("#search").unbind("click");
                 $("#search").on("click", function (e) {
                     showApproveTableInfo(url, null);
@@ -442,10 +456,10 @@
                                 var msg = "";
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
-                                        if (postData[i]['value'].length >= 100) {
+                                        if (postData[i]['value'].length >= 500) {
                                             enableAccountApplicationDialogButton(true);
                                             showCommonNoticeDialog('拒绝理由错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('拒绝理由不能超过100个字符'), 300);
+                                                    generateNoticeMsg('拒绝理由不能超过500个字符'), 300);
                                             return;
                                         } else if (postData[i]['value'].length == 0) {
                                             showCommonNoticeDialog('拒绝理由错误', 'icon-warning-sign',
@@ -524,10 +538,10 @@
                                 }
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
-                                        if (postData[i]['value'].length >= 100) {
+                                        if (postData[i]['value'].length >= 500) {
                                             enableAccountApplicationDialogButton(true);
                                             showCommonNoticeDialog('加签错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('加签理由不能超过100个字符'), 300);
+                                                    generateNoticeMsg('加签理由不能超过500个字符'), 300);
                                             return;
                                         } else if (postData[i]['value'].length == 0) {
                                             showCommonNoticeDialog('加签错误', 'icon-warning-sign',
@@ -943,9 +957,9 @@
                                 
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
-                                        if (postData[i]['value'].length >= 100) {
+                                        if (postData[i]['value'].length >= 500) {
                                             showCommonNoticeDialog('回退错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('回退理由不能超过100个字符'), 300);
+                                                    generateNoticeMsg('回退理由不能超过500个字符'), 300);
                                             return;
                                         } else if (postData[i]['value'].length == 0) {
                                             showCommonNoticeDialog('回退错误', 'icon-warning-sign',

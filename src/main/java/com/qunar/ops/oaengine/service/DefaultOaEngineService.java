@@ -369,7 +369,7 @@ public class DefaultOaEngineService implements IOAEngineService {
 		String fincheckUser=this.logManager.getFinCheckedUser(formId,"财务报销审核组");
 		TaskResult tr = null;
 		if(formApproveLog!=null){
-			if( !"".equals(fincheckUser)&& "加签操作".equals(formApproveLog.getNextTaskName())){
+			if( !"".equals(fincheckUser)&& "加签操作".equals(formApproveLog.getNextTaskName())&&!this.groupManager.inGroups(new String[] {"fin_check", "fin_check_mdd" }, userId)){
 				
 				formApproveLog.setApproveUser(fincheckUser);
 				tr = this.workflowManager.passNew(taskId, userId,formApproveLog.getApproveUser());

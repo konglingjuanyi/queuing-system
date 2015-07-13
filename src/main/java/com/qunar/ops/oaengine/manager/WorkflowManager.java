@@ -574,7 +574,10 @@ public class WorkflowManager {
 		newTransition.setDestination(pointActivity);
 		List<TaskInfo> currentTasks = new ArrayList<TaskInfo>();
 		try {
-			taskService.complete(task.getId());
+			Map<String, Object> vars = new HashMap<String, Object>();
+			vars.put("complete", true);
+			vars.put("candidates", assignee);
+			taskService.complete(task.getId(), vars);
 		}catch (Exception e) {
 			throw new ActivitiException(e.getMessage());
 		} finally{

@@ -129,7 +129,7 @@
     <sequenceFlow id="flow92" sourceRef="hrbp_tb" targetRef="exclusivegateway26"></sequenceFlow>
     <exclusiveGateway id="exclusivegateway27" name="Exclusive Gateway"></exclusiveGateway>
     <sequenceFlow id="flow93" sourceRef="exclusivegateway27" targetRef="hrbp_tb">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${request.department == "旅游度假事业部" or request.department == "门票事业部"}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${request.department == "旅游度假事业部" or request.department == "门票事业部"  or request.department == "无线事业群"  or request.department == "机票事业群"}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="flow94" sourceRef="exclusivegateway27" targetRef="tb_check">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${request.department == "技术部"}]]></conditionExpression>

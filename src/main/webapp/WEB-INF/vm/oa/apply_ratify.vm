@@ -970,9 +970,9 @@
                                 var msg = "";
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
-                                        if (postData[i]['value'].length >= 100) {
+                                        if (postData[i]['value'].length >= 500) {
                                             showCommonNoticeDialog('拒绝理由错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('拒绝理由不能超过100个字符'), 300);
+                                                    generateNoticeMsg('拒绝理由不能超过500个字符'), 300);
                                             return;
                                         } else if (postData[i]['value'].length == 0) {
                                             showCommonNoticeDialog('拒绝理由错误', 'icon-warning-sign',
@@ -1038,9 +1038,9 @@
                                 var msg = "";
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
-                                        if (postData[i]['value'].length >= 100) {
+                                        if (postData[i]['value'].length >= 500) {
                                             showCommonNoticeDialog('退回理由错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('退回理由不能超过100个字符'), 300);
+                                                    generateNoticeMsg('退回理由不能超过500个字符'), 300);
                                             return;
                                         } else if (postData[i]['value'].length == 100) {
                                             showCommonNoticeDialog('退回理由错误', 'icon-warning-sign',
@@ -1112,9 +1112,9 @@
                                 }
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
-                                        if (postData[i]['value'].length >= 100) {
+                                        if (postData[i]['value'].length >= 500) {
                                             showCommonNoticeDialog('加签错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('加签理由不能超过100个字符'), 300);
+                                                    generateNoticeMsg('加签理由不能超过500个字符'), 300);
                                             return;
                                         } else if (postData[i]['value'].length == 0) {
                                             showCommonNoticeDialog('加签错误', 'icon-warning-sign',
@@ -1197,9 +1197,9 @@
                                 
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
-                                        if (postData[i]['value'].length >= 100) {
+                                        if (postData[i]['value'].length >= 500) {
                                             showCommonNoticeDialog('回退错误', 'icon-warning-sign',
-                                                    generateNoticeMsg('回退理由不能超过100个字符'), 300);
+                                                    generateNoticeMsg('回退理由不能超过500个字符'), 300);
                                             return;
                                         } else if (postData[i]['value'].length == 0) {
                                             showCommonNoticeDialog('回退错误', 'icon-warning-sign',
