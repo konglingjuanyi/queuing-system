@@ -424,7 +424,7 @@
     });
 
     function showTime() {
-        WdatePicker({dateFmt: 'yyyy-MM-dd'});
+        WdatePicker({dateFmt: 'yyyy-MM-dd', maxDate: '%y-%M-%d'});
     }
 
     function showTimeAndLabor(tableId, curRow) {
