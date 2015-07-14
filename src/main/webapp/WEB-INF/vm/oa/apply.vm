@@ -1033,15 +1033,14 @@
 		                    	vals = info.split(":");
 		    					addRow(tableId, vals[0], vals[1]);
 		                    }
-		                    self.disabled=false;
         				}else{
 		                    for(var i=0; i<data.length; i++){
 		                    	info = data[i];
 		                    	vals = info.split(":");
 		    					addRow(tableId, vals[0], vals[1]);
 		                    }
-		                    self.disabled=false;
 	                    }
+	                    self.disabled=false;
                     }else{
                     	showCommonNoticeDialog('自动填写', 'icon-warning-sign', generateNoticeMsg("你没有大于11.5小时的考勤记录"), 300);
                     	self.disabled=false;
