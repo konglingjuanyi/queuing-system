@@ -652,7 +652,6 @@ public class OaEngineController {
 		}
 		if(startDate!=null&&endDate!=null){
 			if(scope > entryStartScope && entryStartScope >= 0){
-				if(scope > entryEndScope && entryEndScope >= -60){
 					List<String> infos = new ArrayList<String>();// laborHour = 0;
 					int days = Days.daysBetween(startDate, endDate).getDays();
 					for(int i=0; i<=days; i++){
@@ -670,7 +669,6 @@ public class OaEngineController {
 					}
 					return BaseResult.getSuccessResult(infos);
 				}
-			}
 		}
 		return BaseResult.getErrorResult(-1, "时间太过久远，请保持三个月范围内。");
 	}

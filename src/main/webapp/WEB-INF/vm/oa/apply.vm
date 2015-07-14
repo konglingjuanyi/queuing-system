@@ -110,7 +110,7 @@
             <input class="date" id="auto-file-date-to-table1" type="text" style="width: 186px" onclick="showTime()" placeholder="结束日期..."/>
             <i class="icon-calendar green"></i>
         	</span>
-            <button onclick="autoFill('table1')">自动填写</button>
+            <button onclick="autoFill('table1',this)">自动填写</button>
             </div>
             <table frame="vsides" class="col-xs-12"
                    id="table1">
@@ -193,7 +193,7 @@
             <input class="date" id="auto-file-date-to-table2" type="text" style="width: 186px" onclick="showTime()" placeholder="结束日期..."/>
             <i class="icon-calendar green"></i>
         	</span>
-            <button onclick="autoFill('table2')">自动填写</button>
+            <button onclick="autoFill('table2',this)">自动填写</button>
             </div>
             <table frame="vsides" class="col-xs-12"
                    id="table2">
@@ -964,8 +964,7 @@
 			return false;
 		}
 		if(cell.value==0){
-			alert(field + "不能为0");
-			cell.value = "";
+			cell.value=1;
 			return false;
 		}
     }
@@ -980,15 +979,18 @@
         return form;
     }
     
-    function autoFill(tableId){
+    function autoFill(tableId,self){
+    	self.disabled=true;
     	var start = $("#auto-file-date-from-"+tableId).val();
     	var end = $("#auto-file-date-to-"+tableId).val();
     	if(start=='' || end==''){
     		showCommonNoticeDialog('错误', 'icon-warning-sign', generateNoticeMsg('请填写开始时间和结束时间!'), 300);
+    		self.disabled=false;
     		return false;
     	}
     	if(end < start){
     		showCommonNoticeDialog('错误', 'icon-warning-sign', generateNoticeMsg('结束时间不能小于开始时间!'), 300);
+    		self.disabled=false;
     		return false;
     	}
         var params = {
@@ -1031,24 +1033,30 @@
 		                    	vals = info.split(":");
 		    					addRow(tableId, vals[0], vals[1]);
 		                    }
+		                    self.disabled=false;
         				}else{
 		                    for(var i=0; i<data.length; i++){
 		                    	info = data[i];
 		                    	vals = info.split(":");
 		    					addRow(tableId, vals[0], vals[1]);
 		                    }
+		                    self.disabled=false;
 	                    }
                     }else{
                     	showCommonNoticeDialog('自动填写', 'icon-warning-sign', generateNoticeMsg("你没有大于11.5小时的考勤记录"), 300);
+                    	self.disabled=false;
                     }
                 } else {
                     showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg(resp.errorMessage), 300);
+                    self.disabled=false;
                 }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                self.disabled=false;
             }
         });
+        self.disabled=false;
     }
     
     

@@ -19,7 +19,13 @@
 			</td>
 		</tr>
 		<tr>
-			<td height="30px" style="color:red; font-size: 20px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >[请使用Chrome或FireFox浏览器]</td>
+			<td height="30px" style="color:red; font-size: 30px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >[请使用Chrome或FireFox浏览器]</td>
+		</tr>
+		<tr>
+			<td><br/></td>
+		</tr>
+		<tr>
+			<td height="30px" style="color:red; font-size: 20px; text-align: center; font-weight: bolder; letter-spacing: 2px;" >[目前只支持技术、度假、门票、机票、无线，还请其他部门报销的小伙伴们移步到<a href='http://oa.corp.qunar.com'>OA</a>]</td>
 		</tr>
 #if("$!{message}"!="")
 		<tr>
