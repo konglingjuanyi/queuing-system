@@ -1055,7 +1055,6 @@
                 self.disabled=false;
             }
         });
-        self.disabled=false;
     }
     
     

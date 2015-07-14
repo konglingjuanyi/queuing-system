@@ -631,7 +631,7 @@ public class OaEngineController {
 	public BaseResult webBatchLaborHour(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
 		String nowDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		long scope = 125;
+		long scope = 100;
 		String userId = QUtils.getUsername(request);
 		if (userId == null || userId.length() == 0) {
 			logger.warn(OAEngineConst.RTX_ID_IS_NULL_MSG);
