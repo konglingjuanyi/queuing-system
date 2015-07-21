@@ -47,7 +47,7 @@
                	 退回
             </button>
             <button class="btn btn-info" type="button"
-                    onclick="showEditDialog('440');">
+                    onclick="showEditDialog1();">
                	 打印预览
             </button>
         </span>
@@ -419,6 +419,10 @@
 			e.preventDefault();
         });
     });
+    
+    function showEditDialog1(){
+		showEditDialog(formId);
+	}
     
     jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
@@ -1608,4 +1612,5 @@
 $(function() {
      $("#rtx_id").autocomplete("Ajax/AutoComplete.ashx"); //由ashx取得资料
 });
+
 </script>
