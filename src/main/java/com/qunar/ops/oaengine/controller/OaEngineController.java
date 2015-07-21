@@ -352,6 +352,10 @@ public class OaEngineController {
 		mav.addObject("loans", loans);
 		mav.addObject("formId", request.getParameter("formId"));
 		mav.addObject("taskId", request.getParameter("taskId"));
+		mav.addObject("dateFrom", request.getParameter("dateFrom"));
+		mav.addObject("dateTo", request.getParameter("dateTo"));
+		//mav.addObject("approveUser", new String(request.getParameter("approveUser").getBytes("iso-8859-1"),"UTF-8"));
+		mav.addObject("approveUser", request.getParameter("approveUser"));
 		String tk = this.workflowManager.getTaskKey(request.getParameter("taskId"));
 		List<FormApproveLog> listPass=logManager.formAppreoveLogAllPassByFormId(
 				Long.parseLong(request.getParameter("formId").toString()),tk,"pass");
@@ -662,8 +666,8 @@ public class OaEngineController {
 								infos.add(date.toString("yyyy-MM-dd")+":"+laborHour);
 							}
 						} catch (RemoteAccessException e) {
-							e.printStackTrace();
-							logger.error(e.getMessage());
+							if(!"今日没有打卡数据".equals(e.getMessage().trim()))e.printStackTrace();
+							//logger.error(e.getMessage());
 							continue;
 						}
 					}
@@ -1683,6 +1687,7 @@ public class OaEngineController {
 		String startTime = vars.get("startTime");
 		String endTime = vars.get("endTime");
 		String approveUser = vars.get("approveUser");
+		String approveRtx = vars.get("approveRtx");
 		String approveNo = vars.get("approveNo");
 		String checkStartTime = vars.get("checkStartTime");
 		String checkEndTime = vars.get("checkEndTime");
@@ -1766,6 +1771,9 @@ public class OaEngineController {
 		if (OAControllerUtils.isNull(approveUser)) {
 			approveUser = null;
 		}
+		if (OAControllerUtils.isNull(approveRtx)) {
+			approveRtx = null;
+		}
 		if (OAControllerUtils.isNull(approveNo)) {
 			approveNo = null;
 		}
@@ -1776,7 +1784,7 @@ public class OaEngineController {
 			payUser = null;
 		}
 		FormInfoList formInfoList = null;
-		formInfoList = ioaEngineService.search(approveUser, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, status, pageNo, pageSize);
+		formInfoList = ioaEngineService.search(approveUser,approveRtx, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, status, pageNo, pageSize);
 		DataResult dataResult;
 		try {
 			dataResult = getAllTableInfos(formInfoList, userId, 6);
@@ -1808,6 +1816,7 @@ public class OaEngineController {
 		String startTime = request.getParameter("startTime");
 		String endTime = request.getParameter("endTime");
 		String approveUser = request.getParameter("approveUser");
+		String approveRtx = request.getParameter("approveRtx");
 		String approveNo = request.getParameter("approveNo");
 		String checkStartTime = request.getParameter("checkStartTime");
 		String checkEndTime = request.getParameter("checkEndTime");
@@ -1873,6 +1882,9 @@ public class OaEngineController {
 		if (OAControllerUtils.isNull(approveUser)) {
 			approveUser = null;
 		}
+		if (OAControllerUtils.isNull(approveRtx)) {
+			approveRtx = null;
+		}
 		if (OAControllerUtils.isNull(approveNo)) {
 			approveNo = null;
 		}
@@ -1883,7 +1895,7 @@ public class OaEngineController {
 			payUser = null;
 		}
 		FormInfoList formInfoList = null;
-		formInfoList = ioaEngineService.search(approveUser, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, status, pageNo, pageSize);
+		formInfoList = ioaEngineService.search(approveUser, approveRtx, approveNo, _startTime, _endTime, checkUser, _checkStartTime, _checkEndTime, payUser, _payStartTime, _payEndTime, status, pageNo, pageSize);
 
 		File file = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

@@ -11,8 +11,8 @@
 	<script
 		src="https://qsso.corp.qunar.com/lib/qsso-auth.js?t=1">
 	</script>
-	<div align="center" style="margin-top:8%">
-	<table style="text-align: center;">
+	<div align="center" style="margin-top:8%" id = "bodydiv">
+	<table style="text-align: center;" id = "tablediv">
 		<tr>
 			<td colspan="2" height="100px">
 					<img src="images/logo.png" border="0" alt="" />
@@ -45,6 +45,9 @@
 	</table>
 	</div>
 	<script>
+		if ((navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0)){
+			document.getElementById('bodydiv').innerHTML="<div style='color:red; font-size: 50px; font-weight: bolder; letter-spacing: 2px; margin:9cm 4cm 3cm 4cm;' >[请使用Chrome或FireFox浏览器]<div>" ;
+		}
 		QSSO.attach('qsso-login', '$request.getContextPath()/oa/login');
 	</script>
 </body>

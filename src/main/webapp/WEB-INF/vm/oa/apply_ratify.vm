@@ -46,6 +46,10 @@
                     onclick="approveBack();">
                	 退回
             </button>
+            <button class="btn btn-info" type="button"
+                    onclick="showEditDialog('440');">
+               	 打印预览
+            </button>
         </span>
     </div>
 </div>
@@ -396,10 +400,15 @@
 <script src="/oaengine/static/js/dialog_common.js"></script>
 <script src="/oaengine/static/js/approve_common.js"></script>
 <script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
+
+
 <script language=JavaScript>
 
 	var formId = "$formId";
 	var taskId = "$taskId";
+	var dateFrom = "$dateFrom";
+	var dateTo = "$dateTo";
+	var approveUser = "$approveUser";
     jQuery(function ($) {
     	createEditApplyTable(formId);
     	
@@ -410,6 +419,210 @@
 			e.preventDefault();
         });
     });
+    
+    jQuery(function ($) {
+        window.edit_form = $("#edit-form").html();
+        showApproveTableInfo("oa/approve_todo", null);
+        
+    	$('#rtx_id').autocomplete({
+	        source: function (request, response) {
+	    		var params = {};
+	    		var vars = {};
+                params["vars"] = vars;
+                vars["key"] = $('#rtx_id').val();
+                $.ajax({
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "POST",
+                    "url": "oa/get_ems",
+                    "data": JSON.stringify(params),
+                    "success": function (resp) {
+                    	var data = resp.data;
+						response($.map(data, function(item){
+						                          return item;
+						                      }));
+                    },
+                    error: function () {
+                        showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                    }
+                });
+	    	}
+	    });
+	});	
+	
+	
+	function showApproveTableInfo(url, fids) {
+        var ex = document.getElementById("approve_todo");
+        if ($.fn.dataTable.fnIsDataTable(ex)) {
+            $(ex).dataTable().fnDestroy();
+        }
+        var aoColumns = [
+            {
+                "sTitle": '<lable><input id="current-checkbox-select-all" ' +
+                'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
+                "bSortable": false, "sClass": "center"
+            },
+            {"sTitle": 'ID', "sClass": "center", "sWidth": 100},
+            {"sTitle": '金额', "sClass": "center", "sWidth": 150},
+            {"sTitle": '发起人', "sClass": "center", "sWidth": 200},
+            {"sTitle": '发起时间', "sClass": "center", "sWidth": 200},
+            {"sTitle": '接收时间', "sClass": "center", "sWidth": 200},
+            {"sTitle": "报销详情", "sClass": "center", "sWidth": 150}];
+
+        var wh = $(window).height();
+        var sY = (wh - 100) + 'px';
+        var oTable = $(ex).dataTable({
+            "bFilter": false,
+            "bAutoWidth": true,
+            "bProcessing": false,
+            "bServerSide": true,
+            "sDom": 't<"row"<"col-sm-12"i>>',
+            "bSort": false,
+            "bScrollCollapse": true,
+            "iDisplayLength": 20,
+            "iDisplayStart": 0,
+            "aoColumns": aoColumns,
+            "sAjaxSource": "",
+            "bScrollInfinite": true,
+            "sScrollY": sY,
+            "fnServerData": function (sSource, aDataSet, fnCallback) {
+                var startDate = $.trim($('#date-from').val());
+                var endDate = $.trim($('#date-to').val());
+                var approveUser = $.trim($('#approve-user').val());
+                var start = 0;
+                var length = 0;
+                for (var i = 0; i < aDataSet.length; i++) {
+                    if (aDataSet[i].name == 'iDisplayStart') {
+                        start = aDataSet[i].value;
+                    }
+                    if (aDataSet[i].name == 'iDisplayLength') {
+                        length = aDataSet[i].value;
+                    }
+                }
+                var vars = {};
+                vars["start"] = start;
+                vars["length"] = length;
+                if(fids != null){
+                	vars["fids"] = fids;
+                }
+                if (startDate != '') {
+                    vars["startTime"] = startDate;
+                }
+                if (endDate != '') {
+                    vars["endTime"] = endDate;
+                }
+
+                if (approveUser != '') {
+                    vars["approveUser"] = approveUser;
+                }
+                var params = {};
+                params["vars"] = vars;
+                $.ajax({
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "POST",
+                    "url": url,
+                    "data": JSON.stringify(params),
+                    "success": function (resp) {
+                        if (resp.errorCode == 0) {
+                            var data = resp.data;
+                            var iTotalRecords = data.count || 0;
+                            var iTotalDisplayRecords = iTotalRecords;
+                            var aaData = showTableInfo(data, aoColumns.length);
+                            data = {
+                                "aaData": aaData,
+                                "iTotalRecords": (iTotalRecords || 0),
+                                "iTotalDisplayRecords": (iTotalDisplayRecords || 0)
+                            };
+                            fnCallback(data);
+                        }
+                        else {
+                            showCommonNoticeDialog('失败', 'icon-warning-sign',
+                                    generateNoticeMsg(resp.errorMessage), 300);
+                        }
+                    },
+                    error: function () {
+                        showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                    }
+                });
+            },
+            "fnDrawCallback": function () {
+                if (!oTable) {
+                }
+                $("#date-from").keydown(function(e){
+				if(e.keyCode==13){
+				   showApproveTableInfo(url, null);
+				}
+				});
+                $("#date-to").keydown(function(e){
+				if(e.keyCode==13){
+				   showApproveTableInfo(url, null);
+				}
+				});
+                $("#approve-user").keydown(function(e){
+				if(e.keyCode==13){
+				   showApproveTableInfo(url, null);
+				}
+				});
+                $("#search").unbind("click");
+                $("#search").on("click", function (e) {
+                    showApproveTableInfo(url, null);
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+                $("#approve_pass").unbind("click");
+                $("#approve_pass").on("click", function (e) {
+                    approvePass(oTable);
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+                $("#import").unbind("click");
+                $("#import").on("click", function (e) {
+                	showUploadDialog();
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+                $("#approve_reject").unbind("click");
+                $("#approve_reject").on("click", function (e) {
+                    approveReject(oTable);
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+					
+                $("#approve_other").unbind("click");
+                $("#approve_other").on("click", function (e) {
+                    approveEndorse(oTable);
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+                $("#approve_back").unbind("click");
+                $("#approve_back").on("click", function (e) {
+                    approveBack(oTable);
+                }).on("dblclick", function (e) {
+                    e.preventDefault();
+                });
+                oTable.$('tr.row_selected').removeClass('row_selected');
+                oTable.$("tr").unbind('click');
+                oTable.$("tr").click({
+                    oTable: oTable
+                }, function (e) {
+                    if ($(this).hasClass('row_selected')) {
+                        $(this).removeClass('row_selected');
+                    }
+                    else {
+                        e.data.oTable.$('tr.row_selected').removeClass('row_selected');
+                        $(this).addClass('row_selected');
+                        var id = e.data.oTable.fnGetData(this)[1];
+                        showApproveTodoDetailsList(id);
+                    }
+                });
+            },
+            fnInitComplete: function () {
+                $('#current-checkbox-select-all').prop('checked', false);
+                $('#current-checkbox-select-all').attr('checked', false);
+                toggleCheck(oTable);
+            }
+        })
+    }
+	
     
 	function generateNoticeMsg(msg) {
 	    return $.parseStr('<div class="alert alert-info bigger-110" style="margin-bottom: 0px; margin-top: 5px;">%s</div>', msg);
@@ -773,7 +986,7 @@
                     	approvePass();
                     }else{
                     	showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("保存成功！"), 300);
-                    	window.location.href = '/oaengine/oa/approve_todo.html';
+                    	window.location.href = '/oaengine/oa/approve_todo.html?dateFrom='+dateFrom+'&dateTo='+dateTo+'&approveUser='+approveUser;
                     }
                 } else {
                     showCommonNoticeDialog('失败', 'icon-warning-sign',
@@ -827,14 +1040,14 @@
                             click: function () {
                                 $("#approve-result-dialog").empty();
                                 $("#approve-result-dialog").dialog('destroy');
-                                window.location.href = '/oaengine/oa/approve_todo.html';
+                                window.location.href = '/oaengine/oa/approve_todo.html?dateFrom='+dateFrom+'&dateTo='+dateTo+'&approveUser='+approveUser;
                             }
                         }
                     ],
                     close: function () {
                         $("#approve-result-dialog").empty();
                         $("#approve-result-dialog").dialog('destroy');
-                        window.location.href = '/oaengine/oa/approve_todo.html';
+                        window.location.href = '/oaengine/oa/approve_todo.html?dateFrom='+dateFrom+'&dateTo='+dateTo+'&approveUser='+approveUser;
                     }
                 });
             },
@@ -1082,12 +1295,12 @@
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#endorse-msg-dialog").empty();
-            $("#endorse-msg-dialog").append(createEndorseMsgForm('Tips: 请输入加签RTX_ID'));
+            $("#endorse-msg-dialog").append(createEndorseMsgForm('Tips: 请输入加签理由'));
             var dialog = $("#endorse-msg-dialog").removeClass('hide').dialog({
                 modal: true,
                 width: dialog_width,
                 height: 300,
-                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 加签理由</div>',
+                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 加签</div>',
                 title_html: true,
                 closeOnEscape: false,
                 open: function (event, ui) {
@@ -1387,4 +1600,12 @@
 			}
 		});
 	}
+</script>
+<script src="/oaengine/static/ace/js/jquery.dataTables.min.js"></script>
+<script src="/oaengine/static/ace/js/jquery.dataTables.bootstrap.js"></script>
+<script src="/oaengine/static/js/all_common.js"/>
+<script type="text/javascript">
+$(function() {
+     $("#rtx_id").autocomplete("Ajax/AutoComplete.ashx"); //由ashx取得资料
+});
 </script>

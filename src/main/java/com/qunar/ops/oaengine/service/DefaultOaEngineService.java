@@ -667,11 +667,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 	}
 
 	@Override
-	public FormInfoList search(String approveUser, String approveNo,
+	public FormInfoList search(String approveUser,String approveRtx, String approveNo,
 			Date approvtStartTime, Date approveEndTime, String checkUser,
 			Date checkStartTime, Date checkEndTime, String payUser,
 			Date payStartTime, Date payEndTime, String status, int pageNo, int pageSize) {
-		return this.form0114Manager.search(approveUser, approveNo,
+		return this.form0114Manager.search(approveUser,approveRtx, approveNo,
 				approvtStartTime, approveEndTime, checkUser,
 				checkStartTime, checkEndTime, payUser,
 				payStartTime, payEndTime, status, pageNo, pageSize);

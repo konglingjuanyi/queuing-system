@@ -13,6 +13,25 @@
 
 
 </style>
+<script language=JavaScript>
+	function GetRequest() { 
+		var url = location.search; //获取url中"?"符后的字串 
+		var theRequest = new Object(); 
+		if (url.indexOf("?") != -1) { 
+			var str = url.substr(1); 
+			strs = str.split("&"); 
+			for(var i = 0; i < strs.length; i ++) { 
+				theRequest[strs[i].split("=")[0]]=decodeURI(strs[i].split("=")[1]); 
+			} 
+		} 
+		return theRequest; 
+	} 
+	var Request = new Object(); 
+		Request = GetRequest(); 
+	var dateFrom = Request["dateFrom"];
+	var dateTo = Request["dateTo"];
+	var approveUser = Request["approveUser"];
+</script>
 <div class="row">
     <div class="col-xs-12">
         <div id="upTag" class="col-xs-5">
@@ -47,7 +66,7 @@
             <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
         <span class="input-icon input-icon-right">
             <input name="startTime" class="date" id="date-from" type="text" style="width: 100px" onclick="showTime()"
-                    placeholder="发起时间..."/>
+                    placeholder="发起时间..."  />
                    <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">
@@ -128,7 +147,6 @@
 </script>
 <script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
-
 	var nowPeFinCheckFlag="$nowFlag";
     	  if(nowPeFinCheckFlag=="true"){
 			 document.getElementById("approve_pass").style.display="";
@@ -507,12 +525,12 @@
         var dialog_width = Math.min(Math.round(window.screen.width * 0.7), 900);
         try {
             $("#endorse-msg-dialog").empty();
-            $("#endorse-msg-dialog").append(createEndorseMsgForm('Tips: 请输入加签RTX_ID'));
+            $("#endorse-msg-dialog").append(createEndorseMsgForm('Tips: 请输入加签理由'));
             var dialog = $("#endorse-msg-dialog").removeClass('hide').dialog({
                 modal: true,
                 width: dialog_width,
                 height: 300,
-                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 加签理由</div>',
+                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold"><li class="icon-user"></li> 加签</div>',
                 title_html: true,
                 closeOnEscape: false,
                 open: function (event, ui) {
@@ -783,7 +801,10 @@
     }
     
     function edit(formId, taskId) {
-        window.location.href = "oa/apply_ratify.html?formId=" + formId + "&taskId=" + taskId;
+    	var dateFrom =  document.getElementById("date-from").value;
+    	var dateTo =  document.getElementById("date-to").value;
+    	var approveUser =  document.getElementById("approve-user").value;
+        window.location.href = "oa/apply_ratify.html?formId=" + formId + "&taskId=" + taskId + "&dateFrom=" + dateFrom + "&dateTo=" + dateTo + "&approveUser=" + approveUser;
     }
     
     function update(formId, taskId, eu) {
@@ -996,4 +1017,15 @@
         }
     }
 	
+</script>
+<script language=JavaScript charset="UTF-8">
+	if(dateFrom!=null){
+		document.getElementById("date-from").value=dateFrom;
+	}
+	if(dateTo!=null){
+		document.getElementById("date-to").value=dateTo;
+	}
+	if(approveUser!=null){
+		document.getElementById("approve-user").value=approveUser;
+	}
 </script>

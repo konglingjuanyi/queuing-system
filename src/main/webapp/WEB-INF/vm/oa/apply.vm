@@ -10,6 +10,10 @@
     td {
         text-align: center;
     }
+    
+    .date_td{
+    	width: 110px;
+    }
 
 </style>
 <div id="common-notice-dialog" class="hide"></div>
@@ -111,6 +115,7 @@
             <i class="icon-calendar green"></i>
         	</span>
             <button onclick="autoFill('table1',this)">自动填写</button>
+            <button onclick="autoCopy('table1',this)">一键填写地点</button><font style="color:red;">(Tips:批量填写起点终点)</font>
             </div>
             <table frame="vsides" class="col-xs-12"
                    id="table1">
@@ -131,12 +136,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><span class="input-icon input-icon-right">
-            <input type="text" onclick="showTimeAndLabor('table1', this)"/>
+                    <td ><span class="input-icon input-icon-right">
+            <input class="date_td" type="text" onclick="showTimeAndLabor('table1', this)" name="table1_date"/>
             <i class="icon-calendar green"></i>
         </span></td>
-                    <td><input type="text"></td>
-                    <td><input type="text"></td>
+                    <td><input type="text" name = "starting"></td>
+                    <td><input type="text" name = "theEnd"></td>
                     <td><input type="text"></td>
                     <td><input type="text"></td>
                     <td><input type="text"></td>
@@ -213,12 +218,12 @@
                 </tr>
                 <tr>
                     <td><span class="input-icon input-icon-right">
-            <input type="text" onclick="showTimeAndLabor('table2', this)"/>
+            <input class="date_td" type="text" onclick="showTimeAndLabor('table2', this)" name="table2_date"/>
             <i class="icon-calendar green"></i>
         </span></td>
                     <td><input type="text"></td>
                     <td><input type="text"></td>
-                    <td><input type="text" onblur="isInteger(this, '就餐人数');avgMoney('table2', this)"></td>
+                    <td><input type="text" onblur="isInteger(this, '就餐人数');avgMoney('table2', this)" value="1"></td>
                     <td><input type="text" onblur="javascript:addMoney('table2');avgMoney('table2', this)"></td>
                     <td><input type="text" disabled="disabled" value=""></td>
                     <td><input type="text" onblur="isNumber(this, '发票金额')"></td>
@@ -264,7 +269,7 @@
                 </tr>
                 <tr>
                     <td><span class="input-icon input-icon-right">
-            <input type="text" onclick="showTime()"/>
+            <input class="date_td" type="text" onclick="showTime()"/>
             <i class="icon-calendar green"></i>
         </span></td>
                     <td><input type="text" class="table3"></td>
@@ -311,7 +316,7 @@
                 </tr>
                 <tr>
                     <td><span class="input-icon input-icon-right">
-            <input type="text" onclick="showTime()" class="table4"/>
+            <input class="date_td" type="text" onclick="showTime()" class="table4"/>
             <i class="icon-calendar green"></i>
         </span></td>
                     <td><input type="text" class="table4"></td>
@@ -390,7 +395,7 @@
                 <i class="icon-arrow-up bigger-110"></i>
                 暂存
             </button>
-            <button class="btn btn-info" type="button"
+            <button class="btn btn-info" type="button" id="save_pass"
                     onclick="subTableInfos(true, false);">
                 <i class="icon-arrow-right bigger-110"></i>
                 保存并提交
@@ -654,6 +659,14 @@
         });
     }
     function addRow(tableId, day, hour) { //读取最后一行的行号，存放在txtTRLastIndex文本框中
+    	var allDate1 = document.getElementsByName("table1_date");
+    	var allDate2 = document.getElementsByName("table2_date");
+    	for(var i = 0 ; i < allDate1.length ; i++){
+    		if(allDate1[i].value == day) return false;
+    	}
+    	for(var i = 0 ; i < allDate2.length ; i++){
+    		if(allDate2[i].value == day) return false;
+    	}
         var table = document.getElementById(tableId);
         var rowLen = table.rows.length;
         var coLen = table.rows[0].cells.length;
@@ -979,6 +992,87 @@
         return form;
     }
     
+    function clearValue(self){
+    	if(self.value=='Tips:请输入起点')self.value='';
+    	if(self.value=='Tips:请输入终点')self.value='';
+    }
+    
+     function createCopyText(msg) {
+        var tips = msg;
+        var form = '<form style="width: 100%; background-color: white"> ';
+        form += '<div>';
+        form += $.parseStr('起点: <input id="startingId" type="text" value="Tips:请输入起点" onkeydown="clearValue(this)"></br>', tips);
+        form += $.parseStr('终点: <input id="theEndId" type="text" value="Tips:请输入终点" onkeydown="clearValue(this)">', tips);
+        form += '</div>';
+        form += '</form>';
+        return form;
+    }
+    
+    
+    function autoCopy(tableId,self){
+    	self.disabled=true;
+    	var starting = document.getElementsByName("starting");
+    	var theEnd = document.getElementsByName("theEnd");
+    	 try {
+            $("#approve-msg-dialog").empty();
+            var form = createCopyText('Tips: 起点');
+            $("#approve-msg-dialog").append(form);
+            var dialog = $("#approve-msg-dialog").removeClass('hide').dialog({
+                modal: true,
+                width: 250,
+                height: 190,
+                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
+                '<li class="icon-user"></li>一键添加  起点 -- 终点</div>',
+                title_html: true,
+                closeOnEscape: false,
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                },
+                buttons: [
+                    {
+                        id: "approve-msg-submit",
+                        text: "确认添加",
+                        "class": "btn btn-primary btn-xs",
+                        click: function (e) {
+                            try {
+                               var startingId = document.getElementById("startingId").value;
+    						   var theEndId = document.getElementById("theEndId").value;
+    						   if(startingId=='Tips:请输入起点'){
+    						   		alert('未知起点，窗口关闭！');
+    						   	}else if(theEndId=='Tips:请输入终点'){
+    						   		alert('未知终点，窗口关闭！');
+    						    }else{
+    						    	for(var i = 0 ;i < starting.length ; i++){
+						    		starting[i].value=startingId;
+						    		theEnd[i].value=theEndId;
+						    		}
+						    	}
+                                e.preventDefault(); 
+                                $(this).dialog("close");
+                            } catch (e) {
+                                showCommonNoticeDialog('网络错误', 'icon-warning-sign',
+                                        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+                            }
+                        }
+                    },
+                    {
+                        id: "approve-msg-cancel",
+                        text: "取消",
+                        "class": "btn btn-xs",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+        } catch (e) {
+        	alert(e)
+            showCommonNoticeDialog('网络错误', 'icon-warning-sign', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+        }
+
+    	self.disabled=false;
+    }
+    	
     function autoFill(tableId,self){
     	self.disabled=true;
     	var start = $("#auto-file-date-from-"+tableId).val();
@@ -1059,6 +1153,9 @@
     
     
     function subTableInfos(flag, uploadFile) {
+    	if(flag==true){
+        $("#save_pass").attr("disabled","disabled");
+    	}
         var params = {};
         var vars = {};
         if(formId != null && formId != ""){
@@ -1141,6 +1238,7 @@
             if(price == "") price = "0.00";
             if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(price)) {
 				showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg("冲销金额格式错误"), 300);
+				$("#save_pass").attr("disabled",false);
 				return false;
 			}
 			borrowBillBalance = parseFloat(borrowBillBalance);
@@ -1148,6 +1246,7 @@
 			priceSum += price;
 			if (price > borrowBillBalance) {
 				showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg("冲销金额不能大于借款余额"), 300);
+				$("#save_pass").attr("disabled",false);
 				return false;
 			}
             list[0][k] = billNo+","+invoiceDate+","+amount+","+borrowBillBalance+","+price;
@@ -1160,6 +1259,7 @@
         params["flag"] = flag;
         if($("#sum").val()==0&&flag==true){
     	 showCommonNoticeDialog('提示信息', 'icon-bolt', generateNoticeMsg('客官您的报销申请金额为零,无须申请~'), 320);
+    	 $("#save_pass").attr("disabled",false);
     		return null;
     	}
         $.ajax({
@@ -1219,7 +1319,8 @@
             error: function (jqXHR, textStatus, errorThrown) {
                 showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
             }
-        })
+        });
+        $("#save_pass").attr("disabled",false);
     }
     
     var fileData = new FormData()
@@ -1272,7 +1373,7 @@
 		                            }
 		                        },
 		                        error: function () {
-		                            $("#upload_configure_msg").html('<div style="color: red"><p>网络错误</p></div>');
+		                            $("#upload_configure_msg").html('<div style="color: red"><p>请使用jpg格式图片并确保图片名在20字符以内</p></div>');
 		                        }
 		                    });
 						}

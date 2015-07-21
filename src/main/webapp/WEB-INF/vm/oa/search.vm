@@ -28,7 +28,7 @@
             <input name="approveUser" id="approve-user" type="text" placeholder="申请人..." style="width: 100px"/>
         </span>
         <span class="input-icon input-icon-right">
-            <input name="approveNo" id="approve-no" type="text" placeholder="申请人编号..." style="width: 100px"/>
+            <input name="approveRtx" id="approve-rtx" type="text" placeholder="申请人RTX..." style="width: 100px"/>
         </span>
         <br/>
         <span class="input-icon input-icon-right">
@@ -40,6 +40,9 @@
         </span>
         <span class="input-icon input-icon-right">
             <input name="checkUser" id="check-user" type="text" placeholder="报销审核人..." style="width: 100px"/>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input name="approveNo" id="approve-no" type="text" placeholder="申请人编号..." style="width: 100px"/>
         </span>
         <br/>
         <span class="input-icon input-icon-right">
@@ -64,7 +67,7 @@
             <input type="button" id="search"
                     style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
                     class="btn btn-minier btn-primary" value="查询">
-            <input type="submit" id="export"
+            <input type="button" id="export" onclick="this.form.submit()"
                     style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
                     class="btn btn-minier btn-primary" value="导出">
         </div>
@@ -133,12 +136,31 @@
     jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
         $("#search").unbind("click");
-                $("#search").on("click", function (e) {
-                    showApproveTableInfo("oa/admin_search");
-                }).on("dblclick", function (e) {
-                    e.preventDefault();
+        $("#search").on("click", function (e) {
+        	showApproveTableInfo("oa/admin_search");
+        }).on("dblclick", function (e) {
+            e.preventDefault();
 		});
+		 $("#date-from").keydown(function(e){key(e)});
+		 $("#date-to").keydown(function(e){key(e)});
+		 $("#approve-user").keydown(function(e){key(e)});
+		 $("#approve-rtx").keydown(function(e){key(e)});
+		 $("#check-from").keydown(function(e){key(e)});
+		 $("#check-to").keydown(function(e){key(e)});
+		 $("#check-user").keydown(function(e){key(e)});
+		 $("#approve-no").keydown(function(e){key(e)});
+		 $("#pay-from").keydown(function(e){key(e)});
+		 $("#pay-to").keydown(function(e){key(e)});
+		 $("#pay-user").keydown(function(e){key(e)});
+		 $("#status").keydown(function(e){key(e)});
+		 
+		 
     });
+    function key(e){
+			if(e.keyCode==13){
+			   showApproveTableInfo("oa/admin_search");
+			}
+		}
 
     function showApproveTableInfo(url) {
         var ex = document.getElementById("approve_history");

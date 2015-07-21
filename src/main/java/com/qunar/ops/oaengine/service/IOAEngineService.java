@@ -285,8 +285,9 @@ public interface IOAEngineService {
 	
 	/**
 	 * 综合查询
+	 * @param approveRtx 
 	 */
-	public FormInfoList search(String approveUser, String approveNo, Date approvtStartTime, Date approveEndTime, 
+	public FormInfoList search(String approveUser, String approveRtx, String approveNo, Date approvtStartTime, Date approveEndTime, 
 			String checkUser,  Date checkStartTime, Date checkEndTime, 
 			String payUser,  Date payStartTime, Date payEndTime, String status,
 			int pageNo, int pageSize);

@@ -593,7 +593,7 @@ public class Form0114Manager {
 	}
 
 	@Read
-	public FormInfoList search(String approveUser, String approveNo,
+	public FormInfoList search(String approveUser,String approveRtx, String approveNo,
 			Date approvtStartTime, Date approveEndTime, String checkUser,
 			Date checkStartTime, Date checkEndTime, String payUser,
 			Date payStartTime, Date payEndTime, String status, int pageNo,
@@ -610,7 +610,10 @@ public class Form0114Manager {
 			Formmain0114HistoryExample example = new Formmain0114HistoryExample();
 			com.qunar.ops.oaengine.model.Formmain0114HistoryExample.Criteria criteria = example.createCriteria();
 			if (approveUser != null) {
-				criteria.andStartMemberIdLike("%" + approveUser + "%");
+				criteria.andField0004Like("%" + approveUser + "%");
+			}
+			if (approveRtx != null) {
+				criteria.andStartMemberIdLike("%" + approveRtx + "%");
 			}
 			if (approveNo != null) {
 				criteria.andField0008Like("%" + approveNo + "%");
@@ -673,7 +676,10 @@ public class Form0114Manager {
 			com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example
 					.createCriteria();
 			if (approveUser != null) {
-				criteria.andStartMemberIdLike("%" + approveUser + "%");
+				criteria.andField0004Like("%" + approveUser + "%");
+			}
+			if (approveRtx != null) {
+				criteria.andStartMemberIdLike("%" + approveRtx + "%");
 			}
 			if (approveNo != null) {
 				criteria.andField0008Like("%" + approveNo + "%");
@@ -733,7 +739,10 @@ public class Form0114Manager {
 			com.qunar.ops.oaengine.model.Formmain0114Example.Criteria criteria = example
 					.createCriteria();
 			if (approveUser != null) {
-				criteria.andStartMemberIdLike("%" + approveUser + "%");
+				criteria.andField0004Like("%" + approveUser + "%");
+			}
+			if (approveRtx != null) {
+				criteria.andStartMemberIdLike("%" + approveRtx + "%");
 			}
 			if (approveNo != null) {
 				criteria.andField0008Like("%" + approveNo + "%");
