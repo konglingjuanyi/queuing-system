@@ -1282,6 +1282,7 @@
 	                            var data = resp || {};
 	                            if (data.errorCode == 0) {
 	                            	$("#approve-msg-dialog").dialog("close");
+	                            	$("#save_pass").attr("disabled",false);
 	                            	fn = data.data.fileName;
 		                            fid = data.data.id;
 		                            $("#files").append('<div id="file_'+fid+'"><b><a href="oa/download_file?fileId='+fid+'">'+fn+'</a></b> <a href="javascript:void(0)" onclick="removeFile('+fid+')">[删除]</a></div>');
@@ -1289,6 +1290,7 @@
 	                            	var msg_dom = '<div style="color: red">'
 	                                        + $.parseStr('<p>%s</p>', data.errorMessage || '')
 	                                        + '</div>';
+	                                    $("#save_pass").attr("disabled",false);
 	                                    $("#upload_configure_msg").html(msg_dom);
 	                            }
 	                        },
@@ -1320,7 +1322,6 @@
                 showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
             }
         });
-        $("#save_pass").attr("disabled",false);
     }
     
     var fileData = new FormData()
