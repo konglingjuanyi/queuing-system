@@ -400,8 +400,10 @@
 <script src="/oaengine/static/js/dialog_common.js"></script>
 <script src="/oaengine/static/js/approve_common.js"></script>
 <script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
-
-
+<script src="/oaengine/static/ace/js/jquery.dataTables.min.js"></script>
+<script src="/oaengine/static/ace/js/jquery.dataTables.bootstrap.js"></script>
+<script src="/oaengine/static/js/all_common.js"/>
+<script src="/oaengine/static/js/jquery.autocomplete.js"></script>
 <script language=JavaScript>
 
 	var formId = "$formId";
@@ -423,7 +425,30 @@
     function showEditDialog1(){
 		showEditDialog(formId);
 	}
-    
+	
+	function search_rtx(){
+		$("#username").autocomplete({
+	        source: function(request, response){
+			        	$.ajax({ url: 'oa/search_rtx?key='+document.getElementById("username").value,
+				            contentType: false,
+				            processData: false,
+				            type: 'GET',
+				            success: function (json) {
+                      			response($.map(json, function(item){
+                          			return item;
+                      			}));
+
+				            }
+		            	})
+		            },
+		    dataType: "json",
+			mustMatch:true,
+			select:function(e, ui){
+            	console.log("11111111111111111111111111");
+        	}
+		});
+	}
+	
     jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
         showApproveTableInfo("oa/approve_todo", null);
@@ -1300,6 +1325,7 @@
         try {
             $("#endorse-msg-dialog").empty();
             $("#endorse-msg-dialog").append(createEndorseMsgForm('Tips: 请输入加签理由'));
+            search_rtx();
             var dialog = $("#endorse-msg-dialog").removeClass('hide').dialog({
                 modal: true,
                 width: dialog_width,
@@ -1363,6 +1389,7 @@
                 ]
             });
         } catch (e) {
+        console.log(e);
             showCommonNoticeDialog('网络错误', 'icon-warning-sign',
                     generateNoticeMsg('网络错误，请刷新后重试!'), 300);
         }
@@ -1605,12 +1632,6 @@
 		});
 	}
 </script>
-<script src="/oaengine/static/ace/js/jquery.dataTables.min.js"></script>
-<script src="/oaengine/static/ace/js/jquery.dataTables.bootstrap.js"></script>
-<script src="/oaengine/static/js/all_common.js"/>
-<script type="text/javascript">
-$(function() {
-     $("#rtx_id").autocomplete("Ajax/AutoComplete.ashx"); //由ashx取得资料
-});
 
-</script>
+
+

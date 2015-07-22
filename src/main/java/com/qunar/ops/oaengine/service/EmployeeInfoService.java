@@ -570,4 +570,68 @@ public class EmployeeInfoService {
 		if(hrbpList.size()==0)hrbpList.add(hrbp_rtxs);
 		return hrbpList;
 	}
+/**
+ *自动补全
+ * @param key
+ * @return 
+ */
+	public JSONArray getSearchRtx(String key) {
+		EmployeeInfo eInfo = new EmployeeInfo();
+		String apiUrl = "http://qunar.it/s/?kw=" + key;
+		Object object = null;
+		try {
+			CloseableHttpClient httpclient = HttpClients.createDefault();
+			try {
+				HttpGet httpget = new HttpGet(apiUrl);
+				httpget.setHeader("Content-Type", "application/json; charset=UTF-8");
+				ResponseHandler<String> responseHandler = new ResponseHandler<String>() {
+					public String handleResponse(final HttpResponse response)
+							throws ClientProtocolException, IOException {
+						int status = response.getStatusLine().getStatusCode();
+						if (status >= 200 && status < 300) {
+							HttpEntity entity = response.getEntity();
+							return entity != null ? EntityUtils.toString(entity)
+									: null;
+						} else {
+							QMonitor.recordOne("call_qunarit_fail");
+							throw new ClientProtocolException(
+									"Unexpected response status: " + status);
+						}
+					}
+
+				};
+				String responseBody = httpclient.execute(httpget, responseHandler);
+				 JSONArray json = JSONArray.parseArray(responseBody);
+				if (json == null) {
+					throw new RemoteAccessException("responseBody is null",
+							EmployeeInfoService.class);
+				}
+				return json;
+				/*int size = json.size();
+				JSONObject jo = json.getJSONObject(0);
+				for(int i=0;i<size;i++){
+		            JSONObject jo1 = json.getJSONObject(i);
+		            System.out.println(jo1.getString("label")); //循环返回网址
+		        }*/
+			} catch (IOException e) {
+				QMonitor.recordOne("call_qunarit_fail");
+				e.printStackTrace();
+				throw new RemoteAccessException(e.getMessage(),
+						EmployeeInfoService.class);
+			} finally {
+				try {
+					httpclient.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					throw new RemoteAccessException(e.getMessage(),
+							EmployeeInfoService.class);
+				}
+			}
+		} catch (RemoteAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
 }

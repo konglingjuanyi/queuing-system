@@ -66,6 +66,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.qunar.flight.qmonitor.QMonitor;
 import com.qunar.ops.oaengine.exception.AgentAlreadyExistsException;
@@ -3487,4 +3488,17 @@ public class OaEngineController {
 			}
 		return "qmonitor";
 	}
+	@RequestMapping("oa/search_rtx")
+	public void search_rtx(HttpServletResponse response,HttpServletRequest request)
+			throws Exception {
+		response.setContentType("application/json;charset=UTF-8");
+		String key = request.getParameter("key");
+		JSONArray json = this.employeeInfoService.getSearchRtx(key);
+		System.out.println(json.toString());
+		PrintWriter out = response.getWriter(); 
+		out.print(json.toString());
+		out.flush();
+		out.close();
+	}
+	
 }
