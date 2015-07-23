@@ -22,7 +22,7 @@
 		<link rel="stylesheet" href="static/ace/css/dropzone.css" />
 		<link rel="stylesheet" href="static/ace/css/colorbox.css" />
 		<link rel="stylesheet" href="static/ace/css/jquery.qtip.min.css" />
-		<link rel="stylesheet" href="static/css/myplugin.css" />
+		<link rel="stylesheet" href="static/css/myplugin1.css" />
 		
 		
 		<!--[if lte IE 8]>
