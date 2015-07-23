@@ -147,6 +147,28 @@
 </script>
 <script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
+
+	function search_rtx(){
+		$("#rtx_id").autocomplete({
+	        source: function(request, response){
+			        	$.ajax({ url: 'oa/search_rtx?key='+document.getElementById("rtx_id").value,
+				            contentType: false,
+				            processData: false,
+				            type: 'GET',
+				            success: function (json) {
+                      			response($.map(json, function(item){
+                          			return item;
+                      			}));
+
+				            }
+		            	})
+		            },
+		            	dataType:'json',
+						select:function(e, ui){
+            				
+        				}
+		});
+	}
 	var nowPeFinCheckFlag="$nowFlag";
     	  if(nowPeFinCheckFlag=="true"){
 			 document.getElementById("approve_pass").style.display="";
@@ -331,6 +353,7 @@
                 $("#approve_other").unbind("click");
                 $("#approve_other").on("click", function (e) {
                     approveEndorse(oTable);
+                	search_rtx();
                 }).on("dblclick", function (e) {
                     e.preventDefault();
                 });
@@ -735,7 +758,7 @@
         var form = '<form style="width: 100%; background-color: white"> ';
         form += '<div class="form-group">';
         form += '<label>加签给：</label>';
-        form += $.parseStr('<input class="form-control input-mask-date ui-autocomplete-input" id="rtx_id" placeholder="%s" autocomplete="off">', "请输入rtx_id, 不能为空");
+        form += $.parseStr('<input class="form-control input-mask-date ui-autocomplete-input" id="rtx_id" placeholder="%s" autocomplete="off" onkeypress="if(event.keyCode==13) {return false ;}">', "请输入rtx_id, 不能为空");
         form += '</div>';
         form += '<div class="space-4"></div>';
         form += '<div>';

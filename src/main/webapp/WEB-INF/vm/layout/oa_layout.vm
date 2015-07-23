@@ -53,7 +53,6 @@
     <!-- page specific plugin scripts -->
     <script src="static/ace/js/jquery.colorbox-min.js"></script>
     <link rel="stylesheet" href="static/ace/css/jquery-ui-1.10.3.full.min.css"/>
-    <script src="static/ace/js/jquery-ui-1.10.3.full.min.js"></script>
     <script src="static/ace/js/jquery.ui.touch-punch.min.js"></script>
     <script src="static/ace/js/jquery.qtip.min.js"></script>
     <!-- ace scripts -->
@@ -74,6 +73,8 @@
             ace.settings.check('navbar', 'fixed')
         } catch (e) {
         }
+        
+        
     </script>
     <div class="navbar-container" id="navbar-container">
         <div class="navbar-header pull-left">

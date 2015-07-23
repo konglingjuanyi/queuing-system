@@ -403,7 +403,8 @@
 <script src="/oaengine/static/ace/js/jquery.dataTables.min.js"></script>
 <script src="/oaengine/static/ace/js/jquery.dataTables.bootstrap.js"></script>
 <script src="/oaengine/static/js/all_common.js"/>
-<script src="/oaengine/static/js/jquery.autocomplete.js"></script>
+<script src="/oaengine/static/ace/js/jquery-ui-1.10.3.full.min.js"></script>
+<link href="/oaengine/static/ace/css/jquery-ui-1.10.3.full.min.css" rel="stylesheet" type="text/css"/>
 <script language=JavaScript>
 
 	var formId = "$formId";
@@ -427,9 +428,9 @@
 	}
 	
 	function search_rtx(){
-		$("#username").autocomplete({
+		$("#rtx_id").autocomplete({
 	        source: function(request, response){
-			        	$.ajax({ url: 'oa/search_rtx?key='+document.getElementById("username").value,
+			        	$.ajax({ url: 'oa/search_rtx?key='+document.getElementById("rtx_id").value,
 				            contentType: false,
 				            processData: false,
 				            type: 'GET',
@@ -441,40 +442,23 @@
 				            }
 		            	})
 		            },
-		    			dataType: "json",
+		            	dataType:'json',
 						select:function(e, ui){
-            				console.log("11111111111111111111111111");
+            				
         				}
 		});
+		$('#rtx_id').keydown(
+        function(e){
+            if(e.keyCode == 13){
+                $('#rtx_id-em').click();
+            }
+        }
+    );
 	}
 	
     jQuery(function ($) {
         window.edit_form = $("#edit-form").html();
         showApproveTableInfo("oa/approve_todo", null);
-        
-    	$('#rtx_id').autocomplete({
-	        source: function (request, response) {
-	    		var params = {};
-	    		var vars = {};
-                params["vars"] = vars;
-                vars["key"] = $('#rtx_id').val();
-                $.ajax({
-                    "contentType": "application/json; charset=utf-8",
-                    "type": "POST",
-                    "url": "oa/get_ems",
-                    "data": JSON.stringify(params),
-                    "success": function (resp) {
-                    	var data = resp.data;
-						response($.map(data, function(item){
-						                          return item;
-						                      }));
-                    },
-                    error: function () {
-                        showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
-                    }
-                });
-	    	}
-	    });
 	});	
 	
 	
@@ -1388,7 +1372,6 @@
                 ]
             });
         } catch (e) {
-        console.log(e);
             showCommonNoticeDialog('网络错误', 'icon-warning-sign',
                     generateNoticeMsg('网络错误，请刷新后重试!'), 300);
         }
@@ -1496,7 +1479,7 @@
 
         form += '<div class="form-group">';
         form += '<label>加签给：</label>';
-        form += $.parseStr('<input class="form-control" id="rtx_id" placeholder="%s">', "请输入rtx_id, 不能为空");
+        form += $.parseStr('<input class="form-control" id="rtx_id" placeholder="%s" autocomplete="off" onkeypress="if(event.keyCode==13) {return false ;}">', "请输入rtx_id, 不能为空");
         form += '</div>';
         form += '<div class="space-4"></div>';
         form += '<div>';
