@@ -23,6 +23,8 @@ import sun.misc.BASE64Encoder;
 
 public class QUtils {
 
+	public static final int MAX_AGE_DEFAULT = 1 * 60 * 60;
+	
 	public static Map<String, Object> request2Map(HttpServletRequest request) {
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -144,7 +146,7 @@ public class QUtils {
 				value = encrypt(value, "qunar-opsdev-1qaz2wsx-123456");
 			}
 			Cookie cookie = new Cookie(name, value);
-			cookie.setMaxAge(60 * 60 * 2);
+			cookie.setMaxAge(MAX_AGE_DEFAULT);
 			response.addCookie(cookie);
 		}else{
 			Cookie cookie = new Cookie(name, null);

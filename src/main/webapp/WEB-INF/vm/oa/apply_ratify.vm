@@ -447,13 +447,6 @@
             				
         				}
 		});
-		$('#rtx_id').keydown(
-        function(e){
-            if(e.keyCode == 13){
-                $('#rtx_id-em').click();
-            }
-        }
-    );
 	}
 	
     jQuery(function ($) {

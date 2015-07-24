@@ -46,9 +46,15 @@
 	</div>
 	<script>
 		if ((navigator.userAgent.indexOf('MSIE') >= 0) && (navigator.userAgent.indexOf('Opera') < 0)){
+			if((navigator.userAgent.search(/Trident/i)) != -1)
+			{
+				document.getElementById('bodydiv').innerHTML="<div style='color:red; font-size: 50px; font-weight: bolder; letter-spacing: 2px; margin:9cm 4cm 3cm 4cm;' >[请使用Chrome或FireFox浏览器]<div>" ;
+			}
+		}else if(navigator.userAgent=="Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36 SE 2.X MetaSr 1.0"){
 			document.getElementById('bodydiv').innerHTML="<div style='color:red; font-size: 50px; font-weight: bolder; letter-spacing: 2px; margin:9cm 4cm 3cm 4cm;' >[请使用Chrome或FireFox浏览器]<div>" ;
+		}else{
+			QSSO.attach('qsso-login', '$request.getContextPath()/oa/login');
 		}
-		QSSO.attach('qsso-login', '$request.getContextPath()/oa/login');
 	</script>
 </body>
 </html>
