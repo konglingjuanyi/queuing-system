@@ -446,7 +446,7 @@
  			showCommonNoticeDialog('超时提示', 'icon-warning-sign', generateNoticeMsg('登录超时，系统小卫士已经帮您的信息保存到草稿箱，请重新登录，给您带来的不便尽量谅解。'), 500);
  			}
 			,
-			 1000*59);
+			 1000*30);
 	var formId = "$formId";
 	var taskId = "$taskId";
 	var euid = "$euid";
@@ -1422,7 +1422,7 @@
 		                            }
 		                        },
 		                        error: function () {
-		                            $("#upload_configure_msg").html('<div style="color: red"><p>上传失败（提示：请检查文件名是否在20字符以内）</p></div>');
+		                            $("#upload_configure_msg").html('<div style="color: red"><p>上传文件失败，请重新选择文件（如有疑问请Qtalk:lee.guo）</p></div>');
 		                        }
 		                    });
 						}
