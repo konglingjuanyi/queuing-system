@@ -23,7 +23,7 @@ import sun.misc.BASE64Encoder;
 
 public class QUtils {
 
-	public static final int MAX_AGE_DEFAULT = 1 * 60 * 60;
+	public static final int MAX_AGE_DEFAULT = 1 * 60;
 	
 	public static Map<String, Object> request2Map(HttpServletRequest request) {
 

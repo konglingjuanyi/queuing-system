@@ -446,7 +446,7 @@
  			showCommonNoticeDialog('超时提示', 'icon-warning-sign', generateNoticeMsg('登录超时，系统小卫士已经帮您的信息保存到草稿箱，请重新登录，给您带来的不便尽量谅解。'), 500);
  			}
 			,
-			 1000*60*60);
+			 1000*59);
 	var formId = "$formId";
 	var taskId = "$taskId";
 	var euid = "$euid";
@@ -1392,6 +1392,10 @@
 	                "class": "btn btn-danger btn-xs",
 	                click: function () {
 	                    fileData = new FormData();
+	                    if($('#upload_configure_form input[name=file]').get(0).files[0] == undefined){
+	                     $("#upload_configure_msg").html('<div style="color: red"><p>请选择文件</p></div>');
+	                     	return false;
+	                     }
 	                    fileData.append('file', $('#upload_configure_form input[name=file]').get(0).files[0]);
 	                    if(formId == ''){
 	                    	subTableInfos(false, true);
@@ -1418,7 +1422,7 @@
 		                            }
 		                        },
 		                        error: function () {
-		                            $("#upload_configure_msg").html('<div style="color: red"><p>请使确保图片名在20字符以内</p></div>');
+		                            $("#upload_configure_msg").html('<div style="color: red"><p>上传失败（提示：请检查文件名是否在20字符以内）</p></div>');
 		                        }
 		                    });
 						}
