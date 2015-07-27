@@ -1291,7 +1291,11 @@ public class Form0114Manager {
 		Files f = new Files();
 		f.setContent(file);
 		f.setFormId(formId);
-		f.setFileName(fileName.substring(fileName.length()-20,fileName.length()));
+		if(fileName.length()>25){
+			f.setFileName(fileName.substring(fileName.length()-20,fileName.length()));
+		}else{
+			f.setFileName(fileName);
+		}
 		f.setOwner(owner);
 		f.setTs(new Date());
 		f.setDob(new Date());
