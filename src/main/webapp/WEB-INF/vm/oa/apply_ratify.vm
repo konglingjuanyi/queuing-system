@@ -1329,6 +1329,11 @@
                                                     generateNoticeMsg('加签对象不能为空'), 300);
                                     return;
                                 }
+                                if( $("#rtx_id").val().split(".").length != 2){
+                                	showCommonNoticeDialog('加签错误', 'icon-warning-sign',
+                                                    generateNoticeMsg('加签对象rtxid不合法'), 300);
+                                    return;
+                                }
                                 for (var i in postData) {
                                     if (postData[i]['name'] == 'msg') {
                                         if (postData[i]['value'].length >= 500) {

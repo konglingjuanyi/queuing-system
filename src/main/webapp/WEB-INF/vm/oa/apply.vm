@@ -407,46 +407,7 @@
 <script src="/oaengine/static/js/dialog_common.js"></script>
 <script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
- 	setTimeout(function(){
- 			$("#approve-msg-dialog").empty();
-            $("#approve-msg-dialog").append('<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: none">&nbsp;登录超时，请前往登录页面</div>');
-            var dialog = $("#approve-msg-dialog").removeClass('hide').dialog({
-                modal: true,
-                width: 250,
-                height: 150,
-                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
-                '<li class="icon-user"></li>超时提醒</div>',
-                title_html: true,
-                closeOnEscape: false,
-                open: function (event, ui) {
-                    $(".ui-dialog-titlebar-close").hide();
-                },
-                buttons: [
-                    {
-                        id: "approve-msg-submit",
-                        text: "前往登录",
-                        "class": "btn btn-primary btn-xs",
-                        click: function (e) {
-                               window.location.href="/oaengine/oa/index.html";
-                                $(this).dialog("close");
-                        }
-                    },
-                    {
-                        id: "approve-msg-cancel",
-                        text: "取消",
-                        "class": "btn btn-xs",
-                        click: function () {
-                        window.location.href="/oaengine/oa/index.html";
-                            $(this).dialog("close");
-                        }
-                    }
-                ]
-            });
- 			subTableInfos(false, false);
- 			showCommonNoticeDialog('超时提示', 'icon-warning-sign', generateNoticeMsg('登录超时，系统小卫士已经帮您的信息保存到草稿箱，请重新登录，给您带来的不便尽量谅解。'), 500);
- 			}
-			,
-			 1000*30);
+ 
 	var formId = "$formId";
 	var taskId = "$taskId";
 	var euid = "$euid";
@@ -1348,15 +1309,15 @@
 	                    		showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("保存成功！"), 300);
 		                    	window.location.href = '/oaengine/oa/approve_todo.html';   
 	                    	}else{
-		                        //showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("草稿保存成功！"), 300);
-		                    	//window.location.href = '/oaengine/oa/draft.html';    
+		                        showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("草稿保存成功！"), 300);
+		                    	window.location.href = '/oaengine/oa/draft.html';    
 	                    	}           
 	                    }
                     }
                 } else {
                 if(resp.errorMessage===undefined)
                 	{
-                		showCommonNoticeDialog('超时提示', 'icon-warning-sign', generateNoticeMsg('登录超时，系统小卫士已经帮您的信息保存到草稿箱，请重新登录，给您带来的不便尽量谅解。'), 500);
+                		showCommonNoticeDialog('超时提示', 'icon-warning-sign', generateNoticeMsg('登录超时'), 300);
                 	}else{
                     	showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg(resp.errorMessage), 300);
                     }
