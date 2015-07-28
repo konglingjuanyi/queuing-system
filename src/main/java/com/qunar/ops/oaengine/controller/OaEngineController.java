@@ -256,6 +256,7 @@ public class OaEngineController {
 						&& !"无线事业群".equals(departmentI)
 						&& !"liangliang.dou".equals(userId)
 						&& !"tao.luo".equals(userId)
+						&& !"wangtao.wang".equals(userId)
 						){
 					return welcom(request,"本系统目前只对技术部、财务部、内审部、旅游度假事业、门票事业部、机票事业群和无线事业群员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
 				}
