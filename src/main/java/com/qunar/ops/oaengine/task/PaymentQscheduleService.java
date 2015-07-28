@@ -25,7 +25,7 @@ public class PaymentQscheduleService {
 	@Autowired
 	private OaEngineController oaEngineController;
 
-	@QSchedule("oaengine.payAuto")
+	@QSchedule("oaengine.pay")
 	private void process() {
 		// 此为QSchedule提供的API
 		monitor = TaskHolder.getKeeper();
