@@ -59,7 +59,7 @@ public class AppAPIController {
 		String userId = appRequest.getRtx_id();
 		int count = 0;
 		try {
-			FormInfoList todoList = ioaEngineService.todoList(processKey, userId, null, null, null, 0, Integer.MAX_VALUE);
+			FormInfoList todoList = ioaEngineService.todoList(processKey, userId, null, 0, Integer.MAX_VALUE);
 			count = todoList.getCount();
 		} catch (FormNotFoundException e) {
 			logger.warn(e.getMessage(), e);

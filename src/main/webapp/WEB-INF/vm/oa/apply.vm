@@ -661,11 +661,15 @@
     function addRow(tableId, day, hour) { //读取最后一行的行号，存放在txtTRLastIndex文本框中
     	var allDate1 = document.getElementsByName("table1_date");
     	var allDate2 = document.getElementsByName("table2_date");
-    	for(var i = 0 ; i < allDate1.length ; i++){
-    		if(allDate1[i].value == day) return false;
+    	if("table1"==tableId){
+	    	for(var i = 0 ; i < allDate1.length ; i++){
+	    		if(allDate1[i].value == day) return false;
+	    	}
     	}
-    	for(var i = 0 ; i < allDate2.length ; i++){
-    		if(allDate2[i].value == day) return false;
+    	if("table2"==tableId){
+    		for(var i = 0 ; i < allDate2.length ; i++){
+    			if(allDate2[i].value == day) return false;
+    		}
     	}
         var table = document.getElementById(tableId);
         var rowLen = table.rows.length;
