@@ -284,7 +284,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 			formInfo.setTaskCreateTime(taskInfo.getTaskCreateTime());
 			formInfos.add(formInfo);
 		}
-		res.setCount((int)taskInfos.getCount());
+		//res.setCount((int)taskInfos.getCount());
+		res.setCount((int)formInfos.size());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
 		res.setFormInfos(formInfos);
@@ -306,9 +307,11 @@ public class DefaultOaEngineService implements IOAEngineService {
 			formInfo.setTaskKey(taskInfo.getTaskKey());
 			formInfo.setIsEndorse(taskInfo.isEndorse());
 			formInfo.setTaskCreateTime(taskInfo.getTaskCreateTime());
-			formInfos.add(formInfo);
+			if(!(formInfo.isEndorse() && userId.equals(formInfo.getStartMemberId()))){
+				formInfos.add(formInfo);
+			}
 		}
-		res.setCount((int)taskInfos.getCount());
+		//res.setCount((int)taskInfos.getCount());
 		res.setFormInfos(formInfos);
 		return res;
 	}

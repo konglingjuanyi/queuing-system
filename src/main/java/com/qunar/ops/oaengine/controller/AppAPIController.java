@@ -60,7 +60,7 @@ public class AppAPIController {
 		int count = 0;
 		try {
 			FormInfoList todoList = ioaEngineService.todoList(processKey, userId, null, 0, Integer.MAX_VALUE);
-			count = todoList.getCount();
+			count = todoList.getFormInfos().size();
 		} catch (FormNotFoundException e) {
 			logger.warn(e.getMessage(), e);
 		}
@@ -83,7 +83,7 @@ public class AppAPIController {
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
 		try {
 			FormInfoList todoList = ioaEngineService.todoList(processKey, userId, null, start, length);
-			count = todoList.getCount();
+			count = todoList.getFormInfos().size();
 			for(FormInfo info : todoList.getFormInfos()){
 				Map<String, String> item = new HashMap<String, String>();
 				item.put("oid", info.getId() + ":" + info.getTaskId());
@@ -196,7 +196,7 @@ public class AppAPIController {
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
 		try {
 			FormInfoList todoList = ioaEngineService.todoList(processKey, userId, user, start, length);
-			count = todoList.getCount();
+			count = todoList.getFormInfos().size();
 			for(FormInfo info : todoList.getFormInfos()){
 				Map<String, String> item = new HashMap<String, String>();
 				item.put("oid", info.getId() + ":" + info.getTaskId());
