@@ -310,16 +310,19 @@
             "fnDrawCallback": function () {
                 if (!oTable) {
                 }
+                $("#date-from").unbind("keydown");
                 $("#date-from").keydown(function(e){
 				if(e.keyCode==13){
 				   showApproveTableInfo(url, null);
 				}
 				});
+				$("#date-to").unbind("keydown");
                 $("#date-to").keydown(function(e){
 				if(e.keyCode==13){
 				   showApproveTableInfo(url, null);
 				}
 				});
+				$("#approve-user").unbind("keydown");
                 $("#approve-user").keydown(function(e){
 				if(e.keyCode==13){
 				   showApproveTableInfo(url, null);
