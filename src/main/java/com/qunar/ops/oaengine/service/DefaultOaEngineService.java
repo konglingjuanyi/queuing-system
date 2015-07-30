@@ -284,8 +284,8 @@ public class DefaultOaEngineService implements IOAEngineService {
 			formInfo.setTaskCreateTime(taskInfo.getTaskCreateTime());
 			formInfos.add(formInfo);
 		}
-		//res.setCount((int)taskInfos.getCount());
-		res.setCount((int)formInfos.size());
+		res.setCount((int)taskInfos.getCount());
+		//res.setCount((int)formInfos.size());
 		res.setPageNo(pageNo);
 		res.setPageSize(pageSize);
 		res.setFormInfos(formInfos);
