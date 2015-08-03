@@ -407,7 +407,47 @@
 <script src="/oaengine/static/js/dialog_common.js"></script>
 <script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
- 
+
+	var cookie = document.cookie.match(new RegExp("(^| )cookie-time=([^;]*)(;|$)"));
+	var cookie_time = unescape(cookie[2]);
+	var myDate = new Date();
+	var now_time = myDate.getTime();        //获取日期与时间
+ 	var elapsedTime = now_time-cookie_time ;
+	var remainingTime = 7140000-elapsedTime;
+	console.log(remainingTime);
+	console.log(remainingTime-3600000-3000000-500000);
+	setTimeout(function(){
+			$("#approve-msg-dialog").empty();
+            $("#approve-msg-dialog").append('<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: none; line-height:80px;">&nbsp;&nbsp;&nbsp;草稿已保存到我的草稿，请重新登录。</div>');
+            var dialog = $("#approve-msg-dialog").removeClass('hide').dialog({
+                modal: true,
+                width: 350,
+                height: 200,
+                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
+                '<li class="icon-user"></li>登录超时</div>',
+                title_html: true,
+                closeOnEscape: false,
+                open: function (event, ui) {
+                    $(".ui-dialog-titlebar-close").hide();
+                },
+                buttons: [
+                    {
+                        id: "approve-msg-submit",
+                        text: "前往登录",
+                        "class": "btn btn-primary btn-xs",
+                        click: function (e) {
+                              // window.location.href="/oaengine/oa/index.html";
+                              logout_nohint();
+                              $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+ 			//subTableInfos(false, false);
+ 			save_draft(false, false)
+ 			//showCommonNoticeDialog('超时提示', 'icon-warning-sign', generateNoticeMsg('登录超时，系统已经帮您的信息保存到草稿箱，请重新登录，给您带来的不便尽量谅解。'), 500);
+ 			},remainingTime-3600000-3000000-500000) ;
+ 	
 	var formId = "$formId";
 	var taskId = "$taskId";
 	var euid = "$euid";
@@ -1315,6 +1355,183 @@
 	                    	}else{
 		                        showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("草稿保存成功！"), 300);
 		                    	window.location.href = '/oaengine/oa/draft.html';    
+	                    	}           
+	                    }
+                    }
+                } else {
+                if(resp.errorMessage===undefined)
+                	{
+                		showCommonNoticeDialog('超时提示', 'icon-warning-sign', generateNoticeMsg('登录超时'), 300);
+                	}else{
+                    	showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg(resp.errorMessage), 300);
+                    }
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+            }
+        });
+    }
+    
+    function save_draft(flag, uploadFile) {
+    	if(flag==true){
+        $("#save_pass").attr("disabled","disabled");
+    	}
+        var params = {};
+        var vars = {};
+        if(formId != null && formId != ""){
+        	vars["formId"] = formId;
+        }
+        for (var i = 1; i < 7; i++) {
+            vars["sum" + i] = $("#sum" + i).val();
+        }
+        for (var i = 1; i < 7; i++) {
+            vars["ratify" + i] = $("#ratify" + i).val();
+        }
+        vars["sum"] = $("#sum").val();
+        vars["ratify"] = $("#ratify").val();
+        vars["remark"] = $("#remark").val();
+        vars["payAmount"] = $("#payAmount").val();
+        var tableMap = {};
+        var tableList = ["table1", "table2", "table3", "table4", "table5"];
+        var len = tableList.length;
+        for (i = 0; i < len; i++) {
+            var tableId = tableList[i];
+            var table = document.getElementById(tableId);
+            var rowLen = table.rows.length;
+            var coLen = table.rows[0].cells.length;
+            var list = new Array();
+            for (var j = 1; j < rowLen; j++) {
+                list[j - 1] = new Array();
+                for (var k = 0; k < coLen - 1; k++) {
+                    list[j - 1][k] = table.rows[j].cells[k].childNodes[0].value;
+                    if (tableId != "table5" && k == 0) {
+                         _data = table.rows[j].cells[k].childNodes[0].childNodes[1].value;
+                         list[j - 1][k] = _data;
+                    }
+                    if (isNull(list[j - 1][k])) {
+                        list[j - 1][k] = "";
+                    }
+                }
+            }
+            tableMap[tableId] = list;
+        }
+        //table 基本信息
+        table = document.getElementById("table");
+        list = new Array();
+        list[0] = new Array();
+        k = 0;
+        for (i = 0; i < 3; i++) {
+            for (j = 1; j < 6; j += 2) {
+                if ((i == 2) && j == 1) {
+                    var input = table.rows[i].cells[j].childNodes;
+                    var input1 = input[0];
+                    var input2 = input[2];
+                    if (input1.checked) {
+                        list[0][k] = input1.value;
+                    } else if (input2.checked) {
+                        list[0][k] = input2.value;
+                    }
+                } else {
+                    list[0][k] = table.rows[i].cells[j].childNodes[0].value;
+                }
+                if (isNull(list[0][k])) {
+                    list[0][k] = "";
+                }
+                k++;
+            }
+        }
+        tableMap["table"] = list;
+        
+        //table 借款信息
+        table = document.getElementById("table7");
+        list = new Array();
+        list[0] = new Array();
+        var rowLen = table.rows.length;
+        k = 0;
+        priceSum = 0;
+        for (i = 1; i < rowLen; i++) {
+            var billNo = table.rows[i].cells[0].childNodes[0].value;
+            var invoiceDate = table.rows[i].cells[1].childNodes[0].value;
+            var amount = table.rows[i].cells[2].childNodes[0].value;
+            var borrowBillBalance = table.rows[i].cells[3].childNodes[0].value;
+            var price = table.rows[i].cells[4].childNodes[0].value;
+            if(price == "") price = "0.00";
+            if (!(/^(([1-9]\d*)|\d)(\.\d{1,2})?$/).test(price)) {
+				showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg("冲销金额格式错误"), 300);
+				$("#save_pass").attr("disabled",false);
+				return false;
+			}
+			borrowBillBalance = parseFloat(borrowBillBalance);
+			price = parseFloat(price);
+			priceSum += price;
+			if (price > borrowBillBalance) {
+				showCommonNoticeDialog('失败', 'icon-warning-sign', generateNoticeMsg("冲销金额不能大于借款余额"), 300);
+				$("#save_pass").attr("disabled",false);
+				return false;
+			}
+            list[0][k] = billNo+","+invoiceDate+","+amount+","+borrowBillBalance+","+price;
+            k++;
+        }
+        tableMap["table7"] = list;
+        
+        params["vars"] = vars;
+        params["tableMap"] = tableMap;
+        params["flag"] = flag;
+        if($("#sum").val()==0&&flag==true){
+    	 showCommonNoticeDialog('提示信息', 'icon-bolt', generateNoticeMsg('客官您的报销申请金额为零,无须申请~'), 320);
+    	 $("#save_pass").attr("disabled",false);
+    		return null;
+    	}
+        $.ajax({
+            contentType: "application/json; charset=utf-8",
+            url: "oa/data",
+            type: "POST",
+            data: JSON.stringify(params),
+            success: function (resp) {
+                if (resp.errorCode == 0) {
+                    if(uploadFile){
+                    	formId = resp.data;
+                    	fileData.append('formId', formId);
+                    	$.ajax({
+	                        url: 'oa/upload_file',
+	                        contentType: false,
+	                        data: fileData,
+	                        processData: false,
+	                        type: 'POST',
+	                        success: function (resp) {
+	                            var data = resp || {};
+	                            if (data.errorCode == 0) {
+	                            	$("#approve-msg-dialog").dialog("close");
+	                            	$("#save_pass").attr("disabled",false);
+	                            	fn = data.data.fileName;
+		                            fid = data.data.id;
+		                            $("#files").append('<div id="file_'+fid+'"><b><a href="oa/download_file?fileId='+fid+'">'+fn+'</a></b> <a href="javascript:void(0)" onclick="removeFile('+fid+')">[删除]</a></div>');
+	                            }else{
+	                            	var msg_dom = '<div style="color: red">'
+	                                        + $.parseStr('<p>%s</p>', data.errorMessage || '')
+	                                        + '</div>';
+	                                    $("#save_pass").attr("disabled",false);
+	                                    $("#upload_configure_msg").html(msg_dom);
+	                            }
+	                        },
+	                        error: function () {
+	                            $("#upload_configure_msg").html('<div style="color: red"><p>网络错误</p></div>');
+	                        }
+	                    });
+                    }else{
+	                	if(flag && taskId != null && taskId != ""){
+	                		approveEndorse();
+	                	}else if(flag){
+	                    	showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("创建报销申请成功！"), 300);
+	                    	window.location.href = '/oaengine/oa/apply_todo.html';
+	                    }else{
+	                    	if(taskId != null && taskId != ""){
+	                    		showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("保存成功！"), 300);
+		                    	window.location.href = '/oaengine/oa/approve_todo.html';   
+	                    	}else{
+		                        //showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("草稿保存成功！"), 300);
+		                    	//window.location.href = '/oaengine/oa/draft.html';    
 	                    	}           
 	                    }
                     }

@@ -150,7 +150,7 @@
                     <li>
                         <a href="oa/approve_todo.html">
                             <i class="icon-double-angle-right"></i>
-                            待办工作
+                            待办工作<span class="badge badge-important" id="todoListCount">+ <span id="todoCount" >0</span></span>
                         </a>
                     </li>
                     <li>
@@ -193,6 +193,8 @@
     </div>
 </div>
 <script type="text/javascript">
+	
+
     jQuery(function ($) {
         var name = getCookie("test-userid");
 		$("#name").html(name);// = name;
@@ -233,6 +235,20 @@
                 }
             });
 	}
+	function logout_nohint(){
+		$.ajax({
+                url: "https://qsso.corp.qunar.com/api/logout.php",
+                dataType:"jsonp",
+             	jsonp:"callback",
+                success: function (resp) {
+                    delCookie("un");
+                	window.location.href = '/oaengine/oa/index.html'; 
+                },
+                "error": function (jqxhr, textstatus, errorthrown) {
+                    alert("退出成功!");
+                }
+            });
+	}
 	function SetCookie(name,value)//两个参数，一个是cookie的名子，一个是值
 	{
 	    var Days = 30; //此 cookie 将被保存 30 天
@@ -253,6 +269,30 @@
 	    var cval=getCookie(name);
 	    if(cval!=null) document.cookie= name + "="+cval+";expires="+exp.toGMTString();
 	}
+	
+	function getTodoCount(){
+		var username = getCookie("test-userid");
+		if(username == '') return;
+		var params = {};
+        var vars = {"user":username};
+        params["vars"] = vars;
+		$.ajax({
+                contentType: "application/json; charset=utf-8",
+                url: "oa/getTodoCount",
+                type: "post",
+                data: JSON.stringify(params),
+                success: function (resp) {
+                	$("#todoCount").html(resp.count);
+                	if(resp.count==0){
+                		$("#todoListCount").css('display','none');
+                	}
+                },
+                "error": function (jqxhr, textstatus, errorthrown) {
+                }
+            });
+	}
+	
+	getTodoCount();
 </script>
 
 </body>

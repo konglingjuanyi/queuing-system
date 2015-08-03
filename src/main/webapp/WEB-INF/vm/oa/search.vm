@@ -141,17 +141,29 @@
         }).on("dblclick", function (e) {
             e.preventDefault();
 		});
+		 $("#date-from").unbind("keydown");
 		 $("#date-from").keydown(function(e){key(e)});
+		  $("#date-to").unbind("keydown");
 		 $("#date-to").keydown(function(e){key(e)});
+		  $("#approve-user").unbind("keydown");
 		 $("#approve-user").keydown(function(e){key(e)});
+		  $("#approve-rtx").unbind("keydown");
 		 $("#approve-rtx").keydown(function(e){key(e)});
+		  $("#check-from").unbind("keydown");
 		 $("#check-from").keydown(function(e){key(e)});
+		  $("#check-to").unbind("keydown");
 		 $("#check-to").keydown(function(e){key(e)});
+		  $("#check-user").unbind("keydown");
 		 $("#check-user").keydown(function(e){key(e)});
+		  $("#approve-no").unbind("keydown");
 		 $("#approve-no").keydown(function(e){key(e)});
+		  $("#pay-from").unbind("keydown");
 		 $("#pay-from").keydown(function(e){key(e)});
+		  $("#pay-to").unbind("keydown");
 		 $("#pay-to").keydown(function(e){key(e)});
+		  $("#pay-user").unbind("keydown");
 		 $("#pay-user").keydown(function(e){key(e)});
+		 $("#status").unbind("keydown");
 		 $("#status").keydown(function(e){key(e)});
 		 
 		 
@@ -197,6 +209,7 @@
                 var startDate = $.trim($('#date-from').val());
                 var endDate = $.trim($('#date-to').val());
                 var approveUser = $.trim($('#approve-user').val());
+                var approveRtx= $.trim($('#approve-rtx').val());
                 var approveNo = $.trim($('#approve-no').val());
                 var checkStartDate = $.trim($('#check-from').val());
                 var checkEndDate = $.trim($('#check-to').val());
@@ -226,6 +239,9 @@
                 }
                 if (approveUser != '') {
                     vars["approveUser"] = approveUser;
+                }
+                if (approveRtx != '') {
+                    vars["approveRtx"] = approveRtx;
                 }
                 if (approveNo != '') {
                     vars["approveNo"] = approveNo;

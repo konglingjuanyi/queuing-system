@@ -264,6 +264,7 @@ public class OaEngineController {
 				QUtils.setUsername(response2, "un", userId.toLowerCase(), true);
 				QUtils.setUsername(response2, "name", adname, true);
 				QUtils.setUsername(response2, "test-userid", userId.toLowerCase(), false);
+				QUtils.setUsername(response2, "cookie-time", System.currentTimeMillis()+"", false);
 				return myApplyTodo(request);
 			}
 		} catch (Exception e) {
@@ -1996,10 +1997,12 @@ public class OaEngineController {
 		    cell = row.createCell(24);  
 		    cell.setCellValue("财务确认总计");
 		    cell = row.createCell(25);  
-		    cell.setCellValue("财务审核签字时间");
+		    cell.setCellValue("财务审核签字");
 		    cell = row.createCell(26);  
-		    cell.setCellValue("出纳办理签字");
+		    cell.setCellValue("财务审核签字时间");
 		    cell = row.createCell(27);  
+		    cell.setCellValue("出纳办理签字");
+		    cell = row.createCell(28);  
 		    cell.setCellValue("出纳办理签字日期");
 		    
 		    int no = 2;
@@ -2066,11 +2069,13 @@ public class OaEngineController {
 			    cell.setCellValue(info.getTaxiFaresNotifyAmount()==null?OAControllerUtils.centMoneyToYuan(info.getSumTaxiFaresAmount()):OAControllerUtils.centMoneyToYuan(info.getTaxiFaresNotifyAmount()));
 			    cell = row.createCell(24);  
 			    cell.setCellValue(info.getSumFinancialNotify()==null?"":OAControllerUtils.centMoneyToYuan(info.getSumFinancialNotify()));
-			    cell = row.createCell(25);  
-			    cell.setCellValue(info.getFinancialDate()==null?"":sdf.format(info.getFinancialDate()));
+			    cell = row.createCell(25);
+			    cell.setCellValue(info.getField0072());
 			    cell = row.createCell(26);  
-			    cell.setCellValue(info.getCashierSign()==null?"":info.getCashierSign());
+			    cell.setCellValue(info.getFinancialDate()==null?"":sdf.format(info.getFinancialDate()));
 			    cell = row.createCell(27);  
+			    cell.setCellValue(info.getCashierSign()==null?"":info.getCashierSign());
+			    cell = row.createCell(28);  
 			    cell.setCellValue(info.getCashierDate()==null?"":sdf.format(info.getCashierDate()));
 			    no++;
 		    }
@@ -3502,4 +3507,34 @@ public class OaEngineController {
 		out.close();
 	}
 	
+	/**
+	 * 获得待办工作数量
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "oa/getTodoCount")
+	@ResponseBody
+	public DataResult getTodoCount(HttpServletRequest request,
+			@RequestBody CommonRequest commonRequest, HttpServletResponse response) {
+		Map<String, String> vars = commonRequest.getVars();
+		String userId = vars.get("user");
+		int pageSize = 1000;
+		int pageNo = 1;
+		FormInfoList formInfoList = null;
+		try {
+			formInfoList = ioaEngineService.todoList(processKey, userId, null, null, null, pageNo, pageSize);
+		} catch (FormNotFoundException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+		}
+		DataResult dataResult = null;
+		try {
+			dataResult = getAllTableInfos(formInfoList, userId, 2);
+		} catch (RemoteAccessException e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+		}
+		return dataResult;
+	}
 }
