@@ -1527,8 +1527,8 @@
 	                    	window.location.href = '/oaengine/oa/apply_todo.html';
 	                    }else{
 	                    	if(taskId != null && taskId != ""){
-	                    		showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("保存成功！"), 300);
-		                    	window.location.href = '/oaengine/oa/approve_todo.html';   
+	                    		//showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("保存成功！"), 300);
+		                    	//window.location.href = '/oaengine/oa/approve_todo.html';   
 	                    	}else{
 		                        //showCommonNoticeDialog('成功', 'icon-warning-sign', generateNoticeMsg("草稿保存成功！"), 300);
 		                    	//window.location.href = '/oaengine/oa/draft.html';    
