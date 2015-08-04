@@ -408,45 +408,6 @@
 <script src="/oaengine/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
 
-	var cookie = document.cookie.match(new RegExp("(^| )cookie-time=([^;]*)(;|$)"));
-	var cookie_time = unescape(cookie[2]);
-	var myDate = new Date();
-	var now_time = myDate.getTime();        //获取日期与时间
- 	var elapsedTime = now_time-cookie_time ;
-	var remainingTime = 7140000-elapsedTime;
-	console.log(remainingTime);
-	console.log(remainingTime-3600000-3000000-500000);
-	setTimeout(function(){
-			$("#approve-msg-dialog").empty();
-            $("#approve-msg-dialog").append('<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: none; line-height:80px;">&nbsp;&nbsp;&nbsp;草稿已保存到我的草稿，请重新登录。</div>');
-            var dialog = $("#approve-msg-dialog").removeClass('hide').dialog({
-                modal: true,
-                width: 350,
-                height: 200,
-                title: '<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
-                '<li class="icon-user"></li>登录超时</div>',
-                title_html: true,
-                closeOnEscape: false,
-                open: function (event, ui) {
-                    $(".ui-dialog-titlebar-close").hide();
-                },
-                buttons: [
-                    {
-                        id: "approve-msg-submit",
-                        text: "前往登录",
-                        "class": "btn btn-primary btn-xs",
-                        click: function (e) {
-                              // window.location.href="/oaengine/oa/index.html";
-                              logout_nohint();
-                              $(this).dialog("close");
-                        }
-                    }
-                ]
-            });
- 			//subTableInfos(false, false);
- 			save_draft(false, false)
- 			//showCommonNoticeDialog('超时提示', 'icon-warning-sign', generateNoticeMsg('登录超时，系统已经帮您的信息保存到草稿箱，请重新登录，给您带来的不便尽量谅解。'), 500);
- 			},remainingTime-3600000-3000000-500000) ;
  	
 	var formId = "$formId";
 	var taskId = "$taskId";
