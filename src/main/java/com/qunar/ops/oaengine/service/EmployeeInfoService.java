@@ -558,7 +558,7 @@ public class EmployeeInfoService {
 			// EmployeeInfo eInfo = JSONObject.toJavaObject(data,
 			// EmployeeInfo.class);
 			hrbp_rtxs = (String) data.get("hrbp");
-			if(hrbp_rtxs!=null&&"".equals(hrbp_rtxs)){
+			if(hrbp_rtxs!=null&&!"".equals(hrbp_rtxs)){
 				for(String htbp : hrbp_rtxs.split(",")){
 					hrbpList.add(htbp);
 				}
