@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import qunar.tc.qschedule.config.QSchedule;
@@ -25,18 +26,19 @@ public class PaymentQscheduleService {
 	@Autowired
 	private OaEngineController oaEngineController;
 
-	@QSchedule("oaengine.pay")
+	//@QSchedule("oaengine.pay")
+	@Scheduled(cron = "0 * 17 * * ?")
 	private void process() {
 		// 此为QSchedule提供的API
-		monitor = TaskHolder.getKeeper();
+		//monitor = TaskHolder.getKeeper();
 		// 通过该Logger可以将任务执行过程中的日志发送给调度中心，在调度中心监控页面可以浏览任务执行日志
-		logger = monitor.getLogger();
-		logger.info("出纳自动审批 开始运行（定时推送报销单）");
+		//logger = monitor.getLogger();
+		//logger.info("出纳自动审批 开始运行（定时推送报销单）");
 		// 该方法可以将任务要执行的总量发送给调度中心
-		monitor.setRateCapacity(SIZE);
+		//monitor.setRateCapacity(SIZE);
 		execute();
-		monitor.setRate(SIZE);
-		logger.info("出纳自动审批 运行结束");
+		//monitor.setRate(SIZE);
+		//logger.info("出纳自动审批 运行结束");
 	}
 
 	public String execute() {

@@ -114,7 +114,7 @@
             {"sTitle": "召回", "sClass": "center", "sWidth": 150},
             ];
         var wh = $(window).height();
-        var sY = (wh - 100) + 'px';
+        var sY = (wh - 278) + 'px';
         var oTable = $(ex).dataTable({
             "bFilter": false,
             "bAutoWidth": true,
