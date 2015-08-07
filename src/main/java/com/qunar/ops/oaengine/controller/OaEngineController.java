@@ -260,9 +260,8 @@ public class OaEngineController {
 						&& !"tao.luo".equals(userId)
 						&& !"wangtao.wang".equals(userId)
 						){
-					return welcom(request,"本系统目前只对技术部、财务部、内审部、项目管理组、旅游度假事业、门票事业部、机票事业群、无线事业群、目的地服务事业部员工开放，报销请移驾<a href='http://oa.corp.qunar.com'>OA</a>");
+					return welcom(request,"[只对以上部门开通权限，如有疑问请QTalk:lee.guo]");
 				}
-
 				QUtils.setUsername(response2, "un", userId.toLowerCase(), true);
 				QUtils.setUsername(response2, "name", adname, true);
 				QUtils.setUsername(response2, "test-userid", userId.toLowerCase(), false);
