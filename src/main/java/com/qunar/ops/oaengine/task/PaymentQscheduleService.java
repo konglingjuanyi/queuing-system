@@ -27,7 +27,7 @@ public class PaymentQscheduleService {
 	private OaEngineController oaEngineController;
 
 	//@QSchedule("oaengine.pay")
-	@Scheduled(cron = "0 0 19 * * ?")
+	@Scheduled(cron = "0 0 3 * * ?")
 	private void process() {
 		// 此为QSchedule提供的API
 		//monitor = TaskHolder.getKeeper();
