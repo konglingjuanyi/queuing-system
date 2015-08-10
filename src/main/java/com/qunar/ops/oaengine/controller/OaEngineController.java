@@ -257,6 +257,8 @@ public class OaEngineController {
 						&& !"项目管理组".equals(departmentI)
 						&& !"目的地服务事业部".equals(departmentI)
 						&& !"liangliang.dou".equals(userId)
+						&& !"cc.zhuang".equals(userId)
+						&& !"sam.sum".equals(userId)
 						&& !"tao.luo".equals(userId)
 						&& !"wangtao.wang".equals(userId)
 						){

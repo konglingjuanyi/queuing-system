@@ -150,7 +150,7 @@
                     <li>
                         <a href="oa/approve_todo.html">
                             <i class="icon-double-angle-right"></i>
-                            待办工作<span class="badge badge-important" id="todoListCount">+ <span id="todoCount" >0</span></span>
+                            待办工作<span class="badge badge-important" id="todoListCount"></span>
                         </a>
                     </li>
                     <li>
@@ -283,7 +283,7 @@
                 type: "post",
                 data: JSON.stringify(params),
                 success: function (resp) {
-                	$("#todoCount").html(resp.count);
+                	$("#todoListCount").html('<span id="todoCount" >'+resp.count+'</span>');
                 	if(resp.count==0){
                 		$("#todoListCount").css('display','none');
                 	}
