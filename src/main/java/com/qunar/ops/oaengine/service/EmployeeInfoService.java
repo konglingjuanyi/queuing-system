@@ -535,7 +535,7 @@ public class EmployeeInfoService {
 	 * @return
 	 * @throws RemoteAccessException
 	 */
-	public List<String> getEmployeeHRBP(String userId, String dep1, List<GroupInfo> hrbpGroupList) throws RemoteAccessException {
+	public List<String> getEmployeeHRBP1(String userId, String dep1, List<GroupInfo> hrbpGroupList) throws RemoteAccessException {
 		List<String> hrbpList = new ArrayList<String>();
 		for (GroupInfo groupInfo : hrbpGroupList) {
 			for(GroupMember mem : groupInfo.getMembers()){
@@ -568,6 +568,77 @@ public class EmployeeInfoService {
 		}
 		
 		if(hrbpList.size()==0)hrbpList.add(hrbp_rtxs);
+		return hrbpList;
+	}
+	
+	
+	/**
+	 * 获取员工信息HRBP
+	 * 
+	 * @param userId
+	 * @param hrbpList 
+	 * @param string 
+	 * @return
+	 * @throws RemoteAccessException
+	 */
+	public List<String> getEmployeeHRBP(String userId, String dep1, List<GroupInfo> hrbpGroupList) throws RemoteAccessException {
+		/*List<String> hrbpList = new ArrayList<String>();
+		for (GroupInfo groupInfo : hrbpGroupList) {
+			for(GroupMember mem : groupInfo.getMembers()){
+				if(dep1.equals(getEmployee(mem.getMemberUserId().toLowerCase()).getDepartmentI())){
+					hrbpList.add(mem.getMemberUserId().toLowerCase());
+				};
+			}
+		}
+		if(hrbpList.size()>0)return hrbpList;
+		
+		String apiUrl = backyardUrl + "?require=info_mask&userId=" + userId;
+		JSONObject json = invokeGetApi(apiUrl);
+		String hrbp_rtxs;
+		if (json.containsKey("err_id")) {
+			
+			throw new RemoteAccessException(json.getString("msg"),
+					EmployeeInfoService.class);
+		} else {
+			JSONObject data = json.getJSONObject("data");
+			// EmployeeInfo eInfo = JSONObject.toJavaObject(data,
+			// EmployeeInfo.class);
+			hrbp_rtxs = (String) data.get("hrbp");
+			if(hrbp_rtxs!=null&&!"".equals(hrbp_rtxs)){
+				for(String htbp : hrbp_rtxs.split(",")){
+					hrbpList.add(htbp);
+				}
+			}
+			
+			QMonitor.recordOne("call_qunarit_success");
+		}
+		
+		if(hrbpList.size()==0)hrbpList.add(hrbp_rtxs);
+		return hrbpList;*/
+		
+		
+		
+		List<String> hrbpList = new ArrayList<String>();
+		String apiUrl = backyardDrt_vpUrl + "?require=drt_vp&rtx_id=" + userId;
+		//String apiUrl = "http://l-backyard1.ops.dev.cn6.qunar.com:8899/api/employees/" + "?require=get_tree_dep";
+		JSONObject json = invokeGetApi(apiUrl);
+		if ("false".equals(json.getString("ret"))) {
+			throw new RemoteAccessException(json.getString("msg"), EmployeeInfoService.class);
+		}
+		JSONArray datas = json.getJSONArray("data");
+		List<String> hrList = new ArrayList<String>();
+		for(int i=0; i<datas.size(); i++){
+			JSONObject data = datas.getJSONObject(i);
+			hrList.add(data.getString("bp_rtx").trim());
+		}
+		for (String hrbp : hrList) {
+			for(String bprtx : hrbp.split(";")){
+				if(bprtx.length() == 0) continue;
+				hrbpList.add(bprtx.toLowerCase().trim());
+			}
+		}
+		
+		QMonitor.recordOne("call_isapi_success");
 		return hrbpList;
 	}
 /**
