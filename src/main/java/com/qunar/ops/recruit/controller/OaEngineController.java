@@ -36,6 +36,7 @@ public class OaEngineController {
 	 */
 	@RequestMapping(value = "oa/index.html")
 	public ModelAndView welcom(HttpServletRequest request, String message) {
+		System.out.println("test");
 		ModelAndView mav = new ModelAndView("/oa/index");
 		mav.addObject("message", message==null?"":message);
 		mav.addObject("debug", OAControllerUtils.isDebug());
