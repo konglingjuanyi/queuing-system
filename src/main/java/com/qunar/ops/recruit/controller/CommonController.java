@@ -31,6 +31,7 @@ public class CommonController {
 		return "redirect:/login";
 	}
 	
+	
 	/**
 	 * logout
 	 * 

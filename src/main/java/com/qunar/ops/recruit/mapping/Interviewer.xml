@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.ops.recruit.dao.StudentMapper" >
+
+  <resultMap id="interviewerMap" type="com.qunar.ops.recruit.model.Interviewer" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="user_name" property="user_name" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
+	<result column="role" property="role" jdbcType="VARCHAR" />
+    <result column="one_count" property="one_count" jdbcType="BIGINT" />
+    <result column="two_count" property="two_count" jdbcType="BIGINT" />
+    <result column="state" property="state" jdbcType="BIGINT" />
+    <result column="start_date" property="start_date" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+    
+  </resultMap>
+  
+  
+   <select id="getInterviewer" parameterType="int" resultType="com.qunar.ops.recruit.model.Interviewer" resultMap="interviewerMap">  
+            select * from interviewer
+   </select>  
+
+</mapper>

@@ -11,8 +11,6 @@ public class Interviewer {
 
     private String password;
 
-    private String location;
-
     private String city;
 
     private String job;
@@ -28,6 +26,8 @@ public class Interviewer {
     private Date start_date;
 
     private Date end_time;
+    
+    private Date create_time;
 
 	public Integer getId() {
 		return id;
@@ -59,14 +59,6 @@ public class Interviewer {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public String getCity() {
@@ -131,6 +123,14 @@ public class Interviewer {
 
 	public void setEnd_time(Date end_time) {
 		this.end_time = end_time;
+	}
+
+	public Date getCreate_time() {
+		return create_time;
+	}
+
+	public void setCreate_time(Date create_time) {
+		this.create_time = create_time;
 	}
 
    
