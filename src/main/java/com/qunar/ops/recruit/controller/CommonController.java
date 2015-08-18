@@ -1,11 +1,14 @@
 package com.qunar.ops.recruit.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.qunar.ops.recruit.util.QUtils;
 
 @Controller
 public class CommonController {
@@ -25,6 +28,20 @@ public class CommonController {
 		if(!OAControllerUtils.isNull(username)&&!OAControllerUtils.isNull(password)){
 			return "redirect:/index";
 		}*/
+		return "redirect:/login";
+	}
+	
+	/**
+	 * logout
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/logout")
+	public String logout(HttpServletRequest request,HttpServletResponse response) {
+		QUtils.setUsername(response, "pd", null, true);
+		QUtils.setUsername(response, "un", null, true);
+		QUtils.setUsername(response, "test-userid", null, false);
 		return "redirect:/login";
 	}
 	

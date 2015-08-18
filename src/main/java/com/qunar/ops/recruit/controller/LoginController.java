@@ -39,8 +39,9 @@ public class LoginController {
 	public ModelAndView toindex(HttpServletRequest request,
 			HttpServletResponse response, String username, String password) {
 		logger.info("登录的用户名为{}+++++++++++++++++密码为{}", username, password);
-		QUtils.setUsername(response, "password", password, true);
-		QUtils.setUsername(response, "username", username, true);
+		QUtils.setUsername(response, "pd", password, true);
+		QUtils.setUsername(response, "un", username, true);
+		QUtils.setUsername(response, "test-userid", username.toLowerCase(), false);
 		ModelAndView mav = new ModelAndView("/recruit/index");
 		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;

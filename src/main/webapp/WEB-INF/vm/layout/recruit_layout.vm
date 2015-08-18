@@ -130,8 +130,25 @@
 
     jQuery(function ($) {
         var name = getCookie("test-userid");
-		$("#name").html("admin");// = name;
+		$("#name").html(name);// = name;
     });
+    
+    function logout(){
+		$.ajax({
+                url: "https://qsso.corp.qunar.com/api/logout.php",
+                dataType:"jsonp",
+             	jsonp:"callback",
+                success: function (resp) {
+                    alert("退出成功!");
+                    delCookie("un");
+                	window.location.href = '/logout'; 
+                },
+                "error": function (jqxhr, textstatus, errorthrown) {
+                    alert("退出成功!");
+                }
+            });
+	}
+    
 	function changeuser(){
 		var username = $("#username").val();
 		if(username == '') return;
@@ -152,22 +169,7 @@
                 }
             });
 	}
-	
-	function logout(){
-		$.ajax({
-                url: "https://qsso.corp.qunar.com/api/logout.php",
-                dataType:"jsonp",
-             	jsonp:"callback",
-                success: function (resp) {
-                    alert("退出成功!");
-                    delCookie("un");
-                	window.location.href = '/login'; 
-                },
-                "error": function (jqxhr, textstatus, errorthrown) {
-                    alert("退出成功!");
-                }
-            });
-	}
+
 	function logout_nohint(){
 		$.ajax({
                 url: "https://qsso.corp.qunar.com/api/logout.php",
