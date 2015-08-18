@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.ops.recruit.dao.StudentMapper" >
+
+  <resultMap id="studentMap" type="com.qunar.ops.recruit.model.Student" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="note_no" property="note_no" jdbcType="BIGINT" />
+    <result column="phase_no" property="phase_no" jdbcType="VARCHAR" />
+    <result column="interview_time" property="interview_time" jdbcType="TIMESTAMP" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="school" property="school" jdbcType="VARCHAR" />
+    <result column="profession" property="profession" jdbcType="VARCHAR" />
+    <result column="education" property="education" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="card_no" property="card_no" jdbcType="VARCHAR" />
+    <result column="qq_no" property="qq_no" jdbcType="VARCHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
+	<result column="work_start" property="work_start" jdbcType="TIMESTAMP" />
+    <result column="work_end" property="work_end" jdbcType="TIMESTAMP" />
+    <result column="graduate_date" property="graduate_date" jdbcType="TIMESTAMP" />
+    <result column="salary" property="salary" />
+    <result column="assess" property="assess" jdbcType="VARCHAR" />
+    <result column="first_try" property="first_try" jdbcType="VARCHAR" />
+    <result column="second_try" property="second_try" jdbcType="VARCHAR" />
+    <result column="view_remark" property="view_remark" jdbcType="VARCHAR" />
+    <result column="location" property="location" jdbcType="VARCHAR" />
+    <result column="offer_state" property="offer_state" jdbcType="VARCHAR" />
+    <result column="three_side" property="three_side" jdbcType="VARCHAR" />
+    <result column="pay_time" property="pay_time" jdbcType="TIMESTAMP" />
+    <result column="three_state" property="three_state" jdbcType="VARCHAR" />
+    <result column="refuse" property="refuse" jdbcType="VARCHAR" />
+    <result column="refuse_reson" property="refuse_reson" jdbcType="VARCHAR" />
+    <result column="refuse_date" property="refuse_date" jdbcType="TIMESTAMP" />
+    <result column="break" property="break_" jdbcType="VARCHAR" />
+    <result column="train" property="train" jdbcType="VARCHAR" />
+    <result column="staff_no" property="staff_no" jdbcType="VARCHAR" />
+    <result column="interview_dept" property="interview_dept" jdbcType="VARCHAR" />
+    <result column="fenpei_dept" property="fenpei_dept" jdbcType="VARCHAR" />
+    <result column="yuan_dept" property="yuan_dept" jdbcType="VARCHAR" />
+    <result column="organize" property="organize" jdbcType="VARCHAR" />
+    <result column="leader" property="leader" jdbcType="VARCHAR" />
+    <result column="one_result" property="one_result" jdbcType="VARCHAR" />
+    <result column="two_result" property="two_result" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  
+   <select id="getStudent" parameterType="int" resultType="Student" resultMap="studentMap">  
+            select * from studen_info
+   </select>  
+
+</mapper>

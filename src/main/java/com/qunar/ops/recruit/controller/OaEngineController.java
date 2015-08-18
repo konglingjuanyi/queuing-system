@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.qunar.ops.recruit.dao.StudentMapper;
+import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.util.OAControllerUtils;
 
 @Controller
@@ -27,6 +29,8 @@ public class OaEngineController {
 	@Autowired
 	protected RepositoryService repositoryService;
 	
+	@Autowired
+	private StudentMapper stuMapper;
 
 	/**
 	 * index
@@ -37,6 +41,8 @@ public class OaEngineController {
 	@RequestMapping(value = "oa/index.html")
 	public ModelAndView welcom(HttpServletRequest request, String message) {
 		System.out.println("test");
+		Student stu = stuMapper.getStudent(1);
+		System.out.println(stu.getName());
 		ModelAndView mav = new ModelAndView("/oa/index");
 		mav.addObject("message", message==null?"":message);
 		mav.addObject("debug", OAControllerUtils.isDebug());
