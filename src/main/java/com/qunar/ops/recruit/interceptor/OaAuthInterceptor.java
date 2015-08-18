@@ -19,7 +19,7 @@ public class OaAuthInterceptor implements HandlerInterceptor {
 		//String userId = (String)request.getSession().getAttribute("USER_ID");
 		String userId = QUtils.getUsername(request);
 		if(userId != null) return true;
-		response.sendRedirect(request.getContextPath()+"/oa/index.html");
+		response.sendRedirect(request.getContextPath()+"/login");
 		return false;
 	}
 

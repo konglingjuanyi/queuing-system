@@ -125,8 +125,8 @@
 	<bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService"/>
 	<bean id="formService" factory-bean="processEngine" factory-method="getFormService" />
 	<!--
-	<bean id="notificationListener" class="com.qunar.ops.oaengine.listener.NotificationListener"/>
-	<bean id="selectListener" class="com.qunar.ops.oaengine.listener.SelectListener"/>
+	<bean id="notificationListener" class="com.qunar.ops.recruit.listener.NotificationListener"/>
+	<bean id="selectListener" class="com.qunar.ops.recruit.listener.SelectListener"/>
 	-->
 
 	<!-- 注解方式配置事物 -->
