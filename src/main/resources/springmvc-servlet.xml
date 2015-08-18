@@ -8,10 +8,10 @@
   http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd"
 	default-autowire="byName">
 
-	<context:component-scan base-package="com.qunar.ops.oaengine.controller" />
+	<context:component-scan base-package="com.qunar.ops.recruit.controller" />
 	<context:property-placeholder
 		ignore-unresolvable="true" local-override="true"
-		location="classpath*:/oaengine.properties,classpath*:/mq.properties" />
+		location="classpath*:/recruit.properties,classpath*:/mq.properties" />
 	<mvc:annotation-driven />
 
 	<bean id="velocityConfigurer"
@@ -47,15 +47,15 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/admin/*" />
-			<bean class="com.qunar.ops.oaengine.interceptor.AuthInterceptor" />
+			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/oa/*" />
-			<bean class="com.qunar.ops.oaengine.interceptor.OaAuthInterceptor" />
+			<bean class="com.qunar.ops.recruit.interceptor.OaAuthInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/oa/setting/*" />
-			<bean class="com.qunar.ops.oaengine.interceptor.OaAuthInterceptor" />
+			<bean class="com.qunar.ops.recruit.interceptor.OaAuthInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>

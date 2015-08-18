@@ -36,7 +36,7 @@
 	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
 	  <property name="caches">
 	    <list>
-	      <bean name="oaCache" class="com.qunar.ops.oaengine.cache.GuavaCacheAdapter">
+	      <bean name="oaCache" class="com.qunar.ops.recruit.cache.GuavaCacheAdapter">
 	      </bean>
 	    </list>
 	  </property>
