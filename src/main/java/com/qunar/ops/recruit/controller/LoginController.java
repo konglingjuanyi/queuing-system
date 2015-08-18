@@ -1,24 +1,20 @@
 package com.qunar.ops.recruit.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.qunar.ops.recruit.dao.StudentMapper;
-import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.util.OAControllerUtils;
+import com.qunar.ops.recruit.util.QUtils;
 
 @Controller
 public class LoginController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
-	@Autowired(required=true)
-	private StudentMapper studentMapper;
 
 	/**
 	 * login
@@ -32,7 +28,7 @@ public class LoginController {
 		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;
 	}
-	
+
 	/**
 	 * index
 	 * 
@@ -40,14 +36,14 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping(value = "/index")
-	public ModelAndView toindex(HttpServletRequest request,String username,String password) {
-		System.out.println("======================="+username+"+++++++++"+password);
-		Student stu = studentMapper.getStudent(1);
-		System.out.println(stu.getName());
+	public ModelAndView toindex(HttpServletRequest request,
+			HttpServletResponse response, String username, String password) {
+		logger.info("登录的用户名为{}+++++++++++++++++密码为{}", username, password);
+		QUtils.setUsername(response, "password", password, true);
+		QUtils.setUsername(response, "username", username, true);
 		ModelAndView mav = new ModelAndView("/recruit/index");
 		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;
 	}
 
-	
 }

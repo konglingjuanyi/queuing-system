@@ -90,7 +90,7 @@ public class QUtils {
 	public static String getUsername(HttpServletRequest request){
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null)for(Cookie cookie : cookies){
-			if("un".equals(cookie.getName())){
+			if("password".equals(cookie.getName())){
 				String un = cookie.getValue();
 				if(un == null || un.length() == 0) return null;
 				un = decrypt(un, "qunar-opsdev-1qaz2wsx-123456");
@@ -103,7 +103,7 @@ public class QUtils {
 	public static String getAdname(HttpServletRequest request){
 		Cookie[] cookies = request.getCookies();
 		if(cookies != null)for(Cookie cookie : cookies){
-			if("name".equals(cookie.getName())){
+			if("username".equals(cookie.getName())){
 				String name = cookie.getValue();
 				if(name == null || name.length() == 0) return null;
 				name = decrypt(name, "qunar-opsdev-1qaz2wsx-123456");
