@@ -45,7 +45,7 @@
   </resultMap>
   
   
-   <select id="getStudent" parameterType="int" resultType="Student" resultMap="studentMap">  
+   <select id="getStudent" parameterType="int" resultType="com.qunar.ops.recruit.model.Student" resultMap="studentMap">  
             select * from studen_info
    </select>  
 

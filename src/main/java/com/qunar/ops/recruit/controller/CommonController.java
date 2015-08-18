@@ -14,7 +14,7 @@ import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.util.OAControllerUtils;
 
 @Controller
-public class LoginController {
+public class CommonController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired(required=true)
@@ -26,28 +26,9 @@ public class LoginController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/login")
-	public ModelAndView welcom(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("/recruit/login");
-		mav.addObject("debug", OAControllerUtils.isDebug());
-		return mav;
+	@RequestMapping(value = "/")
+	public String index(HttpServletRequest request) {
+		return "redirect:/login";
 	}
-	
-	/**
-	 * index
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/index")
-	public ModelAndView toindex(HttpServletRequest request,String username,String password) {
-		System.out.println("======================="+username+"+++++++++"+password);
-		Student stu = studentMapper.getStudent(1);
-		System.out.println(stu.getName());
-		ModelAndView mav = new ModelAndView("/recruit/index");
-		mav.addObject("debug", OAControllerUtils.isDebug());
-		return mav;
-	}
-
 	
 }

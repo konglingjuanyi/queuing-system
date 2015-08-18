@@ -2,6 +2,9 @@ package com.qunar.ops.recruit.model;
 
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Student {
     private Integer id;
 
