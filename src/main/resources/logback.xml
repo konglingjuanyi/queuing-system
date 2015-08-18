@@ -14,9 +14,9 @@
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>WARN</level>
 		</filter>
-		<file>${qunar.logs}/oaengine.log</file>
+		<file>${qunar.logs}/recruit.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${qunar.logs}/oaengine.%d{yyyy-MM-dd}.log
+			<FileNamePattern>${qunar.logs}/recruit.%d{yyyy-MM-dd}.log
 			</FileNamePattern>
 		</rollingPolicy>
 		<encoder>
@@ -29,9 +29,9 @@
 		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
 			<level>ERROR</level>
 		</filter>
-		<file>${qunar.logs}/oaengine_error.log</file>
+		<file>${qunar.logs}/recruit_error.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${qunar.logs}/oaengine_error.%d{yyyy-MM-dd}.log
+			<FileNamePattern>${qunar.logs}/recruit_error.%d{yyyy-MM-dd}.log
 			</FileNamePattern>
 		</rollingPolicy>
 		<encoder>

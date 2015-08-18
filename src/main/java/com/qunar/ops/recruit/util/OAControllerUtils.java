@@ -204,7 +204,7 @@ public class OAControllerUtils {
     
     public static boolean isDebug(){
     	try {
-    		Resource resource = new ClassPathResource("/oaengine.properties");
+    		Resource resource = new ClassPathResource("/recruit.properties");
 			Properties props = PropertiesLoaderUtils.loadProperties(resource);
 			String debug = props.getProperty("debug", "false");
 			return "true".equals(debug)?true:false;
