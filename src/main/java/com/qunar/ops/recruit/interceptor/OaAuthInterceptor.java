@@ -13,6 +13,7 @@ public class OaAuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
+		System.out.println("come to OaAuthInterceptor=======");
 		if(request.getRequestURI().endsWith("index.html") || request.getRequestURI().endsWith("login")|| request.getRequestURI().endsWith("qmonitor.jsp")) {
 			return true;
 		}
