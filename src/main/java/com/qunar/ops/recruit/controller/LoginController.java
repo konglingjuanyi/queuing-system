@@ -18,11 +18,6 @@ import com.qunar.ops.recruit.util.QUtils;
 @Controller
 public class LoginController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	@Autowired
-	private StudentMapper stuM;
-	@Autowired
-	private InterviewerMapper inM;
-
 	/**
 	 * login
 	 * 
@@ -45,9 +40,9 @@ public class LoginController {
 	@RequestMapping(value = "/index")
 	public ModelAndView toindex(HttpServletRequest request,
 			HttpServletResponse response, String username, String password) {
-		System.out.println("============================================++++");
+		System.out.println("-----============================================++++");
 //		System.out.println("student"+inM.getStudent(1));
-		System.out.println("======"+inM.getInterviewer(2).getPassword()+stuM.getStudent(1).getName());
+//		System.out.println("======"+inM.getInterviewer(2).getPassword()+stuM.getStudent(1).getName());
 		logger.info("登录的用户名为{}+++++++++++++++++密码为{}", username, password);
 		QUtils.setUsername(response, "pd", password, true);
 		QUtils.setUsername(response, "un", username, true);

@@ -1,27 +1,221 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qunar.ops.recruit.dao.InterviewerMapper" >
-
-  <resultMap id="interviewerMap" type="com.qunar.ops.recruit.model.Interviewer" >
-    <id column="id" property="id" jdbcType="BIGINT" />
+  <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.Interviewer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="user_name" property="user_name" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="job" property="job" jdbcType="VARCHAR" />
-	<result column="role" property="role" jdbcType="VARCHAR" />
-    <result column="one_count" property="one_count" jdbcType="BIGINT" />
-    <result column="two_count" property="two_count" jdbcType="BIGINT" />
-    <result column="state" property="state" jdbcType="BIGINT" />
-    <result column="start_date" property="start_date" jdbcType="TIMESTAMP" />
-    <result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
-    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
-    
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="CHAR" />
+    <result column="city" property="city" jdbcType="CHAR" />
+    <result column="job" property="job" jdbcType="CHAR" />
+    <result column="role" property="role" jdbcType="CHAR" />
+    <result column="one_count" property="oneCount" jdbcType="INTEGER" />
+    <result column="two_count" property="twoCount" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
   </resultMap>
-  
-  
-   <select id="getInterviewer" parameterType="int" resultType="com.qunar.ops.recruit.model.Interviewer" resultMap="interviewerMap">  
-            select * from interviewer where id = #{id}
-   </select>  
-
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, name, user_name, password, city, job, role, one_count, two_count, state, start_date, 
+    end_time, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from interviewer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from interviewer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.qunar.ops.recruit.model.Interviewer" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      select currval('interviewer_id_seq')
+    </selectKey>
+    insert into interviewer (name, user_name, password, 
+      city, job, role, one_count, 
+      two_count, state, start_date, 
+      end_time, create_time)
+    values (#{name,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, 
+      #{city,jdbcType=CHAR}, #{job,jdbcType=CHAR}, #{role,jdbcType=CHAR}, #{oneCount,jdbcType=INTEGER}, 
+      #{twoCount,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{startDate,jdbcType=TIMESTAMP}, 
+      #{endTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Interviewer" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      select currval('interviewer_id_seq')
+    </selectKey>
+    insert into interviewer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="job != null" >
+        job,
+      </if>
+      <if test="role != null" >
+        role,
+      </if>
+      <if test="oneCount != null" >
+        one_count,
+      </if>
+      <if test="twoCount != null" >
+        two_count,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="startDate != null" >
+        start_date,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=CHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=CHAR},
+      </if>
+      <if test="job != null" >
+        #{job,jdbcType=CHAR},
+      </if>
+      <if test="role != null" >
+        #{role,jdbcType=CHAR},
+      </if>
+      <if test="oneCount != null" >
+        #{oneCount,jdbcType=INTEGER},
+      </if>
+      <if test="twoCount != null" >
+        #{twoCount,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="startDate != null" >
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qunar.ops.recruit.model.InterviewerExample" resultType="java.lang.Integer" >
+    select count(*) from interviewer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.Interviewer" >
+    update interviewer
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=CHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=CHAR},
+      </if>
+      <if test="job != null" >
+        job = #{job,jdbcType=CHAR},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=CHAR},
+      </if>
+      <if test="oneCount != null" >
+        one_count = #{oneCount,jdbcType=INTEGER},
+      </if>
+      <if test="twoCount != null" >
+        two_count = #{twoCount,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="startDate != null" >
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.Interviewer" >
+    update interviewer
+    set name = #{name,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=CHAR},
+      city = #{city,jdbcType=CHAR},
+      job = #{job,jdbcType=CHAR},
+      role = #{role,jdbcType=CHAR},
+      one_count = #{oneCount,jdbcType=INTEGER},
+      two_count = #{twoCount,jdbcType=INTEGER},
+      state = #{state,jdbcType=INTEGER},
+      start_date = #{startDate,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 </mapper>

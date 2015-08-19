@@ -2,17 +2,14 @@ package com.qunar.ops.recruit.model;
 
 import java.util.Date;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class Student {
     private Integer id;
 
-    private String note_no;
+    private String noteNo;
 
-    private String phase_no;
-    
-    private Date interview_time;
+    private String phaseNo;
+
+    private Date interviewTime;
 
     private String name;
 
@@ -23,389 +20,386 @@ public class Student {
     private String profession;
 
     private String education;
-    
-    private String phone;
-    
-    private String email;
-    
-    private String card_no;
 
-    private String qq_no;
-    
+    private String phone;
+
+    private String email;
+
+    private String cardNo;
+
+    private String qqNo;
+
     private String job;
-    
-    private Date work_start;
-    
-    private Date work_end;
-    
-    private Date graduate_date;
+
+    private Date workStart;
+
+    private Date workEnd;
+
+    private Date graduateDate;
 
     private Double salary;
-    
-    private String assess;
-    
-    private String first_try;
-    
-    private String second_try;
-    
-    private String view_remark;
-    
-    private String location;
-    
-    private String offer_state;
-    
-    private String three_side;
-    
-    private Date pay_time;
-    
-    private String three_state;
-    
-    private String refuse;
-    
-    private String refuse_reson;
-    
-    private Date refuse_date;
 
-    private String break_;
-    
+    private String assess;
+
+    private String firstTry;
+
+    private String secondTry;
+
+    private String viewRemark;
+
+    private String location;
+
+    private String offerState;
+
+    private String threeSide;
+
+    private Date payTime;
+
+    private String threeState;
+
+    private String refuse;
+
+    private String refuseReson;
+
+    private Date refuseDate;
+
+    private String breaker;
+
     private String train;
-    
-    private String staff_no;
-    
-    private String interview_dept;
-    
-    private String fenpei_dept;
-    
-    private String yuan_dept;
-    
+
+    private String staffNo;
+
+    private String interviewDept;
+
+    private String fenpeiDept;
+
+    private String yuanDept;
+
     private String organize;
 
     private String leader;
-    
-    private String one_result;
 
-    private String two_result;
+    private String oneResult;
 
-	public Integer getId() {
-		return id;
-	}
+    private String twoResult;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getNote_no() {
-		return note_no;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setNote_no(String note_no) {
-		this.note_no = note_no;
-	}
+    public String getNoteNo() {
+        return noteNo;
+    }
 
-	public String getPhase_no() {
-		return phase_no;
-	}
+    public void setNoteNo(String noteNo) {
+        this.noteNo = noteNo == null ? null : noteNo.trim();
+    }
 
-	public void setPhase_no(String phase_no) {
-		this.phase_no = phase_no;
-	}
+    public String getPhaseNo() {
+        return phaseNo;
+    }
 
-	public Date getInterview_time() {
-		return interview_time;
-	}
+    public void setPhaseNo(String phaseNo) {
+        this.phaseNo = phaseNo == null ? null : phaseNo.trim();
+    }
 
-	public void setInterview_time(Date interview_time) {
-		this.interview_time = interview_time;
-	}
+    public Date getInterviewTime() {
+        return interviewTime;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setInterviewTime(Date interviewTime) {
+        this.interviewTime = interviewTime;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getSex() {
-		return sex;
-	}
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
 
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
+    public String getSex() {
+        return sex;
+    }
 
-	public String getSchool() {
-		return school;
-	}
+    public void setSex(String sex) {
+        this.sex = sex == null ? null : sex.trim();
+    }
 
-	public void setSchool(String school) {
-		this.school = school;
-	}
+    public String getSchool() {
+        return school;
+    }
 
-	public String getProfession() {
-		return profession;
-	}
+    public void setSchool(String school) {
+        this.school = school == null ? null : school.trim();
+    }
 
-	public void setProfession(String profession) {
-		this.profession = profession;
-	}
+    public String getProfession() {
+        return profession;
+    }
 
-	public String getEducation() {
-		return education;
-	}
+    public void setProfession(String profession) {
+        this.profession = profession == null ? null : profession.trim();
+    }
 
-	public void setEducation(String education) {
-		this.education = education;
-	}
+    public String getEducation() {
+        return education;
+    }
 
-	public String getPhone() {
-		return phone;
-	}
+    public void setEducation(String education) {
+        this.education = education == null ? null : education.trim();
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public String getCard_no() {
-		return card_no;
-	}
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
+    }
 
-	public void setCard_no(String card_no) {
-		this.card_no = card_no;
-	}
+    public String getCardNo() {
+        return cardNo;
+    }
 
-	public String getQq_no() {
-		return qq_no;
-	}
+    public void setCardNo(String cardNo) {
+        this.cardNo = cardNo == null ? null : cardNo.trim();
+    }
 
-	public void setQq_no(String qq_no) {
-		this.qq_no = qq_no;
-	}
+    public String getQqNo() {
+        return qqNo;
+    }
 
-	public String getJob() {
-		return job;
-	}
+    public void setQqNo(String qqNo) {
+        this.qqNo = qqNo == null ? null : qqNo.trim();
+    }
 
-	public void setJob(String job) {
-		this.job = job;
-	}
+    public String getJob() {
+        return job;
+    }
 
-	public Date getWork_start() {
-		return work_start;
-	}
+    public void setJob(String job) {
+        this.job = job == null ? null : job.trim();
+    }
 
-	public void setWork_start(Date work_start) {
-		this.work_start = work_start;
-	}
+    public Date getWorkStart() {
+        return workStart;
+    }
 
-	public Date getWork_end() {
-		return work_end;
-	}
+    public void setWorkStart(Date workStart) {
+        this.workStart = workStart;
+    }
 
-	public void setWork_end(Date work_end) {
-		this.work_end = work_end;
-	}
+    public Date getWorkEnd() {
+        return workEnd;
+    }
 
-	public Date getGraduate_date() {
-		return graduate_date;
-	}
+    public void setWorkEnd(Date workEnd) {
+        this.workEnd = workEnd;
+    }
 
-	public void setGraduate_date(Date graduate_date) {
-		this.graduate_date = graduate_date;
-	}
+    public Date getGraduateDate() {
+        return graduateDate;
+    }
 
-	public Double getSalary() {
-		return salary;
-	}
+    public void setGraduateDate(Date graduateDate) {
+        this.graduateDate = graduateDate;
+    }
 
-	public void setSalary(Double salary) {
-		this.salary = salary;
-	}
+    public Double getSalary() {
+        return salary;
+    }
 
-	public String getAssess() {
-		return assess;
-	}
+    public void setSalary(Double salary) {
+        this.salary = salary;
+    }
 
-	public void setAssess(String assess) {
-		this.assess = assess;
-	}
+    public String getAssess() {
+        return assess;
+    }
 
-	public String getFirst_try() {
-		return first_try;
-	}
+    public void setAssess(String assess) {
+        this.assess = assess == null ? null : assess.trim();
+    }
 
-	public void setFirst_try(String first_try) {
-		this.first_try = first_try;
-	}
+    public String getFirstTry() {
+        return firstTry;
+    }
 
-	public String getSecond_try() {
-		return second_try;
-	}
+    public void setFirstTry(String firstTry) {
+        this.firstTry = firstTry == null ? null : firstTry.trim();
+    }
 
-	public void setSecond_try(String second_try) {
-		this.second_try = second_try;
-	}
+    public String getSecondTry() {
+        return secondTry;
+    }
 
-	public String getView_remark() {
-		return view_remark;
-	}
+    public void setSecondTry(String secondTry) {
+        this.secondTry = secondTry == null ? null : secondTry.trim();
+    }
 
-	public void setView_remark(String view_remark) {
-		this.view_remark = view_remark;
-	}
+    public String getViewRemark() {
+        return viewRemark;
+    }
 
-	public String getLocation() {
-		return location;
-	}
+    public void setViewRemark(String viewRemark) {
+        this.viewRemark = viewRemark == null ? null : viewRemark.trim();
+    }
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    public String getLocation() {
+        return location;
+    }
 
-	public String getOffer_state() {
-		return offer_state;
-	}
+    public void setLocation(String location) {
+        this.location = location == null ? null : location.trim();
+    }
 
-	public void setOffer_state(String offer_state) {
-		this.offer_state = offer_state;
-	}
+    public String getOfferState() {
+        return offerState;
+    }
 
-	public String getThree_side() {
-		return three_side;
-	}
+    public void setOfferState(String offerState) {
+        this.offerState = offerState == null ? null : offerState.trim();
+    }
 
-	public void setThree_side(String three_side) {
-		this.three_side = three_side;
-	}
+    public String getThreeSide() {
+        return threeSide;
+    }
 
-	public Date getPay_time() {
-		return pay_time;
-	}
+    public void setThreeSide(String threeSide) {
+        this.threeSide = threeSide == null ? null : threeSide.trim();
+    }
 
-	public void setPay_time(Date pay_time) {
-		this.pay_time = pay_time;
-	}
+    public Date getPayTime() {
+        return payTime;
+    }
 
-	public String getThree_state() {
-		return three_state;
-	}
+    public void setPayTime(Date payTime) {
+        this.payTime = payTime;
+    }
 
-	public void setThree_state(String three_state) {
-		this.three_state = three_state;
-	}
+    public String getThreeState() {
+        return threeState;
+    }
 
-	public String getRefuse() {
-		return refuse;
-	}
+    public void setThreeState(String threeState) {
+        this.threeState = threeState == null ? null : threeState.trim();
+    }
 
-	public void setRefuse(String refuse) {
-		this.refuse = refuse;
-	}
+    public String getRefuse() {
+        return refuse;
+    }
 
-	public String getRefuse_reson() {
-		return refuse_reson;
-	}
+    public void setRefuse(String refuse) {
+        this.refuse = refuse == null ? null : refuse.trim();
+    }
 
-	public void setRefuse_reson(String refuse_reson) {
-		this.refuse_reson = refuse_reson;
-	}
+    public String getRefuseReson() {
+        return refuseReson;
+    }
 
-	public Date getRefuse_date() {
-		return refuse_date;
-	}
+    public void setRefuseReson(String refuseReson) {
+        this.refuseReson = refuseReson == null ? null : refuseReson.trim();
+    }
 
-	public void setRefuse_date(Date refuse_date) {
-		this.refuse_date = refuse_date;
-	}
+    public Date getRefuseDate() {
+        return refuseDate;
+    }
 
-	public String getBreak_() {
-		return break_;
-	}
+    public void setRefuseDate(Date refuseDate) {
+        this.refuseDate = refuseDate;
+    }
 
-	public void setBreak_(String break_) {
-		this.break_ = break_;
-	}
+    public String getBreaker() {
+        return breaker;
+    }
 
-	public String getTrain() {
-		return train;
-	}
+    public void setBreaker(String breaker) {
+        this.breaker = breaker == null ? null : breaker.trim();
+    }
 
-	public void setTrain(String train) {
-		this.train = train;
-	}
+    public String getTrain() {
+        return train;
+    }
 
-	public String getStaff_no() {
-		return staff_no;
-	}
+    public void setTrain(String train) {
+        this.train = train == null ? null : train.trim();
+    }
 
-	public void setStaff_no(String staff_no) {
-		this.staff_no = staff_no;
-	}
+    public String getStaffNo() {
+        return staffNo;
+    }
 
-	public String getInterview_dept() {
-		return interview_dept;
-	}
+    public void setStaffNo(String staffNo) {
+        this.staffNo = staffNo == null ? null : staffNo.trim();
+    }
 
-	public void setInterview_dept(String interview_dept) {
-		this.interview_dept = interview_dept;
-	}
+    public String getInterviewDept() {
+        return interviewDept;
+    }
 
-	public String getFenpei_dept() {
-		return fenpei_dept;
-	}
+    public void setInterviewDept(String interviewDept) {
+        this.interviewDept = interviewDept == null ? null : interviewDept.trim();
+    }
 
-	public void setFenpei_dept(String fenpei_dept) {
-		this.fenpei_dept = fenpei_dept;
-	}
+    public String getFenpeiDept() {
+        return fenpeiDept;
+    }
 
-	public String getYuan_dept() {
-		return yuan_dept;
-	}
+    public void setFenpeiDept(String fenpeiDept) {
+        this.fenpeiDept = fenpeiDept == null ? null : fenpeiDept.trim();
+    }
 
-	public void setYuan_dept(String yuan_dept) {
-		this.yuan_dept = yuan_dept;
-	}
+    public String getYuanDept() {
+        return yuanDept;
+    }
 
-	public String getOrganize() {
-		return organize;
-	}
+    public void setYuanDept(String yuanDept) {
+        this.yuanDept = yuanDept == null ? null : yuanDept.trim();
+    }
 
-	public void setOrganize(String organize) {
-		this.organize = organize;
-	}
+    public String getOrganize() {
+        return organize;
+    }
 
-	public String getLeader() {
-		return leader;
-	}
+    public void setOrganize(String organize) {
+        this.organize = organize == null ? null : organize.trim();
+    }
 
-	public void setLeader(String leader) {
-		this.leader = leader;
-	}
+    public String getLeader() {
+        return leader;
+    }
 
-	public String getOne_result() {
-		return one_result;
-	}
+    public void setLeader(String leader) {
+        this.leader = leader == null ? null : leader.trim();
+    }
 
-	public void setOne_result(String one_result) {
-		this.one_result = one_result;
-	}
+    public String getOneResult() {
+        return oneResult;
+    }
 
-	public String getTwo_result() {
-		return two_result;
-	}
+    public void setOneResult(String oneResult) {
+        this.oneResult = oneResult == null ? null : oneResult.trim();
+    }
 
-	public void setTwo_result(String two_result) {
-		this.two_result = two_result;
-	}
+    public String getTwoResult() {
+        return twoResult;
+    }
 
-    
-
+    public void setTwoResult(String twoResult) {
+        this.twoResult = twoResult == null ? null : twoResult.trim();
+    }
 }

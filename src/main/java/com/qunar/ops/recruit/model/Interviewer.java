@@ -7,7 +7,7 @@ public class Interviewer {
 
     private String name;
 
-    private String user_name;
+    private String userName;
 
     private String password;
 
@@ -17,121 +17,119 @@ public class Interviewer {
 
     private String role;
 
-    private Integer one_count;
+    private Integer oneCount;
 
-    private Integer two_count;
-    
+    private Integer twoCount;
+
     private Integer state;
 
-    private Date start_date;
+    private Date startDate;
 
-    private Date end_time;
-    
-    private Date create_time;
+    private Date endTime;
 
-	public Integer getId() {
-		return id;
-	}
+    private Date createTime;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Integer getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getUser_name() {
-		return user_name;
-	}
+    public void setName(String name) {
+        this.name = name == null ? null : name.trim();
+    }
 
-	public void setUser_name(String user_name) {
-		this.user_name = user_name;
-	}
+    public String getUserName() {
+        return userName;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getCity() {
-		return city;
-	}
+    public void setPassword(String password) {
+        this.password = password == null ? null : password.trim();
+    }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+    public String getCity() {
+        return city;
+    }
 
-	public String getJob() {
-		return job;
-	}
+    public void setCity(String city) {
+        this.city = city == null ? null : city.trim();
+    }
 
-	public void setJob(String job) {
-		this.job = job;
-	}
+    public String getJob() {
+        return job;
+    }
 
-	public String getRole() {
-		return role;
-	}
+    public void setJob(String job) {
+        this.job = job == null ? null : job.trim();
+    }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
+    public String getRole() {
+        return role;
+    }
 
-	public Integer getOne_count() {
-		return one_count;
-	}
+    public void setRole(String role) {
+        this.role = role == null ? null : role.trim();
+    }
 
-	public void setOne_count(Integer one_count) {
-		this.one_count = one_count;
-	}
+    public Integer getOneCount() {
+        return oneCount;
+    }
 
-	public Integer getTwo_count() {
-		return two_count;
-	}
+    public void setOneCount(Integer oneCount) {
+        this.oneCount = oneCount;
+    }
 
-	public void setTwo_count(Integer two_count) {
-		this.two_count = two_count;
-	}
+    public Integer getTwoCount() {
+        return twoCount;
+    }
 
-	public Integer getState() {
-		return state;
-	}
+    public void setTwoCount(Integer twoCount) {
+        this.twoCount = twoCount;
+    }
 
-	public void setState(Integer state) {
-		this.state = state;
-	}
+    public Integer getState() {
+        return state;
+    }
 
-	public Date getStart_date() {
-		return start_date;
-	}
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
-	public void setStart_date(Date start_date) {
-		this.start_date = start_date;
-	}
+    public Date getStartDate() {
+        return startDate;
+    }
 
-	public Date getEnd_time() {
-		return end_time;
-	}
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
 
-	public void setEnd_time(Date end_time) {
-		this.end_time = end_time;
-	}
+    public Date getEndTime() {
+        return endTime;
+    }
 
-	public Date getCreate_time() {
-		return create_time;
-	}
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 
-	public void setCreate_time(Date create_time) {
-		this.create_time = create_time;
-	}
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-   
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 }
