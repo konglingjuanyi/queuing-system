@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.qunar.ops.recruit.dao.StudentMapper" >
+<mapper namespace="com.qunar.ops.recruit.dao.InterviewerMapper" >
 
   <resultMap id="interviewerMap" type="com.qunar.ops.recruit.model.Interviewer" >
     <id column="id" property="id" jdbcType="BIGINT" />
@@ -21,7 +21,7 @@
   
   
    <select id="getInterviewer" parameterType="int" resultType="com.qunar.ops.recruit.model.Interviewer" resultMap="interviewerMap">  
-            select * from interviewer
+            select * from interviewer where id = #{id}
    </select>  
 
 </mapper>

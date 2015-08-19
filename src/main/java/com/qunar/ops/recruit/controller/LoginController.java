@@ -1,8 +1,5 @@
 package com.qunar.ops.recruit.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,12 +11,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.dao.InterviewerMapper;
+import com.qunar.ops.recruit.dao.StudentMapper;
 import com.qunar.ops.recruit.util.OAControllerUtils;
 import com.qunar.ops.recruit.util.QUtils;
 
 @Controller
 public class LoginController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	private StudentMapper stuM;
 	@Autowired
 	private InterviewerMapper inM;
 
@@ -45,7 +45,9 @@ public class LoginController {
 	@RequestMapping(value = "/index")
 	public ModelAndView toindex(HttpServletRequest request,
 			HttpServletResponse response, String username, String password) {
-		System.out.println("======"+inM.getInterviewer(1).getPassword());
+		System.out.println("============================================++++");
+//		System.out.println("student"+inM.getStudent(1));
+		System.out.println("======"+inM.getInterviewer(2).getPassword()+stuM.getStudent(1).getName());
 		logger.info("登录的用户名为{}+++++++++++++++++密码为{}", username, password);
 		QUtils.setUsername(response, "pd", password, true);
 		QUtils.setUsername(response, "un", username, true);
@@ -53,15 +55,6 @@ public class LoginController {
 		ModelAndView mav = new ModelAndView("/recruit/index");
 		mav.addObject("debug", OAControllerUtils.isDebug());
 		return mav;
-	}
-
-	@RequestMapping(value = "/index1")
-	public Map toindex1(HttpServletRequest request,
-			HttpServletResponse response, String username, String password) {
-		System.out.println("========");
-		Map m = new HashMap();
-		m.put("1", "1");
-		return m;
 	}
 	
 	
