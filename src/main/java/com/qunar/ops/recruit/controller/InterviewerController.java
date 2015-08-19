@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.model.Interviewer;
+import com.qunar.ops.recruit.result.CommonRequest;
+import com.qunar.ops.recruit.result.DataResult;
+import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.util.OAControllerUtils;
 
 @Controller
@@ -43,14 +46,14 @@ public class InterviewerController {
 	
 	@RequestMapping(value = "/interview/getInterviewers")
 	@ResponseBody
-	public List<Interviewer> getInterviewers(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+	public List<Interviewer> getInterviewers(HttpServletRequest request) {
 		System.out.println("=======");
-		Map<String, String> vars = commonRequest.getVars();
-		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
-		int pageSize = noSize[0];
-		int pageNo = noSize[1];
-//		int pageSize = 3;
-//		int pageNo = 1;
+		//Map<String, String> vars = commonRequest.getVars();
+		//int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
+		//int pageSize = noSize[0];
+		//int pageNo = noSize[1];
+		int pageSize = 3;
+		int pageNo = 1;
 		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize);
 		System.out.println(list);
 		for(Interviewer i: list){
