@@ -19,12 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.model.Interviewer;
-import com.qunar.ops.recruit.result.BaseResult;
-import com.qunar.ops.recruit.result.CommonRequest;
-import com.qunar.ops.recruit.result.DataResult;
-import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.util.OAControllerUtils;
-import com.qunar.ops.recruit.util.QUtils;
 
 @Controller
 public class InterviewerController {

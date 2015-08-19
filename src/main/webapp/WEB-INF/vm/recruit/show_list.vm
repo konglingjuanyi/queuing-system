@@ -117,7 +117,7 @@
                     type: "GET",
                     contentType: 'application/json',
                     dataType: "json",
-                    url: "/interview/all",
+                    url: "/interview/getInterviewers",
                     data: {'pageIndex': 1, 'pageSize': 30},
                     success: function (returnedData) {
                     	alert(returnedData);
