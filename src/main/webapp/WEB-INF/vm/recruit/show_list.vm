@@ -14,18 +14,35 @@
 </style>
 
 
-<div class="row" style="height:600px;">
+<div class="row">
     <div class="col-xs-12">
-        <div class="col-xs-7" style="float:right;">
+        <div class="col-xs-7" style="float:left;width:100%;">
             <div class="form-group dash-button-group" style="margin-bottom: 0px; float: right;">
         <span class="input-icon input-icon-right">
+           <select id="city_id" style="height:28px;">
+                    <option value="">城市...</option>
+                    <option value="北京">北京</option>
+                    <option value="长春">长春</option>
+                    <option value="哈尔滨">哈尔滨</option>
+                    <option value="沈阳">沈阳</option>
+                    <option value="大连">大连</option>
+                    <option value="西安">西安</option>
+                    <option value="武汉">武汉</option>
+                    <option value="成都">成都</option>
+                    <option value="南京">南京</option>
+           </select>
+        </span>
+        <span class="input-icon input-icon-right">
+            <input id="name" name="name" type="text" placeholder="姓名..." style="width: 100px"/>
+        </span>
+        <span class="input-icon input-icon-right">
             <input class="date" id="date-from" type="text" style="width: 186px" onclick="showTime()"
-                   placeholder="申请日期..."/>
+                   placeholder="开始日期..."/>
             <i class="icon-calendar green"></i>
         </span>
         <span class="input-icon input-icon-right">
             <input class="date" id="date-to" type="text" style="width: 186px" onclick="showTime()"
-                   placeholder="申请日期..."/>
+                   placeholder="开始日期..."/>
             <i class="icon-calendar green"></i>
         </span>
                 <button id="search"
@@ -33,32 +50,134 @@
                         class="btn btn-minier btn-primary">
                     查询
                 </button>
+                <button id="add"
+                        style="width: 60px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                        class="btn btn-minier btn-primary">
+                    新增
+                </button>
+                 <button id="disablebtn"
+                        style="width: 80px; height:28px; font-size: 14px; margin: 0px 2px 4px; font-weight: bold"
+                        class="btn btn-minier btn-primary">
+                    全部禁用
+                </button>
             </div>
         </div>
     </div>
-    <div class="col-xs-12">
+</div>
+<div class="row">
+	<div class="col-xs-12">
         <div class="col-xs-9" style="width:100%;">
             <div class="widget-box">
                 <div class="widget-header header-color-blue" style="">
                     <h5 class="bigger lighter"><i class="icon-time"></i>面试官列表</h5>
                 </div>
                 <div class="widget-body">
-                    <table id="apply_todo"
-                           class="table table-striped table-bordered table-hover"></table>
+                    <table id="apply_todo" class="table table-striped table-bordered table-hover">
+                    
+                    </table>
                 </div>
             </div>
 
         </div>
-    </div>
+	</div>
 </div>
 
-<div id="dialog-confirm" class="hide">
-    <form class="form-horizontal">
-        <div id="edit-form">
-            <div id="edit_content">
+<div id="train-create">
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="new-className">城市：</label>
+
+                <div class="controls">
+                    <select id="new-city" style="height:28px;">
+                    	<option value="">城市...</option>
+                    	<option value="北京">北京</option>
+                    	<option value="长春">长春</option>
+                    	<option value="哈尔滨">哈尔滨</option>
+                    	<option value="沈阳">沈阳</option>
+                    	<option value="大连">大连</option>
+                    	<option value="西安">西安</option>
+                    	<option value="武汉">武汉</option>
+                    	<option value="成都">成都</option>
+                    	<option value="南京">南京</option>
+           			</select>
+                    <small class="text-error">(*必选项)</small>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="new-up">姓名：</label>
+
+                <div class="controls"><input type="text" id="new-name"/> 人
+                    <small class="text-error">(*必填项)</small>
+                </div>
+            </div>
+			<div class="control-group">
+                <label class="control-label" for="new-address">职位：</label>
+
+                <div class="controls">
+                    <input type="text" id="new-job"/>
+                    <small class="text-error">(*25字以内)</small>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="new-low">用户名：</label>
+
+                <div class="controls">
+                    <input type="text" id="new-user"/> 人
+                    <small class="text-error">(*必填项)</small>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="new-address">登录密码：</label>
+
+                <div class="controls">
+                    <input type="text" id="new-password"/>
+                    <small class="text-error">(*25字以内)</small>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="new-address">面试角色：</label>
+
+                <div class="controls">
+                    <input type="text" id="new-role"/>
+                    <small class="text-error">(*25字以内)</small>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="new-startDate">开始日期：</label>
+
+                <div class="controls">
+                    <div class="input-append date form-date">
+                        <input class="input-medium" id="new-startDate" type="text" style="width: 186px" onclick="showTime()"
+                   			placeholder="开始日期"/>
+            			<span class="add-on"  style="height:28px;"><i class="icon-th green"></i></span>
+                    </div>
+                    <small class="text-error">(*必填项)</small>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="new-endDate">结束日期：</label>
+
+                <div class="controls">
+                    <div class="input-append date form-date">
+                        <input class="input-medium" id="new-endDate" type="text"  style="width: 186px" onclick="showTime()"
+                   			placeholder="结束日期"/>
+            			<span class="add-on"  style="height:28px;"><i class="icon-th green"></i></span>
+                    </div>
+                    <small class="text-error">(*必填项)</small>
+                </div>
             </div>
         </div>
-    </form>
+        <!-- 表单 -->
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" data-dismiss="modal" id="create-upload">
+            提交
+            <i class="icon-upload icon-white-common"></i>
+        </button>
+    </div>
 </div>
 
 <div id="common-notice-dialog" class="hide"></div>
@@ -82,294 +201,253 @@
 <script src="/recruit/static/My97DatePicker/WdatePicker.js"></script>
 <script language=JavaScript>
 
+    jQuery(function ($) {
+        doshow();
+               
+        $("#disablebtn").unbind("click");
+        $("#disablebtn").on("click", function (e) {
+            dodisabled();
+        }).on("dblclick", function (e) {
+            e.preventDefault();
+        });
+         
+        $("#search").unbind("click");
+        $("#search").on("click", function (e) {
+            doshow();
+        }).on("dblclick", function (e) {
+            e.preventDefault();
+        });
+        
+        $("#create-upload").unbind("click");
+        $("#create-upload").on("click", function (e) {
+            doadd();
+        }).on("dblclick", function (e) {
+            e.preventDefault();
+        });
+        
+        
+        $( "#train-create" ).dialog({
+      		autoOpen: false,
+      		height: 580,
+      		width: 560,
+      		title:"新增面试官"
+    	});
+        
+        $("#add").on("click", function () {
+              $("#train-create").dialog("open");
+        });
+    });
+    
+    function dodelete(id){
+        $.ajax({
+              type: "POST",
+              contentType: 'application/json',
+              dataType: "json",
+              url: "/interview/deleteInterviewers",
+              data: {'id':id},
+              success: function (returnedData) {
+                  if( !ajaxReturn( returnedData ) ){
+                      return;
+                  }else {
+                  	  alert("创建成功");
+                      show_registered_staff(returnedData);
+                    }
+			  },
+              error: function () {
+                    alert("系统发生了错误请稍后重试");
+              }
+       });
+    }
+    
+    function dodisabled(){
+    	var checkBoxs = document.getElementsByName("checked");//获取所有的选中的checkbox。
+    	var num = 0;
+    	var arr = new Array();
+    	for (var i = 0; i < checkBoxs.length; ++i) {  //将所有的状态中的用户的id取出来，添加到一个数组中。
+        	if (checkBoxs[i].checked) {
+            	++num;
+            	arr.push(checkBoxs[i].getAttribute("value"));//获取所有的页面中的被选中所有的用户的id 的列表。
+        	}
+    	}
+    	var vars = {};
+    	vars["ids"] = arr;
+    	var params = {"vars": vars};
+    	$.ajax({
+              type: "POST",
+              contentType: 'application/json',
+              dataType: "json",
+              url: "/interview/disableInterviewers",
+              data: JSON.stringify(params),
+              success: function (returnedData) {
+                  if( !ajaxReturn( returnedData ) ){
+                      return;
+                  }else {
+                  	  alert("禁用成功");
+                      show_registered_staff(returnedData);
+                    }
+			  },
+              error: function () {
+                    alert("系统发生了错误请稍后重试");
+              }
+       });
+    }
+    
+    function doadd(){
+    	var new_city = $.trim($('#new-city').val());
+    	var new_name = $.trim($('#new-name').val());
+    	var new_job = $.trim($('#new-job').val());
+    	var new_user = $.trim($('#new-user').val()); 
+    	var new_password = $.trim($('#new-password').val());
+    	var new_startDate = $.trim($('#new-startDate').val());
+    	var new_endDate = $.trim($('#new-endDate').val());
+    	var new_role = $.trim($('#new-role').val());
+    	var vars = {};
+        if (new_city != '') {
+             vars["new_city"] = new_city;
+        }
+        if (new_name != '') {
+              vars["new_name"] = new_name;
+        }
+        if (new_job != '') {
+             vars["new_job"] = new_job;
+        }
+        if (new_user != '') {
+              vars["new_user"] = new_user;
+        }
+        
+        if (new_password != '') {
+             vars["new_password"] = new_password;
+        }
+        if (new_startDate != '') {
+              vars["new_startDate"] = new_startDate;
+        }
+        if (new_endDate != '') {
+             vars["new_endDate"] = new_endDate;
+        }
+        if (new_role != '') {
+              vars["new_role"] = new_role;
+        }
+        var params = {"vars": vars};
+        $.ajax({
+              type: "POST",
+              contentType: 'application/json',
+              dataType: "json",
+              url: "/interview/addInterviewers",
+              data: JSON.stringify(params),
+              success: function (returnedData) {
+                  if( !ajaxReturn( returnedData ) ){
+                      return;
+                  }else {
+                  	  alert("创建成功");
+                      show_registered_staff(returnedData);
+                    }
+			  },
+              error: function () {
+                    alert("系统发生了错误请稍后重试");
+              }
+       });
+    }
+    
+    function doshow(){
+    	var startDate = $.trim($('#date-from').val());
+    	var endDate = $.trim($('#date-to').val());
+    	var cityName = $.trim($('#city_id').val());
+    	var name = $.trim($('#name').val());
+    	var vars = {};
+        if (startDate != '') {
+             vars["startTime"] = startDate;
+        }
+        if (endDate != '') {
+              vars["endTime"] = endDate;
+        }
+        if (cityName != '') {
+             vars["cityName"] = cityName;
+        }
+        if (name != '') {
+              vars["name"] = name;
+        }
+        vars["start"] = 1;
+        vars["length"] = 30;
+        var params = {"vars": vars};
+    	$.ajax({
+              type: "POST",
+              contentType: 'application/json',
+              dataType: "json",
+              url: "/interview/getInterviewers",
+              data: JSON.stringify(params),
+              success: function (returnedData) {
+                  if( !ajaxReturn( returnedData ) ){
+                      return;
+                  }
+                  if (returnedData == null) {
+                      alert("系统中出现了异常，请稍后重试");
+                      show_enrollState_empty_table();
+                  }else {
+                      show_registered_staff(returnedData);
+                    }
+
+                    },
+              error: function () {
+                    alert("系统发生了错误请稍后重试");
+              }
+       });
+    }
+    
     function showTime() {
         WdatePicker({dateFmt: 'yyyy-MM-dd'});
     }
 
-    //显示表格数据
-    function showApplyTodoInfo(url, tableName, rTableId, status) {
-        var ex = document.getElementById(tableName);
-        if ($.fn.dataTable.fnIsDataTable(ex)) {
-            $(ex).dataTable().fnDestroy();
-        }
-
-        var aoColumns = [
-            {
-                "sTitle": '<lable><input id="current-checkbox-select-all" ' +
-                'type="checkbox" value="ALL" class="ace"><span class="lbl"></span></label>',
-                "bSortable": false, "sWidth": 10, "sClass": "center"
-            }, {
-                "sTitle": "ID",
-                "sWidth": 100,
-                "sClass": "center",
-                "bVisible": true
-            }, {
-                "sTitle": "申请日期",
-                "sWidth": 120,
-                "sClass": "center"
-            }, {
-                "sTitle": "报销金额",
-                "sWidth": 100,
-                "sClass": "center"
-            }, {
-                "sTitle": "详情",
-                "sWidth": 50,
-                "sClass": "center"
-            }, {
-                "sTitle": "操作",
-                "sWidth": 100,
-                "sClass": "center"
-            }, {
-                "sTitle": "流程图",
-                "sWidth": 100,
-                "sClass": "center"
-            }];
-        var wh = $(window).height();
-        var sY = (wh - 278) + 'px';
-        var oTable = $(ex).dataTable({
-            "bFilter": false,
-            "bAutoWidth": true,
-            "bProcessing": false,
-            "bServerSide": true,
-            "sDom": 't<"row"<"col-sm-12"i>>',
-            "bSort": false,
-            "bScrollCollapse": true,
-            "iDisplayLength": 20,
-            "iDisplayStart": 0,
-            "aoColumns": aoColumns,
-            "sAjaxSource": "",
-            "bScrollInfinite": true,
-            "sScrollY": sY,
-            "fnServerData": function (sSource, aDataSet, fnCallback) {
-                var startDate = $.trim($('#date-from').val());
-                var endDate = $.trim($('#date-to').val());
-                var start = 0;
-                var length = 0;
-                for (var i = 0; i < aDataSet.length; i++) {
-                    if (aDataSet[i].name == 'iDisplayStart') {
-                        start = aDataSet[i].value;
-                    }
-                    if (aDataSet[i].name == 'iDisplayLength') {
-                        length = aDataSet[i].value;
-                    }
-                }
-                var vars = {};
-                vars["start"] = start;
-                vars["length"] = length;
-                if (startDate != '') {
-                    vars["startTime"] = startDate;
-                }
-                if (endDate != '') {
-                    vars["endTime"] = endDate;
-                }
-                var params = {"vars": vars};
-                $.ajax({
-                    "contentType": "application/json; charset=utf-8",
-                    "type": "POST",
-                    "url": url,
-                    "data": JSON.stringify(params),
-                    "success": function (resp) {
-                        if (resp.errorCode == 0) {
-                            var data = resp.data;
-                            var iTotalRecords = data.count || 0;
-                            var iTotalDisplayRecords = iTotalRecords;
-                            var aaData = constructTodoTableInfo(data);
-                            data = {
-                                "aaData": aaData,
-                                "iTotalRecords": (iTotalRecords || 0),
-                                "iTotalDisplayRecords": (iTotalDisplayRecords || 0)
-                            };
-                            fnCallback(data);
-                        } else {
-                            showCommonNoticeDialog('失败', 'icon-warning-sign',
-                                    generateNoticeMsg(resp.errorMessage), 300);
-                        }
-                    },
-                    error: function () {
-                        showCommonNoticeDialog('网络错误', 'icon-bolt', generateNoticeMsg('网络错误，请刷新后重试!'), 300);
-                    }
-                });
-            },
-            "fnDrawCallback": function () {
-                if (!oTable) {
-                    return;
-                }
-
-                $("#search").unbind("click");
-                $("#search").on("click", function (e) {
-                    showApplyTodoInfo(url, tableName, rTableId, status);
-                }).on("dblclick", function (e) {
-                    e.preventDefault();
-                });
-
-                $("#apply_back").unbind("click");
-                $("#apply_back").on("click", function (e) {
-                    applyBackorDel(oTable, 1);
-                }).on("dblclick", function (e) {
-                    e.preventDefault();
-                });
-
-                oTable.$('tr.row_selected').removeClass('row_selected');
-                oTable.$("tr").unbind('click');
-                oTable.$("tr").click({
-                    oTable: oTable
-                }, function (e) {
-                    if ($(this).hasClass('row_selected')) {
-                        $(this).removeClass('row_selected');
-                    }
-                    else {
-                        e.data.oTable.$('tr.row_selected').removeClass('row_selected');
-                        $(this).addClass('row_selected');
-                        var id = e.data.oTable.fnGetData(this)[1];
-                        showApplyTodoOrHistoryDetailsList(id, rTableId, status);
-                    }
-                });
-            },
-            fnInitComplete: function () {
-                $('#current-checkbox-select-all').prop('checked', false);
-                $('#current-checkbox-select-all').attr('checked', false);
-                toggleCheck(oTable);
+    function show_registered_staff(returnedData) {
+    	var table = "<table width='100%' style='table-layout:fixed' class='table table-bordered'><thead class='info'><tr><th style='width:20px;align:center;'><input type='checkbox' id='selectAll'  onclick='selectAllCheckBoxes(this);'></th><th style='width:60px;text-align:center;'>城市</th><th style='width:80px;text-align:center;'>姓名</th><th style='width:100px;text-align:center;'>用户名</th><th style='width:100px;text-align:center;'>密码</th><th style='width:90px;text-align:center;'>开始时间</th><th style='width:80px;text-align:center;'>结束时间</th><th style='width:200px;text-align:center;'>操作</th></tr></thead>";
+		if (returnedData != null) {
+            table = table + "<tbody>";
+            for (var i = 0; i < (returnedData.length); ++i) {
+                table += "<tr><td><input type='checkbox' name='checked' value=" + (returnedData[i].id) + " ></td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].city) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].name) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].userName) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].password) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].startDate) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].endTime) + "</td>";
+                table = table + "<td style='word-wrap:break-all;'><a href='javascript:void(0);' onclick=\"doupdate(\' " + (returnedData[i].id) + "\')\">修改</a>|<a href='javascript:void(0);' onclick=\"dodelete(\' " + (returnedData[i].id) + "\')\">删除</a></td>";
             }
-        })
-    }
 
-    function constructTodoTableInfo(data) {
-        var aaData = [];
-        var needData = data.tableInfos;
-        var d_len = needData.length;
-        for (var i = 0; i < d_len; i++) {
-            var money = parseFloat(needData[i][2]);
-            money /= 100;
-            var map = $.parseStr("<a href='javascript:void(0);' " +
-            "onclick='showEditDialog(%s);'><i class='icon-link'></i></a>", needData[i][0]);
-            var push = "";
-            var checkbox = '<label><input value="" type="checkbox" class="ace"> <span class="lbl"></span></label>';
-            push = '<a href="javascript:void(0);" role="button" ' +
-            'onclick="sendEmailToCandidate(\'' + needData[i][0] + '\')" class="green"><i class="icon-user">催办</i></a>';
-            var trace = '<a href="javascript:void(0);" role="button" onclick="trace(\'' + needData[i][0] + '\')" class="green">流程图</a>';
-            aaData.push([checkbox, needData[i][0], needData[i][1], money.toFixed(2), map, push, trace]);
         }
-        return aaData;
-    }
+    	table += "</table>";
+    	$("#apply_todo").html("");
+    	$("#apply_todo").append(table);
+	}
+	
+	function selectAllCheckBoxes(selector) {
 
 
-    function applyBackorDel(oTable, num) {
-        var operStr = "cancel";
-        var msg = "是否撤销?";
-        var title = "撤销操作";
-        var formIds = "";
-        $("input:checked", oTable.fnGetNodes()).each(function () {
-            var row = $(this).parent().parent().parent();
-            var nTds = $('td', row);
-            var formId = nTds[1].childNodes[0].data;
-            formIds += formId + ",";
-        });
-        if (formIds.length < 1) {
-            showResultDialog("apply-result-dialog", operStr, 'icon-lightbulb',
-                    generateNoticeMsg("请选择要撤销的条目!"), 300);
-            return;
-        }
-        try {
-            $("#back-msg-dialog").empty();
-            $("#back-msg-dialog").append(generateNoticeMsg(msg));
-            var title_html = $.parseStr('<div style="color: DodgerBlue; padding: 4px; height: 28px; font-size: 14px; font-weight: bold">' +
-            '<li class="icon-user"></li> %s</div>', title);
-            var dialog = $("#back-msg-dialog").removeClass('hide').dialog({
-                modal: true,
-                width: 300,
-                title: title_html,
-                title_html: true,
-                closeOnEscape: false,
-                open: function (event, ui) {
-                    $(".ui-dialog-titlebar-close").hide();
-                },
-                buttons: [
-                    {
-                        id: "apply-msg-submit",
-                        text: "提交",
-                        "class": "btn btn-primary btn-xs",
-                        click: function (e) {
-                            applyBackorDeltoDB(formIds, operStr);
-                            $(this).dialog("close");
-                        }
-                    },
-                    {
-                        id: "apply-msg-cancel",
-                        text: "取消",
-                        "class": "btn btn-xs",
-                        click: function () {
-                            $(this).dialog("close");
-                        }
-                    }
-                ]
-            });
-        } catch (e) {
-            showCommonNoticeDialog('网络错误', 'icon-warning-sign',
-                    generateNoticeMsg('网络错误，请刷新后重试!'), 300);
-        }
+        if (selector.checked) {
+            var allCheckBox = document.getElementsByName("checked");
 
-    }
-
-    function applyBackorDeltoDB(formIds, action) {
-        var id = "apply-result-dialog";
-        var params = {};
-        var vars = {};
-        vars["formIds"] = formIds;
-        vars["backDel"] = action;
-        params["vars"] = vars;
-        $.ajax({
-            contentType: "application/json; charset=utf-8",
-            url: "oa/back_del",
-            type: "post",
-            data: JSON.stringify(params),
-            success: function (resp) {
-                var title_html_str = '';
-                try {
-                    if (resp.errorCode == 0) {
-                        title_html_str = '<div class="dialog_title"><li class="icon-info-sign"></li> 审批撤销</div>';
-                        var succeed_html = '<b><li class="icon-check"></li> 撤销成功</b><br/>';
-                        $("#" + id).append(generateNoticeMsg(succeed_html));
-                    } else {
-                        title_html_str = '<div class="dialog_title"><li class="icon-exclamation-sign"></li>审批撤销</div>';
-                        $("#" + id).append(generateNoticeMsg(resp.errorMessage));
-                    }
-                } catch (e) {
-                }
-                var dialog = $("#" + id).removeClass('hide').dialog({
-                    modal: true,
-                    width: 400,
-                    resizable: true,
-                    title: title_html_str,
-                    title_html: true,
-                    closeOnEscape: false,
-                    buttons: [
-                        {
-                            text: "确定",
-                            "class": "btn btn-primary btn-xs",
-                            click: function () {
-                                $("#" + id).empty();
-                                $("#" + id).dialog('destroy');
-                            }
-                        }
-                    ],
-                    close: function () {
-                        $("#").empty();
-                        $("#" + id).dialog('destroy');
-                    }
-                });
-                showApplyTodoInfo("oa/todo", "apply_todo", "todo-apply-details-list", "审批过程中");
-            },
-            "error": function (jqxhr, textstatus, errorthrown) {
-                enableCurrentApproveToolbarButton(true);
-                showResultDialog('网络错误', 'icon-warning-sign',
-                        generateNoticeMsg('网络错误，请刷新后重试!'), 300);
+            for (var i = 0; i < allCheckBox.length; ++i) {
+                allCheckBox[i].checked = true;
             }
-        });
+        }
+        else {
+            var allCheckBox = document.getElementsByName("checked");
+
+            for (var i = 0; i < allCheckBox.length; ++i) {
+                allCheckBox[i].checked = false;
+            }
+        }
+
     }
     
-    function trace(oid){
-    	window.open('oa/oa_common/'+oid+'/trace_pic.png', 'newwindow',   'height=600,   width=1200, toolbar=no,   menubar=no,   scrollbars=no,   resizable=no,location=n   o,   status=no') ;     
+    function ajaxReturn( data ){
+    if(data.status == 2){
+        window.alert(data.message);
+        var protocol = window.location.protocol;
+        var host = window.location.host;
+        var url = protocol +"//"+ host + '/index.jsp';
+        window.location.href = url;
+        return false;
     }
-
+    return true;
+};
 
 </script>
