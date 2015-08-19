@@ -20,9 +20,9 @@ import java.util.Properties;
  * Author: zhenqing.wang <zhenqing.wang@qunar.com>
  * Date: 2014 12/12/14 4:29 PM
  */
-public class OAControllerUtils {
+public class RecruitControllerUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(OAControllerUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(RecruitControllerUtils.class);
 
     private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     

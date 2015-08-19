@@ -9,6 +9,10 @@ public class InterviewerExample {
 
     protected boolean distinct;
 
+    protected int limit = -1;
+
+    protected int offset = -1;
+
     protected List<Criteria> oredCriteria;
 
     public InterviewerExample() {
@@ -27,7 +31,23 @@ public class InterviewerExample {
         this.distinct = distinct;
     }
 
-    public boolean isDistinct() {
+    public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
+	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
+	public boolean isDistinct() {
         return distinct;
     }
 

@@ -72,6 +72,35 @@
       </foreach>
     </where>
   </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
   <sql id="Base_Column_List" >
     id, note_no, phase_no, interview_time, name, sex, school, profession, education, 
     phone, email, card_no, qq_no, job, work_start, work_end, graduate_date, salary, assess, 
@@ -79,6 +108,21 @@
     three_state, refuse, refuse_reson, refuse_date, breaker, train, staff_no, interview_dept, 
     fenpei_dept, yuan_dept, organize, leader, one_result, two_result
   </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.StudentExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from studen_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -88,6 +132,12 @@
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from studen_info
     where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.StudentExample" >
+    delete from studen_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
   </delete>
   <insert id="insert" parameterType="com.qunar.ops.recruit.model.Student" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -370,6 +420,180 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update studen_info
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.noteNo != null" >
+        note_no = #{record.noteNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phaseNo != null" >
+        phase_no = #{record.phaseNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.interviewTime != null" >
+        interview_time = #{record.interviewTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=CHAR},
+      </if>
+      <if test="record.school != null" >
+        school = #{record.school,jdbcType=VARCHAR},
+      </if>
+      <if test="record.profession != null" >
+        profession = #{record.profession,jdbcType=VARCHAR},
+      </if>
+      <if test="record.education != null" >
+        education = #{record.education,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phone != null" >
+        phone = #{record.phone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardNo != null" >
+        card_no = #{record.cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.qqNo != null" >
+        qq_no = #{record.qqNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.job != null" >
+        job = #{record.job,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workStart != null" >
+        work_start = #{record.workStart,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.workEnd != null" >
+        work_end = #{record.workEnd,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.graduateDate != null" >
+        graduate_date = #{record.graduateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.salary != null" >
+        salary = #{record.salary,jdbcType=DOUBLE},
+      </if>
+      <if test="record.assess != null" >
+        assess = #{record.assess,jdbcType=VARCHAR},
+      </if>
+      <if test="record.firstTry != null" >
+        first_try = #{record.firstTry,jdbcType=VARCHAR},
+      </if>
+      <if test="record.secondTry != null" >
+        second_try = #{record.secondTry,jdbcType=VARCHAR},
+      </if>
+      <if test="record.viewRemark != null" >
+        view_remark = #{record.viewRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.location != null" >
+        location = #{record.location,jdbcType=VARCHAR},
+      </if>
+      <if test="record.offerState != null" >
+        offer_state = #{record.offerState,jdbcType=VARCHAR},
+      </if>
+      <if test="record.threeSide != null" >
+        three_side = #{record.threeSide,jdbcType=CHAR},
+      </if>
+      <if test="record.payTime != null" >
+        pay_time = #{record.payTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.threeState != null" >
+        three_state = #{record.threeState,jdbcType=CHAR},
+      </if>
+      <if test="record.refuse != null" >
+        refuse = #{record.refuse,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refuseReson != null" >
+        refuse_reson = #{record.refuseReson,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refuseDate != null" >
+        refuse_date = #{record.refuseDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.breaker != null" >
+        breaker = #{record.breaker,jdbcType=CHAR},
+      </if>
+      <if test="record.train != null" >
+        train = #{record.train,jdbcType=VARCHAR},
+      </if>
+      <if test="record.staffNo != null" >
+        staff_no = #{record.staffNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.interviewDept != null" >
+        interview_dept = #{record.interviewDept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fenpeiDept != null" >
+        fenpei_dept = #{record.fenpeiDept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.yuanDept != null" >
+        yuan_dept = #{record.yuanDept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.organize != null" >
+        organize = #{record.organize,jdbcType=VARCHAR},
+      </if>
+      <if test="record.leader != null" >
+        leader = #{record.leader,jdbcType=VARCHAR},
+      </if>
+      <if test="record.oneResult != null" >
+        one_result = #{record.oneResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.twoResult != null" >
+        two_result = #{record.twoResult,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update studen_info
+    set id = #{record.id,jdbcType=INTEGER},
+      note_no = #{record.noteNo,jdbcType=VARCHAR},
+      phase_no = #{record.phaseNo,jdbcType=VARCHAR},
+      interview_time = #{record.interviewTime,jdbcType=TIMESTAMP},
+      name = #{record.name,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=CHAR},
+      school = #{record.school,jdbcType=VARCHAR},
+      profession = #{record.profession,jdbcType=VARCHAR},
+      education = #{record.education,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      card_no = #{record.cardNo,jdbcType=VARCHAR},
+      qq_no = #{record.qqNo,jdbcType=VARCHAR},
+      job = #{record.job,jdbcType=VARCHAR},
+      work_start = #{record.workStart,jdbcType=TIMESTAMP},
+      work_end = #{record.workEnd,jdbcType=TIMESTAMP},
+      graduate_date = #{record.graduateDate,jdbcType=TIMESTAMP},
+      salary = #{record.salary,jdbcType=DOUBLE},
+      assess = #{record.assess,jdbcType=VARCHAR},
+      first_try = #{record.firstTry,jdbcType=VARCHAR},
+      second_try = #{record.secondTry,jdbcType=VARCHAR},
+      view_remark = #{record.viewRemark,jdbcType=VARCHAR},
+      location = #{record.location,jdbcType=VARCHAR},
+      offer_state = #{record.offerState,jdbcType=VARCHAR},
+      three_side = #{record.threeSide,jdbcType=CHAR},
+      pay_time = #{record.payTime,jdbcType=TIMESTAMP},
+      three_state = #{record.threeState,jdbcType=CHAR},
+      refuse = #{record.refuse,jdbcType=VARCHAR},
+      refuse_reson = #{record.refuseReson,jdbcType=VARCHAR},
+      refuse_date = #{record.refuseDate,jdbcType=TIMESTAMP},
+      breaker = #{record.breaker,jdbcType=CHAR},
+      train = #{record.train,jdbcType=VARCHAR},
+      staff_no = #{record.staffNo,jdbcType=VARCHAR},
+      interview_dept = #{record.interviewDept,jdbcType=VARCHAR},
+      fenpei_dept = #{record.fenpeiDept,jdbcType=VARCHAR},
+      yuan_dept = #{record.yuanDept,jdbcType=VARCHAR},
+      organize = #{record.organize,jdbcType=VARCHAR},
+      leader = #{record.leader,jdbcType=VARCHAR},
+      one_result = #{record.oneResult,jdbcType=VARCHAR},
+      two_result = #{record.twoResult,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.Student" >
     update studen_info
     <set >

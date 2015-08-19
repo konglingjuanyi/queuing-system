@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.dao.InterviewerMapper;
 import com.qunar.ops.recruit.dao.StudentMapper;
-import com.qunar.ops.recruit.util.OAControllerUtils;
+import com.qunar.ops.recruit.util.RecruitControllerUtils;
 import com.qunar.ops.recruit.util.QUtils;
 
 @Controller
@@ -27,7 +27,7 @@ public class LoginController {
 	@RequestMapping(value = "/login")
 	public ModelAndView welcom(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("/recruit/login");
-		mav.addObject("debug", OAControllerUtils.isDebug());
+		mav.addObject("debug", RecruitControllerUtils.isDebug());
 		return mav;
 	}
 
@@ -48,7 +48,7 @@ public class LoginController {
 		QUtils.setUsername(response, "un", username, true);
 		QUtils.setUsername(response, "test-userid", username.toLowerCase(), false);
 		ModelAndView mav = new ModelAndView("/recruit/index");
-		mav.addObject("debug", OAControllerUtils.isDebug());
+		mav.addObject("debug", RecruitControllerUtils.isDebug());
 		System.out.println("***************");
 		return mav;
 	}
