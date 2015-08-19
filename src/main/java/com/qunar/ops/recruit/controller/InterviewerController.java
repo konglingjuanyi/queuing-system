@@ -48,7 +48,7 @@ public class InterviewerController {
 	
 	@RequestMapping(value = "/interview/getInterviewers")
 	@ResponseBody
-	public List<Interviewer> getInterviewers(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
+	public List<Interviewer> getInterviewers(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
 		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
 		int noSize[] = OAControllerUtils.getPageNoAndSize(vars);
