@@ -28,6 +28,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.qunar.flight.qmonitor.QMonitor;
 import com.qunar.ops.recruit.dao.InterviewerMapper;
 import com.qunar.ops.recruit.model.Interviewer;
+import com.qunar.ops.recruit.model.InterviewerExample;
 
 @Component
 public class InterviewerService {
@@ -50,12 +51,27 @@ public class InterviewerService {
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public List<Interviewer> getAllInterviewer() {
-		return interMapper.getAll();
+		return null;
 	}
 
 	public List<Interviewer> getInterviewers(int offset, int limit) {
 		// TODO Auto-generated method stub
-		return interMapper.getInterviewers(offset, limit);
+		return null;
+	}
+
+	public List<Interviewer> getInterviewers(int offset, int limit, Date start,
+			Date end, String cityName) {
+		InterviewerExample example = new InterviewerExample();
+		InterviewerExample.Criteria criteria = example.createCriteria();
+		if(cityName != null)
+			criteria.andCityEqualTo(cityName);
+		if(start != null)
+			criteria.andStartDateGreaterThanOrEqualTo(start);
+		if(start != null)
+			criteria.andStartDateLessThanOrEqualTo(end);
+		example.setOffset(offset);
+		example.setLimit(limit);
+		return interMapper.selectByExample(example);
 	}
 
 }
