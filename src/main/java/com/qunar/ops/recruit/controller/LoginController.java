@@ -49,8 +49,8 @@ public class LoginController {
 		QUtils.setUsername(response, "test-userid", username.toLowerCase(), false);
 		ModelAndView mav = new ModelAndView("/recruit/index");
 		mav.addObject("debug", OAControllerUtils.isDebug());
+		System.out.println("***************");
 		return mav;
 	}
-	
 	
 }

@@ -1,5 +1,7 @@
 package com.qunar.ops.recruit.dao;
 
+import java.util.List;
+
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.InterviewerExample;
 
@@ -17,4 +19,8 @@ public interface InterviewerMapper {
     int updateByPrimaryKeySelective(Interviewer record);
 
     int updateByPrimaryKey(Interviewer record);
+
+	List<Interviewer> getAll();
+	
+	List<Interviewer> getInterviewers(int offset, int limit);
 }

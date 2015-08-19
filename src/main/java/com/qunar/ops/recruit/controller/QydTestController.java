@@ -30,13 +30,14 @@ public class QydTestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/qyd")
-	public String index(HttpServletRequest request) {
+	public String index(HttpServletRequest request, Interviewer v, int i) {
 		/*String username = (String) request.getSession().getAttribute("username");
 		String password = (String) request.getSession().getAttribute("password");
 		logger.info("登录的用户名为{}====密码为{}", username,password);
 		if(!OAControllerUtils.isNull(username)&&!OAControllerUtils.isNull(password)){
 			return "redirect:/index";
 		}*/
+		System.out.println("-->"+i+v);
 		Interviewer in = new Interviewer();
 		in.setEndTime(new Date());
 		in.setName("qyd");
