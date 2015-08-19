@@ -99,18 +99,18 @@
     <div class="sidebar" id="sidebar">
         <ul class="nav nav-list">
             <li>
-                <a href="oa/apply.html">
-                    <span class="menu-text"> 报销申请 </span>
+                <a href="/interview/show_list.html">
+                    <span class="menu-text"> 面试官管理 </span>
                 </a>
             </li>
             <li>
                 <a href="oa/draft.html">
-                    <span class="menu-text"> 我的草稿 </span>
+                    <span class="menu-text"> 候选人管理 </span>
                 </a>
             </li>
             <li>
                 <a href="oa/search.html">
-                    <span class="menu-text"> 综合查询 </span>
+                    <span class="menu-text"> 用户管理 </span>
                 </a>
             </li>
         </ul>
