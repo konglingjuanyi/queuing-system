@@ -49,10 +49,12 @@ public class InterviewerService {
 			criteria.andCityEqualTo(cityName);
 		if(start != null)
 			criteria.andStartDateGreaterThanOrEqualTo(start);
-		if(start != null)
-			criteria.andStartDateLessThanOrEqualTo(end);
+		if(end != null)
+			criteria.andEndTimeLessThan(end);
 		example.setOffset(offset);
+		System.out.println("hahahahhahaa-----");
 		example.setLimit(limit);
+		System.out.println(offset+" "+limit+" "+start+" "+end+ " "+cityName);
 		return interMapper.selectByExample(example);
 	}
 

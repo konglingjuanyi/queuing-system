@@ -45,7 +45,7 @@ public class InterviewerController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/interview/getInterviewers")
+	@RequestMapping(value = "/interview/getInterviewers1")
 	@ResponseBody
 	public List<Interviewer> getInterviewers(HttpServletRequest request) {
 		System.out.println("=======");
@@ -63,17 +63,18 @@ public class InterviewerController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/interview/addInterviewers")
+	@RequestMapping(value = "/interview/all")
 	@ResponseBody
 	public void addInterviewers(HttpServletRequest request) {
 		System.out.println("=======");
 
 	}
 	
-	@RequestMapping(value = "/interview/all")
+	@RequestMapping(value = "/interview/getInterviewers")
 	@ResponseBody
 	public BaseResult all(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
+		System.out.println(vars);
 		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
 		int pageSize = noSize[0];
 		int pageNo = noSize[1];
@@ -103,6 +104,9 @@ public class InterviewerController {
 		}		
 		String cityName = vars.get("cityName");
 		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize, _startTime, _endDate, cityName);
+		for(Interviewer inter : list){
+			System.out.println(inter.getState());
+		}
 		DataResult<Interviewer> dataResult = new DataResult<Interviewer>();
 		dataResult.setCount(list.size());
 		dataResult.setTableInfos(list);
