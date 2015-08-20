@@ -25,23 +25,17 @@ import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.qunar.flight.qmonitor.QMonitor;
+import com.qunar.ops.recruit.model.Student;
 
 @Component
 public class StudentService {
-
-	@Value("${backyard.apihost}")
-	String backyardUrl;
-	
-	@Value("${backyard.apihost.bank}")
-	String backyardBankUrl;
-	
-	@Value("${backyard.drt_vp}")
-	String backyardDrt_vpUrl;
-	
-	@Value("${oa.apihost}")
-	String oadUrl;
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+	public Student getStudentByPhone(String phone) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 

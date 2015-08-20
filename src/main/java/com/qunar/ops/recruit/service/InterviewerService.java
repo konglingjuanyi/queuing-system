@@ -54,8 +54,12 @@ public class InterviewerService {
 		example.setOffset(offset);
 //		System.out.println("hahahahhahaa-----");
 		example.setLimit(limit);
-		System.out.println(offset+" "+limit+" "+start+" "+end+ " "+cityName);
+//		System.out.println(offset+" "+limit+" "+start+" "+end+ " "+cityName);
 		return interMapper.selectByExample(example);
+	}
+
+	public void addInterviewer(Interviewer inter) {
+		interMapper.insert(inter);
 	}
 
 }

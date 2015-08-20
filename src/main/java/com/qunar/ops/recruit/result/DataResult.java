@@ -5,15 +5,15 @@ import java.util.List;
 /**
  * 各个表格信息获取
  */
-public class DataResult<T> {
-    private List<T> tableInfos;
+public class DataResult {
+    private List<String[]> tableInfos;
     private int count;
 
-    public List<T> getTableInfos() {
+    public List<String[]> getTableInfos() {
         return tableInfos;
     }
 
-    public void setTableInfos(List<T> tableInfos) {
+    public void setTableInfos(List<String[]> tableInfos) {
         this.tableInfos = tableInfos;
     }
 

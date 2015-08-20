@@ -4,7 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +21,19 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+
+import com.qunar.ops.recruit.result.BaseResult;
 
 public class QUtils {
 
 	public static final int MAX_AGE_DEFAULT = 60 * 60 * 2 ;
+	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private static Logger logger = LoggerFactory.getLogger(QUtils.class);
 	
 	public static Map<String, Object> request2Map(HttpServletRequest request) {
 
@@ -196,5 +206,26 @@ public class QUtils {
 			return null;
 		}
 
+	}
+
+	public static Date formatDate(String startTime) {
+		Date _startTime = null;
+		if (startTime != null) {
+			try {
+				_startTime = sdf.parse(startTime);
+			} catch (ParseException e) {
+				logger.warn(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		
+		return _startTime;
+	}
+
+	public static String date2str(Date date) {
+		if(date != null)
+			return sdf.format(date);
+		else
+			return "empty date";
 	}
 }

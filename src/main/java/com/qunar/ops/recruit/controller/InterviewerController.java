@@ -3,6 +3,7 @@ package com.qunar.ops.recruit.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,31 +67,24 @@ public class InterviewerController {
 	
 	@RequestMapping(value = "/interview/addInterviewers")
 	@ResponseBody
-	public void addInterviewers(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
-		System.out.println("=======");
+	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
+//		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
-		String new_city = vars.get("new_city");
-		String new_name = vars.get("new_name");
-		String new_job = vars.get("new_job");
-		String new_user = vars.get("new_user");
-		String new_password = vars.get("new_password");
-		String new_startDate = vars.get("new_startDate");
-		String new_endDate = vars.get("new_endDate");
-		String new_role = vars.get("new_role");
-		Interviewer inter = new Interviewer();
-		inter.setCity(new_city);
-		inter.setName(new_name);
-		inter.setUserName(new_user);
-		inter.setJob(new_job);
-		inter.setPassword(new_password);
-//		Date startDate = QUtils.formatDate();
-//		Date endDate = QUtils.formatDate();
-//		inter.setStartDate();
-//		inter.;
-		
-		
+		Interviewer inter = createInterviewer(vars);
+		inServe.addInterviewer(inter);
+		return BaseResult.getSuccessResult(null);
 	}
 	
+	@RequestMapping(value = "/interview/updateInterviewers")
+	@ResponseBody
+	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
+//		System.out.println("=======");
+		Map<String, String> vars = commonRequest.getVars();
+		Interviewer inter = createInterviewer(vars);
+		inServe.addInterviewer(inter);
+		return BaseResult.getSuccessResult(null);
+	}
+
 	@RequestMapping(value = "/interview/getInterviewers")
 	@ResponseBody
 	public BaseResult getInterviewers(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
@@ -124,9 +118,53 @@ public class InterviewerController {
 		}		
 		String cityName = vars.get("cityName");
 		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize, _startTime, _endTime, cityName);
-		DataResult<Interviewer> dataResult = new DataResult<Interviewer>();
+		List<String[]> retList = tranfer2stringArray(list);
+		DataResult dataResult = new DataResult();
 		dataResult.setCount(list.size());
-		dataResult.setTableInfos(list);
+		dataResult.setTableInfos(retList);
 		return BaseResult.getSuccessResult(dataResult);
+	}
+
+	private List<String[]> tranfer2stringArray(List<Interviewer> list) {
+		List<String[]> retList = new LinkedList<String[]>();
+		for(Interviewer inter : list){
+			String[] tmp = new String[]{inter.getId()+"", inter.getName(), inter.getUserName(),
+					inter.getPassword(), inter.getCity(), inter.getJob(), inter.getRole(),
+					inter.getOneCount()+"", inter.getTwoCount()+"", inter.getState()+"", QUtils.date2str(inter.getStartDate()),
+					QUtils.date2str(inter.getEndTime()), QUtils.date2str(inter.getCreateTime())};
+			for(String s : tmp){
+				System.out.print(s+" ");
+			}
+			System.out.println();
+			retList.add(tmp);
+		}
+		return retList;
+	}
+	
+	private Interviewer createInterviewer(Map<String, String> vars) {
+		Interviewer inter = new Interviewer();
+		String new_city = vars.get("new_city");
+		String new_name = vars.get("new_name");
+		String new_job = vars.get("new_job");
+		String new_user = vars.get("new_user");
+		String new_password = vars.get("new_password");
+		String new_startDate = vars.get("new_startDate");
+		String new_endDate = vars.get("new_endDate");
+		String new_role = vars.get("new_role");
+		inter.setCity(new_city);
+		inter.setName(new_name);
+		inter.setUserName(new_user);
+		inter.setJob(new_job);
+		inter.setPassword(new_password);
+		Date startDate = QUtils.formatDate(new_startDate);
+		Date endDate = QUtils.formatDate(new_endDate);
+		inter.setStartDate(startDate);
+		inter.setEndTime(endDate);
+		inter.setRole(new_role);
+		inter.setOneCount(0);
+		inter.setTwoCount(0);
+		inter.setState(0);
+		inter.setCreateTime(new Date());
+		return inter;
 	}
 }
