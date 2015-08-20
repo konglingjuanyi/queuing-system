@@ -22,6 +22,7 @@ import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.DataResult;
 import com.qunar.ops.recruit.service.InterviewerService;
+import com.qunar.ops.recruit.util.QUtils;
 import com.qunar.ops.recruit.util.RecruitConst;
 import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
@@ -63,25 +64,44 @@ public class InterviewerController {
 		return null;
 	}
 	
-	@RequestMapping(value = "/interview/all")
+	@RequestMapping(value = "/interview/addInterviewers")
 	@ResponseBody
-	public void addInterviewers(HttpServletRequest request) {
+	public void addInterviewers(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 		System.out.println("=======");
-
+		Map<String, String> vars = commonRequest.getVars();
+		String new_city = vars.get("new_city");
+		String new_name = vars.get("new_name");
+		String new_job = vars.get("new_job");
+		String new_user = vars.get("new_user");
+		String new_password = vars.get("new_password");
+		String new_startDate = vars.get("new_startDate");
+		String new_endDate = vars.get("new_endDate");
+		String new_role = vars.get("new_role");
+		Interviewer inter = new Interviewer();
+		inter.setCity(new_city);
+		inter.setName(new_name);
+		inter.setUserName(new_user);
+		inter.setJob(new_job);
+		inter.setPassword(new_password);
+//		Date startDate = QUtils.formatDate();
+//		Date endDate = QUtils.formatDate();
+//		inter.setStartDate();
+//		inter.;
+		
+		
 	}
 	
 	@RequestMapping(value = "/interview/getInterviewers")
 	@ResponseBody
-	public BaseResult all(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
+	public BaseResult getInterviewers(HttpServletRequest request, @RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
-		System.out.println(vars);
 		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
 		int pageSize = noSize[0];
 		int pageNo = noSize[1];
 		pageNo = pageNo <= 0 ? 1 : pageNo;
 		pageSize = pageSize > 0 ? pageSize : 20;
 		String startTime = vars.get("startTime");
-		String endDate = vars.get("endDate");
+		String endTime = vars.get("endTime");
 		Date _startTime = null;
 		if (startTime != null) {
 			try {
@@ -92,10 +112,10 @@ public class InterviewerController {
 				return BaseResult.getErrorResult(RecruitConst.DATE_FORMAT_ERROR, RecruitConst.DATE_FORMAT_ERROR_MSG);
 			}
 		}
-		Date _endDate = null;
-		if (endDate != null) {
+		Date _endTime = null;
+		if (endTime != null) {
 			try {
-				_endDate = sdf.parse(endDate);
+				_endTime = sdf.parse(endTime);
 			} catch (ParseException e) {
 				logger.warn(e.getMessage());
 				e.printStackTrace();
@@ -103,10 +123,7 @@ public class InterviewerController {
 			}
 		}		
 		String cityName = vars.get("cityName");
-		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize, _startTime, _endDate, cityName);
-		for(Interviewer inter : list){
-			System.out.println(inter.getState());
-		}
+		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize, _startTime, _endTime, cityName);
 		DataResult<Interviewer> dataResult = new DataResult<Interviewer>();
 		dataResult.setCount(list.size());
 		dataResult.setTableInfos(list);
