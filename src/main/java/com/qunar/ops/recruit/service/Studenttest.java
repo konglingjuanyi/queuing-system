@@ -20,12 +20,16 @@ public class Studenttest implements Comparable<Studenttest>{
 	@Override
 	public int compareTo(Studenttest u) {
 		if(this.getState().equals(RecruitConst.NORMAL) && u.getState().equals(RecruitConst.NORMAL)){
+			System.out.println("两个都正常");
 			return this.realComeTime > u.realComeTime ? -1:1;
 		}else if(this.getState().equals(RecruitConst.NORMAL)){
+			System.out.println("存在的正常");
 			return 1;
 		}else if(u.getState().equals(RecruitConst.NORMAL)){
+			System.out.println("传入的正常");
 			return -1;
 		}else{
+			System.out.println("两个都不正常");
 			return this.realComeTime > u.realComeTime ? -1:1;
 		}
 	}

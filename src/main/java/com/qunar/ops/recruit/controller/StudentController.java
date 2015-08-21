@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -87,8 +88,8 @@ public class StudentController {
 			Calendar calendar1=Calendar.getInstance();
 			calendar1.setTime(sdf.parse(real));
 			Calendar calendar2=Calendar.getInstance();
-			Date d=sdf.parse("2015-8-21 9:30:00");
-			calendar.setTime(d);
+			Date d=sdf.parse("2015-08-21 10:30:00");
+			calendar2.setTime(d);
 			s = calendar.getTimeInMillis();
 			r = calendar1.getTimeInMillis();
 			n = calendar2.getTimeInMillis();
@@ -110,5 +111,19 @@ public class StudentController {
 			return BaseResult.getErrorResult(RecruitConst.NOT_REGIST_ERROR, RecruitConst.NOT_REGIST_ERROR_MSG);
 		}
 		
+	}
+	
+	/**
+	 * 手机端学生登录界面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/student/login")
+	public String loginMobile(HttpServletRequest request,ModelMap model) {
+		String msg="<span class='name'>赵英俊</span>同学 <br />在你前面还有 <span class='num'>32</span> 位同学<br />正在进行面试";
+		model.addAttribute("msg",msg);
+		model.addAttribute("flag",0);
+		return "jsp/mobile_index";
 	}
 }
