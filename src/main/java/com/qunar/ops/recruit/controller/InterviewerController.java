@@ -127,17 +127,17 @@ public class InterviewerController {
 
 	private List<String[]> tranfer2stringArray(List<Interviewer> list) {
 		List<String[]> retList = new LinkedList<String[]>();
-		for(Interviewer inter : list){
-			String[] tmp = new String[]{inter.getId()+"", inter.getName(), inter.getUserName(),
-					inter.getPassword(), inter.getCity(), inter.getJob(), inter.getRole(),
-					inter.getOneCount()+"", inter.getTwoCount()+"", inter.getState()+"", QUtils.date2str(inter.getStartDate()),
-					QUtils.date2str(inter.getEndTime()), QUtils.date2str(inter.getCreateTime())};
-			for(String s : tmp){
-				System.out.print(s+" ");
-			}
-			System.out.println();
-			retList.add(tmp);
-		}
+//		for(Interviewer inter : list){
+//			String[] tmp = new String[]{inter.getId()+"", inter.getName(), inter.getUserName(),
+//					inter.getPassword(), inter.getCity(), inter.getJob(), inter.getRole(),
+//					inter.getOneCount()+"", inter.getTwoCount()+"", inter.getState()+"", QUtils.date2str(inter.getStartDate()),
+//					QUtils.date2str(inter.getEndTime()), QUtils.date2str(inter.getCreateTime())};
+//			for(String s : tmp){
+//				System.out.print(s+" ");
+//			}
+//			System.out.println();
+//			retList.add(tmp);
+//		}
 		return retList;
 	}
 	
@@ -152,18 +152,13 @@ public class InterviewerController {
 		String new_endDate = vars.get("new_endDate");
 		String new_role = vars.get("new_role");
 		inter.setCity(new_city);
-		inter.setName(new_name);
 		inter.setUserName(new_user);
-		inter.setJob(new_job);
 		inter.setPassword(new_password);
 		Date startDate = QUtils.formatDate(new_startDate);
 		Date endDate = QUtils.formatDate(new_endDate);
 		inter.setStartDate(startDate);
-		inter.setEndTime(endDate);
-		inter.setRole(new_role);
 		inter.setOneCount(0);
 		inter.setTwoCount(0);
-		inter.setState(0);
 		inter.setCreateTime(new Date());
 		return inter;
 	}

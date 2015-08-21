@@ -5,29 +5,35 @@ import java.util.Date;
 public class Interviewer {
     private Integer id;
 
-    private String name;
-
     private String userName;
 
     private String password;
 
     private String city;
 
-    private String job;
+    private String oneView;
 
-    private String role;
+    private String twoView;
 
     private Integer oneCount;
 
     private Integer twoCount;
 
-    private Integer state;
+    private Integer status;
 
     private Date startDate;
 
-    private Date endTime;
+    private Date endDate;
 
     private Date createTime;
+
+    private Long pahseId;
+
+    private Long viewCount;
+
+    private Object room;
+
+    private Long enable;
 
     public Integer getId() {
         return id;
@@ -35,14 +41,6 @@ public class Interviewer {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
     }
 
     public String getUserName() {
@@ -69,20 +67,20 @@ public class Interviewer {
         this.city = city == null ? null : city.trim();
     }
 
-    public String getJob() {
-        return job;
+    public String getOneView() {
+        return oneView;
     }
 
-    public void setJob(String job) {
-        this.job = job == null ? null : job.trim();
+    public void setOneView(String oneView) {
+        this.oneView = oneView == null ? null : oneView.trim();
     }
 
-    public String getRole() {
-        return role;
+    public String getTwoView() {
+        return twoView;
     }
 
-    public void setRole(String role) {
-        this.role = role == null ? null : role.trim();
+    public void setTwoView(String twoView) {
+        this.twoView = twoView == null ? null : twoView.trim();
     }
 
     public Integer getOneCount() {
@@ -101,12 +99,12 @@ public class Interviewer {
         this.twoCount = twoCount;
     }
 
-    public Integer getState() {
-        return state;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setState(Integer state) {
-        this.state = state;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public Date getStartDate() {
@@ -117,12 +115,12 @@ public class Interviewer {
         this.startDate = startDate;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public Date getEndDate() {
+        return endDate;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public Date getCreateTime() {
@@ -131,5 +129,37 @@ public class Interviewer {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getPahseId() {
+        return pahseId;
+    }
+
+    public void setPahseId(Long pahseId) {
+        this.pahseId = pahseId;
+    }
+
+    public Long getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Long viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public Object getRoom() {
+        return room;
+    }
+
+    public void setRoom(Object room) {
+        this.room = room;
+    }
+
+    public Long getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Long enable) {
+        this.enable = enable;
     }
 }

@@ -115,7 +115,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from studen_info
+    from student_info
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -126,24 +126,24 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from studen_info
+    from student_info
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from studen_info
+    delete from student_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.StudentExample" >
-    delete from studen_info
+    delete from student_info
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.qunar.ops.recruit.model.Student" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('studen_info_id_seq')
+      select currval('student_info_id_seq')
     </selectKey>
-    insert into studen_info (note_no, phase_no, interview_time, 
+    insert into student_info (note_no, phase_no, interview_time, 
       name, sex, school, profession, 
       education, phone, email, 
       card_no, qq_no, job, 
@@ -172,9 +172,9 @@
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Student" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('studen_info_id_seq')
+      select currval('student_info_id_seq')
     </selectKey>
-    insert into studen_info
+    insert into student_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="noteNo != null" >
         note_no,
@@ -415,13 +415,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.qunar.ops.recruit.model.StudentExample" resultType="java.lang.Integer" >
-    select count(*) from studen_info
+    select count(*) from student_info
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update studen_info
+    update student_info
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -549,7 +549,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update studen_info
+    update student_info
     set id = #{record.id,jdbcType=INTEGER},
       note_no = #{record.noteNo,jdbcType=VARCHAR},
       phase_no = #{record.phaseNo,jdbcType=VARCHAR},
@@ -595,7 +595,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.Student" >
-    update studen_info
+    update student_info
     <set >
       <if test="noteNo != null" >
         note_no = #{noteNo,jdbcType=VARCHAR},
@@ -718,7 +718,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.Student" >
-    update studen_info
+    update student_info
     set note_no = #{noteNo,jdbcType=VARCHAR},
       phase_no = #{phaseNo,jdbcType=VARCHAR},
       interview_time = #{interviewTime,jdbcType=TIMESTAMP},

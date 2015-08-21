@@ -5,12 +5,12 @@
     <classPathEntry location="C:\Users\yadong.qin\.m2\repository\postgresql\postgresql\9.1-901-1.jdbc4\postgresql-9.1-901-1.jdbc4.jar" /> 
     <!-- <classPathEntry location="C:\Users\yongnian.jiang.QUNARSERVERS\.m2\repository\postgresql\postgresql\9.2-1002.jdbc4\postgresql-9.2-1002.jdbc4.jar" />-->
     <context id="DB2Tables" targetRuntime="MyBatis3">
-        <plugin type="com.qunar.ops.recruit.plugin.PaginationPlugin"></plugin>
+        <!-- <plugin type="com.qunar.ops.recruit.plugin.PaginationPlugin"></plugin> -->
         <commentGenerator>
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
         <!-- 数据库链接URL、用户名、密码 -->
-        <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://l-backyard1.ops.dev.cn6.qunar.com:5432/recruit"  userId="recruit" password="recruit">
+        <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://l-backyard1.ops.dev.cn6.qunar.com:5432/recruit"  userId="recruit" password="cLBiNcWNkREp6kL8Wb8kZvYNgd8=">
         </jdbcConnection>
         
         <javaTypeResolver>
@@ -33,8 +33,14 @@
         <table tableName="interviewer" domainObjectName="Interviewer" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('interviewer_id_seq')"/>
         </table>
-        <table tableName="studen_info" domainObjectName="Student" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id" identity="true" sqlStatement="select currval('studen_info_id_seq')"/>
+        <table tableName="student_info" domainObjectName="Student" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('student_info_id_seq')"/>
+        </table>
+        <table tableName="phase_info" domainObjectName="Phase" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id_" identity="true" sqlStatement="select currval('phase_info_id_seq')"/>
+        </table>
+        <table tableName="student_assess" domainObjectName="StudentAssess" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('student_assess_id_seq')"/>
         </table>
         <!-- 
         <table tableName="form_approve_log" domainObjectName="FormApproveLog" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">

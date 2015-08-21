@@ -39,15 +39,10 @@ public class QydTestController {
 		}*/
 		System.out.println("-->"+i+v);
 		Interviewer in = new Interviewer();
-		in.setEndTime(new Date());
-		in.setName("qyd");
 		in.setCity("jinan");
 		in.setUserName("qinyadong");
 		in.setPassword("123456");
-		in.setState(1);
 		in.setStartDate(new Date());
-		in.setJob("");
-		in.setRole("");
 		in.setOneCount(0);
 		in.setTwoCount(0);
 		inM.insert(in);

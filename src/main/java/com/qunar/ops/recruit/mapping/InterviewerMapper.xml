@@ -3,18 +3,21 @@
 <mapper namespace="com.qunar.ops.recruit.dao.InterviewerMapper" >
   <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.Interviewer" >
     <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="CHAR" />
     <result column="city" property="city" jdbcType="CHAR" />
-    <result column="job" property="job" jdbcType="CHAR" />
-    <result column="role" property="role" jdbcType="CHAR" />
+    <result column="one_view" property="oneView" jdbcType="CHAR" />
+    <result column="two_view" property="twoView" jdbcType="CHAR" />
     <result column="one_count" property="oneCount" jdbcType="INTEGER" />
     <result column="two_count" property="twoCount" jdbcType="INTEGER" />
-    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
     <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
-    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="pahse_id" property="pahseId" jdbcType="BIGINT" />
+    <result column="view_count" property="viewCount" jdbcType="BIGINT" />
+    <result column="room" property="room" jdbcType="ARRAY" />
+    <result column="enable" property="enable" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -75,8 +78,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, name, user_name, password, city, job, role, one_count, two_count, state, start_date, 
-    end_time, create_time
+    id, user_name, password, city, one_view, two_view, one_count, two_count, status, 
+    start_date, end_date, create_time, pahse_id, view_count, room, enable
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.InterviewerExample" >
     select
@@ -91,9 +94,6 @@
     </if>
     <if test="orderByClause != null" >
       order by ${orderByClause}
-    </if>
-    <if test="limit >= 0" >
-      offset ${offset} limit ${limit}
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -116,14 +116,18 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       select currval('interviewer_id_seq')
     </selectKey>
-    insert into interviewer (name, user_name, password, 
-      city, job, role, one_count, 
-      two_count, state, start_date, 
-      end_time, create_time)
-    values (#{name,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, 
-      #{city,jdbcType=CHAR}, #{job,jdbcType=CHAR}, #{role,jdbcType=CHAR}, #{oneCount,jdbcType=INTEGER}, 
-      #{twoCount,jdbcType=INTEGER}, #{state,jdbcType=INTEGER}, #{startDate,jdbcType=TIMESTAMP}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP})
+    insert into interviewer (user_name, password, city, 
+      one_view, two_view, one_count, 
+      two_count, status, start_date, 
+      end_date, create_time, pahse_id, 
+      view_count, room, enable
+      )
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, #{city,jdbcType=CHAR}, 
+      #{oneView,jdbcType=CHAR}, #{twoView,jdbcType=CHAR}, #{oneCount,jdbcType=INTEGER}, 
+      #{twoCount,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{startDate,jdbcType=TIMESTAMP}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{pahseId,jdbcType=BIGINT}, 
+      #{viewCount,jdbcType=BIGINT}, #{room,jdbcType=ARRAY}, #{enable,jdbcType=BIGINT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Interviewer" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -131,9 +135,6 @@
     </selectKey>
     insert into interviewer
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="name != null" >
-        name,
-      </if>
       <if test="userName != null" >
         user_name,
       </if>
@@ -143,11 +144,11 @@
       <if test="city != null" >
         city,
       </if>
-      <if test="job != null" >
-        job,
+      <if test="oneView != null" >
+        one_view,
       </if>
-      <if test="role != null" >
-        role,
+      <if test="twoView != null" >
+        two_view,
       </if>
       <if test="oneCount != null" >
         one_count,
@@ -155,23 +156,32 @@
       <if test="twoCount != null" >
         two_count,
       </if>
-      <if test="state != null" >
-        state,
+      <if test="status != null" >
+        status,
       </if>
       <if test="startDate != null" >
         start_date,
       </if>
-      <if test="endTime != null" >
-        end_time,
+      <if test="endDate != null" >
+        end_date,
       </if>
       <if test="createTime != null" >
         create_time,
       </if>
+      <if test="pahseId != null" >
+        pahse_id,
+      </if>
+      <if test="viewCount != null" >
+        view_count,
+      </if>
+      <if test="room != null" >
+        room,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
       </if>
@@ -181,11 +191,11 @@
       <if test="city != null" >
         #{city,jdbcType=CHAR},
       </if>
-      <if test="job != null" >
-        #{job,jdbcType=CHAR},
+      <if test="oneView != null" >
+        #{oneView,jdbcType=CHAR},
       </if>
-      <if test="role != null" >
-        #{role,jdbcType=CHAR},
+      <if test="twoView != null" >
+        #{twoView,jdbcType=CHAR},
       </if>
       <if test="oneCount != null" >
         #{oneCount,jdbcType=INTEGER},
@@ -193,17 +203,29 @@
       <if test="twoCount != null" >
         #{twoCount,jdbcType=INTEGER},
       </if>
-      <if test="state != null" >
-        #{state,jdbcType=INTEGER},
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="startDate != null" >
         #{startDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="endTime != null" >
-        #{endTime,jdbcType=TIMESTAMP},
+      <if test="endDate != null" >
+        #{endDate,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pahseId != null" >
+        #{pahseId,jdbcType=BIGINT},
+      </if>
+      <if test="viewCount != null" >
+        #{viewCount,jdbcType=BIGINT},
+      </if>
+      <if test="room != null" >
+        #{room,jdbcType=ARRAY},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=BIGINT},
       </if>
     </trim>
   </insert>
@@ -219,9 +241,6 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.name != null" >
-        name = #{record.name,jdbcType=VARCHAR},
-      </if>
       <if test="record.userName != null" >
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
@@ -231,11 +250,11 @@
       <if test="record.city != null" >
         city = #{record.city,jdbcType=CHAR},
       </if>
-      <if test="record.job != null" >
-        job = #{record.job,jdbcType=CHAR},
+      <if test="record.oneView != null" >
+        one_view = #{record.oneView,jdbcType=CHAR},
       </if>
-      <if test="record.role != null" >
-        role = #{record.role,jdbcType=CHAR},
+      <if test="record.twoView != null" >
+        two_view = #{record.twoView,jdbcType=CHAR},
       </if>
       <if test="record.oneCount != null" >
         one_count = #{record.oneCount,jdbcType=INTEGER},
@@ -243,17 +262,29 @@
       <if test="record.twoCount != null" >
         two_count = #{record.twoCount,jdbcType=INTEGER},
       </if>
-      <if test="record.state != null" >
-        state = #{record.state,jdbcType=INTEGER},
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
       </if>
       <if test="record.startDate != null" >
         start_date = #{record.startDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.endTime != null" >
-        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      <if test="record.endDate != null" >
+        end_date = #{record.endDate,jdbcType=TIMESTAMP},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.pahseId != null" >
+        pahse_id = #{record.pahseId,jdbcType=BIGINT},
+      </if>
+      <if test="record.viewCount != null" >
+        view_count = #{record.viewCount,jdbcType=BIGINT},
+      </if>
+      <if test="record.room != null" >
+        room = #{record.room,jdbcType=ARRAY},
+      </if>
+      <if test="record.enable != null" >
+        enable = #{record.enable,jdbcType=BIGINT},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -263,18 +294,21 @@
   <update id="updateByExample" parameterType="map" >
     update interviewer
     set id = #{record.id,jdbcType=INTEGER},
-      name = #{record.name,jdbcType=VARCHAR},
       user_name = #{record.userName,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=CHAR},
       city = #{record.city,jdbcType=CHAR},
-      job = #{record.job,jdbcType=CHAR},
-      role = #{record.role,jdbcType=CHAR},
+      one_view = #{record.oneView,jdbcType=CHAR},
+      two_view = #{record.twoView,jdbcType=CHAR},
       one_count = #{record.oneCount,jdbcType=INTEGER},
       two_count = #{record.twoCount,jdbcType=INTEGER},
-      state = #{record.state,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=INTEGER},
       start_date = #{record.startDate,jdbcType=TIMESTAMP},
-      end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+      end_date = #{record.endDate,jdbcType=TIMESTAMP},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      pahse_id = #{record.pahseId,jdbcType=BIGINT},
+      view_count = #{record.viewCount,jdbcType=BIGINT},
+      room = #{record.room,jdbcType=ARRAY},
+      enable = #{record.enable,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -282,9 +316,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.Interviewer" >
     update interviewer
     <set >
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
       <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
@@ -294,11 +325,11 @@
       <if test="city != null" >
         city = #{city,jdbcType=CHAR},
       </if>
-      <if test="job != null" >
-        job = #{job,jdbcType=CHAR},
+      <if test="oneView != null" >
+        one_view = #{oneView,jdbcType=CHAR},
       </if>
-      <if test="role != null" >
-        role = #{role,jdbcType=CHAR},
+      <if test="twoView != null" >
+        two_view = #{twoView,jdbcType=CHAR},
       </if>
       <if test="oneCount != null" >
         one_count = #{oneCount,jdbcType=INTEGER},
@@ -306,35 +337,50 @@
       <if test="twoCount != null" >
         two_count = #{twoCount,jdbcType=INTEGER},
       </if>
-      <if test="state != null" >
-        state = #{state,jdbcType=INTEGER},
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
       </if>
       <if test="startDate != null" >
         start_date = #{startDate,jdbcType=TIMESTAMP},
       </if>
-      <if test="endTime != null" >
-        end_time = #{endTime,jdbcType=TIMESTAMP},
+      <if test="endDate != null" >
+        end_date = #{endDate,jdbcType=TIMESTAMP},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pahseId != null" >
+        pahse_id = #{pahseId,jdbcType=BIGINT},
+      </if>
+      <if test="viewCount != null" >
+        view_count = #{viewCount,jdbcType=BIGINT},
+      </if>
+      <if test="room != null" >
+        room = #{room,jdbcType=ARRAY},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=BIGINT},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.Interviewer" >
     update interviewer
-    set name = #{name,jdbcType=VARCHAR},
-      user_name = #{userName,jdbcType=VARCHAR},
+    set user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=CHAR},
       city = #{city,jdbcType=CHAR},
-      job = #{job,jdbcType=CHAR},
-      role = #{role,jdbcType=CHAR},
+      one_view = #{oneView,jdbcType=CHAR},
+      two_view = #{twoView,jdbcType=CHAR},
       one_count = #{oneCount,jdbcType=INTEGER},
       two_count = #{twoCount,jdbcType=INTEGER},
-      state = #{state,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
       start_date = #{startDate,jdbcType=TIMESTAMP},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+      end_date = #{endDate,jdbcType=TIMESTAMP},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      pahse_id = #{pahseId,jdbcType=BIGINT},
+      view_count = #{viewCount,jdbcType=BIGINT},
+      room = #{room,jdbcType=ARRAY},
+      enable = #{enable,jdbcType=BIGINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

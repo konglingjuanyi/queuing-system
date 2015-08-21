@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.ops.recruit.dao.PhaseMapper" >
+  <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.Phase" >
+    <id column="id_" property="id" jdbcType="INTEGER" />
+    <result column="phase_name" property="phaseName" jdbcType="VARCHAR" />
+    <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id_, phase_name, city_name
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.PhaseExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from phase_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from phase_info
+    where id_ = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from phase_info
+    where id_ = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.PhaseExample" >
+    delete from phase_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qunar.ops.recruit.model.Phase" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      select currval('phase_info_id_seq')
+    </selectKey>
+    insert into phase_info (phase_name, city_name)
+    values (#{phaseName,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Phase" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      select currval('phase_info_id_seq')
+    </selectKey>
+    insert into phase_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="phaseName != null" >
+        phase_name,
+      </if>
+      <if test="cityName != null" >
+        city_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="phaseName != null" >
+        #{phaseName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        #{cityName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qunar.ops.recruit.model.PhaseExample" resultType="java.lang.Integer" >
+    select count(*) from phase_info
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update phase_info
+    <set >
+      <if test="record.id != null" >
+        id_ = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.phaseName != null" >
+        phase_name = #{record.phaseName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cityName != null" >
+        city_name = #{record.cityName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update phase_info
+    set id_ = #{record.id,jdbcType=INTEGER},
+      phase_name = #{record.phaseName,jdbcType=VARCHAR},
+      city_name = #{record.cityName,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.Phase" >
+    update phase_info
+    <set >
+      <if test="phaseName != null" >
+        phase_name = #{phaseName,jdbcType=VARCHAR},
+      </if>
+      <if test="cityName != null" >
+        city_name = #{cityName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id_ = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.Phase" >
+    update phase_info
+    set phase_name = #{phaseName,jdbcType=VARCHAR},
+      city_name = #{cityName,jdbcType=VARCHAR}
+    where id_ = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
