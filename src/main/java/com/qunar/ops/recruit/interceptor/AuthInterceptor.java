@@ -13,19 +13,26 @@ public class AuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
-		if(request.getRequestURI().endsWith("index.html") || request.getRequestURI().endsWith("login")) {
+//		System.out.println("preHandle============================");
+		if(request.getRequestURI().endsWith("index") || request.getRequestURI().endsWith("login")) {
 			return true;
 		}
-		String userId = QUtils.getAdmin(request);//(String)request.getSession().getAttribute("USER_ID");
-		if(userId != null) return true;
-		response.sendRedirect(request.getContextPath()+"/admin/index.html");
-		return false;
+		Object userId = request.getSession().getAttribute("user");//(String)request.getSession().getAttribute("USER_ID");
+		if(userId != null) 
+			return true;
+		else{
+			response.sendRedirect(request.getContextPath()+"/login");
+			return false;
+		}
+			
 	}
 
 	@Override
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
+
+//		System.out.println("postHandle============================");
 		
 	}
 
@@ -33,7 +40,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		
+//		System.out.println("afterCompletion============================");
 	}
 
 }

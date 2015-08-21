@@ -83,6 +83,10 @@ public class Student {
 
     private String twoResult;
 
+    private Date trueTime;
+
+    private Date oneOvertime;
+
     public Integer getId() {
         return id;
     }
@@ -401,5 +405,21 @@ public class Student {
 
     public void setTwoResult(String twoResult) {
         this.twoResult = twoResult == null ? null : twoResult.trim();
+    }
+
+    public Date getTrueTime() {
+        return trueTime;
+    }
+
+    public void setTrueTime(Date trueTime) {
+        this.trueTime = trueTime;
+    }
+
+    public Date getOneOvertime() {
+        return oneOvertime;
+    }
+
+    public void setOneOvertime(Date oneOvertime) {
+        this.oneOvertime = oneOvertime;
     }
 }

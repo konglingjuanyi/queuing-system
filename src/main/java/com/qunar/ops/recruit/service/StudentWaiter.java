@@ -1,5 +1,7 @@
 package com.qunar.ops.recruit.service;
 
+import java.util.List;
+
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.util.RecruitConst;
 
@@ -65,6 +67,11 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 	public boolean equals(Object obj) {
 		StudentWaiter uw = (StudentWaiter) obj;
 		return this.stu.getId() == uw.getStu().getId();
+	}
+
+	public void recovery(List<Student> oneList, List<Student> twoList) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	

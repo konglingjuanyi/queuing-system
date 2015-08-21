@@ -2824,6 +2824,126 @@ public class StudentExample {
             addCriterion("two_result not between", value1, value2, "twoResult");
             return (Criteria) this;
         }
+
+        public Criteria andTrueTimeIsNull() {
+            addCriterion("true_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeIsNotNull() {
+            addCriterion("true_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeEqualTo(Date value) {
+            addCriterion("true_time =", value, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeNotEqualTo(Date value) {
+            addCriterion("true_time <>", value, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeGreaterThan(Date value) {
+            addCriterion("true_time >", value, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("true_time >=", value, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeLessThan(Date value) {
+            addCriterion("true_time <", value, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeLessThanOrEqualTo(Date value) {
+            addCriterion("true_time <=", value, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeIn(List<Date> values) {
+            addCriterion("true_time in", values, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeNotIn(List<Date> values) {
+            addCriterion("true_time not in", values, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeBetween(Date value1, Date value2) {
+            addCriterion("true_time between", value1, value2, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andTrueTimeNotBetween(Date value1, Date value2) {
+            addCriterion("true_time not between", value1, value2, "trueTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeIsNull() {
+            addCriterion("one_overtime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeIsNotNull() {
+            addCriterion("one_overtime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeEqualTo(Date value) {
+            addCriterion("one_overtime =", value, "oneOvertime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeNotEqualTo(Date value) {
+            addCriterion("one_overtime <>", value, "oneOvertime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeGreaterThan(Date value) {
+            addCriterion("one_overtime >", value, "oneOvertime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("one_overtime >=", value, "oneOvertime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeLessThan(Date value) {
+            addCriterion("one_overtime <", value, "oneOvertime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeLessThanOrEqualTo(Date value) {
+            addCriterion("one_overtime <=", value, "oneOvertime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeIn(List<Date> values) {
+            addCriterion("one_overtime in", values, "oneOvertime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeNotIn(List<Date> values) {
+            addCriterion("one_overtime not in", values, "oneOvertime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeBetween(Date value1, Date value2) {
+            addCriterion("one_overtime between", value1, value2, "oneOvertime");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneOvertimeNotBetween(Date value1, Date value2) {
+            addCriterion("one_overtime not between", value1, value2, "oneOvertime");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

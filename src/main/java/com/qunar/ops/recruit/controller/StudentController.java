@@ -54,22 +54,39 @@ public class StudentController {
 	@RequestMapping(value = "/student/register")
 	@ResponseBody
 	//public BaseResult register(HttpServletRequest request, String phone) {
-	public BaseResult register(HttpServletRequest request, String phone) {
-		Student stu = studentService.getStudentByPhone(phone);
-		if(waitService.contains(stu)){
-			return BaseResult.getErrorResult(RecruitConst.ALREADY_REGIST_ERROR, RecruitConst.ALREADY_REGIST_ERROR_MSG);
+	public BaseResult register(HttpServletRequest request, String phone, String name) {
+		Object user = request.getSession().getAttribute("user");
+		if(user == null){
+			if(phone != null && name != null){
+				Student stu = studentService.getStudentByPhone(phone);
+				if(stu == null){
+					return BaseResult.getErrorResult(RecruitConst.NO_USER_ERROR, RecruitConst.NO_USER_ERROR_MSG);
+				}else if(!stu.getName().equals(name)){
+					return BaseResult.getErrorResult(RecruitConst.PHONE_NAME_MISS_MATCH, RecruitConst.PHONE_NAME_MISS_MATCH_MSG);
+				}else if(waitService.contains(stu)){
+					return BaseResult.getSuccessResult(waitService.numberInFrontOf(new StudentWaiter(stu,0)));
+				}else{
+					Date date = new Date();
+					StudentWaiter sw = new StudentWaiter(stu, date.getTime());
+					int frontWaters = waitService.add2WaitList(sw);
+					request.getSession().setAttribute("user", sw);
+					studentService.addStudentRealComeTimeIntoDB(date);
+					return BaseResult.getSuccessResult(frontWaters);
+				}
+			}else{
+				return BaseResult.getErrorResult(RecruitConst.PARAMETER_NULL, RecruitConst.PARAMETER_NULL_ERROR);
+			}
 		}else{
-			StudentWaiter sw = new StudentWaiter(stu, System.currentTimeMillis());
-			int frontWaters = waitService.add2WaitList(sw);
-			request.getSession().setAttribute("sw", sw);
-			return BaseResult.getSuccessResult(frontWaters);
+			if(user instanceof StudentWaiter){
+				StudentWaiter sw = (StudentWaiter) user;
+				int frontWaters = waitService.numberInFrontOf(sw);
+				return BaseResult.getSuccessResult(frontWaters);
+			}else{
+				return BaseResult.getErrorResult(RecruitConst.AUTHORITY_ERROR, RecruitConst.AUTHORITY_ERROR_MSG);
+			}
+
 		}
-	}
-	
-	@RequestMapping(value = "/test")
-	public ModelAndView welcom(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("/recruit/test");
-		return mav;
+
 	}
 	
 	@RequestMapping(value = "/student/test")
@@ -78,6 +95,9 @@ public class StudentController {
 	public void test(HttpServletRequest request, @RequestParam  String name,@RequestParam  String should,@RequestParam  String real) {
 		System.out.println("应到时间:"+should+"++++实到时间:"+real);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");//小写的mm表示的是分钟  
+		String[] shouldcomeTimes = new String[]{"2015-8-21 9:00:00","2015-8-21 10:00:00","2015-8-21 9:00:00"};
+		String[] realcomeTimes = new String[]{"2015-8-21 8:25:00","2015-8-21 8:00:00","2015-8-21 8:23:00"};
+		
 		long s;
 		long r;
 		long n;
