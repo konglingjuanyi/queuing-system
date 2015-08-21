@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.model.Student;
@@ -14,13 +15,14 @@ import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.service.WaitService;
+import com.qunar.ops.recruit.util.RecruitConst;
 
 @Controller
 public class StudentController {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	WaitService<StudentWaiter> waitService;
+	WaitService waitService;
 	@Autowired
 	StudentService studentService;
 	/**
@@ -42,13 +44,16 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/student/register")
+	@ResponseBody
 	public BaseResult register(HttpServletRequest request, String phone) {
 		Student stu = studentService.getStudentByPhone(phone);
-		StudentWaiter sw = new StudentWaiter();
-		sw.setRealComeTime(System.currentTimeMillis());
-		sw.setUserId(stu.getId());
-		sw.setShouldComeTime(stu.getInterviewTime().getTime());
-		int frontWaters = waitService.add2WaitList(sw);
-		return null;
+		if(waitService.contains(stu)){
+			return BaseResult.getErrorResult(RecruitConst.ALREADY_REGIST_ERROR, RecruitConst.ALREADY_REGIST_ERROR_MSG);
+		}else{
+			StudentWaiter sw = new StudentWaiter(stu, System.currentTimeMillis());
+			int frontWaters = waitService.add2WaitList(sw);
+			return BaseResult.getSuccessResult(frontWaters);
+		}
+		
 	}
 }
