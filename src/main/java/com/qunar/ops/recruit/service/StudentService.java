@@ -1,6 +1,7 @@
 package com.qunar.ops.recruit.service;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,22 @@ public class StudentService {
 			return ret.get(0);
 		else
 			return null;
+	}
+
+	public List<Student> getOneList() {
+		StudentExample se = new StudentExample();
+		List<Student> ret = stuMapper.selectByExample(se);
+		return ret;
+	}
+
+	public List<Student> getTwoList() {
+		StudentExample se = new StudentExample();
+		List<Student> ret = stuMapper.selectByExample(se);
+		return ret;
+	}
+
+	public void addStudentRealComeTimeIntoDB(Date date) {
+		
 	}
 	
 

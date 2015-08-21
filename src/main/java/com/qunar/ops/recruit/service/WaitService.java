@@ -1,6 +1,7 @@
 package com.qunar.ops.recruit.service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -95,6 +96,28 @@ public class WaitService {
 	
 	public boolean contains(Student stu) {
 		return list.contains(stu);
+	}
+
+	public void recovery(List<Student> oneList, List<Student> twoList) {
+		List<StudentWaiter> swList1 = new LinkedList<StudentWaiter>();
+		for (Student student : oneList) {
+			swList1.add(new StudentWaiter(student,student.getTrueTime().getTime()));
+		}
+		this.list = swList1;
+		Collections.sort(list);
+		List<StudentWaiter> swList2 = new LinkedList<StudentWaiter>();
+		for (Student student : twoList) {
+			swList2.add(new StudentWaiter(student,student.getTrueTime().getTime()));
+		}
+		this.twoList = swList2;
+		Collections.sort(this.twoList, new Comparator<StudentWaiter>() {
+
+			@Override
+			public int compare(StudentWaiter o1, StudentWaiter o2) {
+				return o1.getRealComeTime() > o2.getRealComeTime() ? 1:-1;
+			}
+		});
+		
 	}
 	
 }

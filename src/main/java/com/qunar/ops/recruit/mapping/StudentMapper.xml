@@ -42,6 +42,8 @@
     <result column="leader" property="leader" jdbcType="VARCHAR" />
     <result column="one_result" property="oneResult" jdbcType="VARCHAR" />
     <result column="two_result" property="twoResult" jdbcType="VARCHAR" />
+    <result column="true_time" property="trueTime" jdbcType="TIMESTAMP" />
+    <result column="one_overtime" property="oneOvertime" jdbcType="TIMESTAMP" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -106,7 +108,7 @@
     phone, email, card_no, qq_no, job, work_start, work_end, graduate_date, salary, assess, 
     first_try, second_try, view_remark, location, offer_state, three_side, pay_time, 
     three_state, refuse, refuse_reson, refuse_date, breaker, train, staff_no, interview_dept, 
-    fenpei_dept, yuan_dept, organize, leader, one_result, two_result
+    fenpei_dept, yuan_dept, organize, leader, one_result, two_result, true_time, one_overtime
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.StudentExample" >
     select
@@ -155,7 +157,8 @@
       refuse_date, breaker, train, 
       staff_no, interview_dept, fenpei_dept, 
       yuan_dept, organize, leader, 
-      one_result, two_result)
+      one_result, two_result, true_time, 
+      one_overtime)
     values (#{noteNo,jdbcType=VARCHAR}, #{phaseNo,jdbcType=VARCHAR}, #{interviewTime,jdbcType=TIMESTAMP}, 
       #{name,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR}, #{school,jdbcType=VARCHAR}, #{profession,jdbcType=VARCHAR}, 
       #{education,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
@@ -168,7 +171,8 @@
       #{refuseDate,jdbcType=TIMESTAMP}, #{breaker,jdbcType=CHAR}, #{train,jdbcType=VARCHAR}, 
       #{staffNo,jdbcType=VARCHAR}, #{interviewDept,jdbcType=VARCHAR}, #{fenpeiDept,jdbcType=VARCHAR}, 
       #{yuanDept,jdbcType=VARCHAR}, #{organize,jdbcType=VARCHAR}, #{leader,jdbcType=VARCHAR}, 
-      #{oneResult,jdbcType=VARCHAR}, #{twoResult,jdbcType=VARCHAR})
+      #{oneResult,jdbcType=VARCHAR}, #{twoResult,jdbcType=VARCHAR}, #{trueTime,jdbcType=TIMESTAMP}, 
+      #{oneOvertime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Student" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -293,6 +297,12 @@
       <if test="twoResult != null" >
         two_result,
       </if>
+      <if test="trueTime != null" >
+        true_time,
+      </if>
+      <if test="oneOvertime != null" >
+        one_overtime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="noteNo != null" >
@@ -411,6 +421,12 @@
       </if>
       <if test="twoResult != null" >
         #{twoResult,jdbcType=VARCHAR},
+      </if>
+      <if test="trueTime != null" >
+        #{trueTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oneOvertime != null" >
+        #{oneOvertime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -543,6 +559,12 @@
       <if test="record.twoResult != null" >
         two_result = #{record.twoResult,jdbcType=VARCHAR},
       </if>
+      <if test="record.trueTime != null" >
+        true_time = #{record.trueTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.oneOvertime != null" >
+        one_overtime = #{record.oneOvertime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -589,7 +611,9 @@
       organize = #{record.organize,jdbcType=VARCHAR},
       leader = #{record.leader,jdbcType=VARCHAR},
       one_result = #{record.oneResult,jdbcType=VARCHAR},
-      two_result = #{record.twoResult,jdbcType=VARCHAR}
+      two_result = #{record.twoResult,jdbcType=VARCHAR},
+      true_time = #{record.trueTime,jdbcType=TIMESTAMP},
+      one_overtime = #{record.oneOvertime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -714,6 +738,12 @@
       <if test="twoResult != null" >
         two_result = #{twoResult,jdbcType=VARCHAR},
       </if>
+      <if test="trueTime != null" >
+        true_time = #{trueTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="oneOvertime != null" >
+        one_overtime = #{oneOvertime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -757,7 +787,9 @@
       organize = #{organize,jdbcType=VARCHAR},
       leader = #{leader,jdbcType=VARCHAR},
       one_result = #{oneResult,jdbcType=VARCHAR},
-      two_result = #{twoResult,jdbcType=VARCHAR}
+      two_result = #{twoResult,jdbcType=VARCHAR},
+      true_time = #{trueTime,jdbcType=TIMESTAMP},
+      one_overtime = #{oneOvertime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

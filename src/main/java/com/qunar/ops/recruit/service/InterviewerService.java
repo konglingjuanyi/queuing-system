@@ -15,18 +15,6 @@ import com.qunar.ops.recruit.model.InterviewerExample;
 @Component
 public class InterviewerService {
 
-	@Value("${backyard.apihost}")
-	String backyardUrl;
-	
-	@Value("${backyard.apihost.bank}")
-	String backyardBankUrl;
-	
-	@Value("${backyard.drt_vp}")
-	String backyardDrt_vpUrl;
-	
-	@Value("${oa.apihost}")
-	String oadUrl;
-	
 	@Autowired
 	InterviewerMapper interMapper;
 	
@@ -68,6 +56,16 @@ public class InterviewerService {
 	public Interviewer getInterviewersById(String id) {
 		// TODO Auto-generated method stub
 		return interMapper.selectByPrimaryKey(Integer.valueOf(id));
+	}
+
+	public Interviewer getInterviewersByUserName(String username) {
+		InterviewerExample ie = new InterviewerExample();
+		ie.createCriteria().andUserNameEqualTo(username);
+		List<Interviewer> inter = interMapper.selectByExample(ie);
+		if(inter != null && inter.size() > 0){
+			return inter.get(0);
+		}
+		return null;
 	}
 
 }
