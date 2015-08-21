@@ -193,7 +193,7 @@ public class InterviewerController {
 				stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
 			}
 		}else{
-			//只有一面角色从一面队列中拿数据
+			//只有一面角色从一面队列中拿数据`
 			stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
 		}
 		return BaseResult.getSuccessResult(stu);

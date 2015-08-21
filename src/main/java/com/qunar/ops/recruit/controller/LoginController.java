@@ -27,7 +27,6 @@ public class LoginController {
 	@RequestMapping(value = "/login")
 	public ModelAndView welcom(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("/recruit/login");
-		mav.addObject("debug", RecruitControllerUtils.isDebug());
 		return mav;
 	}
 
@@ -41,14 +40,10 @@ public class LoginController {
 	public ModelAndView toindex(HttpServletRequest request,
 			HttpServletResponse response, String username, String password) {
 		System.out.println("-----============================================++++");
-//		System.out.println("student"+inM.getStudent(1));
-//		System.out.println("======"+inM.getInterviewer(2).getPassword()+stuM.getStudent(1).getName());
 		logger.info("登录的用户名为{}+++++++++++++++++密码为{}", username, password);
-		QUtils.setUsername(response, "pd", password, true);
-		QUtils.setUsername(response, "un", username, true);
-		QUtils.setUsername(response, "test-userid", username.toLowerCase(), false);
+		request.getSession().setAttribute("username", username);
+		request.getSession().setAttribute("password", password);
 		ModelAndView mav = new ModelAndView("/recruit/index");
-		mav.addObject("debug", RecruitControllerUtils.isDebug());
 		System.out.println("***************");
 		return mav;
 	}

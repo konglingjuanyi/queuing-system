@@ -22,12 +22,9 @@ public class CommonController {
 	 */
 	@RequestMapping(value = "/")
 	public String index(HttpServletRequest request) {
-		/*String username = (String) request.getSession().getAttribute("username");
-		String password = (String) request.getSession().getAttribute("password");
-		logger.info("登录的用户名为{}====密码为{}", username,password);
-		if(!OAControllerUtils.isNull(username)&&!OAControllerUtils.isNull(password)){
-			return "redirect:/index";
-		}*/
+		request.getSession().getAttribute("username");
+		request.getSession().getAttribute("password");
+		logger.info("登录的用户名为{}====密码为{}", request.getSession().getAttribute("username"),request.getSession().getAttribute("password"));
 		return "redirect:/login";
 	}
 	
