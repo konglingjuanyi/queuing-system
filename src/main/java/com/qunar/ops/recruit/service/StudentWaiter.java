@@ -1,12 +1,21 @@
 package com.qunar.ops.recruit.service;
 
+import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.util.RecruitConst;
 
 public class StudentWaiter implements Comparable<StudentWaiter>{
-	int userId;
+	Student stu;
 	long shouldComeTime;
 	long realComeTime;
 	
+	
+	
+	public StudentWaiter(Student stu, long realComeTime) {
+		this.stu = stu;
+		this.realComeTime = realComeTime;
+		this.shouldComeTime = stu.getInterviewTime().getTime();
+	}
+
 	@Override
 	public int compareTo(StudentWaiter u) {
 		if(this.getState().equals(RecruitConst.NORMAL) && u.getState().equals(RecruitConst.NORMAL)){
@@ -27,14 +36,6 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 			return RecruitConst.IN_NORMAL;
 		}
 	}
-	
-	public int getUserId() {
-		return userId;
-	}
-
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
 
 	public long getShouldComeTime() {
 		return shouldComeTime;
@@ -52,11 +53,20 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 		this.realComeTime = realComeTime;
 	}
 
+	public Student getStu() {
+		return stu;
+	}
+
+	public void setStu(Student stu) {
+		this.stu = stu;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		StudentWaiter uw = (StudentWaiter) obj;
-		return this.userId == uw.userId;
+		return this.stu.getId() == uw.getStu().getId();
 	}
+
 	
 	
 

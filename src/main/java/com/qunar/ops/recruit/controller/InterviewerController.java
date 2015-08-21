@@ -40,7 +40,7 @@ public class InterviewerController {
 	@Autowired
 	StudentService studentService;
 	@Autowired
-	WaitService<StudentWaiter> waitService;
+	WaitService waitService;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
@@ -183,15 +183,20 @@ public class InterviewerController {
 		Map<String, String> vars = commonRequest.getVars();
 		//通过ID获取面试官信息
 		Interviewer inter = inServe.getInterviewersById(vars.get("id"));
+		StudentWaiter  stu;
 		if(!"".equals(inter.getTwoView())){
 			//如果面试官的二面角色不为空,先从二面队列中拿数据
 			//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
-			Student  stu = waitService.getTwoView(inter.getCity(),inter.getTwoView(),inter.getUserName());
-			
+			stu = waitService.getTwoView(inter.getCity(),inter.getTwoView(),inter.getUserName());
+			if(stu==null && !"".equals(inter.getOneView())){
+				//如果二面候选人为空并且是一面面试官，查询一面队列候选人
+				stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
+			}
 		}else{
 			//只有一面角色从一面队列中拿数据
+			stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
 		}
-		return BaseResult.getSuccessResult(null);
+		return BaseResult.getSuccessResult(stu);
 	}
 	
 	/**
@@ -211,7 +216,8 @@ public class InterviewerController {
 		if(!"不通过".equals(vars.get("ID"))){
 			//添加到二面队列中
 			Student stu =studentService.getStudentByPhone(vars.get("phone"));
-			waitService.addTwoList(stu);
+			StudentWaiter sw =new StudentWaiter(stu,0);
+			waitService.addTwoList(sw);
 			return BaseResult.getSuccessResult(null);
 		}else{
 			//结束面试

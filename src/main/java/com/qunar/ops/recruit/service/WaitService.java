@@ -9,33 +9,36 @@ import org.springframework.stereotype.Component;
 import com.qunar.ops.recruit.model.Student;
 
 @Component
-public class WaitService<T extends Comparable<T>> {
+public class WaitService {
 
 	
-	List<T> list = new LinkedList<T>();
+	List<StudentWaiter> list = new LinkedList<StudentWaiter>();
 	
-	List<T> twoList = new LinkedList<T>();
-	
-	public synchronized int numberInFrontOf(T t){
+	List<StudentWaiter> twoList = new LinkedList<StudentWaiter>();
+
+	public synchronized int numberInFrontOf(StudentWaiter t){
 		int count = 0;
-		for (T tt : list) {
-			if(t.equals(tt)){
+		for (StudentWaiter stu : list) {
+			if(t.equals(stu)){
 				break;
 			}
-			count ++;
+			if(stu.getStu().getLocation().equals(t.getStu().getLocation()) &&
+					stu.getStu().getJob().equals(t.getStu().getJob())){
+				count ++;
+			}
 		}
 		return count;
 	}
 	
-	public synchronized int add2WaitList(T t){
+	public synchronized int add2WaitList(StudentWaiter t){
 		list.add(t);
 		Collections.sort(list);
 		return numberInFrontOf(t);
 	}
 	
-	public synchronized T removeHighestPriorityFromList(){
-		T ret = null;
-		for (T t : list) {
+	public synchronized StudentWaiter removeHighestPriorityFromList(String city, String twoView, String userName){
+		StudentWaiter ret = null;
+		for (StudentWaiter t : list) {
 			if(ret == null){
 				ret = t;
 			}else{
@@ -47,13 +50,14 @@ public class WaitService<T extends Comparable<T>> {
 		return ret;
 	}
 
+
 	/**
 	 * 添加到二面队列中
 	 * @param stu
 	 */
-	public synchronized void addTwoList(Student stu) {
+	public synchronized void addTwoList(StudentWaiter stu) {
 		// TODO Auto-generated method stub
-		twoList.add((T) stu);
+		twoList.add(stu);
 	}
 
 	/**
@@ -63,12 +67,23 @@ public class WaitService<T extends Comparable<T>> {
 	 * @param userName
 	 * @return
 	 */
-	public synchronized Student getTwoView(String city, String twoView, String userName) {
+	public synchronized StudentWaiter getTwoView(String city, String twoView, String userName) {
 		// TODO Auto-generated method stub
+		StudentWaiter stu=null;
 		for(int i=0;i<twoList.size();i++){
-			
+			String ci=twoList.get(i).getStu().getLocation();
+			String view=twoList.get(i).getStu().getJob();
+			String one=twoList.get(i).getStu().getFirstTry();
+			if(city.equals(ci)&&twoView.contains(view)&&!userName.equals(one)){
+				stu=twoList.get(i);
+				break;
+			}
 		}
-		return null;
+		return stu;
+	}
+	
+	public boolean contains(Student stu) {
+		return list.contains(stu);
 	}
 	
 }

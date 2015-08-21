@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.qunar.ops.recruit.dao.InterviewerMapper;
 import com.qunar.ops.recruit.dao.StudentMapper;
@@ -21,6 +22,8 @@ public class QydTestController {
 	private StudentMapper stuM;
 	@Autowired
 	private InterviewerMapper inM;
+	
+	int count = 0;
 
 	
 	/**
@@ -30,24 +33,23 @@ public class QydTestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/qyd")
-	public String index(HttpServletRequest request, Interviewer v, int i) {
+	@ResponseBody
+	public void index(HttpServletRequest request, Interviewer v, int i) {
 		/*String username = (String) request.getSession().getAttribute("username");
 		String password = (String) request.getSession().getAttribute("password");
 		logger.info("登录的用户名为{}====密码为{}", username,password);
 		if(!OAControllerUtils.isNull(username)&&!OAControllerUtils.isNull(password)){
 			return "redirect:/index";
 		}*/
-		System.out.println("-->"+i+v);
-		Interviewer in = new Interviewer();
-		in.setCity("jinan");
-		in.setUserName("qinyadong");
-		in.setPassword("123456");
-		in.setStartDate(new Date());
-		in.setOneCount(0);
-		in.setTwoCount(0);
-		inM.insert(in);
-		System.out.println("===");
-		return "redirect:/login";
+		System.out.println("current access time--->"+ count++);
+		try {
+			Thread.sleep((long)(100000*Math.random()));
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(count--);
+		System.out.println("current object-->"+this+"  currentThread-->"+Thread.currentThread().getId());
 	}
 	
 }
