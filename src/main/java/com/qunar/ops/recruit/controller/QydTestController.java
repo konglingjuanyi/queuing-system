@@ -41,13 +41,35 @@ public class QydTestController {
 		if(!OAControllerUtils.isNull(username)&&!OAControllerUtils.isNull(password)){
 			return "redirect:/index";
 		}*/
-		System.out.println("current access time--->"+ count++);
-		try {
-			Thread.sleep((long)(100000*Math.random()));
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		System.out.println("current access time--->"+ count++);
+//		try {
+//			Thread.sleep((long)(100000*Math.random()));
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		System.out.println(request.getSession().getAttribute("i"));
+		System.out.println(count--);
+		System.out.println("current object-->"+this+"  currentThread-->"+Thread.currentThread().getId());
+	}
+	
+	@RequestMapping(value = "/qydset")
+	@ResponseBody
+	public void set(HttpServletRequest request, Interviewer v, int i) {
+		/*String username = (String) request.getSession().getAttribute("username");
+		String password = (String) request.getSession().getAttribute("password");
+		logger.info("登录的用户名为{}====密码为{}", username,password);
+		if(!OAControllerUtils.isNull(username)&&!OAControllerUtils.isNull(password)){
+			return "redirect:/index";
+		}*/
+//		System.out.println("current access time--->"+ count++);
+//		try {
+//			Thread.sleep((long)(100000*Math.random()));
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		request.getSession().setAttribute("i", i);
 		System.out.println(count--);
 		System.out.println("current object-->"+this+"  currentThread-->"+Thread.currentThread().getId());
 	}

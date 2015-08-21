@@ -1,6 +1,7 @@
 package com.qunar.ops.recruit.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +53,21 @@ public class StudentController {
 		}else{
 			StudentWaiter sw = new StudentWaiter(stu, System.currentTimeMillis());
 			int frontWaters = waitService.add2WaitList(sw);
+			request.getSession().setAttribute("sw", sw);
 			return BaseResult.getSuccessResult(frontWaters);
+		}
+		
+	}
+	
+	@RequestMapping(value = "/student/refresh")
+	@ResponseBody
+	public BaseResult refresh(HttpSession session) {
+		StudentWaiter sw = (StudentWaiter) session.getAttribute("sw");
+		if(sw != null){
+			int frontWaters = waitService.numberInFrontOf(sw);
+			return BaseResult.getSuccessResult(frontWaters);
+		}else{
+			return BaseResult.getErrorResult(RecruitConst.NOT_REGIST_ERROR, RecruitConst.NOT_REGIST_ERROR_MSG);
 		}
 		
 	}

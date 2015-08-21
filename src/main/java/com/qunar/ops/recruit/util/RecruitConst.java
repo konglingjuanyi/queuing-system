@@ -19,4 +19,6 @@ public class RecruitConst {
     
 	public static final int ALREADY_REGIST_ERROR = 103;
 	public static String ALREADY_REGIST_ERROR_MSG = "已经注册排队！";
+	public static int NOT_REGIST_ERROR = 104;
+	public static final String NOT_REGIST_ERROR_MSG = "未注册";
 }
