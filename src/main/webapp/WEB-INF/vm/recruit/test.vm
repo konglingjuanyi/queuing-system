@@ -1,0 +1,50 @@
+#set($layout = "layout/default.vm")
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Qunar 校园招聘系统</title>
+<base href="/recruit/"/>
+<script src="/recruit/static/My97DatePicker/WdatePicker.js"></script>
+</head>
+<body bgcolor="#FFFFFF">
+	<form action="/student/test" method="post">
+	<div align="center" style="margin-top:8%" id = "bodydiv">
+	<table style="text-align: center;" id = "tablediv">
+		<tr>
+			<td>
+                 <div class="input-append date form-date">
+                        <input class="input-medium" name="name" type="text" style="width: 186px" placeholder="姓名"/>
+                    </div>
+			</td>
+			<td>
+                 <div class="input-append date form-date">
+                        <input class="input-medium" name="should" type="text" style="width: 186px" onclick="showTime()"
+                   			placeholder="应到时间"/>
+            			<span class="add-on"  style="height:28px;"><i class="icon-th green"></i></span>
+                    </div>
+			</td>
+			<td>
+                 <div class="input-append date form-date">
+                        <input class="input-medium" name="real" type="text" style="width: 186px" onclick="showTime()"
+                   			placeholder="实到时间"/>
+            			<span class="add-on"  style="height:28px;"><i class="icon-th green"></i></span>
+                    </div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" style="font-size: 30px; text-align: center;">
+				<button id="login" type="submit">登录</button>
+			</td>
+		</tr>
+	</table>
+	</div>
+	</form>
+	<script>
+		 function showTime() {
+        WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+    }
+	</script>
+</body>
+</html>

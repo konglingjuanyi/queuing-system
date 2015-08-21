@@ -14,6 +14,8 @@ public class WaitService {
 	
 	List<StudentWaiter> list = new LinkedList<StudentWaiter>();
 	
+	List<Studenttest> l = new LinkedList<Studenttest>();
+	
 	List<StudentWaiter> twoList = new LinkedList<StudentWaiter>();
 
 	public synchronized int numberInFrontOf(StudentWaiter t){
@@ -34,6 +36,15 @@ public class WaitService {
 		list.add(t);
 		Collections.sort(list);
 		return numberInFrontOf(t);
+	}
+	
+	public synchronized int addtest(Studenttest t){
+		l.add(t);
+		Collections.sort(l);
+		for(int i=0;i<l.size();i++){
+			System.out.println(l.get(i).getName()+"++"+l.get(i).getShouldComeTime()+"==="+l.get(i).getRealComeTime()+"***"+l.get(i).getNowtime());
+		}
+		return 0;
 	}
 	
 	public synchronized StudentWaiter removeHighestPriorityFromList(String city, String twoView, String userName){
