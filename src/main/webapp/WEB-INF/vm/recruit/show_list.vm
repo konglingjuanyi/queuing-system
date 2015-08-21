@@ -180,6 +180,105 @@
     </div>
 </div>
 
+<div id="train-edit">
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="edit-className">城市：</label>
+
+                <div class="controls">
+                    <select id="edit-city" style="height:28px;">
+                    	<option value="">城市...</option>
+                    	<option value="北京">北京</option>
+                    	<option value="长春">长春</option>
+                    	<option value="哈尔滨">哈尔滨</option>
+                    	<option value="沈阳">沈阳</option>
+                    	<option value="大连">大连</option>
+                    	<option value="西安">西安</option>
+                    	<option value="武汉">武汉</option>
+                    	<option value="成都">成都</option>
+                    	<option value="南京">南京</option>
+           			</select>
+                    <small class="text-error">(*必选项)</small>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="edit-up">姓名：</label>
+
+                <div class="controls"><input type="text" id="edit-name"/> 人
+                    <small class="text-error">(*必填项)</small>
+                </div>
+            </div>
+			<div class="control-group">
+                <label class="control-label" for="edit-address">职位：</label>
+
+                <div class="controls">
+                    <input type="text" id="edit-job"/>
+                    <small class="text-error">(*25字以内)</small>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="edit-low">用户名：</label>
+
+                <div class="controls">
+                    <input type="text" id="edit-user"/> 人
+                    <small class="text-error">(*必填项)</small>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="edit-address">登录密码：</label>
+
+                <div class="controls">
+                    <input type="text" id="edit-password"/>
+                    <small class="text-error">(*25字以内)</small>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="edit-address">面试角色：</label>
+
+                <div class="controls">
+                    <input type="text" id="edit-role"/>
+                    <small class="text-error">(*25字以内)</small>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="edit-startDate">开始日期：</label>
+
+                <div class="controls">
+                    <div class="input-append date form-date">
+                        <input class="input-medium" id="edit-startDate" type="text" style="width: 186px" onclick="showTime()"
+                   			placeholder="开始日期"/>
+            			<span class="add-on"  style="height:28px;"><i class="icon-th green"></i></span>
+                    </div>
+                    <small class="text-error">(*必填项)</small>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="edit-endDate">结束日期：</label>
+
+                <div class="controls">
+                    <div class="input-append date form-date">
+                        <input class="input-medium" id="edit-endDate" type="text"  style="width: 186px" onclick="showTime()"
+                   			placeholder="结束日期"/>
+            			<span class="add-on"  style="height:28px;"><i class="icon-th green"></i></span>
+                    </div>
+                    <small class="text-error">(*必填项)</small>
+                </div>
+            </div>
+        </div>
+        <!-- 表单 -->
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit" data-dismiss="modal" id="edit-upload">
+            提交
+            <i class="icon-upload icon-white-common"></i>
+        </button>
+    </div>
+</div>
+
+
 <div id="common-notice-dialog" class="hide"></div>
 <div id="apply-result-dialog" class="hide"></div>
 <div id="back-msg-dialog" class="hide"></div>
@@ -225,6 +324,13 @@
             e.preventDefault();
         });
         
+        $("#edit-upload").unbind("click");
+        $("#edit-upload").on("click", function (e) {
+            doedit();
+        }).on("dblclick", function (e) {
+            e.preventDefault();
+        });
+        
         
         $( "#train-create" ).dialog({
       		autoOpen: false,
@@ -232,11 +338,67 @@
       		width: 560,
       		title:"新增面试官"
     	});
+    	
+    	$( "#train-edit" ).dialog({
+      		autoOpen: false,
+      		height: 580,
+      		width: 560,
+      		title:"修改面试官"
+    	});
         
         $("#add").on("click", function () {
               $("#train-create").dialog("open");
         });
     });
+    
+    function doupdate(id){
+    	$("#train-edit").dialog("open");
+    	$.ajax({
+              type: "POST",
+              contentType: 'application/json',
+              dataType: "json",
+              url: "/interview/updInterviewers",
+              data: {'id':id},
+              success: function (returnedData) {
+                  if( !ajaxReturn( returnedData ) ){
+                      return;
+                  }else {
+                  	  alert("创建成功");
+                      setData(returnedData);
+                    }
+			  },
+              error: function () {
+                    alert("系统发生了错误请稍后重试");
+              }
+       });
+	}
+	
+	function setData(data) {
+    	$('#edit-city').val(data.city);
+    	$('#edit-name').val(data.name);
+    	$('#edit-job').val(data.job);
+    	$('#edit-user').val(data.userName); 
+    	$('#edit-password').val(data.password);
+    	$('#edit-role').val(data.role);
+    	setStartDate(data.startDate);
+    	setEndDate(data.endTime);
+	}
+	
+	//设置开始日期
+	function setStartDate(start) {
+    	//其实只要最后一句话
+    	$('#edit-startDate').datetimepicker('setValue', start);
+    	$('#edit-startDate').datetimepicker('update');
+    	$('#edit-startDate').datetimepicker().children('input').val(start);
+	}
+
+	//设置结束日期
+	function setEndDate(end) {
+    	//其实只要最后一句话
+    	$('#edit-endDate').datetimepicker('setValue', end);
+    	$('#edit-endDate').datetimepicker('update');
+    	$('#edit-endDate').datetimepicker().children('input').val(end);
+	}
     
     function dodelete(id){
         $.ajax({
@@ -348,6 +510,62 @@
        });
     }
     
+    function doedit(){
+    	var edit_city = $.trim($('#edit-city').val());
+    	var edit_name = $.trim($('#edit-name').val());
+    	var edit_job = $.trim($('#edit-job').val());
+    	var edit_user = $.trim($('#edit-user').val()); 
+    	var edit_password = $.trim($('#edit-password').val());
+    	var edit_startDate = $.trim($('#edit-startDate').val());
+    	var edit_endDate = $.trim($('#edit-endDate').val());
+    	var edit_role = $.trim($('#edit-role').val());
+    	var vars = {};
+        if (edit_city != '') {
+             vars["edit_city"] = edit_city;
+        }
+        if (edit_name != '') {
+              vars["edit_name"] = edit_name;
+        }
+        if (edit_job != '') {
+             vars["edit_job"] = edit_job;
+        }
+        if (edit_user != '') {
+              vars["edit_user"] = edit_user;
+        }
+        
+        if (edit_password != '') {
+             vars["edit_password"] = edit_password;
+        }
+        if (edit_startDate != '') {
+              vars["edit_startDate"] = edit_startDate;
+        }
+        if (edit_endDate != '') {
+             vars["edit_endDate"] = edit_endDate;
+        }
+        if (edit_role != '') {
+              vars["edit_role"] = edit_role;
+        }
+        var params = {"vars": vars};
+        $.ajax({
+              type: "POST",
+              contentType: 'application/json',
+              dataType: "json",
+              url: "/interview/editInterviewers",
+              data: JSON.stringify(params),
+              success: function (returnedData) {
+                  if( !ajaxReturn( returnedData ) ){
+                      return;
+                  }else {
+                  	  alert("修改成功成功");
+                      show_registered_staff(returnedData);
+                    }
+			  },
+              error: function () {
+                    alert("系统发生了错误请稍后重试");
+              }
+       });
+    }
+    
     function doshow(){
     	var startDate = $.trim($('#date-from').val());
     	var endDate = $.trim($('#date-to').val());
@@ -400,16 +618,17 @@
     function show_registered_staff(returnedData) {
     	var table = "<table width='100%' style='table-layout:fixed' class='table table-bordered'><thead class='info'><tr><th style='width:20px;align:center;'><input type='checkbox' id='selectAll'  onclick='selectAllCheckBoxes(this);'></th><th style='width:60px;text-align:center;'>城市</th><th style='width:80px;text-align:center;'>姓名</th><th style='width:100px;text-align:center;'>用户名</th><th style='width:100px;text-align:center;'>密码</th><th style='width:90px;text-align:center;'>开始时间</th><th style='width:80px;text-align:center;'>结束时间</th><th style='width:200px;text-align:center;'>操作</th></tr></thead>";
 		if (returnedData != null) {
+			var inte = returnedData.data.tableInfos;
             table = table + "<tbody>";
-            for (var i = 0; i < (returnedData.length); ++i) {
-                table += "<tr><td><input type='checkbox' name='checked' value=" + (returnedData[i].id) + " ></td>";
-                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].city) + "</td>";
-                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].name) + "</td>";
-                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].userName) + "</td>";
-                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].password) + "</td>";
-                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].startDate) + "</td>";
-                table = table + "<td style='word-wrap:break-word;'>" + (returnedData[i].endTime) + "</td>";
-                table = table + "<td style='word-wrap:break-all;'><a href='javascript:void(0);' onclick=\"doupdate(\' " + (returnedData[i].id) + "\')\">修改</a>|<a href='javascript:void(0);' onclick=\"dodelete(\' " + (returnedData[i].id) + "\')\">删除</a></td>";
+            for (var i = 0; i < (inte.length); ++i) {
+                table += "<tr><td><input type='checkbox' name='checked' value=" + (inte[i].id) + " ></td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (inte[i].city) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (inte[i].name) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (inte[i].userName) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (inte[i].password) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (inte[i].startDate) + "</td>";
+                table = table + "<td style='word-wrap:break-word;'>" + (inte[i].endTime) + "</td>";
+                table = table + "<td style='word-wrap:break-all;'><a href='javascript:void(0);' onclick=\"doupdate(\' " + (inte[i].id) + "\')\">修改</a>|<a href='javascript:void(0);' onclick=\"dodelete(\' " + (inte[i].id) + "\')\">删除</a></td>";
             }
 
         }

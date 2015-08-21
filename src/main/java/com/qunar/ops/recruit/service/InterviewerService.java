@@ -60,4 +60,14 @@ public class InterviewerService {
 		interMapper.insert(inter);
 	}
 
+	/**
+	 * 通过ID获取面试官信息
+	 * @param id 
+	 * @return
+	 */
+	public Interviewer getInterviewersById(String id) {
+		// TODO Auto-generated method stub
+		return interMapper.selectByPrimaryKey(Integer.valueOf(id));
+	}
+
 }

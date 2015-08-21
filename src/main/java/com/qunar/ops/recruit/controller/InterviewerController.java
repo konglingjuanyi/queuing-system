@@ -19,10 +19,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.model.Interviewer;
+import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.DataResult;
 import com.qunar.ops.recruit.service.InterviewerService;
+import com.qunar.ops.recruit.service.StudentService;
+import com.qunar.ops.recruit.service.StudentWaiter;
+import com.qunar.ops.recruit.service.WaitService;
 import com.qunar.ops.recruit.util.QUtils;
 import com.qunar.ops.recruit.util.RecruitConst;
 import com.qunar.ops.recruit.util.RecruitControllerUtils;
@@ -33,6 +37,10 @@ public class InterviewerController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private InterviewerService inServe;
+	@Autowired
+	StudentService studentService;
+	@Autowired
+	WaitService<StudentWaiter> waitService;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
@@ -161,5 +169,53 @@ public class InterviewerController {
 		inter.setTwoCount(0);
 		inter.setCreateTime(new Date());
 		return inter;
+	}
+	
+	/**
+	 * 面试官点击继续面试和开始面试获取下一个待面试的候选人
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "/interview/getNextStudent")
+	@ResponseBody
+	public BaseResult getNextStudent(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		//通过ID获取面试官信息
+		Interviewer inter = inServe.getInterviewersById(vars.get("id"));
+		if(!"".equals(inter.getTwoView())){
+			//如果面试官的二面角色不为空,先从二面队列中拿数据
+			//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
+			Student  stu = waitService.getTwoView(inter.getCity(),inter.getTwoView(),inter.getUserName());
+			
+		}else{
+			//只有一面角色从一面队列中拿数据
+		}
+		return BaseResult.getSuccessResult(null);
+	}
+	
+	/**
+	 * 一面结束根据一面结果判断候选人是否通过是否需要进行二面
+	 * @param request
+	 * @param commonRequest
+	 * @return
+	 */
+	@RequestMapping(value = "/interview/finishOneView")
+	@ResponseBody
+	public BaseResult finishOneView(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		//根据参数保存候选人的基本信息和评估表信息
+		
+		//end
+		//根据评估表的信息判断候选人时候需要参加二面
+		if(!"不通过".equals(vars.get("ID"))){
+			//添加到二面队列中
+			Student stu =studentService.getStudentByPhone(vars.get("phone"));
+			waitService.addTwoList(stu);
+			return BaseResult.getSuccessResult(null);
+		}else{
+			//结束面试
+			return BaseResult.getSuccessResult(null);
+		}
 	}
 }
