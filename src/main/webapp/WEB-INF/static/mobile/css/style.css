@@ -1,0 +1,216 @@
+@charset "utf-8";
+
+@import url("reset.css");
+@import url("fade-in.css");
+@import url("fade-in-down.css");
+@import url("fade-in-up.css");
+@import url("fade-in-right.css");
+@import url("elastic-x.css");
+@import url("elastic-y.css");
+@import url("pulse.css");
+@import url("stretch.css");
+
+
+html,body{
+	height: 100%;
+	overflow: hidden;
+}
+.wrap{
+	position: relative;
+	width: 100%;
+	height: 100%;
+	background: url(../images/bg.jpg) no-repeat center top;
+	background-size: 100% 100%;
+}
+.balloon{	
+	position: absolute;
+	top:-7.2%;
+	left: 7.65%;
+}
+.balloon_left{
+	position: absolute;
+	top:4%;
+	left: -4.68%;
+}
+.balloon_middle{
+	position: absolute;
+	top:-7.2%;
+	left: 33.12%;
+}
+.balloon_right{
+	position: absolute;
+	top:-1.4%;
+	right: 5.9%;
+}
+.title{
+	position: absolute;
+	top:7.5%;
+	left: 9.6%;
+}
+.con{
+	width: 100%;
+	height: 100%;
+}
+.step_1{
+	background: url(../images/kuang.png) no-repeat top center;
+	background-size:contain;
+	width: 90.78%;
+	height: 42.4%;
+	position: absolute;
+	top: 31.6%;
+	left: 3.9%;
+
+}
+.step_1 .form, .step_1 form{
+	display: block;
+	width:100%;
+	height: 100%;
+	
+}
+.step_1 .form{
+	padding-top: 1px;
+	position: relative;
+}
+.step_1 .form .box{
+	position: absolute;
+	left: 50%;
+	top: 45%;
+	margin-left: -105px;
+	text-align: center;
+}
+.step_1 .form .item{
+	width: 210px;
+	height: 39px;
+	background: #fff;
+	border-radius: 3px;
+	margin-bottom: 10px;
+}
+
+.step_1 .form .item input{
+	border: none;
+	display: block;
+	padding: 0;
+	font-size: 16px;
+	color: #333;
+	width: 90%;
+	height: 90%;
+	padding:3px 10px;
+	line-height: 1;
+	background: none;
+}
+.step_1 .btn{
+	position: absolute;
+	width: 52.66%;
+	height: 21.46%;
+	top: 110%;
+	left: 24.26%;
+	background: url(../images/btn.png) no-repeat center top;
+	background-size:contain; 
+	margin: 0 auto;
+}
+.step_1 .btn:hover{
+    -webkit-animation: none;
+    animation: none;
+}
+.step_1 .form .plane{
+	position: absolute;
+	width: 11.01%;
+	height: 15.09%;
+	background: url(../images/plane.png) no-repeat;
+	background-size: contain;
+	left: 48.19%;
+	top:5%;
+}
+
+
+.step_2,.step_3{
+	background: url(../images/kuang2.png) no-repeat top center;
+	background-size: contain;
+	width: 93.75%;
+	height: 47.7%;
+	position: absolute;
+	top: 31.6%;
+	left: 3.12%;
+
+}
+.step_2 .form, .step_2 form,.step_3 .form, .step_3 form{
+	display: block;
+	width:100%;
+	height: 100%;
+	
+}
+.step_2 .form,.step_3 .form{
+	padding-top: 1px;
+	position: relative;
+}
+.step_2 .form .text, .step_3 .form .text{
+	position: absolute;
+	width: 80.66%;
+	height: 53.03%;
+	top: 43.6%;
+	left: 8.666%;
+	font-size: 18px;
+	line-height: 32px;
+	text-align: center;
+}
+.step_2 .form .text .name, .step_3 .form .text .name{
+	color: #0f73d0;
+}
+.step_2 .form .text .num, .step_3 .form .text .num{
+	color: #56d559;
+}
+.step_2 .form .plane{
+	position: absolute;
+	width: 19%;
+	height: 23.27%;
+	background: url(../images/plane2.png) no-repeat;
+	background-size: contain;
+	left: 49.66%;
+	top:3.56%;
+}
+
+
+.step_3 .form .pen{
+	position: absolute;
+	width: 11.666%;
+	height: 24.31%;
+	background: url(../images/pen.png) no-repeat;
+	background-size: contain;
+	left: 52.16%;
+	top:-3.77%;
+}
+
+
+.ani {
+	-webkit-animation-duration: 1s;
+	animation-duration: 1s;
+	-webkit-animation-fill-mode: both;
+	animation-fill-mode: both;
+}
+
+.ani.infinite {
+	-webkit-animation-iteration-count: infinite;
+	animation-iteration-count: infinite;
+}
+.delay100{
+	-webkit-animation-delay:1s;
+	animation-delay:1s;
+}
+.delay200{
+	-webkit-animation-delay:2s;
+	animation-delay:2s;
+}
+.delay300{
+	-webkit-animation-delay:3s;
+	animation-delay:3s;
+}
+.delay500{
+	-webkit-animation-delay:5s;
+	animation-delay:5s;
+}
+.delay800{
+	-webkit-animation-delay:8s;
+	animation-delay:8s;
+}
+
+

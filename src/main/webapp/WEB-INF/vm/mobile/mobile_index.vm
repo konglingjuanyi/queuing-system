@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>去哪儿网校园招聘</title>
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<link rel="stylesheet" href="/static/mobile/css/style.min.css">
+	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/mobile/mobile.js"></script>
+</head>
+<body>
+	<div class="wrap">
+		<img class="balloon ani fade-in" src="/static/mobile/images/balloon.png" width="97.34%" alt="">
+		<img class="balloon_left ani fade-in-up delay100" src="/static/mobile/images/balloon-left.png" width="19.06%" alt="">
+		<img class="balloon_middle ani fade-in-up" src="/static/mobile/images/balloon-middle.png" width="22.5%" alt="">
+		<img class="balloon_right ani fade-in-up" src="/static/mobile/images/balloon-right.png" width="20.78%" alt="">
+		<img class="title ani fade-in elastic-x delay100" src="/static/mobile/images/title.png" width="80.78%" alt="">		
+		<div class="con">
+			#if($flag==0)
+			<div class="step step_1 ani fade-in" style="display: ">
+				<form id="registForm" name="registForm" action="" method="post">
+					<div class="form">
+						<div class="box">
+							<div class="item">
+								<input id="phone" name="phone" type="number" placeholder="请输入手机号">
+							</div>
+							<div class="item">
+								<input id="name" name="name" type="text" placeholder="请输姓名">
+							</div>
+							<div id="showError" style="display: none">请填写手机号和姓名</div>
+						</div>
+						<div class="plane ani  pulse infinite"></div>
+					</div>
+					<div id="regist" class="btn ani  stretch delay300"></div>
+				</form>
+			</div>
+			#end
+			#if($flag==1)
+			<div class="step step_2 ani fade-in" style="display: ">
+				<div class="form">
+					<div class="text">
+						<span class="name">赵英俊</span>
+						同学 <br />
+						在你前面还有 <span class="num">32</span> 位同学<br />
+						正在进行面试
+					</div>
+					<div class="plane ani  pulse infinite"></div>
+				</div>
+			</div>
+			#end
+			#if($flag==2)
+			<div class="step step_3 ani fade-in" style="display: ">
+				<div class="form">
+					<div class="text">
+						<span class="name">赵英俊</span>
+						同学 <br />
+						请你到 <span class="num">302</span> 号房间<br />
+						进行面试
+					</div>
+					<div class="pen ani  pulse infinite"></div>
+				</div>
+			</div>
+			#end
+		</div>
+	</div>
+</body>
+</html>

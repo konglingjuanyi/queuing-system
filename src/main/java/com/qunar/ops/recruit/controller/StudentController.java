@@ -26,6 +26,7 @@ import com.qunar.ops.recruit.service.Studenttest;
 import com.qunar.ops.recruit.service.WaitService;
 import com.qunar.ops.recruit.util.RecruitConst;
 
+
 @Controller
 public class StudentController {
 
@@ -54,8 +55,8 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/student/register")
 	@ResponseBody
-	//public BaseResult register(HttpServletRequest request, String phone) {
 	public BaseResult register(HttpServletRequest request, String phone, String name) {
+		System.out.println(phone+"============="+name);
 		Object user = request.getSession().getAttribute("user");
 		if(user == null){
 			if(phone != null && name != null){
@@ -141,9 +142,9 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/student/login")
 	public String loginMobile(HttpServletRequest request,ModelMap model) {
-		String msg="<span class='name'>赵英俊</span>同学 <br />在你前面还有 <span class='num'>32</span> 位同学<br />正在进行面试";
-		model.addAttribute("msg",msg);
+		//String msg="<span class='name'>赵英俊</span>同学 <br />在你前面还有 <span class='num'>32</span> 位同学<br />正在进行面试";
+		//model.addAttribute("msg",msg);
 		model.addAttribute("flag",0);
-		return "jsp/mobile_index";
+		return "mobile/mobile_index";
 	}
 }
