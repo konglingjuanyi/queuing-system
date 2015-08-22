@@ -25,6 +25,7 @@ import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.service.Studenttest;
 import com.qunar.ops.recruit.service.WaitService;
 import com.qunar.ops.recruit.util.RecruitConst;
+import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
 
 @Controller
@@ -131,7 +132,6 @@ public class StudentController {
 		}else{
 			return BaseResult.getErrorResult(RecruitConst.NOT_REGIST_ERROR, RecruitConst.NOT_REGIST_ERROR_MSG);
 		}
-		
 	}
 	
 	/**
@@ -142,8 +142,8 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/student/login")
 	public String loginMobile(HttpServletRequest request,ModelMap model) {
-		//String msg="<span class='name'>赵英俊</span>同学 <br />在你前面还有 <span class='num'>32</span> 位同学<br />正在进行面试";
-		//model.addAttribute("msg",msg);
+		//String message="<span class='name'>赵英俊</span>同学 <br />在你前面还有 <span class='num'>32</span> 位同学<br />正在进行面试";
+		//model.addAttribute("message",message);
 		model.addAttribute("flag",0);
 		return "mobile/mobile_index";
 	}

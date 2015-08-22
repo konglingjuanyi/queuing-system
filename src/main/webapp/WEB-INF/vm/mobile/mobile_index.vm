@@ -4,6 +4,7 @@
 	<meta charset="UTF-8">
 	<title>去哪儿网校园招聘</title>
 	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<!--<meta http-equiv="refresh"  content="5;/student/login" />-->
 	<link rel="stylesheet" href="/static/mobile/css/style.min.css">
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/mobile/mobile.js"></script>
@@ -34,30 +35,13 @@
 					<div id="regist" class="btn ani  stretch delay300"></div>
 				</form>
 			</div>
-			#end
-			#if($flag==1)
+			#else
 			<div class="step step_2 ani fade-in" style="display: ">
 				<div class="form">
 					<div class="text">
-						<span class="name">赵英俊</span>
-						同学 <br />
-						在你前面还有 <span class="num">32</span> 位同学<br />
-						正在进行面试
+						${message}
 					</div>
 					<div class="plane ani  pulse infinite"></div>
-				</div>
-			</div>
-			#end
-			#if($flag==2)
-			<div class="step step_3 ani fade-in" style="display: ">
-				<div class="form">
-					<div class="text">
-						<span class="name">赵英俊</span>
-						同学 <br />
-						请你到 <span class="num">302</span> 号房间<br />
-						进行面试
-					</div>
-					<div class="pen ani  pulse infinite"></div>
 				</div>
 			</div>
 			#end
