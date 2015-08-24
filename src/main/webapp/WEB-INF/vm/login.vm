@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="/static/assets/css/reset.css">
         <link rel="stylesheet" href="/static/assets/css/supersized.css">
         <link rel="stylesheet" href="/static/assets/css/style.css">
-
+		<script src="/static/assets/js/login.js"></script>
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
             <script src="/static/assets/js/html5.js"></script>
@@ -29,7 +29,9 @@
             <form action="/index" method="post">
                 <input type="text" name="username" class="username" placeholder="请输入您的用户名！">
                 <input type="password" name="password" class="password" placeholder="请输入您的用户密码！">
-                <button type="submit" class="submit_button">登录</button>
+                <br>
+                <div class="msg" id="msg">${message}</div>
+                <button type="submit" onclick="checkUp();" class="submit_button">登录</button>
                 <div class="error"><span>+</span></div>
             </form>
         </div>
