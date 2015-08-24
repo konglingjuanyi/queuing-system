@@ -30,7 +30,7 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/login")
 	public ModelAndView welcom(HttpServletRequest request) {
-		ModelAndView mav = new ModelAndView("/recruit/login");
+		ModelAndView mav = new ModelAndView("/login");
 		return mav;
 	}
 
@@ -44,7 +44,7 @@ public class LoginController {
 	public ModelAndView toindex(HttpServletRequest request,
 			HttpServletResponse response, String username, String password) {
 		logger.info("登录的用户名为{}+++++++++++++++++密码为{}", username, password);
-		if(username == null || password == null){
+		/*if(username == null || password == null){
 			ModelAndView mav = new ModelAndView("redirect:/login");
 			mav.getModelMap().put("wrong", "username or password is null!");
 			return mav;
@@ -66,7 +66,9 @@ public class LoginController {
 			System.out.println("wrong password!");
 			return mav;
 			
-		}
+		}*/
+		ModelAndView mav = new ModelAndView("/index");
+		return mav;
 	}
 	
 }
