@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.recruit.dao.StudentMapper;
+import com.qunar.ops.recruit.model.HrExample.Criteria;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentExample;
 
@@ -30,12 +31,18 @@ public class StudentService {
 
 	public List<Student> getOneList() {
 		StudentExample se = new StudentExample();
+		StudentExample.Criteria cr = se.createCriteria();
+		cr.andFirstTryIsNull();
+		cr.andTrueTimeIsNotNull();
 		List<Student> ret = stuMapper.selectByExample(se);
 		return ret;
 	}
 
 	public List<Student> getTwoList() {
 		StudentExample se = new StudentExample();
+		StudentExample.Criteria cr = se.createCriteria();
+		cr.andFirstTryIsNotNull();
+		cr.andSecondTryIsNull();
 		List<Student> ret = stuMapper.selectByExample(se);
 		return ret;
 	}

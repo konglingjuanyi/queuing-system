@@ -1,18 +1,29 @@
 package com.qunar.ops.recruit.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.service.StudentService;
+import com.qunar.ops.recruit.service.WaitService;
 import com.qunar.ops.recruit.util.QUtils;
 
 @Controller
 public class CommonController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	@Autowired
+	WaitService ws;
+	@Autowired
+	StudentService ss;
 	
 	/**
 	 * login
@@ -41,6 +52,17 @@ public class CommonController {
 		QUtils.setUsername(response, "un", null, true);
 		QUtils.setUsername(response, "test-userid", null, false);
 		return "redirect:/login";
+	}
+	
+	
+	
+	@RequestMapping(value = "/restart")
+	@ResponseBody
+	public String restart(HttpServletRequest request,HttpServletResponse response) {
+		List<Student> l1 = ss.getOneList();
+		List<Student> l2 = ss.getTwoList();
+		ws.recovery(l1, l2);
+		return "success";
 	}
 	
 }
