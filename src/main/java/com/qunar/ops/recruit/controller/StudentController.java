@@ -130,7 +130,7 @@ public class StudentController {
 						model.addAttribute("message",RecruitConst.INTERVIEW_STATE_ING);
 						model.addAttribute("flag",1);
 					}
-					session.setAttribute("user", newStudent);
+					session.setAttribute("user", new StudentWaiter(newStudent));
 				}
 			}else{
 				String message= RecruitConst.AUTHORITY_ERROR_MSG;
