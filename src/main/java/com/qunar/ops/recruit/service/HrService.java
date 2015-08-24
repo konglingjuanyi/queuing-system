@@ -9,11 +9,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.recruit.dao.InterviewerMapper;
+import com.qunar.ops.recruit.model.Hr;
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.InterviewerExample;
 
 @Component
-public class InterviewerService {
+public class HrService {
 
 	@Autowired
 	InterviewerMapper interMapper;
@@ -58,15 +59,18 @@ public class InterviewerService {
 		return interMapper.selectByPrimaryKey(Integer.valueOf(id));
 	}
 
-	public Interviewer getInterviewerByNameAndPass(String username, String password) {
+	public Interviewer getInterviewersByUserName(String username) {
 		InterviewerExample ie = new InterviewerExample();
-		InterviewerExample.Criteria c = ie.createCriteria();
-		c.andPasswordEqualTo(password);
-		c.andUserNameEqualTo(username);
+		ie.createCriteria().andUserNameEqualTo(username);
 		List<Interviewer> inter = interMapper.selectByExample(ie);
 		if(inter != null && inter.size() > 0){
 			return inter.get(0);
 		}
+		return null;
+	}
+
+	public Hr getHrByUserName(String username) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

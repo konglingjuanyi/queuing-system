@@ -1,5 +1,7 @@
 package com.qunar.ops.recruit.controller;
 
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,25 +13,28 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.qunar.ops.recruit.dao.InterviewerMapper;
-import com.qunar.ops.recruit.dao.StudentMapper;
+import com.qunar.ops.recruit.model.Hr;
 import com.qunar.ops.recruit.model.Interviewer;
+import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.service.HrService;
 import com.qunar.ops.recruit.service.InterviewerService;
-import com.qunar.ops.recruit.util.RecruitControllerUtils;
-import com.qunar.ops.recruit.util.QUtils;
+import com.qunar.ops.recruit.service.StudentWaiter;
+import com.qunar.ops.recruit.util.RecruitConst;
 
 @Controller
 public class LoginController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
 	private InterviewerService interservice;
+	@Autowired
+	private HrService hrService;
 	/**
 	 * login
 	 * 
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/login")
+	@RequestMapping(value = "/tologin")
 	public ModelAndView welcom(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("/login");
 		return mav;
@@ -41,36 +46,46 @@ public class LoginController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/index")
-	public ModelAndView toindex(HttpServletRequest request,
+	@RequestMapping(value = "/login")
+	public String toindex(HttpServletRequest request,
 			HttpServletResponse response, String username, String password, ModelMap model) {
-		logger.info("登录的用户名为{}+++++++++++++++++密码为{}", username, password);
-		/*if(username == null || password == null){
-			ModelAndView mav = new ModelAndView("redirect:/login");
-			mav.getModelMap().put("wrong", "username or password is null!");
-			return mav;
+		Object user = request.getSession().getAttribute("user");
+		if(user == null){
+			if(username != null && password != null){
+				Hr hr = hrService.getHrByUserName(username);
+				Interviewer inter = interservice.getInterviewerByNameAndPass(username, password);
+				if(hr == null && inter == null){
+					String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
+					model.addAttribute("message",message);
+					model.addAttribute("flag",-1);
+					return "/login";
+				}else if(hr != null){
+					String message= RecruitConst.PHONE_NAME_MISS_MATCH_MSG;
+					model.addAttribute("message","success");
+					model.addAttribute("flag",0);
+					return "/hr_index";
+				}else{
+					String message= RecruitConst.PHONE_NAME_MISS_MATCH_MSG;
+					model.addAttribute("message","success");
+					model.addAttribute("flag",1);
+					return "/view_index";
+				}
+			}else{
+				model.addAttribute("flag",-1);
+				return "/login";
+			}
+		}else{//session中存在用户信息
+			if(user instanceof Hr){
+				model.addAttribute("flag",0);
+				return "/hr_index";
+			}else if(user instanceof Interviewer){
+				model.addAttribute("flag",1);
+				return "/view_index";
+			}else{
+				return "/login";
+			}
 		}
-		Interviewer inter = interservice.getInterviewersByUserName(username);
-		if(inter == null){
-			request.getSession().setAttribute("user", inter);
-			ModelAndView mav = new ModelAndView("redirect:/login");
-			mav.getModelMap().put("wrong", "no user");
-			System.out.println("no this user");
-			return mav;
-		}if(inter.getPassword().equals(password)){
-			request.getSession().setAttribute("user", inter);
-			ModelAndView mav = new ModelAndView("/recruit/index");
-			return mav;
-		}else{
-			ModelAndView mav = new ModelAndView("redirect:/login");
-			mav.getModelMap().put("wrong", "wrong password!");
-			System.out.println("wrong password!");
-			return mav;
-			
-		}*/
-		model.addAttribute("admin","admin");
-		ModelAndView mav = new ModelAndView("/index");
-		return mav;
+
 	}
 	
 }

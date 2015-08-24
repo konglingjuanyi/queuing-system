@@ -99,7 +99,58 @@ public class StudentController {
 	@RequestMapping(value = "/student/refresh")
 	public String refresh(HttpSession session,  ModelMap model) {
 		Object sw = session.getAttribute("user");
-		System.out.println(sw+"===========");
+//		System.out.println(sw+"===========");
+		if(sw != null){ 
+			if(sw instanceof StudentWaiter){
+				StudentWaiter studentWaiter = (StudentWaiter) sw;
+				Student student = studentWaiter.getStu();
+				String name = student.getName();
+				if(waitService.contains(studentWaiter)){
+					int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
+					String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
+					model.addAttribute("message",message);
+					model.addAttribute("flag",1);
+				}else{ 
+					Student newStudent = studentService.getStudentByPhone(student.getPhone());
+					System.out.println(student+" "+newStudent);
+					System.out.println(student.getFirstTry() +"\t" + newStudent.getFirstTry());
+					if(student.getFirstTry() == null && newStudent.getFirstTry() != null){
+						//一面到房间面试
+						String numberOfRoom = joinService.getFirstInterviewRoomNumber(student);
+						String message="<span class='name'>"+name+"</span>同学 <br />请您到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
+						model.addAttribute("message",message);
+						model.addAttribute("flag",1);
+					}else if(student.getSecondTry() == null && newStudent.getSecondTry() != null){
+						//二面到房间面试
+						String numberOfRoom = joinService.getSecondInterviewRoomNumber(student);
+						String message="<span class='name'>"+name+"</span>同学 <br />请您到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
+						model.addAttribute("message",message);
+						model.addAttribute("flag",1);
+					}else{
+						//可能hr面或者面试结束
+						
+						model.addAttribute("message",RecruitConst.INTERVIEW_STATE_ING);
+						model.addAttribute("flag",1);
+					}
+					session.setAttribute("user", new StudentWaiter(newStudent));
+				}
+			}else{
+				String message= RecruitConst.AUTHORITY_ERROR_MSG;
+				model.addAttribute("message",message);
+				model.addAttribute("flag",1);
+			}
+			return "mobile/mobile_index";
+		}else{
+			model.addAttribute("flag",0);
+			return "mobile/mobile_login";
+		}
+	}
+	
+	@RequestMapping(value = "/student/refresh1")
+	@ResponseBody
+	public BaseResult refresh1(HttpSession session,  ModelMap model) {
+		Object sw = session.getAttribute("user");
+//		System.out.println(sw+"===========");
 		if(sw != null){ 
 			if(sw instanceof StudentWaiter){
 				StudentWaiter studentWaiter = (StudentWaiter) sw;
@@ -137,46 +188,7 @@ public class StudentController {
 				model.addAttribute("message",message);
 				model.addAttribute("flag",1);
 			}
-			return "mobile/mobile_index";
 		}else{
-			model.addAttribute("flag",0);
-			return "mobile/mobile_login";
-		}
-	}
-	
-	@RequestMapping(value = "/student/refresh1")
-	@ResponseBody
-	public BaseResult refresh1(HttpSession session,  ModelMap model) {
-		Object sw = session.getAttribute("user");
-		System.out.println(sw+"===========");
-		if(sw != null){ 
-			if(sw instanceof StudentWaiter){
-				StudentWaiter studentWaiter = (StudentWaiter) sw;
-				Student student = studentWaiter.getStu();
-				String name = student.getName();
-				if(waitService.contains(studentWaiter)){
-					int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
-					String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
-					model.addAttribute("message",message);
-					model.addAttribute("flag",1);
-				}else if(student.getFirstTry() == null){
-					//到房间面试
-					model.addAttribute("message",RecruitConst.INTERVIEW_STATE_ING);
-					model.addAttribute("flag",1);
-				}else{
-					//不在队列中，可能hr面或者面试结束
-					
-					model.addAttribute("message",RecruitConst.INTERVIEW_STATE_ING);
-					model.addAttribute("flag",1);
-				}
-			}else{
-				String message= RecruitConst.AUTHORITY_ERROR_MSG;
-				model.addAttribute("message",message);
-				model.addAttribute("flag",1);
-			}
-		}else{
-			String message= RecruitConst.NOT_LOGIN_ERROR_MSG;
-			model.addAttribute("message",message);
 			model.addAttribute("flag",0);
 		}
 		return BaseResult.getSuccessResult(model);
