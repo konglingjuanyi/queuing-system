@@ -5,26 +5,32 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.util.TimedTask;
 
 @Component
 public class WaitService {
 
-	
 	List<StudentWaiter> list = new LinkedList<StudentWaiter>();
 	
 	List<Studenttest> l = new LinkedList<Studenttest>();
 	
 	List<StudentWaiter> twoList = new LinkedList<StudentWaiter>();
-
+	
+	@Autowired
+	TimedTask tt;
+	
+	boolean b = false;
+	
 	public synchronized int numberInFrontOf(StudentWaiter t){
 		if(list.contains(t)){
-			return numberInFrontOfOne(t);
+			return numberInFrontOfOne(t)+1;
 		}
 		if(twoList.contains(t)){
-			return numberInFrontOfTwo(t);
+			return numberInFrontOfTwo(t)+1;
 		}
 		return -1;
 	}
@@ -61,7 +67,10 @@ public class WaitService {
 	
 	public synchronized int add2WaitList(StudentWaiter t){
 		list.add(t);
-		Collections.sort(list);
+		if(!b){
+			new Thread(tt).start();
+			b = true;
+		}
 		return numberInFrontOf(t);
 	}
 	
@@ -149,6 +158,12 @@ public class WaitService {
 	@Override
 	public String toString() {
 		return list + "\n" + twoList;
+	}
+
+	public void sort() {
+		Collections.sort(list);
+		Collections.sort(twoList);
+		
 	}
 	
 	
