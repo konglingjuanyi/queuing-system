@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -42,7 +43,7 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/index")
 	public ModelAndView toindex(HttpServletRequest request,
-			HttpServletResponse response, String username, String password) {
+			HttpServletResponse response, String username, String password, ModelMap model) {
 		logger.info("登录的用户名为{}+++++++++++++++++密码为{}", username, password);
 		/*if(username == null || password == null){
 			ModelAndView mav = new ModelAndView("redirect:/login");
@@ -67,6 +68,7 @@ public class LoginController {
 			return mav;
 			
 		}*/
+		model.addAttribute("admin","admin");
 		ModelAndView mav = new ModelAndView("/index");
 		return mav;
 	}

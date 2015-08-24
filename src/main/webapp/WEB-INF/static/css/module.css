@@ -1,0 +1,100 @@
+@charset "utf-8";
+
+.m-title{
+	padding: 10px 20px;
+	float: left;
+}
+.m-title h1{
+	font-size: 18px;
+	line-height: 30px!important;
+	color: #fff;
+	float: left;
+	margin: 0 30px;
+	vertical-align: middle;
+}
+.m-title select{
+	margin-left: 10px;
+	width: auto;
+	vertical-align: middle;
+}
+
+.m-nav{
+	float: right;
+	padding-top: 10px;	
+	width: 500px;
+}
+.m-nav li a{
+	color: #fff;
+}
+
+
+.m-pop{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -200px;
+	margin-top: -150px;
+	width: 300px;
+	height: 150px;
+	
+}
+.m-pop-hd .close{
+	position: absolute;
+	right: 10px;
+	top: 5px;
+}
+.m-login-btn{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -55px;
+	margin-top: -22px;
+}
+.m-pop-ft{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 10px 0;
+	left: 0;
+}
+.m-pop-ft .btn{
+	margin: 0 10px;
+}
+.m-table{
+	margin-top: 30px;
+}
+
+.m-table tr td,.m-table th{
+	text-align: center;
+}
+
+.m-manage-hd .btn{
+	margin-right: 10px;
+}
+.m-manage-bd{
+	margin-top: 30px;
+}
+.m-manage-bd td,.m-manage-bd th{
+	text-align: center;
+}
+
+
+.m-addmanage{
+
+}
+.m-addmanage .table{
+	width: 500px;
+}
+.m-addmanage .table td,.m-addmanage .table th{
+	text-align: center;
+}
+.m-addmanage-btn .btn{
+	margin-right: 10px;
+}
+
+
+
+
+
+
+
