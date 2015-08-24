@@ -1,8 +1,11 @@
 $(document).ready(function () {
 	if($("#showError").html()=='${message}'){
+		$("#showError").css("background-color","");
 		$("#showError").text("");
+		setTimeout("hidDiv()",3000);
 	}else{
 		$("#showError").css("display","");
+		$("#showError").css("background-color","#cccccc");
 		setTimeout("hidDiv()",3000);
 	}
 	$("#regist").click(function(){
@@ -11,6 +14,7 @@ $(document).ready(function () {
 		if(phone=='' || username==''){
 			$("#showError").text("请输入电话和姓名");
 			$("#showError").css("display","");
+			$("#showError").css("background-color","#cccccc");
 			setTimeout("hidDiv()",3000);
 			return false;
 		}else{

@@ -1,0 +1,42 @@
+@charset "utf-8";
+a,a:hover{text-decoration:none}
+.clr,.clrfix:after{clear:both;height:0}
+.bg,.bg_1,.bg_2,.bg_3,.bg_4,.bg_5,.bg_6,.wrap{width:100%}
+html{font:400 12px/1.5 tahoma,arial,sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;color:#555;min-width:980px}
+body,dd,dl,p,pre{margin:0}
+iframe,img{border:0}
+button,input,select,textarea{margin:0;font-family:inherit;font-size:100%;color:#555}
+table{border-collapse:collapse;border-spacing:0}
+h1,h2,h3,h4,h5,h6,td,th{margin:0;padding:0;font-size:100%;font-weight:400;text-align:left}
+ol,ul{margin:0;padding:0;list-style:none}
+em{font-style:normal}
+.wrap-1000 .title-name,.wrap-1000 .title-root{font-style:italic;color:#fff;position:absolute}
+a{outline:0;color:#0069ca}
+a:hover{color:#f60}
+.clr{overflow:hidden}
+.clrfix{zoom:1}
+.clrfix:after{display:block;visibility:hidden;content:"."}
+body,html{background:#041630}
+.bg,.wrap{min-width:1400px;position:relative;font-family:"Microsoft Yahei",simsun,arial,sans-serif}
+.bg_1,.bg_2,.bg_3,.bg_4,.bg_5,.bg_6{height:150px}
+.banner,.nav,.nav .item{height:335px}
+.bg_1{background:url(../images/xz_01.jpg) center top no-repeat}
+.bg_2{background:url(../images/xz_02.jpg) center top no-repeat}
+.bg_3{background:url(../images/xz_03.jpg) center top no-repeat}
+.bg_4{background:url(../images/xz_04.jpg) center top no-repeat}
+.bg_5{background:url(../images/xz_05.jpg) center top no-repeat}
+.bg_6{background:url(../images/xz_06.jpg) center top no-repeat}
+.wrap-1000{width:1000px;margin:0 auto;position:relative}
+.wrap-1000 .title-name{top:146px;left:274px;font-size:103px;width:430px}
+.wrap-1000 .title-root{top:256px;left:354px;font-size:103px;width:490px}
+.banner{position:absolute;top:565px;left:0;right:0;width:100%}
+.nav{width:1400px;margin:0 auto}
+.nav .item{width:210px;float:left;margin-left:20px;background:url(../images/nav2.png) no-repeat}
+.nav .item .room{padding-top:36px;font-size:60px;padding-left:38px;line-height:64px;text-align:center;color:#4aa6c5}
+.nav .item .state{font-size:30px;padding-left:33px;padding-top:10px;line-height:48px;text-align:center;color:#4aa6c5}
+.nav .item .job,.nav .item .name{font-size:42px;text-align:center;color:#4aa6c5}
+.nav .item .name{padding-top:33px;padding-left:32px;padding-right:13px;line-height:54px}
+.nav .item .job{padding-left:26px;padding-right:25px;line-height:50px}
+.nav .item-wait{background:url(../images/nav.png) no-repeat}
+.nav .item-wait .room,.nav .item-wait .state{color:#fff}
+.nav .item-wait .job,.nav .item-wait .name{color:#ffcd7f}
