@@ -20,8 +20,34 @@ public class WaitService {
 	List<StudentWaiter> twoList = new LinkedList<StudentWaiter>();
 
 	public synchronized int numberInFrontOf(StudentWaiter t){
+		if(list.contains(t)){
+			return numberInFrontOfOne(t);
+		}
+		if(twoList.contains(t)){
+			return numberInFrontOfTwo(t);
+		}
+		return -1;
+	}
+	
+	public synchronized int numberInFrontOfOne(StudentWaiter t) {
 		int count = 0;
 		for (StudentWaiter stu : list) {
+			if(t.equals(stu)){
+				break;
+			}
+//			System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
+			if(stu.getStu().getLocation().equals(t.getStu().getLocation()) &&
+					stu.getStu().getJob().equals(t.getStu().getJob())){
+				count ++;
+			}
+		}
+		return count;
+	}
+	
+	
+	public synchronized int numberInFrontOfTwo(StudentWaiter t) {
+		int count = 0;
+		for (StudentWaiter stu : twoList) {
 			if(t.equals(stu)){
 				break;
 			}
@@ -94,8 +120,8 @@ public class WaitService {
 		return stu;
 	}
 	
-	public boolean contains(Student stu) {
-		return list.contains(stu);
+	public boolean contains(StudentWaiter stu) {
+		return list.contains(stu) || twoList.contains(stu);
 	}
 
 	public void recovery(List<Student> oneList, List<Student> twoList) {
@@ -119,6 +145,14 @@ public class WaitService {
 		});
 		
 	}
+
+	@Override
+	public String toString() {
+		return list + "\n" + twoList;
+	}
+	
+	
+
 	
 }
 

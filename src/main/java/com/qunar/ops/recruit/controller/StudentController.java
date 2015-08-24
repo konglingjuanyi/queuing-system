@@ -55,43 +55,86 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/student/register")
-	@ResponseBody
-	public BaseResult register(HttpServletRequest request, String phone, String name) {
+	public String register(HttpServletRequest request, String phone, String name, ModelMap model) {
 		System.out.println(phone+"============="+name);
 		Object user = request.getSession().getAttribute("user");
 		if(user == null){
 			if(phone != null && name != null){
 				Student stu = studentService.getStudentByPhone(phone);
 				if(stu == null){
-					return BaseResult.getErrorResult(RecruitConst.NO_USER_ERROR, RecruitConst.NO_USER_ERROR_MSG);
+					String message= RecruitConst.NO_USER_ERROR_MSG;
+					model.addAttribute("message",message);
+					model.addAttribute("flag",0);
+					System.out.println(RecruitConst.NO_USER_ERROR_MSG);
 				}else if(!stu.getName().equals(name)){
-					return BaseResult.getErrorResult(RecruitConst.PHONE_NAME_MISS_MATCH, RecruitConst.PHONE_NAME_MISS_MATCH_MSG);
-				}else if(waitService.contains(stu)){
-					return BaseResult.getSuccessResult(waitService.numberInFrontOf(new StudentWaiter(stu,0)));
+					String message= RecruitConst.PHONE_NAME_MISS_MATCH_MSG;
+					model.addAttribute("message",message);
+					model.addAttribute("flag",0);
+					System.out.println(RecruitConst.PHONE_NAME_MISS_MATCH_MSG);
+				}else if(stu.getTrueTime() != null){
+					request.getSession().setAttribute("user", new StudentWaiter(stu));
+					return "redirect:/student/refresh";
 				}else{
 					Date date = new Date();
-					StudentWaiter sw = new StudentWaiter(stu, date.getTime());
-					int frontWaters = waitService.add2WaitList(sw);
+					stu.setTrueTime(date);
+					StudentWaiter sw = new StudentWaiter(stu);
+					waitService.add2WaitList(sw);
 					request.getSession().setAttribute("user", sw);
-					studentService.addStudentRealComeTimeIntoDB(date);
-					return BaseResult.getSuccessResult(frontWaters);
+					studentService.updateStudent(stu);
+					return "redirect:/student/refresh";
 				}
 			}else{
-				return BaseResult.getErrorResult(RecruitConst.PARAMETER_NULL, RecruitConst.PARAMETER_NULL_ERROR);
+				String message= RecruitConst.PARAMETER_NULL_ERROR_MSG;
+				model.addAttribute("message",message);
+				model.addAttribute("flag",0);
 			}
-		}else{
-			if(user instanceof StudentWaiter){
-				StudentWaiter sw = (StudentWaiter) user;
-				int frontWaters = waitService.numberInFrontOf(sw);
-				return BaseResult.getSuccessResult(frontWaters);
-			}else{
-				return BaseResult.getErrorResult(RecruitConst.AUTHORITY_ERROR, RecruitConst.AUTHORITY_ERROR_MSG);
-			}
-
+		}else{//session中存在学生信息
+			System.out.println("redirect:/student/refresh");
+			return "redirect:/student/refresh";
 		}
+		return "mobile/mobile_index";
 
 	}
 	
+	@RequestMapping(value = "/student/refresh")
+	public String refresh(HttpSession session,  ModelMap model) {
+		Object sw = session.getAttribute("user");
+		System.out.println(sw);
+		System.out.println(waitService);
+		if(sw != null){
+			if(sw instanceof StudentWaiter){
+				StudentWaiter studentWaiter = (StudentWaiter) sw;
+				Student student = studentWaiter.getStu();
+				String name = student.getName();
+				if(waitService.contains(studentWaiter)){
+					System.out.println("waitService contains student!!!!!");
+					int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
+					String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
+					model.addAttribute("message",message);
+					model.addAttribute("flag",1);
+				}else{
+					//不在队列中，可能hr面或者面试结束
+					model.addAttribute("message",RecruitConst.INTERVIEW_STATE_ING);
+					model.addAttribute("flag",1);
+				}
+			}else{
+				String message= RecruitConst.AUTHORITY_ERROR_MSG;
+				model.addAttribute("message",message);
+				model.addAttribute("flag",1);
+			}
+		}else{
+			String message= RecruitConst.NOT_LOGIN_ERROR_MSG;
+			model.addAttribute("message",message);
+			model.addAttribute("flag",0);
+		}
+		return "mobile/mobile_index";
+	}
+	
+	private String judgeStudentState(Student stu) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	@RequestMapping(value = "/student/test")
 	@ResponseBody
 	//public BaseResult register(HttpServletRequest request, String phone) {
@@ -122,17 +165,7 @@ public class StudentController {
 		}
 	}
 	
-	@RequestMapping(value = "/student/refresh")
-	@ResponseBody
-	public BaseResult refresh(HttpSession session) {
-		StudentWaiter sw = (StudentWaiter) session.getAttribute("sw");
-		if(sw != null){
-			int frontWaters = waitService.numberInFrontOf(sw);
-			return BaseResult.getSuccessResult(frontWaters);
-		}else{
-			return BaseResult.getErrorResult(RecruitConst.NOT_REGIST_ERROR, RecruitConst.NOT_REGIST_ERROR_MSG);
-		}
-	}
+
 	
 	/**
 	 * 手机端学生登录界面

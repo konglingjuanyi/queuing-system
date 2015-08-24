@@ -22,11 +22,17 @@ public class RecruitConst {
 	public static final int NOT_REGIST_ERROR = 104;
 	public static final int NO_USER_ERROR = 105;
 	public static final String NOT_REGIST_ERROR_MSG = "未注册";
+	public static final String NOT_LOGIN_ERROR_MSG = "未注册";
 	public static final String NO_USER_ERROR_MSG = "没有用户";
 	public static final int PHONE_NAME_MISS_MATCH = 106;
 	public static final String PHONE_NAME_MISS_MATCH_MSG = "手机号与姓名不匹配";
 	public static final int AUTHORITY_ERROR = 107;
 	public static final String AUTHORITY_ERROR_MSG = "没有访问权限";
 	public static final int PARAMETER_NULL = 108;
-	public static final String PARAMETER_NULL_ERROR = "参数不能为空";
+	public static final String PARAMETER_NULL_ERROR_MSG = "参数不能为空";
+	
+	public static final String INTERVIEW_STATE_ING = "面试中";
+	public static final String INTERVIEW_STATE_WAIT = "等待面试";
+	public static final String INTERVIEW_STATE_REJECT = "已回绝";
+	public static final String INTERVIEW_STATE_ACCEPT = "待发Offer";
 }

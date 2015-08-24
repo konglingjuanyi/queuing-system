@@ -40,8 +40,12 @@ public class StudentService {
 		return ret;
 	}
 
-	public void addStudentRealComeTimeIntoDB(Date date) {
-		
+	public void addStudentRealComeTimeIntoDB(Student stu, Date date) {
+
+	}
+
+	public void updateStudent(Student stu) {
+		stuMapper.updateByPrimaryKeySelective(stu);
 	}
 	
 

@@ -7,7 +7,7 @@ $(document).ready(function () {
 			setTimeout("hidDiv()",3000);
 			return false;
 		}else{
-			alert(phone+"========"+username);
+			//alert(phone+"========"+username);
 			$("#registForm").attr("action","/student/register");
 			$("#registForm").submit();
 		}

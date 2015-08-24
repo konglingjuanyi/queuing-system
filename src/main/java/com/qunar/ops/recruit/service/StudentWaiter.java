@@ -17,17 +17,23 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 		this.realComeTime = realComeTime;
 		this.shouldComeTime = stu.getInterviewTime().getTime();
 	}
+	
+	public StudentWaiter(Student stu) {
+		this.stu = stu;
+		this.realComeTime = stu.getTrueTime().getTime();
+		this.shouldComeTime = stu.getInterviewTime().getTime();
+	}
 
 	@Override
 	public int compareTo(StudentWaiter u) {
 		if(this.getState().equals(RecruitConst.NORMAL) && u.getState().equals(RecruitConst.NORMAL)){
 			return this.realComeTime > u.realComeTime ? -1:1;
 		}else if(this.getState().equals(RecruitConst.NORMAL)){
-			return 1;
-		}else if(u.getState().equals(RecruitConst.NORMAL)){
 			return -1;
+		}else if(u.getState().equals(RecruitConst.NORMAL)){
+			return 1;
 		}else{
-			return this.realComeTime > u.realComeTime ? -1:1;
+			return this.realComeTime > u.realComeTime ? 1:-1;
 		}
 	}
 
@@ -65,8 +71,17 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 
 	@Override
 	public boolean equals(Object obj) {
-		StudentWaiter uw = (StudentWaiter) obj;
-		return this.stu.getId() == uw.getStu().getId();
+//		System.out.println(this+" "+obj);
+		if(obj !=null){
+			StudentWaiter uw = (StudentWaiter) obj;
+			if(this.stu != null && uw.getStu() != null)
+				return this.stu.getId() == uw.getStu().getId();
+			else
+				return false;
+		}else{
+			return false;
+		}
+
 	}
 
 	public void recovery(List<Student> oneList, List<Student> twoList) {
