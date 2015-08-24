@@ -139,8 +139,6 @@ public class StudentController {
 			}
 			return "mobile/mobile_index";
 		}else{
-			String message= RecruitConst.NOT_LOGIN_ERROR_MSG;
-			model.addAttribute("message",message);
 			model.addAttribute("flag",0);
 			return "mobile/mobile_login";
 		}
@@ -229,8 +227,13 @@ public class StudentController {
 	 */
 	@RequestMapping(value = "/student/login")
 	public String loginMobile(HttpServletRequest request,ModelMap model) {
-		model.addAttribute("flag",0);
-		return "mobile/mobile_login";
+		Object sw = request.getSession().getAttribute("user");
+		if(null==sw){
+			model.addAttribute("flag",0);
+			return "mobile/mobile_login";
+		}else{
+			return "redirect:/student/refresh";
+		}
 	}
 	
 	/**
