@@ -87,8 +87,6 @@ public class StudentController {
 					return "redirect:/student/refresh";
 				}
 			}else{
-				String message= RecruitConst.PARAMETER_NULL_ERROR_MSG;
-				model.addAttribute("message",message);
 				model.addAttribute("flag",0);
 				return "mobile/mobile_login";
 			}
@@ -139,12 +137,13 @@ public class StudentController {
 				model.addAttribute("message",message);
 				model.addAttribute("flag",1);
 			}
+			return "mobile/mobile_index";
 		}else{
 			String message= RecruitConst.NOT_LOGIN_ERROR_MSG;
 			model.addAttribute("message",message);
 			model.addAttribute("flag",0);
+			return "mobile/mobile_login";
 		}
-		return "mobile/mobile_index";
 	}
 	
 	@RequestMapping(value = "/student/refresh1")
