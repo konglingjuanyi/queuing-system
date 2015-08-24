@@ -55,6 +55,7 @@ public class StudentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/student/register")
+	@ResponseBody
 	public String register(HttpServletRequest request, String phone, String name, ModelMap model) {
 		System.out.println(phone+"============="+name);
 		Object user = request.getSession().getAttribute("user");
@@ -176,8 +177,19 @@ public class StudentController {
 	@RequestMapping(value = "/student/login")
 	public String loginMobile(HttpServletRequest request,ModelMap model) {
 		//String message="<span class='name'>赵英俊</span>同学 <br />在你前面还有 <span class='num'>32</span> 位同学<br />正在进行面试";
-		model.addAttribute("message","");
+		//model.addAttribute("message","");
 		model.addAttribute("flag",0);
 		return "mobile/mobile_index";
+	}
+	
+	/**
+	 * PC端显示界面
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/student/pc_show")
+	public String pc_show(HttpServletRequest request,ModelMap model) {
+		return "pc/pc_index";
 	}
 }
