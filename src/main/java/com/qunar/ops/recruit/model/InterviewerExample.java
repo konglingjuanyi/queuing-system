@@ -1005,52 +1005,62 @@ public class InterviewerExample {
             return (Criteria) this;
         }
 
-        public Criteria andRoomEqualTo(Object value) {
+        public Criteria andRoomEqualTo(String value) {
             addCriterion("room =", value, "room");
             return (Criteria) this;
         }
 
-        public Criteria andRoomNotEqualTo(Object value) {
+        public Criteria andRoomNotEqualTo(String value) {
             addCriterion("room <>", value, "room");
             return (Criteria) this;
         }
 
-        public Criteria andRoomGreaterThan(Object value) {
+        public Criteria andRoomGreaterThan(String value) {
             addCriterion("room >", value, "room");
             return (Criteria) this;
         }
 
-        public Criteria andRoomGreaterThanOrEqualTo(Object value) {
+        public Criteria andRoomGreaterThanOrEqualTo(String value) {
             addCriterion("room >=", value, "room");
             return (Criteria) this;
         }
 
-        public Criteria andRoomLessThan(Object value) {
+        public Criteria andRoomLessThan(String value) {
             addCriterion("room <", value, "room");
             return (Criteria) this;
         }
 
-        public Criteria andRoomLessThanOrEqualTo(Object value) {
+        public Criteria andRoomLessThanOrEqualTo(String value) {
             addCriterion("room <=", value, "room");
             return (Criteria) this;
         }
 
-        public Criteria andRoomIn(List<Object> values) {
+        public Criteria andRoomLike(String value) {
+            addCriterion("room like", value, "room");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNotLike(String value) {
+            addCriterion("room not like", value, "room");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomIn(List<String> values) {
             addCriterion("room in", values, "room");
             return (Criteria) this;
         }
 
-        public Criteria andRoomNotIn(List<Object> values) {
+        public Criteria andRoomNotIn(List<String> values) {
             addCriterion("room not in", values, "room");
             return (Criteria) this;
         }
 
-        public Criteria andRoomBetween(Object value1, Object value2) {
+        public Criteria andRoomBetween(String value1, String value2) {
             addCriterion("room between", value1, value2, "room");
             return (Criteria) this;
         }
 
-        public Criteria andRoomNotBetween(Object value1, Object value2) {
+        public Criteria andRoomNotBetween(String value1, String value2) {
             addCriterion("room not between", value1, value2, "room");
             return (Criteria) this;
         }

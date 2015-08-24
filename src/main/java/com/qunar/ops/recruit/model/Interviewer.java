@@ -31,7 +31,7 @@ public class Interviewer {
 
     private Long viewCount;
 
-    private Object room;
+    private String room;
 
     private Long enable;
 
@@ -147,12 +147,12 @@ public class Interviewer {
         this.viewCount = viewCount;
     }
 
-    public Object getRoom() {
+    public String getRoom() {
         return room;
     }
 
-    public void setRoom(Object room) {
-        this.room = room;
+    public void setRoom(String room) {
+        this.room = room == null ? null : room.trim();
     }
 
     public Long getEnable() {

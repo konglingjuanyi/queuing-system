@@ -16,7 +16,7 @@
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="pahse_id" property="pahseId" jdbcType="BIGINT" />
     <result column="view_count" property="viewCount" jdbcType="BIGINT" />
-    <result column="room" property="room" jdbcType="ARRAY" />
+    <result column="room" property="room" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="BIGINT" />
   </resultMap>
   <sql id="Example_Where_Clause" >
@@ -126,7 +126,7 @@
       #{oneView,jdbcType=CHAR}, #{twoView,jdbcType=CHAR}, #{oneCount,jdbcType=INTEGER}, 
       #{twoCount,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{startDate,jdbcType=TIMESTAMP}, 
       #{endDate,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{pahseId,jdbcType=BIGINT}, 
-      #{viewCount,jdbcType=BIGINT}, #{room,jdbcType=ARRAY}, #{enable,jdbcType=BIGINT}
+      #{viewCount,jdbcType=BIGINT}, #{room,jdbcType=VARCHAR}, #{enable,jdbcType=BIGINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Interviewer" >
@@ -222,7 +222,7 @@
         #{viewCount,jdbcType=BIGINT},
       </if>
       <if test="room != null" >
-        #{room,jdbcType=ARRAY},
+        #{room,jdbcType=VARCHAR},
       </if>
       <if test="enable != null" >
         #{enable,jdbcType=BIGINT},
@@ -281,7 +281,7 @@
         view_count = #{record.viewCount,jdbcType=BIGINT},
       </if>
       <if test="record.room != null" >
-        room = #{record.room,jdbcType=ARRAY},
+        room = #{record.room,jdbcType=VARCHAR},
       </if>
       <if test="record.enable != null" >
         enable = #{record.enable,jdbcType=BIGINT},
@@ -307,7 +307,7 @@
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       pahse_id = #{record.pahseId,jdbcType=BIGINT},
       view_count = #{record.viewCount,jdbcType=BIGINT},
-      room = #{record.room,jdbcType=ARRAY},
+      room = #{record.room,jdbcType=VARCHAR},
       enable = #{record.enable,jdbcType=BIGINT}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -356,7 +356,7 @@
         view_count = #{viewCount,jdbcType=BIGINT},
       </if>
       <if test="room != null" >
-        room = #{room,jdbcType=ARRAY},
+        room = #{room,jdbcType=VARCHAR},
       </if>
       <if test="enable != null" >
         enable = #{enable,jdbcType=BIGINT},
@@ -379,7 +379,7 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       pahse_id = #{pahseId,jdbcType=BIGINT},
       view_count = #{viewCount,jdbcType=BIGINT},
-      room = #{room,jdbcType=ARRAY},
+      room = #{room,jdbcType=VARCHAR},
       enable = #{enable,jdbcType=BIGINT}
     where id = #{id,jdbcType=INTEGER}
   </update>

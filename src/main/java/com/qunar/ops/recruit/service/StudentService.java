@@ -54,6 +54,11 @@ public class StudentService {
 	public void updateStudent(Student stu) {
 		stuMapper.updateByPrimaryKeySelective(stu);
 	}
+
+	public int getNumberOfRoom(Student student) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 
 
