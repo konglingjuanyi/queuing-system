@@ -10,6 +10,10 @@ $(document).ready(function () {
 	$('#addview').click(function(){
 		addViewer();
 	});
+	
+	$('#updview').click(function(){
+		updViewer();
+	});
 });
 
 function addViewer(){
@@ -44,6 +48,90 @@ function addViewer(){
           data: JSON.stringify(params),
           success: function (returnedData) {
         	  	$("#addform").modal("hide");
+        	  	$('#content').load('/hr/getInterviewers');
+		  },
+          error: function () {
+                alert("系统发生了错误请稍后重试");
+          }
+   });
+}
+
+function doUpd(id,password){
+	alert(id);
+	var name=$('#tr'+id).children('td').eq(0).text();
+	var job=$('#tr'+id).children('td').eq(1).text();
+	var rd=$('#tr'+id).children('td').eq(2).text();
+	var fe=$('#tr'+id).children('td').eq(3).text();
+	var qa=$('#tr'+id).children('td').eq(4).text();
+	$("#updid").val(id);
+	$("#upduserName").val(name);
+	$("#updjob").val(job);
+	$("#updpassword").val(password);
+	if(rd!=''){
+		var rds=rd.split(",");
+		for(var i=0;i<rds.length;i++){
+			$('input[name="updfirstname"]').each(function(){    
+				if($(this).val()==rds[i]){
+					$(this).attr("checked",'true');
+				}   
+			});
+		}
+	}
+	if(fe!=''){
+		var rds=rd.split(",");
+		for(var i=0;i<rds.length;i++){
+			$('input[name="updsecondname"]').each(function(){    
+				if($(this).val()==rds[i]){
+					$(this).attr("checked",'true');
+				}   
+			});
+		}
+	}
+	if(qa!=''){
+		var rds=rd.split(",");
+		for(var i=0;i<rds.length;i++){
+			$('input[name="updfinishname"]').each(function(){    
+				if($(this).val()==rds[i]){
+					$(this).attr("checked",'true');
+				}   
+			});
+		}
+	}
+	$("#updform").modal("show");
+}
+
+function updViewer(){
+	var username=$("#upduserName").val().trim();
+	var job=$("#updjob").val().trim();
+	var password=$("#updpassword").val().trim();
+	var first_value =[];
+	var second_value =[];
+	var finish_value =[];
+	$('input[name="updfirstname"]:checked').each(function(){    
+		first_value.push($(this).val());    
+	});
+	$('input[name="updsecondname"]:checked').each(function(){    
+		second_value.push($(this).val());    
+	});
+	$('input[name="updfinishname"]:checked').each(function(){    
+		finish_value.push($(this).val());    
+	});
+	var vars = {};
+	vars["username"] = username;
+	vars["job"] = job;
+	vars["password"] = password;
+	vars["first_value"] = first_value.join(",");
+	vars["second_value"] = second_value.join(",");
+	vars["finish_value"] = finish_value.join(",");
+    var params = {"vars": vars};
+    $.ajax({
+          url: "/hr/updateInterviewer",
+          type: "POST",
+          dataType: "json",
+          contentType: 'application/json; charset=utf-8',
+          data: JSON.stringify(params),
+          success: function (returnedData) {
+        	  	$("#updform").modal("hide");
         	  	$('#content').load('/hr/getInterviewers');
 		  },
           error: function () {

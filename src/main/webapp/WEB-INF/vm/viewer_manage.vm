@@ -26,9 +26,9 @@
 				                <tr>
 				                  <th>面试官姓名</th>
 				                  <th>职位</th>
-				                  <th>RD</th>
-				                  <th>FE</th>
-				                  <th>QA</th>
+				                  <th>初试</th>
+				                  <th>复试</th>
+				                  <th>一次决定权</th>
 				                  <th>初试人数</th>
 				                  <th>复试人数</th>
 				                  <th>操作</th>
@@ -36,17 +36,18 @@
 				              </thead>
 				              <tbody>
 				                #foreach($info in $message)
-				                <tr>
+				                <tr id="tr$info.id">
 				                  <td>$info.userName</td>
 				                  <td>$info.job</td>
-				                  <td>$info.userName</td>
-				                  <td>$info.userName</td>
-				                  <td>$info.userName</td>
+				                  <td>$info.oneView</td>
+				                  <td>$info.twoView</td>
+				                  <td>$info.determine</td>
 				                  <td>$info.oneCount</td>
 				                  <td>$info.twoCount</td>
 				                  <td>
-				                  	<a href="#">查看</a>
-				                  	<a href="#">删除</a>
+				                  	<a href="#" id="upd" onclick="doUpd($info.id,$info.password)">修改</a>
+				                  	<a href="#" id="sel">查看</a>
+				                  	<a href="#" id="del">删除</a>
 				                  </td>	
 				                </tr>
 				                #end
@@ -136,6 +137,94 @@
 							<div class="modal-footer" style="text-align:center;">
 								<div>
 								  <button id="addview" type="button" class="btn ">保存</button>
+								  <button type="button" class="btn ">取消</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div id="updform" class="l-inner modal hide fade in" style="display: none;">
+					<div class="modal-header" style="text-align:center">
+        				<a class="close" data-dismiss="modal">×</a>
+        				<h3>修改面试官</h3>
+    				</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<input type="hidden" id="updid" name="updid" value="">
+							<div class="control-group">
+								<label class="control-label" for="name">面试官姓名</label>
+								<div class="controls">
+								  <input type="text" id="upduserName" placeholder="必填">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="job">职位</label>
+								<div class="controls">
+								  <input type="text" id="updjob" placeholder="必填">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="password">密码</label>
+								<div class="controls">
+								  <input type="text" id="updpassword" placeholder="必填">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="project">面试项目</label>
+								<div class="controls">
+									<table class="table table-bordered">
+						              <thead>
+						                <tr>
+						                  <th></th>
+						                  <th>初试</th>
+						                  <th>复试</th>
+						                  <th>一次决定权</th>
+						                </tr>
+						              </thead>
+						              <tbody>
+											<tr>
+												<td>RD</td>
+												<td>
+													<input id="updfirstid" name="updfirstname" type="checkbox"  value="RD">
+												</td>
+												<td>
+													<input id="updsecondid" name="updsecondname" type="checkbox"  value="RD">
+												</td>
+												<td>
+													<input id="updfinishid" name="updfinishname" type="checkbox"  value="RD">
+												</td>
+											</tr>
+											<tr>
+												<td>FE</td>
+												<td>
+													<input id="updfirstid" name="updfirstname" type="checkbox"  value="FE">
+												</td>
+												<td>
+													<input id="updsecondid" name="updsecondname" type="checkbox"  value="FE">
+												</td>
+												<td>
+													<input id="updfinishid" name="updfinishname" type="checkbox"  value="FE">
+												</td>
+											</tr>
+											<tr>
+												<td>QA</td>
+												<td>
+													<input id="updfirstid" name="updfirstname" type="checkbox"  value="QA">
+												</td>
+												<td>
+													<input id="updsecondid" name="updsecondname" type="checkbox"  value="QA">
+												</td>
+												<td>
+													<input id="updfinishid" name="updfinishname" type="checkbox"  value="QA">
+												</td>
+											</tr>
+						              </tbody>
+						            </table>
+								</div>
+							</div>
+							<div class="modal-footer" style="text-align:center;">
+								<div>
+								  <button id="updview" type="button" class="btn ">保存</button>
 								  <button type="button" class="btn ">取消</button>
 								</div>
 							</div>
