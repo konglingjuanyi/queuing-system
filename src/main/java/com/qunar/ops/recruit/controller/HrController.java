@@ -72,12 +72,15 @@ public class HrController {
 	@RequestMapping(value = "/hr/updateInterviewer")
 	@ResponseBody
 	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
-		System.out.println("update interviewers==============");
 		Map<String, String> vars = commonRequest.getVars();
 		System.out.println(vars);
 		Interviewer inter = interService.createInterviewer(vars);
-		interService.updateInterviewer(inter);
-		return BaseResult.getSuccessResult("success");
+		if(interService.getInterviewerByUserNameExceptId(inter.getUserName(), inter.getId()) != null){
+			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_USER_ERROR_MSG);
+		}else{
+			interService.updateInterviewer(inter);
+			return BaseResult.getSuccessResult("success");
+		}
 	}
 
 	@RequestMapping(value = "/hr/getInterviewers")

@@ -83,6 +83,7 @@ public class InterviewerService {
 	
 	public Interviewer createInterviewer(Map<String, String> vars) {
 		Interviewer inter = new Interviewer();
+		String id = vars.get("updid");
 		String city = vars.get("city");
 		String userName = vars.get("username");
 		String job = vars.get("job");
@@ -90,6 +91,9 @@ public class InterviewerService {
 		String first_value = vars.get("first_value");
 		String second_value = vars.get("second_value");
 		String finish_value = vars.get("finish_value");
+		if(id != null){
+			inter.setId(Integer.parseInt(id));
+		}
 		inter.setUserName(userName);
 		inter.setPassword(password);
 		inter.setCity(city);
@@ -103,16 +107,25 @@ public class InterviewerService {
 	}
 
 	public void updateInterviewer(Interviewer record) {
-		InterviewerExample example = new InterviewerExample();
-		InterviewerExample.Criteria criteria = example.createCriteria();
-		criteria.andUserNameEqualTo(record.getUserName());
-		interMapper.updateByExampleSelective(record, example);
+		interMapper.updateByPrimaryKey(record);
 		
 	}
 
 	public void deleteInterviewer(int id) {
 		interMapper.deleteByPrimaryKey(id);
 		
+	}
+
+	public Interviewer getInterviewerByUserNameExceptId(String userName, int id) {
+		InterviewerExample example = new InterviewerExample();
+		InterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andUserNameEqualTo(userName);
+		criteria.andIdNotEqualTo(id);
+		List<Interviewer> inter = interMapper.selectByExample(example);
+		if(inter != null && inter.size() > 0){
+			return inter.get(0);
+		}
+		return null;
 	}
 
 	public Interviewer getInterviewerByUserName(String userName) {
