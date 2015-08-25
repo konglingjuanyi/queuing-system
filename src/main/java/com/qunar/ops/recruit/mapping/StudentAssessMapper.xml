@@ -1,70 +1,70 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.qunar.ops.recruit.dao.StudentAssessMapper">
-  <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.StudentAssess">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="student_id" jdbcType="BIGINT" property="studentId" />
-    <result column="one_viewer" jdbcType="VARCHAR" property="oneViewer" />
-    <result column="one_code" jdbcType="BIGINT" property="oneCode" />
-    <result column="one_suanfa" jdbcType="BIGINT" property="oneSuanfa" />
-    <result column="one_intenet" jdbcType="BIGINT" property="oneIntenet" />
-    <result column="one_xiangmu" jdbcType="BIGINT" property="oneXiangmu" />
-    <result column="one_other" jdbcType="BIGINT" property="oneOther" />
-    <result column="one_count" jdbcType="BIGINT" property="oneCount" />
-    <result column="one_luoji" jdbcType="BIGINT" property="oneLuoji" />
-    <result column="one_chuangxin" jdbcType="BIGINT" property="oneChuangxin" />
-    <result column="one_team" jdbcType="BIGINT" property="oneTeam" />
-    <result column="one_stady" jdbcType="BIGINT" property="oneStady" />
-    <result column="one_zhuoyue" jdbcType="BIGINT" property="oneZhuoyue" />
-    <result column="one_sum" jdbcType="BIGINT" property="oneSum" />
-    <result column="one_result" jdbcType="BIGINT" property="oneResult" />
-    <result column="one_yewu" jdbcType="VARCHAR" property="oneYewu" />
-    <result column="one_suzhi" jdbcType="VARCHAR" property="oneSuzhi" />
-    <result column="one_zonghe" jdbcType="VARCHAR" property="oneZonghe" />
-    <result column="two_viewer" jdbcType="VARCHAR" property="twoViewer" />
-    <result column="two_code" jdbcType="BIGINT" property="twoCode" />
-    <result column="two_suanfa" jdbcType="BIGINT" property="twoSuanfa" />
-    <result column="two_intenet" jdbcType="BIGINT" property="twoIntenet" />
-    <result column="two_xiangmu" jdbcType="BIGINT" property="twoXiangmu" />
-    <result column="two_other" jdbcType="BIGINT" property="twoOther" />
-    <result column="two_count" jdbcType="BIGINT" property="twoCount" />
-    <result column="two_luoji" jdbcType="BIGINT" property="twoLuoji" />
-    <result column="two_chuangxin" jdbcType="BIGINT" property="twoChuangxin" />
-    <result column="two_team" jdbcType="BIGINT" property="twoTeam" />
-    <result column="two_stady" jdbcType="BIGINT" property="twoStady" />
-    <result column="two_zhuoyue" jdbcType="BIGINT" property="twoZhuoyue" />
-    <result column="two_sum" jdbcType="BIGINT" property="twoSum" />
-    <result column="two_result" jdbcType="BIGINT" property="twoResult" />
-    <result column="two_yewu" jdbcType="VARCHAR" property="twoYewu" />
-    <result column="two_suzhi" jdbcType="VARCHAR" property="twoSuzhi" />
-    <result column="two_zonghe" jdbcType="VARCHAR" property="twoZonghe" />
-    <result column="one_fenpei" jdbcType="VARCHAR" property="oneFenpei" />
-    <result column="two_fenpei" jdbcType="VARCHAR" property="twoFenpei" />
-    <result column="hr_yijian" jdbcType="VARCHAR" property="hrYijian" />
-    <result column="one_slary" jdbcType="BIGINT" property="oneSlary" />
-    <result column="two_slary" jdbcType="BIGINT" property="twoSlary" />
-    <result column="hr_slary" jdbcType="BIGINT" property="hrSlary" />
-    <result column="hr_name" jdbcType="VARCHAR" property="hrName" />
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.ops.recruit.dao.StudentAssessMapper" >
+  <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.StudentAssess" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="student_id" property="studentId" jdbcType="BIGINT" />
+    <result column="one_viewer" property="oneViewer" jdbcType="VARCHAR" />
+    <result column="one_code" property="oneCode" jdbcType="BIGINT" />
+    <result column="one_suanfa" property="oneSuanfa" jdbcType="BIGINT" />
+    <result column="one_intenet" property="oneIntenet" jdbcType="BIGINT" />
+    <result column="one_xiangmu" property="oneXiangmu" jdbcType="BIGINT" />
+    <result column="one_other" property="oneOther" jdbcType="BIGINT" />
+    <result column="one_count" property="oneCount" jdbcType="BIGINT" />
+    <result column="one_luoji" property="oneLuoji" jdbcType="BIGINT" />
+    <result column="one_chuangxin" property="oneChuangxin" jdbcType="BIGINT" />
+    <result column="one_team" property="oneTeam" jdbcType="BIGINT" />
+    <result column="one_stady" property="oneStady" jdbcType="BIGINT" />
+    <result column="one_zhuoyue" property="oneZhuoyue" jdbcType="BIGINT" />
+    <result column="one_sum" property="oneSum" jdbcType="BIGINT" />
+    <result column="one_result" property="oneResult" jdbcType="BIGINT" />
+    <result column="one_yewu" property="oneYewu" jdbcType="VARCHAR" />
+    <result column="one_suzhi" property="oneSuzhi" jdbcType="VARCHAR" />
+    <result column="one_zonghe" property="oneZonghe" jdbcType="VARCHAR" />
+    <result column="two_viewer" property="twoViewer" jdbcType="VARCHAR" />
+    <result column="two_code" property="twoCode" jdbcType="BIGINT" />
+    <result column="two_suanfa" property="twoSuanfa" jdbcType="BIGINT" />
+    <result column="two_intenet" property="twoIntenet" jdbcType="BIGINT" />
+    <result column="two_xiangmu" property="twoXiangmu" jdbcType="BIGINT" />
+    <result column="two_other" property="twoOther" jdbcType="BIGINT" />
+    <result column="two_count" property="twoCount" jdbcType="BIGINT" />
+    <result column="two_luoji" property="twoLuoji" jdbcType="BIGINT" />
+    <result column="two_chuangxin" property="twoChuangxin" jdbcType="BIGINT" />
+    <result column="two_team" property="twoTeam" jdbcType="BIGINT" />
+    <result column="two_stady" property="twoStady" jdbcType="BIGINT" />
+    <result column="two_zhuoyue" property="twoZhuoyue" jdbcType="BIGINT" />
+    <result column="two_sum" property="twoSum" jdbcType="BIGINT" />
+    <result column="two_result" property="twoResult" jdbcType="BIGINT" />
+    <result column="two_yewu" property="twoYewu" jdbcType="VARCHAR" />
+    <result column="two_suzhi" property="twoSuzhi" jdbcType="VARCHAR" />
+    <result column="two_zonghe" property="twoZonghe" jdbcType="VARCHAR" />
+    <result column="one_fenpei" property="oneFenpei" jdbcType="VARCHAR" />
+    <result column="two_fenpei" property="twoFenpei" jdbcType="VARCHAR" />
+    <result column="hr_yijian" property="hrYijian" jdbcType="VARCHAR" />
+    <result column="one_slary" property="oneSlary" jdbcType="BIGINT" />
+    <result column="two_slary" property="twoSlary" jdbcType="BIGINT" />
+    <result column="hr_slary" property="hrSlary" jdbcType="BIGINT" />
+    <result column="hr_name" property="hrName" jdbcType="VARCHAR" />
   </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -75,25 +75,25 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
                   and ${criterion.condition}
                 </when>
-                <when test="criterion.singleValue">
+                <when test="criterion.singleValue" >
                   and ${criterion.condition} #{criterion.value}
                 </when>
-                <when test="criterion.betweenValue">
+                <when test="criterion.betweenValue" >
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
-                <when test="criterion.listValue">
+                <when test="criterion.listValue" >
                   and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
                     #{listItem}
                   </foreach>
                 </when>
@@ -104,7 +104,7 @@
       </foreach>
     </where>
   </sql>
-  <sql id="Base_Column_List">
+  <sql id="Base_Column_List" >
     id, student_id, one_viewer, one_code, one_suanfa, one_intenet, one_xiangmu, one_other, 
     one_count, one_luoji, one_chuangxin, one_team, one_stady, one_zhuoyue, one_sum, one_result, 
     one_yewu, one_suzhi, one_zonghe, two_viewer, two_code, two_suanfa, two_intenet, two_xiangmu, 
@@ -112,39 +112,39 @@
     two_sum, two_result, two_yewu, two_suzhi, two_zonghe, one_fenpei, two_fenpei, hr_yijian, 
     one_slary, two_slary, hr_slary, hr_name
   </sql>
-  <select id="selectByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" resultMap="BaseResultMap">
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" >
     select
-    <if test="distinct">
+    <if test="distinct" >
       distinct
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
     from student_assess
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
-    <if test="orderByClause != null">
+    <if test="orderByClause != null" >
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from student_assess
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from student_assess
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample">
+  <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" >
     delete from student_assess
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.qunar.ops.recruit.model.StudentAssess">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insert" parameterType="com.qunar.ops.recruit.model.StudentAssess" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       select currval('student_assess_id_seq')
     </selectKey>
     insert into student_assess (student_id, one_viewer, one_code, 
@@ -178,412 +178,412 @@
       #{twoSlary,jdbcType=BIGINT}, #{hrSlary,jdbcType=BIGINT}, #{hrName,jdbcType=VARCHAR}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.StudentAssess">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+  <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.StudentAssess" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       select currval('student_assess_id_seq')
     </selectKey>
     insert into student_assess
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="studentId != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="studentId != null" >
         student_id,
       </if>
-      <if test="oneViewer != null">
+      <if test="oneViewer != null" >
         one_viewer,
       </if>
-      <if test="oneCode != null">
+      <if test="oneCode != null" >
         one_code,
       </if>
-      <if test="oneSuanfa != null">
+      <if test="oneSuanfa != null" >
         one_suanfa,
       </if>
-      <if test="oneIntenet != null">
+      <if test="oneIntenet != null" >
         one_intenet,
       </if>
-      <if test="oneXiangmu != null">
+      <if test="oneXiangmu != null" >
         one_xiangmu,
       </if>
-      <if test="oneOther != null">
+      <if test="oneOther != null" >
         one_other,
       </if>
-      <if test="oneCount != null">
+      <if test="oneCount != null" >
         one_count,
       </if>
-      <if test="oneLuoji != null">
+      <if test="oneLuoji != null" >
         one_luoji,
       </if>
-      <if test="oneChuangxin != null">
+      <if test="oneChuangxin != null" >
         one_chuangxin,
       </if>
-      <if test="oneTeam != null">
+      <if test="oneTeam != null" >
         one_team,
       </if>
-      <if test="oneStady != null">
+      <if test="oneStady != null" >
         one_stady,
       </if>
-      <if test="oneZhuoyue != null">
+      <if test="oneZhuoyue != null" >
         one_zhuoyue,
       </if>
-      <if test="oneSum != null">
+      <if test="oneSum != null" >
         one_sum,
       </if>
-      <if test="oneResult != null">
+      <if test="oneResult != null" >
         one_result,
       </if>
-      <if test="oneYewu != null">
+      <if test="oneYewu != null" >
         one_yewu,
       </if>
-      <if test="oneSuzhi != null">
+      <if test="oneSuzhi != null" >
         one_suzhi,
       </if>
-      <if test="oneZonghe != null">
+      <if test="oneZonghe != null" >
         one_zonghe,
       </if>
-      <if test="twoViewer != null">
+      <if test="twoViewer != null" >
         two_viewer,
       </if>
-      <if test="twoCode != null">
+      <if test="twoCode != null" >
         two_code,
       </if>
-      <if test="twoSuanfa != null">
+      <if test="twoSuanfa != null" >
         two_suanfa,
       </if>
-      <if test="twoIntenet != null">
+      <if test="twoIntenet != null" >
         two_intenet,
       </if>
-      <if test="twoXiangmu != null">
+      <if test="twoXiangmu != null" >
         two_xiangmu,
       </if>
-      <if test="twoOther != null">
+      <if test="twoOther != null" >
         two_other,
       </if>
-      <if test="twoCount != null">
+      <if test="twoCount != null" >
         two_count,
       </if>
-      <if test="twoLuoji != null">
+      <if test="twoLuoji != null" >
         two_luoji,
       </if>
-      <if test="twoChuangxin != null">
+      <if test="twoChuangxin != null" >
         two_chuangxin,
       </if>
-      <if test="twoTeam != null">
+      <if test="twoTeam != null" >
         two_team,
       </if>
-      <if test="twoStady != null">
+      <if test="twoStady != null" >
         two_stady,
       </if>
-      <if test="twoZhuoyue != null">
+      <if test="twoZhuoyue != null" >
         two_zhuoyue,
       </if>
-      <if test="twoSum != null">
+      <if test="twoSum != null" >
         two_sum,
       </if>
-      <if test="twoResult != null">
+      <if test="twoResult != null" >
         two_result,
       </if>
-      <if test="twoYewu != null">
+      <if test="twoYewu != null" >
         two_yewu,
       </if>
-      <if test="twoSuzhi != null">
+      <if test="twoSuzhi != null" >
         two_suzhi,
       </if>
-      <if test="twoZonghe != null">
+      <if test="twoZonghe != null" >
         two_zonghe,
       </if>
-      <if test="oneFenpei != null">
+      <if test="oneFenpei != null" >
         one_fenpei,
       </if>
-      <if test="twoFenpei != null">
+      <if test="twoFenpei != null" >
         two_fenpei,
       </if>
-      <if test="hrYijian != null">
+      <if test="hrYijian != null" >
         hr_yijian,
       </if>
-      <if test="oneSlary != null">
+      <if test="oneSlary != null" >
         one_slary,
       </if>
-      <if test="twoSlary != null">
+      <if test="twoSlary != null" >
         two_slary,
       </if>
-      <if test="hrSlary != null">
+      <if test="hrSlary != null" >
         hr_slary,
       </if>
-      <if test="hrName != null">
+      <if test="hrName != null" >
         hr_name,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="studentId != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="studentId != null" >
         #{studentId,jdbcType=BIGINT},
       </if>
-      <if test="oneViewer != null">
+      <if test="oneViewer != null" >
         #{oneViewer,jdbcType=VARCHAR},
       </if>
-      <if test="oneCode != null">
+      <if test="oneCode != null" >
         #{oneCode,jdbcType=BIGINT},
       </if>
-      <if test="oneSuanfa != null">
+      <if test="oneSuanfa != null" >
         #{oneSuanfa,jdbcType=BIGINT},
       </if>
-      <if test="oneIntenet != null">
+      <if test="oneIntenet != null" >
         #{oneIntenet,jdbcType=BIGINT},
       </if>
-      <if test="oneXiangmu != null">
+      <if test="oneXiangmu != null" >
         #{oneXiangmu,jdbcType=BIGINT},
       </if>
-      <if test="oneOther != null">
+      <if test="oneOther != null" >
         #{oneOther,jdbcType=BIGINT},
       </if>
-      <if test="oneCount != null">
+      <if test="oneCount != null" >
         #{oneCount,jdbcType=BIGINT},
       </if>
-      <if test="oneLuoji != null">
+      <if test="oneLuoji != null" >
         #{oneLuoji,jdbcType=BIGINT},
       </if>
-      <if test="oneChuangxin != null">
+      <if test="oneChuangxin != null" >
         #{oneChuangxin,jdbcType=BIGINT},
       </if>
-      <if test="oneTeam != null">
+      <if test="oneTeam != null" >
         #{oneTeam,jdbcType=BIGINT},
       </if>
-      <if test="oneStady != null">
+      <if test="oneStady != null" >
         #{oneStady,jdbcType=BIGINT},
       </if>
-      <if test="oneZhuoyue != null">
+      <if test="oneZhuoyue != null" >
         #{oneZhuoyue,jdbcType=BIGINT},
       </if>
-      <if test="oneSum != null">
+      <if test="oneSum != null" >
         #{oneSum,jdbcType=BIGINT},
       </if>
-      <if test="oneResult != null">
+      <if test="oneResult != null" >
         #{oneResult,jdbcType=BIGINT},
       </if>
-      <if test="oneYewu != null">
+      <if test="oneYewu != null" >
         #{oneYewu,jdbcType=VARCHAR},
       </if>
-      <if test="oneSuzhi != null">
+      <if test="oneSuzhi != null" >
         #{oneSuzhi,jdbcType=VARCHAR},
       </if>
-      <if test="oneZonghe != null">
+      <if test="oneZonghe != null" >
         #{oneZonghe,jdbcType=VARCHAR},
       </if>
-      <if test="twoViewer != null">
+      <if test="twoViewer != null" >
         #{twoViewer,jdbcType=VARCHAR},
       </if>
-      <if test="twoCode != null">
+      <if test="twoCode != null" >
         #{twoCode,jdbcType=BIGINT},
       </if>
-      <if test="twoSuanfa != null">
+      <if test="twoSuanfa != null" >
         #{twoSuanfa,jdbcType=BIGINT},
       </if>
-      <if test="twoIntenet != null">
+      <if test="twoIntenet != null" >
         #{twoIntenet,jdbcType=BIGINT},
       </if>
-      <if test="twoXiangmu != null">
+      <if test="twoXiangmu != null" >
         #{twoXiangmu,jdbcType=BIGINT},
       </if>
-      <if test="twoOther != null">
+      <if test="twoOther != null" >
         #{twoOther,jdbcType=BIGINT},
       </if>
-      <if test="twoCount != null">
+      <if test="twoCount != null" >
         #{twoCount,jdbcType=BIGINT},
       </if>
-      <if test="twoLuoji != null">
+      <if test="twoLuoji != null" >
         #{twoLuoji,jdbcType=BIGINT},
       </if>
-      <if test="twoChuangxin != null">
+      <if test="twoChuangxin != null" >
         #{twoChuangxin,jdbcType=BIGINT},
       </if>
-      <if test="twoTeam != null">
+      <if test="twoTeam != null" >
         #{twoTeam,jdbcType=BIGINT},
       </if>
-      <if test="twoStady != null">
+      <if test="twoStady != null" >
         #{twoStady,jdbcType=BIGINT},
       </if>
-      <if test="twoZhuoyue != null">
+      <if test="twoZhuoyue != null" >
         #{twoZhuoyue,jdbcType=BIGINT},
       </if>
-      <if test="twoSum != null">
+      <if test="twoSum != null" >
         #{twoSum,jdbcType=BIGINT},
       </if>
-      <if test="twoResult != null">
+      <if test="twoResult != null" >
         #{twoResult,jdbcType=BIGINT},
       </if>
-      <if test="twoYewu != null">
+      <if test="twoYewu != null" >
         #{twoYewu,jdbcType=VARCHAR},
       </if>
-      <if test="twoSuzhi != null">
+      <if test="twoSuzhi != null" >
         #{twoSuzhi,jdbcType=VARCHAR},
       </if>
-      <if test="twoZonghe != null">
+      <if test="twoZonghe != null" >
         #{twoZonghe,jdbcType=VARCHAR},
       </if>
-      <if test="oneFenpei != null">
+      <if test="oneFenpei != null" >
         #{oneFenpei,jdbcType=VARCHAR},
       </if>
-      <if test="twoFenpei != null">
+      <if test="twoFenpei != null" >
         #{twoFenpei,jdbcType=VARCHAR},
       </if>
-      <if test="hrYijian != null">
+      <if test="hrYijian != null" >
         #{hrYijian,jdbcType=VARCHAR},
       </if>
-      <if test="oneSlary != null">
+      <if test="oneSlary != null" >
         #{oneSlary,jdbcType=BIGINT},
       </if>
-      <if test="twoSlary != null">
+      <if test="twoSlary != null" >
         #{twoSlary,jdbcType=BIGINT},
       </if>
-      <if test="hrSlary != null">
+      <if test="hrSlary != null" >
         #{hrSlary,jdbcType=BIGINT},
       </if>
-      <if test="hrName != null">
+      <if test="hrName != null" >
         #{hrName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" resultType="java.lang.Integer">
+  <select id="countByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" resultType="java.lang.Integer" >
     select count(*) from student_assess
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
-  <update id="updateByExampleSelective" parameterType="map">
+  <update id="updateByExampleSelective" parameterType="map" >
     update student_assess
-    <set>
-      <if test="record.id != null">
+    <set >
+      <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.studentId != null">
+      <if test="record.studentId != null" >
         student_id = #{record.studentId,jdbcType=BIGINT},
       </if>
-      <if test="record.oneViewer != null">
+      <if test="record.oneViewer != null" >
         one_viewer = #{record.oneViewer,jdbcType=VARCHAR},
       </if>
-      <if test="record.oneCode != null">
+      <if test="record.oneCode != null" >
         one_code = #{record.oneCode,jdbcType=BIGINT},
       </if>
-      <if test="record.oneSuanfa != null">
+      <if test="record.oneSuanfa != null" >
         one_suanfa = #{record.oneSuanfa,jdbcType=BIGINT},
       </if>
-      <if test="record.oneIntenet != null">
+      <if test="record.oneIntenet != null" >
         one_intenet = #{record.oneIntenet,jdbcType=BIGINT},
       </if>
-      <if test="record.oneXiangmu != null">
+      <if test="record.oneXiangmu != null" >
         one_xiangmu = #{record.oneXiangmu,jdbcType=BIGINT},
       </if>
-      <if test="record.oneOther != null">
+      <if test="record.oneOther != null" >
         one_other = #{record.oneOther,jdbcType=BIGINT},
       </if>
-      <if test="record.oneCount != null">
+      <if test="record.oneCount != null" >
         one_count = #{record.oneCount,jdbcType=BIGINT},
       </if>
-      <if test="record.oneLuoji != null">
+      <if test="record.oneLuoji != null" >
         one_luoji = #{record.oneLuoji,jdbcType=BIGINT},
       </if>
-      <if test="record.oneChuangxin != null">
+      <if test="record.oneChuangxin != null" >
         one_chuangxin = #{record.oneChuangxin,jdbcType=BIGINT},
       </if>
-      <if test="record.oneTeam != null">
+      <if test="record.oneTeam != null" >
         one_team = #{record.oneTeam,jdbcType=BIGINT},
       </if>
-      <if test="record.oneStady != null">
+      <if test="record.oneStady != null" >
         one_stady = #{record.oneStady,jdbcType=BIGINT},
       </if>
-      <if test="record.oneZhuoyue != null">
+      <if test="record.oneZhuoyue != null" >
         one_zhuoyue = #{record.oneZhuoyue,jdbcType=BIGINT},
       </if>
-      <if test="record.oneSum != null">
+      <if test="record.oneSum != null" >
         one_sum = #{record.oneSum,jdbcType=BIGINT},
       </if>
-      <if test="record.oneResult != null">
+      <if test="record.oneResult != null" >
         one_result = #{record.oneResult,jdbcType=BIGINT},
       </if>
-      <if test="record.oneYewu != null">
+      <if test="record.oneYewu != null" >
         one_yewu = #{record.oneYewu,jdbcType=VARCHAR},
       </if>
-      <if test="record.oneSuzhi != null">
+      <if test="record.oneSuzhi != null" >
         one_suzhi = #{record.oneSuzhi,jdbcType=VARCHAR},
       </if>
-      <if test="record.oneZonghe != null">
+      <if test="record.oneZonghe != null" >
         one_zonghe = #{record.oneZonghe,jdbcType=VARCHAR},
       </if>
-      <if test="record.twoViewer != null">
+      <if test="record.twoViewer != null" >
         two_viewer = #{record.twoViewer,jdbcType=VARCHAR},
       </if>
-      <if test="record.twoCode != null">
+      <if test="record.twoCode != null" >
         two_code = #{record.twoCode,jdbcType=BIGINT},
       </if>
-      <if test="record.twoSuanfa != null">
+      <if test="record.twoSuanfa != null" >
         two_suanfa = #{record.twoSuanfa,jdbcType=BIGINT},
       </if>
-      <if test="record.twoIntenet != null">
+      <if test="record.twoIntenet != null" >
         two_intenet = #{record.twoIntenet,jdbcType=BIGINT},
       </if>
-      <if test="record.twoXiangmu != null">
+      <if test="record.twoXiangmu != null" >
         two_xiangmu = #{record.twoXiangmu,jdbcType=BIGINT},
       </if>
-      <if test="record.twoOther != null">
+      <if test="record.twoOther != null" >
         two_other = #{record.twoOther,jdbcType=BIGINT},
       </if>
-      <if test="record.twoCount != null">
+      <if test="record.twoCount != null" >
         two_count = #{record.twoCount,jdbcType=BIGINT},
       </if>
-      <if test="record.twoLuoji != null">
+      <if test="record.twoLuoji != null" >
         two_luoji = #{record.twoLuoji,jdbcType=BIGINT},
       </if>
-      <if test="record.twoChuangxin != null">
+      <if test="record.twoChuangxin != null" >
         two_chuangxin = #{record.twoChuangxin,jdbcType=BIGINT},
       </if>
-      <if test="record.twoTeam != null">
+      <if test="record.twoTeam != null" >
         two_team = #{record.twoTeam,jdbcType=BIGINT},
       </if>
-      <if test="record.twoStady != null">
+      <if test="record.twoStady != null" >
         two_stady = #{record.twoStady,jdbcType=BIGINT},
       </if>
-      <if test="record.twoZhuoyue != null">
+      <if test="record.twoZhuoyue != null" >
         two_zhuoyue = #{record.twoZhuoyue,jdbcType=BIGINT},
       </if>
-      <if test="record.twoSum != null">
+      <if test="record.twoSum != null" >
         two_sum = #{record.twoSum,jdbcType=BIGINT},
       </if>
-      <if test="record.twoResult != null">
+      <if test="record.twoResult != null" >
         two_result = #{record.twoResult,jdbcType=BIGINT},
       </if>
-      <if test="record.twoYewu != null">
+      <if test="record.twoYewu != null" >
         two_yewu = #{record.twoYewu,jdbcType=VARCHAR},
       </if>
-      <if test="record.twoSuzhi != null">
+      <if test="record.twoSuzhi != null" >
         two_suzhi = #{record.twoSuzhi,jdbcType=VARCHAR},
       </if>
-      <if test="record.twoZonghe != null">
+      <if test="record.twoZonghe != null" >
         two_zonghe = #{record.twoZonghe,jdbcType=VARCHAR},
       </if>
-      <if test="record.oneFenpei != null">
+      <if test="record.oneFenpei != null" >
         one_fenpei = #{record.oneFenpei,jdbcType=VARCHAR},
       </if>
-      <if test="record.twoFenpei != null">
+      <if test="record.twoFenpei != null" >
         two_fenpei = #{record.twoFenpei,jdbcType=VARCHAR},
       </if>
-      <if test="record.hrYijian != null">
+      <if test="record.hrYijian != null" >
         hr_yijian = #{record.hrYijian,jdbcType=VARCHAR},
       </if>
-      <if test="record.oneSlary != null">
+      <if test="record.oneSlary != null" >
         one_slary = #{record.oneSlary,jdbcType=BIGINT},
       </if>
-      <if test="record.twoSlary != null">
+      <if test="record.twoSlary != null" >
         two_slary = #{record.twoSlary,jdbcType=BIGINT},
       </if>
-      <if test="record.hrSlary != null">
+      <if test="record.hrSlary != null" >
         hr_slary = #{record.hrSlary,jdbcType=BIGINT},
       </if>
-      <if test="record.hrName != null">
+      <if test="record.hrName != null" >
         hr_name = #{record.hrName,jdbcType=VARCHAR},
       </if>
     </set>
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByExample" parameterType="map">
+  <update id="updateByExample" parameterType="map" >
     update student_assess
     set id = #{record.id,jdbcType=INTEGER},
       student_id = #{record.studentId,jdbcType=BIGINT},
@@ -628,952 +628,143 @@
       two_slary = #{record.twoSlary,jdbcType=BIGINT},
       hr_slary = #{record.hrSlary,jdbcType=BIGINT},
       hr_name = #{record.hrName,jdbcType=VARCHAR}
-    <if test="_parameter != null">
+    <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.StudentAssess">
+  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.StudentAssess" >
     update student_assess
-    <set>
-      <if test="studentId != null">
+    <set >
+      <if test="studentId != null" >
         student_id = #{studentId,jdbcType=BIGINT},
       </if>
-      <if test="oneViewer != null">
+      <if test="oneViewer != null" >
         one_viewer = #{oneViewer,jdbcType=VARCHAR},
       </if>
-      <if test="oneCode != null">
+      <if test="oneCode != null" >
         one_code = #{oneCode,jdbcType=BIGINT},
       </if>
-      <if test="oneSuanfa != null">
+      <if test="oneSuanfa != null" >
         one_suanfa = #{oneSuanfa,jdbcType=BIGINT},
       </if>
-      <if test="oneIntenet != null">
+      <if test="oneIntenet != null" >
         one_intenet = #{oneIntenet,jdbcType=BIGINT},
       </if>
-      <if test="oneXiangmu != null">
+      <if test="oneXiangmu != null" >
         one_xiangmu = #{oneXiangmu,jdbcType=BIGINT},
       </if>
-      <if test="oneOther != null">
+      <if test="oneOther != null" >
         one_other = #{oneOther,jdbcType=BIGINT},
       </if>
-      <if test="oneCount != null">
+      <if test="oneCount != null" >
         one_count = #{oneCount,jdbcType=BIGINT},
       </if>
-      <if test="oneLuoji != null">
+      <if test="oneLuoji != null" >
         one_luoji = #{oneLuoji,jdbcType=BIGINT},
       </if>
-      <if test="oneChuangxin != null">
+      <if test="oneChuangxin != null" >
         one_chuangxin = #{oneChuangxin,jdbcType=BIGINT},
       </if>
-      <if test="oneTeam != null">
+      <if test="oneTeam != null" >
         one_team = #{oneTeam,jdbcType=BIGINT},
       </if>
-      <if test="oneStady != null">
+      <if test="oneStady != null" >
         one_stady = #{oneStady,jdbcType=BIGINT},
       </if>
-      <if test="oneZhuoyue != null">
+      <if test="oneZhuoyue != null" >
         one_zhuoyue = #{oneZhuoyue,jdbcType=BIGINT},
       </if>
-      <if test="oneSum != null">
+      <if test="oneSum != null" >
         one_sum = #{oneSum,jdbcType=BIGINT},
       </if>
-      <if test="oneResult != null">
+      <if test="oneResult != null" >
         one_result = #{oneResult,jdbcType=BIGINT},
       </if>
-      <if test="oneYewu != null">
+      <if test="oneYewu != null" >
         one_yewu = #{oneYewu,jdbcType=VARCHAR},
       </if>
-      <if test="oneSuzhi != null">
+      <if test="oneSuzhi != null" >
         one_suzhi = #{oneSuzhi,jdbcType=VARCHAR},
       </if>
-      <if test="oneZonghe != null">
+      <if test="oneZonghe != null" >
         one_zonghe = #{oneZonghe,jdbcType=VARCHAR},
       </if>
-      <if test="twoViewer != null">
+      <if test="twoViewer != null" >
         two_viewer = #{twoViewer,jdbcType=VARCHAR},
       </if>
-      <if test="twoCode != null">
+      <if test="twoCode != null" >
         two_code = #{twoCode,jdbcType=BIGINT},
       </if>
-      <if test="twoSuanfa != null">
+      <if test="twoSuanfa != null" >
         two_suanfa = #{twoSuanfa,jdbcType=BIGINT},
       </if>
-      <if test="twoIntenet != null">
+      <if test="twoIntenet != null" >
         two_intenet = #{twoIntenet,jdbcType=BIGINT},
       </if>
-      <if test="twoXiangmu != null">
+      <if test="twoXiangmu != null" >
         two_xiangmu = #{twoXiangmu,jdbcType=BIGINT},
       </if>
-      <if test="twoOther != null">
+      <if test="twoOther != null" >
         two_other = #{twoOther,jdbcType=BIGINT},
       </if>
-      <if test="twoCount != null">
+      <if test="twoCount != null" >
         two_count = #{twoCount,jdbcType=BIGINT},
       </if>
-      <if test="twoLuoji != null">
+      <if test="twoLuoji != null" >
         two_luoji = #{twoLuoji,jdbcType=BIGINT},
       </if>
-      <if test="twoChuangxin != null">
+      <if test="twoChuangxin != null" >
         two_chuangxin = #{twoChuangxin,jdbcType=BIGINT},
       </if>
-      <if test="twoTeam != null">
+      <if test="twoTeam != null" >
         two_team = #{twoTeam,jdbcType=BIGINT},
       </if>
-      <if test="twoStady != null">
+      <if test="twoStady != null" >
         two_stady = #{twoStady,jdbcType=BIGINT},
       </if>
-      <if test="twoZhuoyue != null">
+      <if test="twoZhuoyue != null" >
         two_zhuoyue = #{twoZhuoyue,jdbcType=BIGINT},
       </if>
-      <if test="twoSum != null">
+      <if test="twoSum != null" >
         two_sum = #{twoSum,jdbcType=BIGINT},
       </if>
-      <if test="twoResult != null">
+      <if test="twoResult != null" >
         two_result = #{twoResult,jdbcType=BIGINT},
       </if>
-      <if test="twoYewu != null">
+      <if test="twoYewu != null" >
         two_yewu = #{twoYewu,jdbcType=VARCHAR},
       </if>
-      <if test="twoSuzhi != null">
+      <if test="twoSuzhi != null" >
         two_suzhi = #{twoSuzhi,jdbcType=VARCHAR},
       </if>
-      <if test="twoZonghe != null">
+      <if test="twoZonghe != null" >
         two_zonghe = #{twoZonghe,jdbcType=VARCHAR},
       </if>
-      <if test="oneFenpei != null">
+      <if test="oneFenpei != null" >
         one_fenpei = #{oneFenpei,jdbcType=VARCHAR},
       </if>
-      <if test="twoFenpei != null">
+      <if test="twoFenpei != null" >
         two_fenpei = #{twoFenpei,jdbcType=VARCHAR},
       </if>
-      <if test="hrYijian != null">
+      <if test="hrYijian != null" >
         hr_yijian = #{hrYijian,jdbcType=VARCHAR},
       </if>
-      <if test="oneSlary != null">
+      <if test="oneSlary != null" >
         one_slary = #{oneSlary,jdbcType=BIGINT},
       </if>
-      <if test="twoSlary != null">
+      <if test="twoSlary != null" >
         two_slary = #{twoSlary,jdbcType=BIGINT},
       </if>
-      <if test="hrSlary != null">
+      <if test="hrSlary != null" >
         hr_slary = #{hrSlary,jdbcType=BIGINT},
       </if>
-      <if test="hrName != null">
+      <if test="hrName != null" >
         hr_name = #{hrName,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.StudentAssess">
-    update student_assess
-    set student_id = #{studentId,jdbcType=BIGINT},
-      one_viewer = #{oneViewer,jdbcType=VARCHAR},
-      one_code = #{oneCode,jdbcType=BIGINT},
-      one_suanfa = #{oneSuanfa,jdbcType=BIGINT},
-      one_intenet = #{oneIntenet,jdbcType=BIGINT},
-      one_xiangmu = #{oneXiangmu,jdbcType=BIGINT},
-      one_other = #{oneOther,jdbcType=BIGINT},
-      one_count = #{oneCount,jdbcType=BIGINT},
-      one_luoji = #{oneLuoji,jdbcType=BIGINT},
-      one_chuangxin = #{oneChuangxin,jdbcType=BIGINT},
-      one_team = #{oneTeam,jdbcType=BIGINT},
-      one_stady = #{oneStady,jdbcType=BIGINT},
-      one_zhuoyue = #{oneZhuoyue,jdbcType=BIGINT},
-      one_sum = #{oneSum,jdbcType=BIGINT},
-      one_result = #{oneResult,jdbcType=BIGINT},
-      one_yewu = #{oneYewu,jdbcType=VARCHAR},
-      one_suzhi = #{oneSuzhi,jdbcType=VARCHAR},
-      one_zonghe = #{oneZonghe,jdbcType=VARCHAR},
-      two_viewer = #{twoViewer,jdbcType=VARCHAR},
-      two_code = #{twoCode,jdbcType=BIGINT},
-      two_suanfa = #{twoSuanfa,jdbcType=BIGINT},
-      two_intenet = #{twoIntenet,jdbcType=BIGINT},
-      two_xiangmu = #{twoXiangmu,jdbcType=BIGINT},
-      two_other = #{twoOther,jdbcType=BIGINT},
-      two_count = #{twoCount,jdbcType=BIGINT},
-      two_luoji = #{twoLuoji,jdbcType=BIGINT},
-      two_chuangxin = #{twoChuangxin,jdbcType=BIGINT},
-      two_team = #{twoTeam,jdbcType=BIGINT},
-      two_stady = #{twoStady,jdbcType=BIGINT},
-      two_zhuoyue = #{twoZhuoyue,jdbcType=BIGINT},
-      two_sum = #{twoSum,jdbcType=BIGINT},
-      two_result = #{twoResult,jdbcType=BIGINT},
-      two_yewu = #{twoYewu,jdbcType=VARCHAR},
-      two_suzhi = #{twoSuzhi,jdbcType=VARCHAR},
-      two_zonghe = #{twoZonghe,jdbcType=VARCHAR},
-      one_fenpei = #{oneFenpei,jdbcType=VARCHAR},
-      two_fenpei = #{twoFenpei,jdbcType=VARCHAR},
-      hr_yijian = #{hrYijian,jdbcType=VARCHAR},
-      one_slary = #{oneSlary,jdbcType=BIGINT},
-      two_slary = #{twoSlary,jdbcType=BIGINT},
-      hr_slary = #{hrSlary,jdbcType=BIGINT},
-      hr_name = #{hrName,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.StudentAssess">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="student_id" jdbcType="BIGINT" property="studentId" />
-    <result column="one_viewer" jdbcType="VARCHAR" property="oneViewer" />
-    <result column="one_code" jdbcType="BIGINT" property="oneCode" />
-    <result column="one_suanfa" jdbcType="BIGINT" property="oneSuanfa" />
-    <result column="one_intenet" jdbcType="BIGINT" property="oneIntenet" />
-    <result column="one_xiangmu" jdbcType="BIGINT" property="oneXiangmu" />
-    <result column="one_other" jdbcType="BIGINT" property="oneOther" />
-    <result column="one_count" jdbcType="BIGINT" property="oneCount" />
-    <result column="one_luoji" jdbcType="BIGINT" property="oneLuoji" />
-    <result column="one_chuangxin" jdbcType="BIGINT" property="oneChuangxin" />
-    <result column="one_team" jdbcType="BIGINT" property="oneTeam" />
-    <result column="one_stady" jdbcType="BIGINT" property="oneStady" />
-    <result column="one_zhuoyue" jdbcType="BIGINT" property="oneZhuoyue" />
-    <result column="one_sum" jdbcType="BIGINT" property="oneSum" />
-    <result column="one_result" jdbcType="BIGINT" property="oneResult" />
-    <result column="one_yewu" jdbcType="VARCHAR" property="oneYewu" />
-    <result column="one_suzhi" jdbcType="VARCHAR" property="oneSuzhi" />
-    <result column="one_zonghe" jdbcType="VARCHAR" property="oneZonghe" />
-    <result column="two_viewer" jdbcType="VARCHAR" property="twoViewer" />
-    <result column="two_code" jdbcType="BIGINT" property="twoCode" />
-    <result column="two_suanfa" jdbcType="BIGINT" property="twoSuanfa" />
-    <result column="two_intenet" jdbcType="BIGINT" property="twoIntenet" />
-    <result column="two_xiangmu" jdbcType="BIGINT" property="twoXiangmu" />
-    <result column="two_other" jdbcType="BIGINT" property="twoOther" />
-    <result column="two_count" jdbcType="BIGINT" property="twoCount" />
-    <result column="two_luoji" jdbcType="BIGINT" property="twoLuoji" />
-    <result column="two_chuangxin" jdbcType="BIGINT" property="twoChuangxin" />
-    <result column="two_team" jdbcType="BIGINT" property="twoTeam" />
-    <result column="two_stady" jdbcType="BIGINT" property="twoStady" />
-    <result column="two_zhuoyue" jdbcType="BIGINT" property="twoZhuoyue" />
-    <result column="two_sum" jdbcType="BIGINT" property="twoSum" />
-    <result column="two_result" jdbcType="BIGINT" property="twoResult" />
-    <result column="two_yewu" jdbcType="VARCHAR" property="twoYewu" />
-    <result column="two_suzhi" jdbcType="VARCHAR" property="twoSuzhi" />
-    <result column="two_zonghe" jdbcType="VARCHAR" property="twoZonghe" />
-    <result column="one_fenpei" jdbcType="VARCHAR" property="oneFenpei" />
-    <result column="two_fenpei" jdbcType="VARCHAR" property="twoFenpei" />
-    <result column="hr_yijian" jdbcType="VARCHAR" property="hrYijian" />
-    <result column="one_slary" jdbcType="BIGINT" property="oneSlary" />
-    <result column="two_slary" jdbcType="BIGINT" property="twoSlary" />
-    <result column="hr_slary" jdbcType="BIGINT" property="hrSlary" />
-    <result column="hr_name" jdbcType="VARCHAR" property="hrName" />
-  </resultMap>
-  <sql id="Example_Where_Clause">
-    <where>
-      <foreach collection="oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Update_By_Example_Where_Clause">
-    <where>
-      <foreach collection="example.oredCriteria" item="criteria" separator="or">
-        <if test="criteria.valid">
-          <trim prefix="(" prefixOverrides="and" suffix=")">
-            <foreach collection="criteria.criteria" item="criterion">
-              <choose>
-                <when test="criterion.noValue">
-                  and ${criterion.condition}
-                </when>
-                <when test="criterion.singleValue">
-                  and ${criterion.condition} #{criterion.value}
-                </when>
-                <when test="criterion.betweenValue">
-                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
-                </when>
-                <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
-        </if>
-      </foreach>
-    </where>
-  </sql>
-  <sql id="Base_Column_List">
-    id, student_id, one_viewer, one_code, one_suanfa, one_intenet, one_xiangmu, one_other, 
-    one_count, one_luoji, one_chuangxin, one_team, one_stady, one_zhuoyue, one_sum, one_result, 
-    one_yewu, one_suzhi, one_zonghe, two_viewer, two_code, two_suanfa, two_intenet, two_xiangmu, 
-    two_other, two_count, two_luoji, two_chuangxin, two_team, two_stady, two_zhuoyue, 
-    two_sum, two_result, two_yewu, two_suzhi, two_zonghe, one_fenpei, two_fenpei, hr_yijian, 
-    one_slary, two_slary, hr_slary, hr_name
-  </sql>
-  <select id="selectByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" resultMap="BaseResultMap">
-    select
-    <if test="distinct">
-      distinct
-    </if>
-    'true' as QUERYID,
-    <include refid="Base_Column_List" />
-    from student_assess
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-    <if test="orderByClause != null">
-      order by ${orderByClause}
-    </if>
-  </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from student_assess
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from student_assess
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample">
-    delete from student_assess
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </delete>
-  <insert id="insert" parameterType="com.qunar.ops.recruit.model.StudentAssess">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      select currval('student_assess_id_seq')
-    </selectKey>
-    insert into student_assess (student_id, one_viewer, one_code, 
-      one_suanfa, one_intenet, one_xiangmu, 
-      one_other, one_count, one_luoji, 
-      one_chuangxin, one_team, one_stady, 
-      one_zhuoyue, one_sum, one_result, 
-      one_yewu, one_suzhi, one_zonghe, 
-      two_viewer, two_code, two_suanfa, 
-      two_intenet, two_xiangmu, two_other, 
-      two_count, two_luoji, two_chuangxin, 
-      two_team, two_stady, two_zhuoyue, 
-      two_sum, two_result, two_yewu, 
-      two_suzhi, two_zonghe, one_fenpei, 
-      two_fenpei, hr_yijian, one_slary, 
-      two_slary, hr_slary, hr_name
-      )
-    values (#{studentId,jdbcType=BIGINT}, #{oneViewer,jdbcType=VARCHAR}, #{oneCode,jdbcType=BIGINT}, 
-      #{oneSuanfa,jdbcType=BIGINT}, #{oneIntenet,jdbcType=BIGINT}, #{oneXiangmu,jdbcType=BIGINT}, 
-      #{oneOther,jdbcType=BIGINT}, #{oneCount,jdbcType=BIGINT}, #{oneLuoji,jdbcType=BIGINT}, 
-      #{oneChuangxin,jdbcType=BIGINT}, #{oneTeam,jdbcType=BIGINT}, #{oneStady,jdbcType=BIGINT}, 
-      #{oneZhuoyue,jdbcType=BIGINT}, #{oneSum,jdbcType=BIGINT}, #{oneResult,jdbcType=BIGINT}, 
-      #{oneYewu,jdbcType=VARCHAR}, #{oneSuzhi,jdbcType=VARCHAR}, #{oneZonghe,jdbcType=VARCHAR}, 
-      #{twoViewer,jdbcType=VARCHAR}, #{twoCode,jdbcType=BIGINT}, #{twoSuanfa,jdbcType=BIGINT}, 
-      #{twoIntenet,jdbcType=BIGINT}, #{twoXiangmu,jdbcType=BIGINT}, #{twoOther,jdbcType=BIGINT}, 
-      #{twoCount,jdbcType=BIGINT}, #{twoLuoji,jdbcType=BIGINT}, #{twoChuangxin,jdbcType=BIGINT}, 
-      #{twoTeam,jdbcType=BIGINT}, #{twoStady,jdbcType=BIGINT}, #{twoZhuoyue,jdbcType=BIGINT}, 
-      #{twoSum,jdbcType=BIGINT}, #{twoResult,jdbcType=BIGINT}, #{twoYewu,jdbcType=VARCHAR}, 
-      #{twoSuzhi,jdbcType=VARCHAR}, #{twoZonghe,jdbcType=VARCHAR}, #{oneFenpei,jdbcType=VARCHAR}, 
-      #{twoFenpei,jdbcType=VARCHAR}, #{hrYijian,jdbcType=VARCHAR}, #{oneSlary,jdbcType=BIGINT}, 
-      #{twoSlary,jdbcType=BIGINT}, #{hrSlary,jdbcType=BIGINT}, #{hrName,jdbcType=VARCHAR}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.StudentAssess">
-    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
-      select currval('student_assess_id_seq')
-    </selectKey>
-    insert into student_assess
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="studentId != null">
-        student_id,
-      </if>
-      <if test="oneViewer != null">
-        one_viewer,
-      </if>
-      <if test="oneCode != null">
-        one_code,
-      </if>
-      <if test="oneSuanfa != null">
-        one_suanfa,
-      </if>
-      <if test="oneIntenet != null">
-        one_intenet,
-      </if>
-      <if test="oneXiangmu != null">
-        one_xiangmu,
-      </if>
-      <if test="oneOther != null">
-        one_other,
-      </if>
-      <if test="oneCount != null">
-        one_count,
-      </if>
-      <if test="oneLuoji != null">
-        one_luoji,
-      </if>
-      <if test="oneChuangxin != null">
-        one_chuangxin,
-      </if>
-      <if test="oneTeam != null">
-        one_team,
-      </if>
-      <if test="oneStady != null">
-        one_stady,
-      </if>
-      <if test="oneZhuoyue != null">
-        one_zhuoyue,
-      </if>
-      <if test="oneSum != null">
-        one_sum,
-      </if>
-      <if test="oneResult != null">
-        one_result,
-      </if>
-      <if test="oneYewu != null">
-        one_yewu,
-      </if>
-      <if test="oneSuzhi != null">
-        one_suzhi,
-      </if>
-      <if test="oneZonghe != null">
-        one_zonghe,
-      </if>
-      <if test="twoViewer != null">
-        two_viewer,
-      </if>
-      <if test="twoCode != null">
-        two_code,
-      </if>
-      <if test="twoSuanfa != null">
-        two_suanfa,
-      </if>
-      <if test="twoIntenet != null">
-        two_intenet,
-      </if>
-      <if test="twoXiangmu != null">
-        two_xiangmu,
-      </if>
-      <if test="twoOther != null">
-        two_other,
-      </if>
-      <if test="twoCount != null">
-        two_count,
-      </if>
-      <if test="twoLuoji != null">
-        two_luoji,
-      </if>
-      <if test="twoChuangxin != null">
-        two_chuangxin,
-      </if>
-      <if test="twoTeam != null">
-        two_team,
-      </if>
-      <if test="twoStady != null">
-        two_stady,
-      </if>
-      <if test="twoZhuoyue != null">
-        two_zhuoyue,
-      </if>
-      <if test="twoSum != null">
-        two_sum,
-      </if>
-      <if test="twoResult != null">
-        two_result,
-      </if>
-      <if test="twoYewu != null">
-        two_yewu,
-      </if>
-      <if test="twoSuzhi != null">
-        two_suzhi,
-      </if>
-      <if test="twoZonghe != null">
-        two_zonghe,
-      </if>
-      <if test="oneFenpei != null">
-        one_fenpei,
-      </if>
-      <if test="twoFenpei != null">
-        two_fenpei,
-      </if>
-      <if test="hrYijian != null">
-        hr_yijian,
-      </if>
-      <if test="oneSlary != null">
-        one_slary,
-      </if>
-      <if test="twoSlary != null">
-        two_slary,
-      </if>
-      <if test="hrSlary != null">
-        hr_slary,
-      </if>
-      <if test="hrName != null">
-        hr_name,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="studentId != null">
-        #{studentId,jdbcType=BIGINT},
-      </if>
-      <if test="oneViewer != null">
-        #{oneViewer,jdbcType=VARCHAR},
-      </if>
-      <if test="oneCode != null">
-        #{oneCode,jdbcType=BIGINT},
-      </if>
-      <if test="oneSuanfa != null">
-        #{oneSuanfa,jdbcType=BIGINT},
-      </if>
-      <if test="oneIntenet != null">
-        #{oneIntenet,jdbcType=BIGINT},
-      </if>
-      <if test="oneXiangmu != null">
-        #{oneXiangmu,jdbcType=BIGINT},
-      </if>
-      <if test="oneOther != null">
-        #{oneOther,jdbcType=BIGINT},
-      </if>
-      <if test="oneCount != null">
-        #{oneCount,jdbcType=BIGINT},
-      </if>
-      <if test="oneLuoji != null">
-        #{oneLuoji,jdbcType=BIGINT},
-      </if>
-      <if test="oneChuangxin != null">
-        #{oneChuangxin,jdbcType=BIGINT},
-      </if>
-      <if test="oneTeam != null">
-        #{oneTeam,jdbcType=BIGINT},
-      </if>
-      <if test="oneStady != null">
-        #{oneStady,jdbcType=BIGINT},
-      </if>
-      <if test="oneZhuoyue != null">
-        #{oneZhuoyue,jdbcType=BIGINT},
-      </if>
-      <if test="oneSum != null">
-        #{oneSum,jdbcType=BIGINT},
-      </if>
-      <if test="oneResult != null">
-        #{oneResult,jdbcType=BIGINT},
-      </if>
-      <if test="oneYewu != null">
-        #{oneYewu,jdbcType=VARCHAR},
-      </if>
-      <if test="oneSuzhi != null">
-        #{oneSuzhi,jdbcType=VARCHAR},
-      </if>
-      <if test="oneZonghe != null">
-        #{oneZonghe,jdbcType=VARCHAR},
-      </if>
-      <if test="twoViewer != null">
-        #{twoViewer,jdbcType=VARCHAR},
-      </if>
-      <if test="twoCode != null">
-        #{twoCode,jdbcType=BIGINT},
-      </if>
-      <if test="twoSuanfa != null">
-        #{twoSuanfa,jdbcType=BIGINT},
-      </if>
-      <if test="twoIntenet != null">
-        #{twoIntenet,jdbcType=BIGINT},
-      </if>
-      <if test="twoXiangmu != null">
-        #{twoXiangmu,jdbcType=BIGINT},
-      </if>
-      <if test="twoOther != null">
-        #{twoOther,jdbcType=BIGINT},
-      </if>
-      <if test="twoCount != null">
-        #{twoCount,jdbcType=BIGINT},
-      </if>
-      <if test="twoLuoji != null">
-        #{twoLuoji,jdbcType=BIGINT},
-      </if>
-      <if test="twoChuangxin != null">
-        #{twoChuangxin,jdbcType=BIGINT},
-      </if>
-      <if test="twoTeam != null">
-        #{twoTeam,jdbcType=BIGINT},
-      </if>
-      <if test="twoStady != null">
-        #{twoStady,jdbcType=BIGINT},
-      </if>
-      <if test="twoZhuoyue != null">
-        #{twoZhuoyue,jdbcType=BIGINT},
-      </if>
-      <if test="twoSum != null">
-        #{twoSum,jdbcType=BIGINT},
-      </if>
-      <if test="twoResult != null">
-        #{twoResult,jdbcType=BIGINT},
-      </if>
-      <if test="twoYewu != null">
-        #{twoYewu,jdbcType=VARCHAR},
-      </if>
-      <if test="twoSuzhi != null">
-        #{twoSuzhi,jdbcType=VARCHAR},
-      </if>
-      <if test="twoZonghe != null">
-        #{twoZonghe,jdbcType=VARCHAR},
-      </if>
-      <if test="oneFenpei != null">
-        #{oneFenpei,jdbcType=VARCHAR},
-      </if>
-      <if test="twoFenpei != null">
-        #{twoFenpei,jdbcType=VARCHAR},
-      </if>
-      <if test="hrYijian != null">
-        #{hrYijian,jdbcType=VARCHAR},
-      </if>
-      <if test="oneSlary != null">
-        #{oneSlary,jdbcType=BIGINT},
-      </if>
-      <if test="twoSlary != null">
-        #{twoSlary,jdbcType=BIGINT},
-      </if>
-      <if test="hrSlary != null">
-        #{hrSlary,jdbcType=BIGINT},
-      </if>
-      <if test="hrName != null">
-        #{hrName,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <select id="countByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" resultType="java.lang.Integer">
-    select count(*) from student_assess
-    <if test="_parameter != null">
-      <include refid="Example_Where_Clause" />
-    </if>
-  </select>
-  <update id="updateByExampleSelective" parameterType="map">
-    update student_assess
-    <set>
-      <if test="record.id != null">
-        id = #{record.id,jdbcType=INTEGER},
-      </if>
-      <if test="record.studentId != null">
-        student_id = #{record.studentId,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneViewer != null">
-        one_viewer = #{record.oneViewer,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oneCode != null">
-        one_code = #{record.oneCode,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneSuanfa != null">
-        one_suanfa = #{record.oneSuanfa,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneIntenet != null">
-        one_intenet = #{record.oneIntenet,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneXiangmu != null">
-        one_xiangmu = #{record.oneXiangmu,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneOther != null">
-        one_other = #{record.oneOther,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneCount != null">
-        one_count = #{record.oneCount,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneLuoji != null">
-        one_luoji = #{record.oneLuoji,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneChuangxin != null">
-        one_chuangxin = #{record.oneChuangxin,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneTeam != null">
-        one_team = #{record.oneTeam,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneStady != null">
-        one_stady = #{record.oneStady,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneZhuoyue != null">
-        one_zhuoyue = #{record.oneZhuoyue,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneSum != null">
-        one_sum = #{record.oneSum,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneResult != null">
-        one_result = #{record.oneResult,jdbcType=BIGINT},
-      </if>
-      <if test="record.oneYewu != null">
-        one_yewu = #{record.oneYewu,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oneSuzhi != null">
-        one_suzhi = #{record.oneSuzhi,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oneZonghe != null">
-        one_zonghe = #{record.oneZonghe,jdbcType=VARCHAR},
-      </if>
-      <if test="record.twoViewer != null">
-        two_viewer = #{record.twoViewer,jdbcType=VARCHAR},
-      </if>
-      <if test="record.twoCode != null">
-        two_code = #{record.twoCode,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoSuanfa != null">
-        two_suanfa = #{record.twoSuanfa,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoIntenet != null">
-        two_intenet = #{record.twoIntenet,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoXiangmu != null">
-        two_xiangmu = #{record.twoXiangmu,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoOther != null">
-        two_other = #{record.twoOther,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoCount != null">
-        two_count = #{record.twoCount,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoLuoji != null">
-        two_luoji = #{record.twoLuoji,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoChuangxin != null">
-        two_chuangxin = #{record.twoChuangxin,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoTeam != null">
-        two_team = #{record.twoTeam,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoStady != null">
-        two_stady = #{record.twoStady,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoZhuoyue != null">
-        two_zhuoyue = #{record.twoZhuoyue,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoSum != null">
-        two_sum = #{record.twoSum,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoResult != null">
-        two_result = #{record.twoResult,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoYewu != null">
-        two_yewu = #{record.twoYewu,jdbcType=VARCHAR},
-      </if>
-      <if test="record.twoSuzhi != null">
-        two_suzhi = #{record.twoSuzhi,jdbcType=VARCHAR},
-      </if>
-      <if test="record.twoZonghe != null">
-        two_zonghe = #{record.twoZonghe,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oneFenpei != null">
-        one_fenpei = #{record.oneFenpei,jdbcType=VARCHAR},
-      </if>
-      <if test="record.twoFenpei != null">
-        two_fenpei = #{record.twoFenpei,jdbcType=VARCHAR},
-      </if>
-      <if test="record.hrYijian != null">
-        hr_yijian = #{record.hrYijian,jdbcType=VARCHAR},
-      </if>
-      <if test="record.oneSlary != null">
-        one_slary = #{record.oneSlary,jdbcType=BIGINT},
-      </if>
-      <if test="record.twoSlary != null">
-        two_slary = #{record.twoSlary,jdbcType=BIGINT},
-      </if>
-      <if test="record.hrSlary != null">
-        hr_slary = #{record.hrSlary,jdbcType=BIGINT},
-      </if>
-      <if test="record.hrName != null">
-        hr_name = #{record.hrName,jdbcType=VARCHAR},
-      </if>
-    </set>
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByExample" parameterType="map">
-    update student_assess
-    set id = #{record.id,jdbcType=INTEGER},
-      student_id = #{record.studentId,jdbcType=BIGINT},
-      one_viewer = #{record.oneViewer,jdbcType=VARCHAR},
-      one_code = #{record.oneCode,jdbcType=BIGINT},
-      one_suanfa = #{record.oneSuanfa,jdbcType=BIGINT},
-      one_intenet = #{record.oneIntenet,jdbcType=BIGINT},
-      one_xiangmu = #{record.oneXiangmu,jdbcType=BIGINT},
-      one_other = #{record.oneOther,jdbcType=BIGINT},
-      one_count = #{record.oneCount,jdbcType=BIGINT},
-      one_luoji = #{record.oneLuoji,jdbcType=BIGINT},
-      one_chuangxin = #{record.oneChuangxin,jdbcType=BIGINT},
-      one_team = #{record.oneTeam,jdbcType=BIGINT},
-      one_stady = #{record.oneStady,jdbcType=BIGINT},
-      one_zhuoyue = #{record.oneZhuoyue,jdbcType=BIGINT},
-      one_sum = #{record.oneSum,jdbcType=BIGINT},
-      one_result = #{record.oneResult,jdbcType=BIGINT},
-      one_yewu = #{record.oneYewu,jdbcType=VARCHAR},
-      one_suzhi = #{record.oneSuzhi,jdbcType=VARCHAR},
-      one_zonghe = #{record.oneZonghe,jdbcType=VARCHAR},
-      two_viewer = #{record.twoViewer,jdbcType=VARCHAR},
-      two_code = #{record.twoCode,jdbcType=BIGINT},
-      two_suanfa = #{record.twoSuanfa,jdbcType=BIGINT},
-      two_intenet = #{record.twoIntenet,jdbcType=BIGINT},
-      two_xiangmu = #{record.twoXiangmu,jdbcType=BIGINT},
-      two_other = #{record.twoOther,jdbcType=BIGINT},
-      two_count = #{record.twoCount,jdbcType=BIGINT},
-      two_luoji = #{record.twoLuoji,jdbcType=BIGINT},
-      two_chuangxin = #{record.twoChuangxin,jdbcType=BIGINT},
-      two_team = #{record.twoTeam,jdbcType=BIGINT},
-      two_stady = #{record.twoStady,jdbcType=BIGINT},
-      two_zhuoyue = #{record.twoZhuoyue,jdbcType=BIGINT},
-      two_sum = #{record.twoSum,jdbcType=BIGINT},
-      two_result = #{record.twoResult,jdbcType=BIGINT},
-      two_yewu = #{record.twoYewu,jdbcType=VARCHAR},
-      two_suzhi = #{record.twoSuzhi,jdbcType=VARCHAR},
-      two_zonghe = #{record.twoZonghe,jdbcType=VARCHAR},
-      one_fenpei = #{record.oneFenpei,jdbcType=VARCHAR},
-      two_fenpei = #{record.twoFenpei,jdbcType=VARCHAR},
-      hr_yijian = #{record.hrYijian,jdbcType=VARCHAR},
-      one_slary = #{record.oneSlary,jdbcType=BIGINT},
-      two_slary = #{record.twoSlary,jdbcType=BIGINT},
-      hr_slary = #{record.hrSlary,jdbcType=BIGINT},
-      hr_name = #{record.hrName,jdbcType=VARCHAR}
-    <if test="_parameter != null">
-      <include refid="Update_By_Example_Where_Clause" />
-    </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.StudentAssess">
-    update student_assess
-    <set>
-      <if test="studentId != null">
-        student_id = #{studentId,jdbcType=BIGINT},
-      </if>
-      <if test="oneViewer != null">
-        one_viewer = #{oneViewer,jdbcType=VARCHAR},
-      </if>
-      <if test="oneCode != null">
-        one_code = #{oneCode,jdbcType=BIGINT},
-      </if>
-      <if test="oneSuanfa != null">
-        one_suanfa = #{oneSuanfa,jdbcType=BIGINT},
-      </if>
-      <if test="oneIntenet != null">
-        one_intenet = #{oneIntenet,jdbcType=BIGINT},
-      </if>
-      <if test="oneXiangmu != null">
-        one_xiangmu = #{oneXiangmu,jdbcType=BIGINT},
-      </if>
-      <if test="oneOther != null">
-        one_other = #{oneOther,jdbcType=BIGINT},
-      </if>
-      <if test="oneCount != null">
-        one_count = #{oneCount,jdbcType=BIGINT},
-      </if>
-      <if test="oneLuoji != null">
-        one_luoji = #{oneLuoji,jdbcType=BIGINT},
-      </if>
-      <if test="oneChuangxin != null">
-        one_chuangxin = #{oneChuangxin,jdbcType=BIGINT},
-      </if>
-      <if test="oneTeam != null">
-        one_team = #{oneTeam,jdbcType=BIGINT},
-      </if>
-      <if test="oneStady != null">
-        one_stady = #{oneStady,jdbcType=BIGINT},
-      </if>
-      <if test="oneZhuoyue != null">
-        one_zhuoyue = #{oneZhuoyue,jdbcType=BIGINT},
-      </if>
-      <if test="oneSum != null">
-        one_sum = #{oneSum,jdbcType=BIGINT},
-      </if>
-      <if test="oneResult != null">
-        one_result = #{oneResult,jdbcType=BIGINT},
-      </if>
-      <if test="oneYewu != null">
-        one_yewu = #{oneYewu,jdbcType=VARCHAR},
-      </if>
-      <if test="oneSuzhi != null">
-        one_suzhi = #{oneSuzhi,jdbcType=VARCHAR},
-      </if>
-      <if test="oneZonghe != null">
-        one_zonghe = #{oneZonghe,jdbcType=VARCHAR},
-      </if>
-      <if test="twoViewer != null">
-        two_viewer = #{twoViewer,jdbcType=VARCHAR},
-      </if>
-      <if test="twoCode != null">
-        two_code = #{twoCode,jdbcType=BIGINT},
-      </if>
-      <if test="twoSuanfa != null">
-        two_suanfa = #{twoSuanfa,jdbcType=BIGINT},
-      </if>
-      <if test="twoIntenet != null">
-        two_intenet = #{twoIntenet,jdbcType=BIGINT},
-      </if>
-      <if test="twoXiangmu != null">
-        two_xiangmu = #{twoXiangmu,jdbcType=BIGINT},
-      </if>
-      <if test="twoOther != null">
-        two_other = #{twoOther,jdbcType=BIGINT},
-      </if>
-      <if test="twoCount != null">
-        two_count = #{twoCount,jdbcType=BIGINT},
-      </if>
-      <if test="twoLuoji != null">
-        two_luoji = #{twoLuoji,jdbcType=BIGINT},
-      </if>
-      <if test="twoChuangxin != null">
-        two_chuangxin = #{twoChuangxin,jdbcType=BIGINT},
-      </if>
-      <if test="twoTeam != null">
-        two_team = #{twoTeam,jdbcType=BIGINT},
-      </if>
-      <if test="twoStady != null">
-        two_stady = #{twoStady,jdbcType=BIGINT},
-      </if>
-      <if test="twoZhuoyue != null">
-        two_zhuoyue = #{twoZhuoyue,jdbcType=BIGINT},
-      </if>
-      <if test="twoSum != null">
-        two_sum = #{twoSum,jdbcType=BIGINT},
-      </if>
-      <if test="twoResult != null">
-        two_result = #{twoResult,jdbcType=BIGINT},
-      </if>
-      <if test="twoYewu != null">
-        two_yewu = #{twoYewu,jdbcType=VARCHAR},
-      </if>
-      <if test="twoSuzhi != null">
-        two_suzhi = #{twoSuzhi,jdbcType=VARCHAR},
-      </if>
-      <if test="twoZonghe != null">
-        two_zonghe = #{twoZonghe,jdbcType=VARCHAR},
-      </if>
-      <if test="oneFenpei != null">
-        one_fenpei = #{oneFenpei,jdbcType=VARCHAR},
-      </if>
-      <if test="twoFenpei != null">
-        two_fenpei = #{twoFenpei,jdbcType=VARCHAR},
-      </if>
-      <if test="hrYijian != null">
-        hr_yijian = #{hrYijian,jdbcType=VARCHAR},
-      </if>
-      <if test="oneSlary != null">
-        one_slary = #{oneSlary,jdbcType=BIGINT},
-      </if>
-      <if test="twoSlary != null">
-        two_slary = #{twoSlary,jdbcType=BIGINT},
-      </if>
-      <if test="hrSlary != null">
-        hr_slary = #{hrSlary,jdbcType=BIGINT},
-      </if>
-      <if test="hrName != null">
-        hr_name = #{hrName,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.StudentAssess">
+  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.StudentAssess" >
     update student_assess
     set student_id = #{studentId,jdbcType=BIGINT},
       one_viewer = #{oneViewer,jdbcType=VARCHAR},

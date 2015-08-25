@@ -80,16 +80,15 @@ public class InterviewerService {
 	
 	public Interviewer createInterviewer(Map<String, String> vars) {
 		Interviewer inter = new Interviewer();
-		String new_city = vars.get("new_city");
-		String new_name = vars.get("new_name");
-		String new_job = vars.get("new_job");
-		String new_user = vars.get("new_user");
-		String new_password = vars.get("new_password");
+		String new_city = vars.get("city");
+		String new_name = vars.get("name");
+		String new_job = vars.get("job");
+		String new_password = vars.get("password");
 		String new_startDate = vars.get("new_startDate");
 		String new_endDate = vars.get("new_endDate");
 		String new_role = vars.get("new_role");
 		inter.setCity(new_city);
-		inter.setUserName(new_user);
+		inter.setUserName(new_name);
 		inter.setPassword(new_password);
 		Date startDate = QUtils.formatDate(new_startDate);
 		Date endDate = QUtils.formatDate(new_endDate);

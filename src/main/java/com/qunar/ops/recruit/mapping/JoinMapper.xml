@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qunar.ops.recruit.dao.JoinMapper" >
-  <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.Student" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="note_no" property="noteNo" jdbcType="VARCHAR" />
-    <result column="phase_no" property="phaseNo" jdbcType="VARCHAR" />
-    <result column="interview_time" property="interviewTime" jdbcType="TIMESTAMP" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="sex" property="sex" jdbcType="CHAR" />
-    <result column="school" property="school" jdbcType="VARCHAR" />
-    <result column="profession" property="profession" jdbcType="VARCHAR" />
-    <result column="education" property="education" jdbcType="VARCHAR" />
-    <result column="phone" property="phone" jdbcType="VARCHAR" />
-    <result column="email" property="email" jdbcType="VARCHAR" />
-    <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
-    <result column="qq_no" property="qqNo" jdbcType="VARCHAR" />
-    <result column="job" property="job" jdbcType="VARCHAR" />
-    <result column="work_start" property="workStart" jdbcType="TIMESTAMP" />
-    <result column="work_end" property="workEnd" jdbcType="TIMESTAMP" />
-    <result column="graduate_date" property="graduateDate" jdbcType="TIMESTAMP" />
-    <result column="salary" property="salary" jdbcType="DOUBLE" />
-    <result column="assess" property="assess" jdbcType="VARCHAR" />
-    <result column="first_try" property="firstTry" jdbcType="VARCHAR" />
-    <result column="second_try" property="secondTry" jdbcType="VARCHAR" />
-    <result column="view_remark" property="viewRemark" jdbcType="VARCHAR" />
-    <result column="location" property="location" jdbcType="VARCHAR" />
-    <result column="offer_state" property="offerState" jdbcType="VARCHAR" />
-    <result column="three_side" property="threeSide" jdbcType="CHAR" />
-    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
-    <result column="three_state" property="threeState" jdbcType="CHAR" />
-    <result column="refuse" property="refuse" jdbcType="VARCHAR" />
-    <result column="refuse_reson" property="refuseReson" jdbcType="VARCHAR" />
-    <result column="refuse_date" property="refuseDate" jdbcType="TIMESTAMP" />
-    <result column="breaker" property="breaker" jdbcType="CHAR" />
-    <result column="train" property="train" jdbcType="VARCHAR" />
-    <result column="staff_no" property="staffNo" jdbcType="VARCHAR" />
-    <result column="interview_dept" property="interviewDept" jdbcType="VARCHAR" />
-    <result column="fenpei_dept" property="fenpeiDept" jdbcType="VARCHAR" />
-    <result column="yuan_dept" property="yuanDept" jdbcType="VARCHAR" />
-    <result column="organize" property="organize" jdbcType="VARCHAR" />
-    <result column="leader" property="leader" jdbcType="VARCHAR" />
-    <result column="one_result" property="oneResult" jdbcType="VARCHAR" />
-    <result column="two_result" property="twoResult" jdbcType="VARCHAR" />
-    <result column="true_time" property="trueTime" jdbcType="TIMESTAMP" />
-    <result column="one_overtime" property="oneOvertime" jdbcType="TIMESTAMP" />
+  <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.Student">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="note_no" jdbcType="VARCHAR" property="noteNo" />
+    <result column="phase_no" jdbcType="VARCHAR" property="phaseNo" />
+    <result column="interview_time" jdbcType="TIMESTAMP" property="interviewTime" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="CHAR" property="sex" />
+    <result column="school" jdbcType="VARCHAR" property="school" />
+    <result column="profession" jdbcType="VARCHAR" property="profession" />
+    <result column="education" jdbcType="VARCHAR" property="education" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+    <result column="qq_no" jdbcType="VARCHAR" property="qqNo" />
+    <result column="job" jdbcType="VARCHAR" property="job" />
+    <result column="work_start" jdbcType="TIMESTAMP" property="workStart" />
+    <result column="work_end" jdbcType="TIMESTAMP" property="workEnd" />
+    <result column="graduate_date" jdbcType="TIMESTAMP" property="graduateDate" />
+    <result column="salary" jdbcType="DOUBLE" property="salary" />
+    <result column="assess" jdbcType="VARCHAR" property="assess" />
+    <result column="first_try" jdbcType="VARCHAR" property="firstTry" />
+    <result column="second_try" jdbcType="VARCHAR" property="secondTry" />
+    <result column="view_remark" jdbcType="VARCHAR" property="viewRemark" />
+    <result column="location" jdbcType="VARCHAR" property="location" />
+    <result column="offer_state" jdbcType="VARCHAR" property="offerState" />
+    <result column="three_side" jdbcType="CHAR" property="threeSide" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="three_state" jdbcType="CHAR" property="threeState" />
+    <result column="refuse" jdbcType="VARCHAR" property="refuse" />
+    <result column="refuse_reson" jdbcType="VARCHAR" property="refuseReson" />
+    <result column="refuse_date" jdbcType="TIMESTAMP" property="refuseDate" />
+    <result column="breaker" jdbcType="CHAR" property="breaker" />
+    <result column="train" jdbcType="VARCHAR" property="train" />
+    <result column="staff_no" jdbcType="VARCHAR" property="staffNo" />
+    <result column="interview_dept" jdbcType="VARCHAR" property="interviewDept" />
+    <result column="fenpei_dept" jdbcType="VARCHAR" property="fenpeiDept" />
+    <result column="yuan_dept" jdbcType="VARCHAR" property="yuanDept" />
+    <result column="organize" jdbcType="VARCHAR" property="organize" />
+    <result column="leader" jdbcType="VARCHAR" property="leader" />
+    <result column="one_result" jdbcType="VARCHAR" property="oneResult" />
+    <result column="two_result" jdbcType="VARCHAR" property="twoResult" />
+    <result column="true_time" jdbcType="TIMESTAMP" property="trueTime" />
+    <result column="one_overtime" jdbcType="TIMESTAMP" property="oneOvertime" />
   </resultMap>
-  <resultMap id="InterResultMap" type="com.qunar.ops.recruit.model.Interviewer" >
+ <resultMap id="InterResultMap" type="com.qunar.ops.recruit.model.Interviewer" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="CHAR" />
@@ -55,13 +55,11 @@
     <result column="one_count" property="oneCount" jdbcType="INTEGER" />
     <result column="two_count" property="twoCount" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
-    <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="pahse_id" property="pahseId" jdbcType="BIGINT" />
+    <result column="phase" property="phase" jdbcType="VARCHAR" />
     <result column="view_count" property="viewCount" jdbcType="BIGINT" />
-    <result column="room" property="room" jdbcType="ARRAY" />
+    <result column="room" property="room" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="BIGINT" />
+    <result column="determine" property="determine" jdbcType="CHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
