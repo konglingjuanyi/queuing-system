@@ -75,13 +75,17 @@ public class HrController {
 		Map<String, String> vars = commonRequest.getVars();
 		System.out.println(vars);
 		Interviewer inter = interService.createInterviewer(vars);
-		interService.updateInterviewer(inter);
-		return BaseResult.getSuccessResult("success");
+		if(interService.getInterviewerByUserNameExceptId(inter.getUserName(), inter.getId()) != null){
+			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_USER_ERROR_MSG);
+		}else{
+			interService.updateInterviewer(inter);
+			return BaseResult.getSuccessResult("success");
+		}
 	}
 
 	@RequestMapping(value = "/hr/getInterviewers")
 	public String getInterviewers(HttpServletRequest request,  ModelMap model) {
-		System.out.println("===========================");
+//		System.out.println("===========================");
 //		Map<String, String> vars = commonRequest.getVars();
 //		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
 //		int pageSize = noSize[0];
