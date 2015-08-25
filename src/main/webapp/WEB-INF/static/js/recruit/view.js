@@ -47,11 +47,15 @@ function addViewer(){
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify(params),
           success: function (returnedData) {
-        	  	$("#addform").modal("hide");
-        	  	$('#content').load('/hr/getInterviewers');
+        	  if(returnedData.errorCode==0){
+        		  $("#addform").modal("hide");
+            	  $('#content').load('/hr/getInterviewers'); 
+        	  }else{
+        		  alert(returnedData.errorMessage);
+        	  }
 		  },
           error: function () {
-                alert("系统发生了错误请稍后重试");
+               alert("系统发生了错误请稍后重试");
           }
    });
 }
@@ -100,6 +104,7 @@ function doUpd(id,password){
 }
 
 function updViewer(){
+	var updid=$("#updid").val().trim();
 	var username=$("#upduserName").val().trim();
 	var job=$("#updjob").val().trim();
 	var password=$("#updpassword").val().trim();
@@ -116,6 +121,7 @@ function updViewer(){
 		finish_value.push($(this).val());    
 	});
 	var vars = {};
+	vars["updid"] = updid;
 	vars["username"] = username;
 	vars["job"] = job;
 	vars["password"] = password;
@@ -140,17 +146,23 @@ function updViewer(){
 }
 
 function doDel(id){
-	alert(id);
-	$.ajax({
-        url: "/hr/deleteInterviewer",
-        type: "POST",
-        dataType: "json",
-        data: {'id':id},
-        success: function (returnedData) {
-      	  	$('#content').load('/hr/getInterviewers');
-		  },
-        error: function () {
-              alert("系统发生了错误请稍后重试");
-        }
- });
+	if(confirm("确定要删除吗？")){
+		$.ajax({
+	        url: "/hr/deleteInterviewer",
+	        type: "POST",
+	        dataType: "json",
+	        data: {'id':id},
+	        success: function (returnedData) {
+	      	  	$('#content').load('/hr/getInterviewers');
+			  },
+	        error: function () {
+	              alert("系统发生了错误请稍后重试");
+	        }
+	 });
+	}
+}
+
+function goBack(){
+	$("#updform").modal("hide");
+	$("#addform").modal("hide");
 }
