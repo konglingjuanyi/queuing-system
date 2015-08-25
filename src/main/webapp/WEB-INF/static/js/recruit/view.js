@@ -57,7 +57,6 @@ function addViewer(){
 }
 
 function doUpd(id,password){
-	alert(id);
 	var name=$('#tr'+id).children('td').eq(0).text();
 	var job=$('#tr'+id).children('td').eq(1).text();
 	var rd=$('#tr'+id).children('td').eq(2).text();
