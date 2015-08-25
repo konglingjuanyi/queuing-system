@@ -90,29 +90,29 @@ function doUpd(id,password){
 	if(rd!=''){
 		var rds=rd.split(",");
 		for(var i=0;i<rds.length;i++){
-			$('input[name="updfirstname"]').each(function(){  
+			$('input[name="updfirstname"]').each(function(){
 				if($(this).val()==rds[i]){
-					$(this).attr("checked",'true');
+					$(this).prop("checked",'true');
 				}   
 			});
 		}
 	}
 	if(fe!=''){
-		var rds=rd.split(",");
+		var rds=fe.split(",");
 		for(var i=0;i<rds.length;i++){
 			$('input[name="updsecondname"]').each(function(){    
 				if($(this).val()==rds[i]){
-					$(this).attr("checked",'true');
+					$(this).prop("checked",'true');
 				}   
 			});
 		}
 	}
 	if(qa!=''){
-		var rds=rd.split(",");
+		var rds=qa.split(",");
 		for(var i=0;i<rds.length;i++){
 			$('input[name="updfinishname"]').each(function(){    
 				if($(this).val()==rds[i]){
-					$(this).attr("checked",'true');
+					$(this).prop("checked",'true');
 				}   
 			});
 		}

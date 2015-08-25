@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="/static/css/module.css" />
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/js/recruit/view.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/phase.js"></script>
 </head>
 <body>
 	<div class="l-fullsreen">
@@ -35,6 +36,7 @@
 					<li><a href="#">面试平台</a></li>
 					<li><a href="javascript:void(0);" id="view_list">面试官管理</a></li>
 					<li><a href="#">候选人管理</a></li>
+					<li><a href="javascript:void(0);" id="phase_list">批次管理</a></li>
 				</ul>
 			</div>
 		</div>
