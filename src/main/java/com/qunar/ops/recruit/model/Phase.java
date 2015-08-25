@@ -7,7 +7,7 @@ public class Phase {
 
     private String cityName;
 
-    private Object yearInfo;
+    private String yearInfo;
 
     public Integer getId() {
         return id;
@@ -33,11 +33,11 @@ public class Phase {
         this.cityName = cityName == null ? null : cityName.trim();
     }
 
-    public Object getYearInfo() {
+    public String getYearInfo() {
         return yearInfo;
     }
 
-    public void setYearInfo(Object yearInfo) {
-        this.yearInfo = yearInfo;
+    public void setYearInfo(String yearInfo) {
+        this.yearInfo = yearInfo == null ? null : yearInfo.trim();
     }
 }
