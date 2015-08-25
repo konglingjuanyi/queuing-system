@@ -16,6 +16,7 @@
     <result column="room" property="room" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="BIGINT" />
     <result column="determine" property="determine" jdbcType="CHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -77,7 +78,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_name, password, city, one_view, two_view, one_count, two_count, status, 
-    phase, view_count, room, enable, determine
+    phase, view_count, room, enable, determine, job
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.InterviewerExample" >
     select
@@ -118,12 +119,12 @@
       one_view, two_view, one_count, 
       two_count, status, phase, 
       view_count, room, enable, 
-      determine)
+      determine, job)
     values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, #{city,jdbcType=CHAR}, 
       #{oneView,jdbcType=CHAR}, #{twoView,jdbcType=CHAR}, #{oneCount,jdbcType=INTEGER}, 
       #{twoCount,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{phase,jdbcType=VARCHAR}, 
       #{viewCount,jdbcType=BIGINT}, #{room,jdbcType=VARCHAR}, #{enable,jdbcType=BIGINT}, 
-      #{determine,jdbcType=CHAR})
+      #{determine,jdbcType=CHAR}, #{job,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Interviewer" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -170,6 +171,9 @@
       <if test="determine != null" >
         determine,
       </if>
+      <if test="job != null" >
+        job,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="userName != null" >
@@ -210,6 +214,9 @@
       </if>
       <if test="determine != null" >
         #{determine,jdbcType=CHAR},
+      </if>
+      <if test="job != null" >
+        #{job,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -264,6 +271,9 @@
       <if test="record.determine != null" >
         determine = #{record.determine,jdbcType=CHAR},
       </if>
+      <if test="record.job != null" >
+        job = #{record.job,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -284,7 +294,8 @@
       view_count = #{record.viewCount,jdbcType=BIGINT},
       room = #{record.room,jdbcType=VARCHAR},
       enable = #{record.enable,jdbcType=BIGINT},
-      determine = #{record.determine,jdbcType=CHAR}
+      determine = #{record.determine,jdbcType=CHAR},
+      job = #{record.job,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -331,6 +342,9 @@
       <if test="determine != null" >
         determine = #{determine,jdbcType=CHAR},
       </if>
+      <if test="job != null" >
+        job = #{job,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -348,7 +362,8 @@
       view_count = #{viewCount,jdbcType=BIGINT},
       room = #{room,jdbcType=VARCHAR},
       enable = #{enable,jdbcType=BIGINT},
-      determine = #{determine,jdbcType=CHAR}
+      determine = #{determine,jdbcType=CHAR},
+      job = #{job,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

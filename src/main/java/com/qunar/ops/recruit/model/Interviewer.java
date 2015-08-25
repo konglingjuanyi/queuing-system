@@ -29,6 +29,8 @@ public class Interviewer {
 
     private String determine;
 
+    private String job;
+
     public Integer getId() {
         return id;
     }
@@ -139,5 +141,13 @@ public class Interviewer {
 
     public void setDetermine(String determine) {
         this.determine = determine == null ? null : determine.trim();
+    }
+
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job == null ? null : job.trim();
     }
 }

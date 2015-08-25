@@ -79,6 +79,7 @@ public class HrController {
 	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 //		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
+		System.out.println(vars);
 		Interviewer inter = interService.createInterviewer(vars);
 		interService.addInterviewer(inter);
 		return BaseResult.getSuccessResult(null);

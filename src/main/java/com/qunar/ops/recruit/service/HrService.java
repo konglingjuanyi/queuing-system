@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +24,17 @@ public class HrService {
 	@Autowired
 	HrMapper hrMapper;
 	
-	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+	private HrService(){
+		System.err.println("init excute!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	}
+	
+	@PostConstruct
+	private void test(){
+		System.err.println("post excute!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+	}
+	
 	public List<Interviewer> getAllInterviewer() {
 		return null;
 	}
