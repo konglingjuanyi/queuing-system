@@ -82,7 +82,7 @@ public class HrController {
 		System.out.println(vars);
 		Interviewer inter = interService.createInterviewer(vars);
 		interService.addInterviewer(inter);
-		return BaseResult.getSuccessResult(null);
+		return BaseResult.getSuccessResult("success");
 	}
 	
 	@RequestMapping(value = "/hr/updateInterviewers")
@@ -92,7 +92,7 @@ public class HrController {
 		Map<String, String> vars = commonRequest.getVars();
 //		Interviewer inter = createInterviewer(vars);
 //		inServe.addInterviewer(inter);
-		return BaseResult.getSuccessResult(null);
+		return BaseResult.getSuccessResult("success");
 	}
 
 	@RequestMapping(value = "/hr/getInterviewers")

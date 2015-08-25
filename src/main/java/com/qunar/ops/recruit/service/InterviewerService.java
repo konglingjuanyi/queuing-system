@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.qunar.ops.recruit.dao.InterviewerMapper;
 import com.qunar.ops.recruit.model.Interviewer;
@@ -80,18 +81,20 @@ public class InterviewerService {
 	
 	public Interviewer createInterviewer(Map<String, String> vars) {
 		Interviewer inter = new Interviewer();
-		String new_city = vars.get("city");
-		String new_name = vars.get("name");
-		String new_job = vars.get("job");
-		String new_password = vars.get("password");
-		String new_startDate = vars.get("new_startDate");
-		String new_endDate = vars.get("new_endDate");
-		String new_role = vars.get("new_role");
-		inter.setCity(new_city);
-		inter.setUserName(new_name);
-		inter.setPassword(new_password);
-		Date startDate = QUtils.formatDate(new_startDate);
-		Date endDate = QUtils.formatDate(new_endDate);
+		String city = vars.get("city");
+		String userName = vars.get("username");
+		String job = vars.get("job");
+		String password = vars.get("password");
+		String first_value = vars.get("first_value");
+		String seconde_value = vars.get("seconde_value");
+		String finish_value = vars.get("finish_value");
+		inter.setUserName(userName);
+		inter.setPassword(password);
+		inter.setCity(city);
+		inter.setJob(job);
+		inter.setOneView(first_value);
+		inter.setTwoView(seconde_value);
+		inter.setDetermine(finish_value);
 		inter.setOneCount(0);
 		inter.setTwoCount(0);
 		return inter;
