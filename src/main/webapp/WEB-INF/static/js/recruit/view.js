@@ -139,3 +139,19 @@ function updViewer(){
           }
    });
 }
+
+function doDel(id){
+	alert(id);
+	$.ajax({
+        url: "/hr/deleteInterviewer",
+        type: "POST",
+        dataType: "json",
+        data: {'id':id},
+        success: function (returnedData) {
+      	  	$('#content').load('/hr/getInterviewers');
+		  },
+        error: function () {
+              alert("系统发生了错误请稍后重试");
+        }
+ });
+}

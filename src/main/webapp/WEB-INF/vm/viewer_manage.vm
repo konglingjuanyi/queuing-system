@@ -47,7 +47,7 @@
 				                  <td>
 				                  	<a href="#" id="upd" onclick="doUpd($info.id,$info.password)">修改</a>
 				                  	<a href="#" id="sel">查看</a>
-				                  	<a href="#" id="del">删除</a>
+				                  	<a href="#" id="del" onclick="doDel($info.id)">删除</a>
 				                  </td>	
 				                </tr>
 				                #end
