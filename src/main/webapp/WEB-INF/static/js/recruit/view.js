@@ -32,6 +32,22 @@ function addViewer(){
 	$('input[name="finishname"]:checked').each(function(){    
 		finish_value.push($(this).val());    
 	});
+	if(username==''){
+		alert("用户名不能为空");
+		return false;
+	}
+	if(job==''){
+		alert("职位不能为空");
+		return false;
+	}
+	if(password==''){
+		alert("密码不能为空");
+		return false;
+	}
+	if(first_value.length==0&&second_value.length==0&&finish_value.length==0){
+		alert("至少选择一项面试项目");
+		return false;
+	}
 	var vars = {};
 	vars["username"] = username;
 	vars["job"] = job;
@@ -120,6 +136,22 @@ function updViewer(){
 	$('input[name="updfinishname"]:checked').each(function(){    
 		finish_value.push($(this).val());    
 	});
+	if(username==''){
+		alert("用户名不能为空");
+		return false;
+	}
+	if(job==''){
+		alert("职位不能为空");
+		return false;
+	}
+	if(password==''){
+		alert("密码不能为空");
+		return false;
+	}
+	if(first_value.length==0&&second_value.length==0&&finish_value.length==0){
+		alert("至少选择一项面试项目");
+		return false;
+	}
 	var vars = {};
 	vars["updid"] = updid;
 	vars["username"] = username;
@@ -174,4 +206,21 @@ function goBack(){
 	});
 	$("#updform").modal("hide");
 	$("#addform").modal("hide");
+}
+
+function doSel(id){
+	$.ajax({
+        url: "/hr/getInterviewerInfo",
+        type: "POST",
+        dataType: "json",
+        data: {'id':id},
+        success: function (returnedData) {
+      	  	alert(returnedData);
+      	  	$("#getform").modal("show");
+      	  	
+		},
+        error: function () {
+              alert("系统发生了错误请稍后重试");
+        }
+ });
 }

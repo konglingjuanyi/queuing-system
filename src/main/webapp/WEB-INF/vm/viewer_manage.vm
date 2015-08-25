@@ -46,7 +46,7 @@
 				                  <td>$info.twoCount</td>
 				                  <td>
 				                  	<a href="#" id="upd" onclick="doUpd($info.id,$info.password)">修改</a>
-				                  	<a href="#" id="sel">查看</a>
+				                  	<a href="#" id="sel" onclick="doSel($info.id)">查看</a>
 				                  	<a href="#" id="del" onclick="doDel($info.id)">删除</a>
 				                  </td>	
 				                </tr>
@@ -225,6 +225,124 @@
 							<div class="modal-footer" style="text-align:center;">
 								<div>
 								  <button id="updview" type="button" class="btn ">保存</button>
+								  <button type="button" class="btn " onclick="goBack()">取消</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div id="getform" class="l-inner modal hide fade in" style="display: none;">
+					<div class="modal-header" style="text-align:center">
+        				<a class="close" data-dismiss="modal" onclick="goBack()">×</a>
+        				<h3>修改面试官</h3>
+    				</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<input type="hidden" id="updid" name="getid" value="">
+							<div class="control-group">
+								<label class="control-label" for="name">面试官姓名</label>
+								<div class="controls">
+								  <input type="text" id="getuserName" placeholder="必填">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="job">职位</label>
+								<div class="controls">
+								  <input type="text" id="getjob" placeholder="必填">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="password">密码</label>
+								<div class="controls">
+								  <input type="text" id="getpassword" placeholder="必填">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="project">面试项目</label>
+								<div class="controls">
+									<table class="table table-bordered">
+						              <thead>
+						                <tr>
+						                  <th></th>
+						                  <th>初试</th>
+						                  <th>复试</th>
+						                  <th>一次决定权</th>
+						                </tr>
+						              </thead>
+						              <tbody>
+											<tr>
+												<td>RD</td>
+												<td>
+													<input id="getfirstid" name="getfirstname" type="checkbox"  value="RD">
+												</td>
+												<td>
+													<input id="getsecondid" name="getsecondname" type="checkbox"  value="RD">
+												</td>
+												<td>
+													<input id="getfinishid" name="getfinishname" type="checkbox"  value="RD">
+												</td>
+											</tr>
+											<tr>
+												<td>FE</td>
+												<td>
+													<input id="getfirstid" name="getfirstname" type="checkbox"  value="FE">
+												</td>
+												<td>
+													<input id="getsecondid" name="getsecondname" type="checkbox"  value="FE">
+												</td>
+												<td>
+													<input id="getfinishid" name="getfinishname" type="checkbox"  value="FE">
+												</td>
+											</tr>
+											<tr>
+												<td>QA</td>
+												<td>
+													<input id="getfirstid" name="getfirstname" type="checkbox"  value="QA">
+												</td>
+												<td>
+													<input id="getsecondid" name="getsecondname" type="checkbox"  value="QA">
+												</td>
+												<td>
+													<input id="getfinishid" name="getfinishname" type="checkbox"  value="QA">
+												</td>
+											</tr>
+						              </tbody>
+						            </table>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="project">面试成果</label>
+								<div class="controls">
+									<table class="table table-bordered">
+						              <thead>
+						                <tr>
+						                  <th></th>
+						                  <th>初试</th>
+						                  <th>复试</th>
+						                </tr>
+						              </thead>
+						              <tbody>
+											<tr>
+												<td>RD</td>
+												<td id="firstrd">4</td>
+												<td id="secondrd">2</td>
+											</tr>
+											<tr>
+												<td>FE</td>
+												<td id="firstfe">4</td>
+												<td id="secondfe">2</td>
+											</tr>
+											<tr>
+												<td>QA</td>
+												<td id="firstqa">4</td>
+												<td id="secondqa">2</td>
+											</tr>
+						              </tbody>
+						            </table>
+								</div>
+							</div>
+							<div class="modal-footer" style="text-align:center;">
+								<div>
 								  <button type="button" class="btn " onclick="goBack()">取消</button>
 								</div>
 							</div>
