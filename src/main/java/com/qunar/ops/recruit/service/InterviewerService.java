@@ -103,6 +103,12 @@ public class InterviewerService {
 		inter.setDetermine(finish_value);
 		inter.setOneCount(0);
 		inter.setTwoCount(0);
+		inter.setFirstFe(0);
+		inter.setFirstQa(0);
+		inter.setFirstRd(0);
+		inter.setSecondFe(0);
+		inter.setSecondQa(0);
+		inter.setSecondRd(0);
 		return inter;
 	}
 	

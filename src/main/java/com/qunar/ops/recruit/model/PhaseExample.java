@@ -314,52 +314,62 @@ public class PhaseExample {
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoEqualTo(Object value) {
+        public Criteria andYearInfoEqualTo(String value) {
             addCriterion("year_info =", value, "yearInfo");
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoNotEqualTo(Object value) {
+        public Criteria andYearInfoNotEqualTo(String value) {
             addCriterion("year_info <>", value, "yearInfo");
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoGreaterThan(Object value) {
+        public Criteria andYearInfoGreaterThan(String value) {
             addCriterion("year_info >", value, "yearInfo");
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoGreaterThanOrEqualTo(Object value) {
+        public Criteria andYearInfoGreaterThanOrEqualTo(String value) {
             addCriterion("year_info >=", value, "yearInfo");
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoLessThan(Object value) {
+        public Criteria andYearInfoLessThan(String value) {
             addCriterion("year_info <", value, "yearInfo");
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoLessThanOrEqualTo(Object value) {
+        public Criteria andYearInfoLessThanOrEqualTo(String value) {
             addCriterion("year_info <=", value, "yearInfo");
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoIn(List<Object> values) {
+        public Criteria andYearInfoLike(String value) {
+            addCriterion("year_info like", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoNotLike(String value) {
+            addCriterion("year_info not like", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoIn(List<String> values) {
             addCriterion("year_info in", values, "yearInfo");
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoNotIn(List<Object> values) {
+        public Criteria andYearInfoNotIn(List<String> values) {
             addCriterion("year_info not in", values, "yearInfo");
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoBetween(Object value1, Object value2) {
+        public Criteria andYearInfoBetween(String value1, String value2) {
             addCriterion("year_info between", value1, value2, "yearInfo");
             return (Criteria) this;
         }
 
-        public Criteria andYearInfoNotBetween(Object value1, Object value2) {
+        public Criteria andYearInfoNotBetween(String value1, String value2) {
             addCriterion("year_info not between", value1, value2, "yearInfo");
             return (Criteria) this;
         }

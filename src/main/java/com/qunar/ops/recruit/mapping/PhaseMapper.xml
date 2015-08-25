@@ -105,7 +105,7 @@
     </selectKey>
     insert into phase_info (phase_name, city_name, year_info
       )
-    values (#{phaseName,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, #{yearInfo,jdbcType=ARRAY}
+    values (#{phaseName,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, #{yearInfo,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Phase" >
@@ -132,7 +132,7 @@
         #{cityName,jdbcType=VARCHAR},
       </if>
       <if test="yearInfo != null" >
-        #{yearInfo,jdbcType=ARRAY},
+        #{yearInfo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -155,7 +155,7 @@
         city_name = #{record.cityName,jdbcType=VARCHAR},
       </if>
       <if test="record.yearInfo != null" >
-        year_info = #{record.yearInfo,jdbcType=ARRAY},
+        year_info = #{record.yearInfo,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -167,7 +167,7 @@
     set id_ = #{record.id,jdbcType=INTEGER},
       phase_name = #{record.phaseName,jdbcType=VARCHAR},
       city_name = #{record.cityName,jdbcType=VARCHAR},
-      year_info = #{record.yearInfo,jdbcType=ARRAY}
+      year_info = #{record.yearInfo,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -182,7 +182,7 @@
         city_name = #{cityName,jdbcType=VARCHAR},
       </if>
       <if test="yearInfo != null" >
-        year_info = #{yearInfo,jdbcType=ARRAY},
+        year_info = #{yearInfo,jdbcType=VARCHAR},
       </if>
     </set>
     where id_ = #{id,jdbcType=INTEGER}
@@ -191,7 +191,7 @@
     update phase_info
     set phase_name = #{phaseName,jdbcType=VARCHAR},
       city_name = #{cityName,jdbcType=VARCHAR},
-      year_info = #{yearInfo,jdbcType=ARRAY}
+      year_info = #{yearInfo,jdbcType=VARCHAR}
     where id_ = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

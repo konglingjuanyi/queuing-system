@@ -82,6 +82,7 @@ function doUpd(id,password){
 	var rd=$('#tr'+id).children('td').eq(2).text();
 	var fe=$('#tr'+id).children('td').eq(3).text();
 	var qa=$('#tr'+id).children('td').eq(4).text();
+	$("#updform").modal("show");
 	$("#updid").val(id);
 	$("#upduserName").val(name);
 	$("#updjob").val(job);
@@ -116,7 +117,6 @@ function doUpd(id,password){
 			});
 		}
 	}
-	$("#updform").modal("show");
 }
 
 function updViewer(){
@@ -198,14 +198,11 @@ function doDel(id){
 	}
 }
 
-function goBack(){
-	$('input[type="text"]').val("");
-	$('input[type="password"]').val("");
-	$("input[type=checkbox]").each(function(){
-		$(this).attr("checked",false);
-	});
-	$("#updform").modal("hide");
+function doclose(){
 	$("#addform").modal("hide");
+	$("#getform").modal("hide");
+	$("#updform").modal("hide");
+	$('#content').load('/hr/getInterviewers');
 }
 
 function doSel(id){
@@ -215,8 +212,44 @@ function doSel(id){
         dataType: "json",
         data: {'id':id},
         success: function (returnedData) {
-      	  	alert(returnedData);
-      	  	$("#getform").modal("show");
+		      	 $("#getuserName").val(returnedData.data.userName);
+		      	 $("#getjob").val(returnedData.data.userName);
+		      	 $("#getpassword").val(returnedData.data.password);
+		      	rd = returnedData.data.oneView;
+		      	fe = returnedData.data.twoView;
+		      	qa = returnedData.data.determine;
+//		      	alert(rd);alert(fe);alert(qa);
+		     	if(rd!=''){
+		    		var rds=rd.split(",");
+		    		for(var i=0;i<rds.length;i++){
+		    			$('input[name="getfirstname"]').each(function(){  
+		    				if($(this).val()==rds[i]){
+		    					$(this).attr("checked",'true');
+		    				}   
+		    			});
+		    		}
+		    	}
+		    	if(fe!=''){
+		    		var rds=rd.split(",");
+		    		for(var i=0;i<rds.length;i++){
+		    			$('input[name="getsecondname"]').each(function(){    
+		    				if($(this).val()==rds[i]){
+		    					$(this).attr("checked",'true');
+		    				}   
+		    			});
+		    		}
+		    	}
+		    	if(qa!=''){
+		    		var rds=rd.split(",");
+		    		for(var i=0;i<rds.length;i++){
+		    			$('input[name="getfinishname"]').each(function(){    
+		    				if($(this).val()==rds[i]){
+		    					$(this).attr("checked",'true');
+		    				}   
+		    			});
+		    		}
+		    	}
+		    	$("#getform").modal("show");
       	  	
 		},
         error: function () {

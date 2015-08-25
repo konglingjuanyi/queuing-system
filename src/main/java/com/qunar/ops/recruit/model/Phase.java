@@ -33,11 +33,11 @@ public class Phase {
         this.cityName = cityName == null ? null : cityName.trim();
     }
 
-    public Object getYearInfo() {
+    public String getYearInfo() {
         return yearInfo;
     }
 
     public void setYearInfo(String yearInfo) {
-        this.yearInfo = yearInfo;
+        this.yearInfo = yearInfo == null ? null : yearInfo.trim();
     }
 }
