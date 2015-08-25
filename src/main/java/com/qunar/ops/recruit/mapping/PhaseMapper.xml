@@ -5,7 +5,7 @@
     <id column="id_" property="id" jdbcType="INTEGER" />
     <result column="phase_name" property="phaseName" jdbcType="VARCHAR" />
     <result column="city_name" property="cityName" jdbcType="VARCHAR" />
-    <result column="year_info" property="yearInfo" jdbcType="ARRAY" />
+    <result column="year_info" property="yearInfo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >

@@ -7,7 +7,7 @@ public class Phase {
 
     private String cityName;
 
-    private Object yearInfo;
+    private String yearInfo;
 
     public Integer getId() {
         return id;
@@ -37,7 +37,7 @@ public class Phase {
         return yearInfo;
     }
 
-    public void setYearInfo(Object yearInfo) {
+    public void setYearInfo(String yearInfo) {
         this.yearInfo = yearInfo;
     }
 }

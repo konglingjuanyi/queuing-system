@@ -27,18 +27,14 @@
 			                </tr>
 			              </thead>
 			              <tbody>
+			                #foreach($info in $list)
 			                <tr>
-			                  <td>2015</td>
-			                  <td>2015春季校招</td>
-			                  <td><a href="#">北京</a>｜<a href="#">上海</a>｜<a href="#">南京</a>｜<a href="#">武汉</a></td>
+			                  <td>$info.yearInfo</td>
+			                  <td>$info.phaseName</td>
+			                  <td>$info.cityName</td>
 			                  <td><a href="#">查看</a></td>
 			                </tr>
-			                <tr>
-			                  <td>2015</td>
-			                  <td>2015春季校招</td>
-			                  <td><a href="#">北京</a>｜<a href="#">上海</a>｜<a href="#">南京</a>｜<a href="#">武汉</a></td>
-			                  <td><a href="#">查看</a></td>
-			                </tr>
+			                #end
 			              </tbody>
 			            </table>
 					</div>
