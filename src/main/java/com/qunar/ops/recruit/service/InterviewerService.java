@@ -36,7 +36,8 @@ public class InterviewerService {
 			Date end, String cityName) {
 		return null;
 	}
-
+	
+	@Transactional
 	public void addInterviewer(Interviewer inter) {
 		interMapper.insert(inter);
 	}
@@ -86,18 +87,28 @@ public class InterviewerService {
 		String job = vars.get("job");
 		String password = vars.get("password");
 		String first_value = vars.get("first_value");
-		String seconde_value = vars.get("seconde_value");
+		String second_value = vars.get("second_value");
 		String finish_value = vars.get("finish_value");
 		inter.setUserName(userName);
 		inter.setPassword(password);
 		inter.setCity(city);
 		inter.setJob(job);
 		inter.setOneView(first_value);
-		inter.setTwoView(seconde_value);
+		inter.setTwoView(second_value);
 		inter.setDetermine(finish_value);
 		inter.setOneCount(0);
 		inter.setTwoCount(0);
 		return inter;
+	}
+
+	public void updateInterviewer(Interviewer inter) {
+		interMapper.updateByPrimaryKeySelective(inter);
+		
+	}
+
+	public void deleteInterviewer(int id) {
+		interMapper.deleteByPrimaryKey(id);
+		
 	}
 
 }

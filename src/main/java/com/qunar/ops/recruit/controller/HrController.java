@@ -47,24 +47,6 @@ public class HrController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/hr/getInterviewers1")
-	@ResponseBody
-	public List<Interviewer> getInterviewers(HttpServletRequest request) {
-		System.out.println("=======");
-//		Map<String, String> vars = commonRequest.getVars();
-//		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
-//		int pageSize = noSize[0];
-//		int pageNo = noSize[1];
-//		int pageSize = 3;
-//		int pageNo = 1;
-//		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize, null,null);
-//		System.out.println(list);
-//		for(Interviewer i: list){
-//			System.out.println(i.getName());
-//		}
-		return null;
-	}
-	
 	@RequestMapping(value = "/hr/addInterviewers")
 	@ResponseBody
 	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
@@ -75,13 +57,20 @@ public class HrController {
 		return BaseResult.getSuccessResult("success");
 	}
 	
-	@RequestMapping(value = "/hr/updateInterviewers")
+	@RequestMapping(value = "/hr/deleteInterviewer")
+	@ResponseBody
+	public BaseResult deleteInterviewers(HttpServletRequest request, int id) {
+		interService.deleteInterviewer(id);
+		return BaseResult.getSuccessResult("success");
+	}
+	
+	@RequestMapping(value = "/hr/updateInterviewer")
 	@ResponseBody
 	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
-//		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
-//		Interviewer inter = createInterviewer(vars);
-//		inServe.addInterviewer(inter);
+		System.out.println(vars);
+		Interviewer inter = interService.createInterviewer(vars);
+		interService.updateInterviewer(inter);
 		return BaseResult.getSuccessResult("success");
 	}
 
