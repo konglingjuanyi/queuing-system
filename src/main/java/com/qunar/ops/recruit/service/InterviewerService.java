@@ -102,8 +102,11 @@ public class InterviewerService {
 		return inter;
 	}
 
-	public void updateInterviewer(Interviewer inter) {
-		interMapper.updateByPrimaryKeySelective(inter);
+	public void updateInterviewer(Interviewer record) {
+		InterviewerExample example = new InterviewerExample();
+		InterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andUserNameEqualTo(record.getUserName());
+		interMapper.updateByExampleSelective(record, example);
 		
 	}
 

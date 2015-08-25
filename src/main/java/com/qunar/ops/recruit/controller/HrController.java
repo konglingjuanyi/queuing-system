@@ -72,6 +72,7 @@ public class HrController {
 	@RequestMapping(value = "/hr/updateInterviewer")
 	@ResponseBody
 	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
+		System.out.println("update interviewers==============");
 		Map<String, String> vars = commonRequest.getVars();
 		System.out.println(vars);
 		Interviewer inter = interService.createInterviewer(vars);
@@ -81,7 +82,7 @@ public class HrController {
 
 	@RequestMapping(value = "/hr/getInterviewers")
 	public String getInterviewers(HttpServletRequest request,  ModelMap model) {
-		System.out.println("===========================");
+//		System.out.println("===========================");
 //		Map<String, String> vars = commonRequest.getVars();
 //		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
 //		int pageSize = noSize[0];
