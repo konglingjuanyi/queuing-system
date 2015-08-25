@@ -29,7 +29,7 @@
 
 
 .m-pop{
-	position: absolute;
+	position: fixed;
 	left: 50%;
 	top: 50%;
 	margin-left: -200px;
@@ -38,27 +38,37 @@
 	height: 150px;
 	
 }
+.m-pop-big{
+	width: 500px;
+	height: 300px;
+}
 .m-pop-hd .close{
 	position: absolute;
 	right: 10px;
 	top: 5px;
 }
+.m-pop-bd{
+	position: relative;
+	height: 80%;
+	overflow-y: auto;
+}
+
+.m-pop-ft{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	left: 0;
+}
+.m-pop-ft .btn{
+	margin: 0 10px;
+}
+
 .m-login-btn{
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	margin-left: -55px;
 	margin-top: -22px;
-}
-.m-pop-ft{
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	padding: 10px 0;
-	left: 0;
-}
-.m-pop-ft .btn{
-	margin: 0 10px;
 }
 .m-table{
 	margin-top: 30px;
@@ -80,7 +90,7 @@
 
 
 .m-addmanage{
-
+	
 }
 .m-addmanage .table{
 	width: 500px;
@@ -91,6 +101,145 @@
 .m-addmanage-btn .btn{
 	margin-right: 10px;
 }
+
+.m-login{
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+	text-align: center;
+}
+.m-login form{
+	margin-bottom: 0;
+}
+
+.m-studentmanage{
+}
+.m-studentmanage-hd .btn{
+	margin-right: 10px;
+}
+.m-studentmanage-hd .iconbox{
+	margin-left: 30px;
+}
+.m-studentmanage-hd .icon{
+	width: 10px;
+	height: 10px;
+	border: 1px solid #333;
+	
+	display: inline-block;
+	vertical-align: middle;
+}
+.m-studentmanage-hd .text{
+	margin-right: 20px;
+	vertical-align: middle;
+}
+.m-studentmanage-hd i.success{
+	background:#dff0d8;
+}
+.m-studentmanage-hd i.error{
+	background:#f2dede;
+}
+.m-studentmanage-hd i.warning{
+	background:#fcf8e3;
+}
+.m-studentmanage-hd i.info{
+	background:#d9edf7;
+}
+
+.m-studentmanage-bd{
+	padding-top: 20px;
+}
+.m-studentmanage-bd table th,.m-studentmanage-bd table td{
+	text-align: center;
+}
+.m-addbatch{}
+.m-addbatch-hd{
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+	text-align: center;
+}
+.m-addbatch-bd{
+	/*width: 800px;*/
+	margin: 0 auto;
+}
+.m-addbatch-btn{
+	text-align: center;
+}
+.m-firsttry-sidebar{
+	padding: 20px;
+	background: #eee;
+
+}
+.m-firsttry-sidebar .item{
+	margin-bottom: 5px;
+}
+.m-firsttry-btn,.m-firsttry-info{
+	padding-top:20px; 
+}
+
+.interviewee-info{
+	position: relative;
+	height: 150px;
+}
+.interviewee-info h3{
+	font-size: 18px;
+	line-height: 24px;
+	color: #aaa;
+}
+.interviewee-info h3 .text{
+	margin-left: 20px;
+	border-bottom: 1px solid #333;
+	width: 200px;
+	display: inline-block;
+	color: #333;
+}
+.interviewee-info .item{
+	margin-bottom: 5px;
+}
+.interviewee-info .label{
+	/*background: none;*/
+}
+.interviewee-info .picture{
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 100px;
+	height: 150px;
+	background: #eee;
+	border: 1px solid #ccc;
+}
+.interviewee-info .picture .btn{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -41px;
+	margin-top: -15px;
+}
+.row-fluid .span10{
+	position: relative;
+	overflow-y: auto;
+}
+.m-firsttry-bd table {
+	margin-bottom: 30px;
+}
+.m-firsttry-bd table select{
+	width: auto;
+}
+.m-firsttry-bd table.table th, .m-firsttry-bd table.table td{
+	vertical-align: middle;
+}
+.m-firsttry-bd table select,
+.m-firsttry-bd table textarea,
+.m-firsttry-bd table input{
+	margin-bottom: 0;
+}
+
+.table .w_1{
+	width: 150px;
+}
+.table .w_2{
+	width: 100px;
+}
+
+
 
 
 
