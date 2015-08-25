@@ -136,8 +136,12 @@ function updViewer(){
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify(params),
           success: function (returnedData) {
-        	  	$("#updform").modal("hide");
-        	  	$('#content').load('/hr/getInterviewers');
+        	  	if(returnedData.errorCode==0){
+        	  		$("#updform").modal("hide");
+            	  	$('#content').load('/hr/getInterviewers');
+          	  }else{
+          		  alert(returnedData.errorMessage);
+          	  }
 		  },
           error: function () {
                 alert("系统发生了错误请稍后重试");
@@ -163,6 +167,11 @@ function doDel(id){
 }
 
 function goBack(){
+	$('input[type="text"]').val("");
+	$('input[type="password"]').val("");
+	$("input[type=checkbox]").each(function(){
+		$(this).attr("checked",false);
+	});
 	$("#updform").modal("hide");
 	$("#addform").modal("hide");
 }
