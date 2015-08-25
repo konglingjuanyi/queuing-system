@@ -5,6 +5,7 @@
     <id column="id_" property="id" jdbcType="INTEGER" />
     <result column="phase_name" property="phaseName" jdbcType="VARCHAR" />
     <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+    <result column="year_info" property="yearInfo" jdbcType="ARRAY" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -65,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id_, phase_name, city_name
+    id_, phase_name, city_name, year_info
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.PhaseExample" >
     select
@@ -102,8 +103,10 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       select currval('phase_info_id_seq')
     </selectKey>
-    insert into phase_info (phase_name, city_name)
-    values (#{phaseName,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR})
+    insert into phase_info (phase_name, city_name, year_info
+      )
+    values (#{phaseName,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, #{yearInfo,jdbcType=ARRAY}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Phase" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -117,6 +120,9 @@
       <if test="cityName != null" >
         city_name,
       </if>
+      <if test="yearInfo != null" >
+        year_info,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="phaseName != null" >
@@ -124,6 +130,9 @@
       </if>
       <if test="cityName != null" >
         #{cityName,jdbcType=VARCHAR},
+      </if>
+      <if test="yearInfo != null" >
+        #{yearInfo,jdbcType=ARRAY},
       </if>
     </trim>
   </insert>
@@ -145,6 +154,9 @@
       <if test="record.cityName != null" >
         city_name = #{record.cityName,jdbcType=VARCHAR},
       </if>
+      <if test="record.yearInfo != null" >
+        year_info = #{record.yearInfo,jdbcType=ARRAY},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -154,7 +166,8 @@
     update phase_info
     set id_ = #{record.id,jdbcType=INTEGER},
       phase_name = #{record.phaseName,jdbcType=VARCHAR},
-      city_name = #{record.cityName,jdbcType=VARCHAR}
+      city_name = #{record.cityName,jdbcType=VARCHAR},
+      year_info = #{record.yearInfo,jdbcType=ARRAY}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -168,13 +181,17 @@
       <if test="cityName != null" >
         city_name = #{cityName,jdbcType=VARCHAR},
       </if>
+      <if test="yearInfo != null" >
+        year_info = #{yearInfo,jdbcType=ARRAY},
+      </if>
     </set>
     where id_ = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.Phase" >
     update phase_info
     set phase_name = #{phaseName,jdbcType=VARCHAR},
-      city_name = #{cityName,jdbcType=VARCHAR}
+      city_name = #{cityName,jdbcType=VARCHAR},
+      year_info = #{yearInfo,jdbcType=ARRAY}
     where id_ = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

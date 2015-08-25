@@ -1,6 +1,7 @@
 package com.qunar.ops.recruit.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
+import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
 import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.WaitService;
@@ -74,7 +76,7 @@ public class HrController {
 	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 		System.out.println(vars);
-		Interviewer inter = interService.createInterviewer(vars);
+		Interviewer inter = interService.createUpdateInterviewer(vars);
 		if(interService.getInterviewerByUserNameExceptId(inter.getUserName(), inter.getId()) != null){
 			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_USER_ERROR_MSG);
 		}else{
@@ -103,9 +105,41 @@ public class HrController {
 //		dataResult.setTableInfos(retList);
 
 		List<Interviewer> list = interService.getInterviewers();
-		model.addAttribute("message", list);
+		List<ResultPlusAdditionalInfo> rets = new LinkedList<ResultPlusAdditionalInfo>();
+		for (Interviewer interviewer : list) {
+			ResultPlusAdditionalInfo info = new ResultPlusAdditionalInfo();
+			info.setObj(interviewer);
+			info.addStringInfo(interviewer.getFirstFe()+interviewer.getFirstQa()+interviewer.getFirstRd()+"");
+			info.addStringInfo(interviewer.getSecondFe()+interviewer.getSecondQa()+interviewer.getSecondRd()+"");
+			rets.add(info);
+		}
+		model.addAttribute("message", rets);
 		return "/viewer_manage";
 	}
 
+	@RequestMapping(value = "/hr/getInterviewerInfo")
+	@ResponseBody
+	public BaseResult getInterviewerInfo(HttpServletRequest request,  int id, ModelMap model) {
+//		System.out.println("===========================");
+//		Map<String, String> vars = commonRequest.getVars();
+//		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
+//		int pageSize = noSize[0];
+//		int pageNo = noSize[1];
+//		int pageSize = 10;
+//		int pageNo = 1;
+//		pageNo = pageNo <= 0 ? 1 : pageNo;
+//		pageSize = pageSize > 0 ? pageSize : 20;
+//		String phase = vars.get("phase");
+//		String city = vars.get("city");
+//		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize, phase, city);
+//		List<String[]> retList = tranfer2stringArray(list);
+//		DataResult dataResult = new DataResult();
+//		dataResult.setCount(list.size());
+//		dataResult.setTableInfos(retList);
+
+		Interviewer inter = interService.getInterviewersById(id);
+		model.addAttribute("message", inter);
+		return null;
+	}
 
 }

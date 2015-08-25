@@ -303,6 +303,66 @@ public class PhaseExample {
             addCriterion("city_name not between", value1, value2, "cityName");
             return (Criteria) this;
         }
+
+        public Criteria andYearInfoIsNull() {
+            addCriterion("year_info is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoIsNotNull() {
+            addCriterion("year_info is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoEqualTo(Object value) {
+            addCriterion("year_info =", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoNotEqualTo(Object value) {
+            addCriterion("year_info <>", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoGreaterThan(Object value) {
+            addCriterion("year_info >", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoGreaterThanOrEqualTo(Object value) {
+            addCriterion("year_info >=", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoLessThan(Object value) {
+            addCriterion("year_info <", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoLessThanOrEqualTo(Object value) {
+            addCriterion("year_info <=", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoIn(List<Object> values) {
+            addCriterion("year_info in", values, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoNotIn(List<Object> values) {
+            addCriterion("year_info not in", values, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoBetween(Object value1, Object value2) {
+            addCriterion("year_info between", value1, value2, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoNotBetween(Object value1, Object value2) {
+            addCriterion("year_info not between", value1, value2, "yearInfo");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

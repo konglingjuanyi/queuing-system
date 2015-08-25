@@ -31,6 +31,18 @@ public class Interviewer {
 
     private String job;
 
+    private Integer firstRd;
+
+    private Integer secondRd;
+
+    private Integer firstFe;
+
+    private Integer secondFe;
+
+    private Integer firstQa;
+
+    private Integer secondQa;
+
     public Integer getId() {
         return id;
     }
@@ -149,5 +161,53 @@ public class Interviewer {
 
     public void setJob(String job) {
         this.job = job == null ? null : job.trim();
+    }
+
+    public Integer getFirstRd() {
+        return firstRd;
+    }
+
+    public void setFirstRd(Integer firstRd) {
+        this.firstRd = firstRd;
+    }
+
+    public Integer getSecondRd() {
+        return secondRd;
+    }
+
+    public void setSecondRd(Integer secondRd) {
+        this.secondRd = secondRd;
+    }
+
+    public Integer getFirstFe() {
+        return firstFe;
+    }
+
+    public void setFirstFe(Integer firstFe) {
+        this.firstFe = firstFe;
+    }
+
+    public Integer getSecondFe() {
+        return secondFe;
+    }
+
+    public void setSecondFe(Integer secondFe) {
+        this.secondFe = secondFe;
+    }
+
+    public Integer getFirstQa() {
+        return firstQa;
+    }
+
+    public void setFirstQa(Integer firstQa) {
+        this.firstQa = firstQa;
+    }
+
+    public Integer getSecondQa() {
+        return secondQa;
+    }
+
+    public void setSecondQa(Integer secondQa) {
+        this.secondQa = secondQa;
     }
 }

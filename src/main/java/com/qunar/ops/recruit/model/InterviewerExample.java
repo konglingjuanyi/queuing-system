@@ -1093,6 +1093,366 @@ public class InterviewerExample {
             addCriterion("job not between", value1, value2, "job");
             return (Criteria) this;
         }
+
+        public Criteria andFirstRdIsNull() {
+            addCriterion("first_rd is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdIsNotNull() {
+            addCriterion("first_rd is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdEqualTo(Integer value) {
+            addCriterion("first_rd =", value, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdNotEqualTo(Integer value) {
+            addCriterion("first_rd <>", value, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdGreaterThan(Integer value) {
+            addCriterion("first_rd >", value, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("first_rd >=", value, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdLessThan(Integer value) {
+            addCriterion("first_rd <", value, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdLessThanOrEqualTo(Integer value) {
+            addCriterion("first_rd <=", value, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdIn(List<Integer> values) {
+            addCriterion("first_rd in", values, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdNotIn(List<Integer> values) {
+            addCriterion("first_rd not in", values, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdBetween(Integer value1, Integer value2) {
+            addCriterion("first_rd between", value1, value2, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRdNotBetween(Integer value1, Integer value2) {
+            addCriterion("first_rd not between", value1, value2, "firstRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdIsNull() {
+            addCriterion("second_rd is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdIsNotNull() {
+            addCriterion("second_rd is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdEqualTo(Integer value) {
+            addCriterion("second_rd =", value, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdNotEqualTo(Integer value) {
+            addCriterion("second_rd <>", value, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdGreaterThan(Integer value) {
+            addCriterion("second_rd >", value, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("second_rd >=", value, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdLessThan(Integer value) {
+            addCriterion("second_rd <", value, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdLessThanOrEqualTo(Integer value) {
+            addCriterion("second_rd <=", value, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdIn(List<Integer> values) {
+            addCriterion("second_rd in", values, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdNotIn(List<Integer> values) {
+            addCriterion("second_rd not in", values, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdBetween(Integer value1, Integer value2) {
+            addCriterion("second_rd between", value1, value2, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondRdNotBetween(Integer value1, Integer value2) {
+            addCriterion("second_rd not between", value1, value2, "secondRd");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeIsNull() {
+            addCriterion("first_fe is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeIsNotNull() {
+            addCriterion("first_fe is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeEqualTo(Integer value) {
+            addCriterion("first_fe =", value, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeNotEqualTo(Integer value) {
+            addCriterion("first_fe <>", value, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeGreaterThan(Integer value) {
+            addCriterion("first_fe >", value, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("first_fe >=", value, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeLessThan(Integer value) {
+            addCriterion("first_fe <", value, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeLessThanOrEqualTo(Integer value) {
+            addCriterion("first_fe <=", value, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeIn(List<Integer> values) {
+            addCriterion("first_fe in", values, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeNotIn(List<Integer> values) {
+            addCriterion("first_fe not in", values, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeBetween(Integer value1, Integer value2) {
+            addCriterion("first_fe between", value1, value2, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstFeNotBetween(Integer value1, Integer value2) {
+            addCriterion("first_fe not between", value1, value2, "firstFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeIsNull() {
+            addCriterion("second_fe is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeIsNotNull() {
+            addCriterion("second_fe is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeEqualTo(Integer value) {
+            addCriterion("second_fe =", value, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeNotEqualTo(Integer value) {
+            addCriterion("second_fe <>", value, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeGreaterThan(Integer value) {
+            addCriterion("second_fe >", value, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("second_fe >=", value, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeLessThan(Integer value) {
+            addCriterion("second_fe <", value, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeLessThanOrEqualTo(Integer value) {
+            addCriterion("second_fe <=", value, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeIn(List<Integer> values) {
+            addCriterion("second_fe in", values, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeNotIn(List<Integer> values) {
+            addCriterion("second_fe not in", values, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeBetween(Integer value1, Integer value2) {
+            addCriterion("second_fe between", value1, value2, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondFeNotBetween(Integer value1, Integer value2) {
+            addCriterion("second_fe not between", value1, value2, "secondFe");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaIsNull() {
+            addCriterion("first_qa is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaIsNotNull() {
+            addCriterion("first_qa is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaEqualTo(Integer value) {
+            addCriterion("first_qa =", value, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaNotEqualTo(Integer value) {
+            addCriterion("first_qa <>", value, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaGreaterThan(Integer value) {
+            addCriterion("first_qa >", value, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaGreaterThanOrEqualTo(Integer value) {
+            addCriterion("first_qa >=", value, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaLessThan(Integer value) {
+            addCriterion("first_qa <", value, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaLessThanOrEqualTo(Integer value) {
+            addCriterion("first_qa <=", value, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaIn(List<Integer> values) {
+            addCriterion("first_qa in", values, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaNotIn(List<Integer> values) {
+            addCriterion("first_qa not in", values, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaBetween(Integer value1, Integer value2) {
+            addCriterion("first_qa between", value1, value2, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstQaNotBetween(Integer value1, Integer value2) {
+            addCriterion("first_qa not between", value1, value2, "firstQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaIsNull() {
+            addCriterion("second_qa is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaIsNotNull() {
+            addCriterion("second_qa is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaEqualTo(Integer value) {
+            addCriterion("second_qa =", value, "secondQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaNotEqualTo(Integer value) {
+            addCriterion("second_qa <>", value, "secondQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaGreaterThan(Integer value) {
+            addCriterion("second_qa >", value, "secondQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaGreaterThanOrEqualTo(Integer value) {
+            addCriterion("second_qa >=", value, "secondQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaLessThan(Integer value) {
+            addCriterion("second_qa <", value, "secondQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaLessThanOrEqualTo(Integer value) {
+            addCriterion("second_qa <=", value, "secondQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaIn(List<Integer> values) {
+            addCriterion("second_qa in", values, "secondQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaNotIn(List<Integer> values) {
+            addCriterion("second_qa not in", values, "secondQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaBetween(Integer value1, Integer value2) {
+            addCriterion("second_qa between", value1, value2, "secondQa");
+            return (Criteria) this;
+        }
+
+        public Criteria andSecondQaNotBetween(Integer value1, Integer value2) {
+            addCriterion("second_qa not between", value1, value2, "secondQa");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

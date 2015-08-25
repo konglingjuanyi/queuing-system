@@ -38,7 +38,7 @@ public class InterviewerService {
 		return null;
 	}
 	
-	@Transactional(propagation=Propagation.NOT_SUPPORTED)
+	@Transactional
 	public void addInterviewer(Interviewer inter) {
 		interMapper.insert(inter);
 	}
@@ -48,9 +48,9 @@ public class InterviewerService {
 	 * @param id 
 	 * @return
 	 */
-	public Interviewer getInterviewersById(String id) {
+	public Interviewer getInterviewersById(int id) {
 		// TODO Auto-generated method stub
-		return interMapper.selectByPrimaryKey(Integer.valueOf(id));
+		return interMapper.selectByPrimaryKey(id);
 	}
 
 	public Interviewer getInterviewerByNameAndPass(String username, String password) {
@@ -105,9 +105,35 @@ public class InterviewerService {
 		inter.setTwoCount(0);
 		return inter;
 	}
+	
+	public Interviewer createUpdateInterviewer(Map<String, String> vars) {
+		Interviewer inter = new Interviewer();
+		String id = vars.get("updid");
+		String city = vars.get("city");
+		String userName = vars.get("username");
+		String job = vars.get("job");
+		String password = vars.get("password");
+		String first_value = vars.get("first_value");
+		String second_value = vars.get("second_value");
+		String finish_value = vars.get("finish_value");
+		if(id != null){
+			inter.setId(Integer.parseInt(id));
+		}
+		inter.setUserName(userName);
+		inter.setPassword(password);
+		inter.setCity(city);
+		inter.setJob(job);
+		first_value = first_value == null ? "":first_value;
+		second_value = second_value == null ? "":second_value;
+		finish_value = finish_value == null ? "":finish_value;
+		inter.setOneView(first_value);
+		inter.setTwoView(second_value);
+		inter.setDetermine(finish_value);
+		return inter;
+	}
 
 	public void updateInterviewer(Interviewer record) {
-		interMapper.updateByPrimaryKey(record);
+		interMapper.updateByPrimaryKeySelective(record);
 		
 	}
 

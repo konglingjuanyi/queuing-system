@@ -36,18 +36,18 @@
 				              </thead>
 				              <tbody>
 				                #foreach($info in $message)
-				                <tr id="tr$info.id">
-				                  <td>$info.userName</td>
-				                  <td>$info.job</td>
-				                  <td>$info.oneView</td>
-				                  <td>$info.twoView</td>
-				                  <td>$info.determine</td>
-				                  <td>$info.oneCount</td>
-				                  <td>$info.twoCount</td>
+				                <tr id="tr$info.obj.id">
+				                  <td>$info.obj.userName</td>
+				                  <td>$info.obj.job</td>
+				                  <td>$info.obj.oneView</td>
+				                  <td>$info.obj.twoView</td>
+				                  <td>$info.obj.determine</td>
+				                  <td>$info.additionalInfos.get(0)</td>
+				                  <td>$info.additionalInfos.get(1)</td>
 				                  <td>
-				                  	<a href="#" id="upd" onclick="doUpd($info.id,$info.password)">修改</a>
-				                  	<a href="#" id="sel" onclick="doSel($info.id)">查看</a>
-				                  	<a href="#" id="del" onclick="doDel($info.id)">删除</a>
+				                  	<a href="#" id="upd" onclick="doUpd($info.obj.id,$info.obj.password)">修改</a>
+				                  	<a href="#" id="sel" onclick="doSel($info.obj.id)">查看</a>
+				                  	<a href="#" id="del" onclick="doDel($info.obj.id)">删除</a>
 				                  </td>	
 				                </tr>
 				                #end

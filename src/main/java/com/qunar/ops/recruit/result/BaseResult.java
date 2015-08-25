@@ -6,7 +6,6 @@ public class BaseResult {
 	private String errorMessage;
 	private Object data;
 	
-	
 	public static BaseResult getErrorResult(int errorCode){
 		BaseResult res = new BaseResult();
 		res.setErrorCode(errorCode);
