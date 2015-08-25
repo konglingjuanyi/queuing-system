@@ -122,7 +122,6 @@ function updViewer(){
 	});
 	var vars = {};
 	vars["updid"] = updid;
-	alert(updid)
 	vars["username"] = username;
 	vars["job"] = job;
 	vars["password"] = password;
