@@ -91,7 +91,6 @@ function doUpd(id,password){
 		for(var i=0;i<rds.length;i++){
 			$('input[name="updfirstname"]').each(function(){  
 				if($(this).val()==rds[i]){
-					alert(1231232)
 					$(this).attr("checked",'true');
 				}   
 			});
@@ -203,10 +202,14 @@ function goBack(){
 	$('input[type="text"]').val("");
 	$('input[type="password"]').val("");
 	$("input[type=checkbox]").each(function(){
-		$(this).attr("checked",false);
+		$(this).removeAttr("checked");
 	});
-	$("#updform").modal("hide");
 	$("#addform").modal("hide");
+}
+
+function close(){
+	$("#updform").modal("hide");
+	$("#getform").modal("hide");
 }
 
 function doSel(id){

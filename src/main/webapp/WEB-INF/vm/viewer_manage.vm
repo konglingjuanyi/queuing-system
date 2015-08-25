@@ -145,7 +145,7 @@
 				</div>
 				<div id="updform" class="l-inner modal hide fade in" style="display: none;">
 					<div class="modal-header" style="text-align:center">
-        				<a class="close" data-dismiss="modal" onclick="goBack()">×</a>
+        				<a class="close" data-dismiss="modal">×</a>
         				<h3>修改面试官</h3>
     				</div>
 					<div class="modal-body">
@@ -225,7 +225,7 @@
 							<div class="modal-footer" style="text-align:center;">
 								<div>
 								  <button id="updview" type="button" class="btn ">保存</button>
-								  <button type="button" class="btn " onclick="goBack()">取消</button>
+								  <button type="button" class="btn" onclick="close()">取消</button>
 								</div>
 							</div>
 						</form>
@@ -233,7 +233,7 @@
 				</div>
 				<div id="getform" class="l-inner modal hide fade in" style="display: none;">
 					<div class="modal-header" style="text-align:center">
-        				<a class="close" data-dismiss="modal" onclick="goBack()">×</a>
+        				<a class="close" data-dismiss="modal">×</a>
         				<h3>修改面试官</h3>
     				</div>
 					<div class="modal-body">
@@ -343,7 +343,7 @@
 							</div>
 							<div class="modal-footer" style="text-align:center;">
 								<div>
-								  <button type="button" class="btn " onclick="goBack()">取消</button>
+								  <button type="button" class="btn " onclick="close()">取消</button>
 								</div>
 							</div>
 						</form>
