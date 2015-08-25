@@ -1,9 +1,6 @@
 package com.qunar.ops.recruit.controller;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,17 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.model.Interviewer;
-import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
-import com.qunar.ops.recruit.result.DataResult;
 import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.StudentService;
-import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.service.WaitService;
-import com.qunar.ops.recruit.util.QUtils;
-import com.qunar.ops.recruit.util.RecruitConst;
-import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
 @Controller
 public class HrController {
@@ -77,7 +68,6 @@ public class HrController {
 	@RequestMapping(value = "/hr/addInterviewers")
 	@ResponseBody
 	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
-//		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
 		System.out.println(vars);
 		Interviewer inter = interService.createInterviewer(vars);

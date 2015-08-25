@@ -135,8 +135,8 @@
 							</div>
 							<div class="modal-footer" style="text-align:center;">
 								<div>
-								  <button id="addview" type="submit" class="btn ">保存</button>
-								  <button type="submit" class="btn ">取消</button>
+								  <button id="addview" type="button" class="btn ">保存</button>
+								  <button type="button" class="btn ">取消</button>
 								</div>
 							</div>
 						</form>

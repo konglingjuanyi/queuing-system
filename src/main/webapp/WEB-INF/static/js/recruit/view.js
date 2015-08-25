@@ -28,28 +28,24 @@ function addViewer(){
 	$('input[name="finishname"]:checked').each(function(){    
 		finish_value.push($(this).val());    
 	});
-	alert(username+"="+job+"="+password+"="+first_value+"="+second_value+"="+finish_value);
 	var vars = {};
 	vars["username"] = username;
 	vars["job"] = job;
 	vars["password"] = password;
-	vars["first_value"] = first_value;
-	vars["second_value"] = second_value;
-	vars["finish_value"] = finish_value;
+	vars["first_value"] = first_value.join(",");
+	vars["second_value"] = second_value.join(",");
+	vars["finish_value"] = finish_value.join(",");
     var params = {"vars": vars};
     $.ajax({
-          type: "POST",
-          contentType: 'application/json',
-          dataType: "json",
           url: "/hr/addInterviewers",
+          type: "POST",
+          dataType: "json",
+          contentType: 'application/json; charset=utf-8',
           data: JSON.stringify(params),
           success: function (returnedData) {
-              if( !ajaxReturn( returnedData ) ){
-                  return;
-              }else {
-              	alert("创建成功");
-              	$('#content').load('/hr/getInterviewers');
-             }
+        	  	alert(12321321);
+        	  	$("#addform").modal("hide");
+        	  	$('#content').load('/hr/getInterviewers');
 		  },
           error: function () {
                 alert("系统发生了错误请稍后重试");
