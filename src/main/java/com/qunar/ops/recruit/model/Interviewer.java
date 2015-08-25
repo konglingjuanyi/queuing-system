@@ -1,7 +1,5 @@
 package com.qunar.ops.recruit.model;
 
-import java.util.Date;
-
 public class Interviewer {
     private Integer id;
 
@@ -21,12 +19,6 @@ public class Interviewer {
 
     private Integer status;
 
-    private Date startDate;
-
-    private Date endDate;
-
-    private Date createTime;
-
     private String phase;
 
     private Long viewCount;
@@ -34,6 +26,8 @@ public class Interviewer {
     private String room;
 
     private Long enable;
+
+    private String determine;
 
     public Integer getId() {
         return id;
@@ -107,30 +101,6 @@ public class Interviewer {
         this.status = status;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
     public String getPhase() {
         return phase;
     }
@@ -161,5 +131,13 @@ public class Interviewer {
 
     public void setEnable(Long enable) {
         this.enable = enable;
+    }
+
+    public String getDetermine() {
+        return determine;
+    }
+
+    public void setDetermine(String determine) {
+        this.determine = determine == null ? null : determine.trim();
     }
 }

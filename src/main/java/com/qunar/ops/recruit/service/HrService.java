@@ -39,8 +39,6 @@ public class HrService {
 		InterviewerExample.Criteria criteria = example.createCriteria();
 		if(cityName != null)
 			criteria.andCityEqualTo(cityName);
-		if(start != null)
-			criteria.andStartDateGreaterThanOrEqualTo(start);
 //		example.setOffset(offset);
 ////		System.out.println("hahahahhahaa-----");
 //		example.setLimit(limit);

@@ -37,7 +37,7 @@ public class HrController {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	private InterviewerService inServe;
+	private InterviewerService interService;
 	@Autowired
 	StudentService studentService;
 	@Autowired
@@ -79,8 +79,8 @@ public class HrController {
 	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 //		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
-//		Interviewer inter = createInterviewer(vars);
-//		inServe.addInterviewer(inter);
+		Interviewer inter = interService.createInterviewer(vars);
+		interService.addInterviewer(inter);
 		return BaseResult.getSuccessResult(null);
 	}
 	
@@ -113,7 +113,7 @@ public class HrController {
 //		dataResult.setCount(list.size());
 //		dataResult.setTableInfos(retList);
 
-		List<Interviewer> list = inServe.getInterviewers();
+		List<Interviewer> list = interService.getInterviewers();
 		model.addAttribute("message", list);
 		return "/viewer_manage";
 	}

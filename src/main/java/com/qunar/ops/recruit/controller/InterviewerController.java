@@ -78,7 +78,7 @@ public class InterviewerController {
 	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 //		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
-		Interviewer inter = createInterviewer(vars);
+		Interviewer inter = inServe.createInterviewer(vars);
 		inServe.addInterviewer(inter);
 		return BaseResult.getSuccessResult(null);
 	}
@@ -88,7 +88,7 @@ public class InterviewerController {
 	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 //		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
-		Interviewer inter = createInterviewer(vars);
+		Interviewer inter = inServe.createInterviewer(vars);
 		inServe.addInterviewer(inter);
 		return BaseResult.getSuccessResult(null);
 	}
@@ -148,28 +148,7 @@ public class InterviewerController {
 //		}
 		return retList;
 	}
-	
-	private Interviewer createInterviewer(Map<String, String> vars) {
-		Interviewer inter = new Interviewer();
-		String new_city = vars.get("new_city");
-		String new_name = vars.get("new_name");
-		String new_job = vars.get("new_job");
-		String new_user = vars.get("new_user");
-		String new_password = vars.get("new_password");
-		String new_startDate = vars.get("new_startDate");
-		String new_endDate = vars.get("new_endDate");
-		String new_role = vars.get("new_role");
-		inter.setCity(new_city);
-		inter.setUserName(new_user);
-		inter.setPassword(new_password);
-		Date startDate = QUtils.formatDate(new_startDate);
-		Date endDate = QUtils.formatDate(new_endDate);
-		inter.setStartDate(startDate);
-		inter.setOneCount(0);
-		inter.setTwoCount(0);
-		inter.setCreateTime(new Date());
-		return inter;
-	}
+
 	
 	/**
 	 * 面试官点击继续面试和开始面试获取下一个待面试的候选人
