@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.qunar.ops.recruit.dao.InterviewerMapper;
@@ -37,7 +38,7 @@ public class InterviewerService {
 		return null;
 	}
 	
-	@Transactional
+	@Transactional(propagation=Propagation.NOT_SUPPORTED)
 	public void addInterviewer(Interviewer inter) {
 		interMapper.insert(inter);
 	}
@@ -109,6 +110,17 @@ public class InterviewerService {
 	public void deleteInterviewer(int id) {
 		interMapper.deleteByPrimaryKey(id);
 		
+	}
+
+	public Interviewer getInterviewerByUserName(String userName) {
+		InterviewerExample example = new InterviewerExample();
+		InterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andUserNameEqualTo(userName);
+		List<Interviewer> inter = interMapper.selectByExample(example);
+		if(inter != null && inter.size() > 0){
+			return inter.get(0);
+		}
+		return null;
 	}
 
 }

@@ -22,6 +22,7 @@ import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.WaitService;
+import com.qunar.ops.recruit.util.RecruitConst;
 
 @Controller
 public class HrController {
@@ -53,8 +54,12 @@ public class HrController {
 		Map<String, String> vars = commonRequest.getVars();
 		System.out.println(vars);
 		Interviewer inter = interService.createInterviewer(vars);
-		interService.addInterviewer(inter);
-		return BaseResult.getSuccessResult("success");
+		if(interService.getInterviewerByUserName(inter.getUserName()) != null){
+			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_USER_ERROR_MSG);
+		}else{
+			interService.addInterviewer(inter);
+			return BaseResult.getSuccessResult("success");
+		}
 	}
 	
 	@RequestMapping(value = "/hr/deleteInterviewer")

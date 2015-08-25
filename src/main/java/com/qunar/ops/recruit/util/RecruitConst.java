@@ -38,5 +38,7 @@ public class RecruitConst {
 	public static final String INTERVIEW_STATE_REJECT = "已回绝";
 	public static final String INTERVIEW_STATE_ACCEPT = "待发Offer";
 	public static final String WAITING_FOR_INTERVIEW_IS_EMPTY = "没有等待面试的学生";
+	public static final int ALREADY_EXIST_USER_ERROR = 110;
+	public static final String ALREADY_EXIST_USER_ERROR_MSG = "用户名已经存在";
 	public static String USERNAM_OR_PASSWORD_ERROR_MSG = "用户名或密码错误";
 }
