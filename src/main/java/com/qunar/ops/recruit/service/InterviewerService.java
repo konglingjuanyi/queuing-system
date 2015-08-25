@@ -24,24 +24,14 @@ public class InterviewerService {
 		return null;
 	}
 
-	public List<Interviewer> getInterviewers(int offset, int limit) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Interviewer> getInterviewers() {
+		InterviewerExample ie = new InterviewerExample();
+		return interMapper.selectByExample(ie);
 	}
 
 	public List<Interviewer> getInterviewers(int offset, int limit, Date start,
 			Date end, String cityName) {
-		InterviewerExample example = new InterviewerExample();
-		InterviewerExample.Criteria criteria = example.createCriteria();
-		if(cityName != null)
-			criteria.andCityEqualTo(cityName);
-		if(start != null)
-			criteria.andStartDateGreaterThanOrEqualTo(start);
-//		example.setOffset(offset);
-////		System.out.println("hahahahhahaa-----");
-//		example.setLimit(limit);
-//		System.out.println(offset+" "+limit+" "+start+" "+end+ " "+cityName);
-		return interMapper.selectByExample(example);
+		return null;
 	}
 
 	public void addInterviewer(Interviewer inter) {
@@ -68,6 +58,21 @@ public class InterviewerService {
 			return inter.get(0);
 		}
 		return null;
+	}
+
+	public List<Interviewer> getInterviewers(int i, int pageSize, String phase,
+			String city) {
+		InterviewerExample example = new InterviewerExample();
+		InterviewerExample.Criteria criteria = example.createCriteria();
+		if(city != null)
+			criteria.andCityEqualTo(city);
+		if(phase != null)
+			criteria.andPhaseEqualTo(phase);
+//		example.setOffset(offset);
+////		System.out.println("hahahahhahaa-----");
+//		example.setLimit(limit);
+//		System.out.println(offset+" "+limit+" "+start+" "+end+ " "+cityName);
+		return interMapper.selectByExample(example);
 	}
 
 }

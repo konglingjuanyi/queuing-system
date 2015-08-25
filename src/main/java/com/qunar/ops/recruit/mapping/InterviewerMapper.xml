@@ -14,7 +14,7 @@
     <result column="start_date" property="startDate" jdbcType="TIMESTAMP" />
     <result column="end_date" property="endDate" jdbcType="TIMESTAMP" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="pahse_id" property="pahseId" jdbcType="BIGINT" />
+    <result column="phase" property="phase" jdbcType="VARCHAR" />
     <result column="view_count" property="viewCount" jdbcType="BIGINT" />
     <result column="room" property="room" jdbcType="VARCHAR" />
     <result column="enable" property="enable" jdbcType="BIGINT" />
@@ -79,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, user_name, password, city, one_view, two_view, one_count, two_count, status, 
-    start_date, end_date, create_time, pahse_id, view_count, room, enable
+    start_date, end_date, create_time, phase, view_count, room, enable
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.InterviewerExample" >
     select
@@ -119,13 +119,13 @@
     insert into interviewer (user_name, password, city, 
       one_view, two_view, one_count, 
       two_count, status, start_date, 
-      end_date, create_time, pahse_id, 
+      end_date, create_time, phase, 
       view_count, room, enable
       )
     values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, #{city,jdbcType=CHAR}, 
       #{oneView,jdbcType=CHAR}, #{twoView,jdbcType=CHAR}, #{oneCount,jdbcType=INTEGER}, 
       #{twoCount,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{startDate,jdbcType=TIMESTAMP}, 
-      #{endDate,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{pahseId,jdbcType=BIGINT}, 
+      #{endDate,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, #{phase,jdbcType=VARCHAR}, 
       #{viewCount,jdbcType=BIGINT}, #{room,jdbcType=VARCHAR}, #{enable,jdbcType=BIGINT}
       )
   </insert>
@@ -168,8 +168,8 @@
       <if test="createTime != null" >
         create_time,
       </if>
-      <if test="pahseId != null" >
-        pahse_id,
+      <if test="phase != null" >
+        phase,
       </if>
       <if test="viewCount != null" >
         view_count,
@@ -215,8 +215,8 @@
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="pahseId != null" >
-        #{pahseId,jdbcType=BIGINT},
+      <if test="phase != null" >
+        #{phase,jdbcType=VARCHAR},
       </if>
       <if test="viewCount != null" >
         #{viewCount,jdbcType=BIGINT},
@@ -274,8 +274,8 @@
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.pahseId != null" >
-        pahse_id = #{record.pahseId,jdbcType=BIGINT},
+      <if test="record.phase != null" >
+        phase = #{record.phase,jdbcType=VARCHAR},
       </if>
       <if test="record.viewCount != null" >
         view_count = #{record.viewCount,jdbcType=BIGINT},
@@ -305,7 +305,7 @@
       start_date = #{record.startDate,jdbcType=TIMESTAMP},
       end_date = #{record.endDate,jdbcType=TIMESTAMP},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      pahse_id = #{record.pahseId,jdbcType=BIGINT},
+      phase = #{record.phase,jdbcType=VARCHAR},
       view_count = #{record.viewCount,jdbcType=BIGINT},
       room = #{record.room,jdbcType=VARCHAR},
       enable = #{record.enable,jdbcType=BIGINT}
@@ -349,8 +349,8 @@
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="pahseId != null" >
-        pahse_id = #{pahseId,jdbcType=BIGINT},
+      <if test="phase != null" >
+        phase = #{phase,jdbcType=VARCHAR},
       </if>
       <if test="viewCount != null" >
         view_count = #{viewCount,jdbcType=BIGINT},
@@ -377,7 +377,7 @@
       start_date = #{startDate,jdbcType=TIMESTAMP},
       end_date = #{endDate,jdbcType=TIMESTAMP},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      pahse_id = #{pahseId,jdbcType=BIGINT},
+      phase = #{phase,jdbcType=VARCHAR},
       view_count = #{viewCount,jdbcType=BIGINT},
       room = #{room,jdbcType=VARCHAR},
       enable = #{enable,jdbcType=BIGINT}

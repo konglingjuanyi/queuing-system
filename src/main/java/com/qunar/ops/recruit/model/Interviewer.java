@@ -27,7 +27,7 @@ public class Interviewer {
 
     private Date createTime;
 
-    private Long pahseId;
+    private String phase;
 
     private Long viewCount;
 
@@ -131,12 +131,12 @@ public class Interviewer {
         this.createTime = createTime;
     }
 
-    public Long getPahseId() {
-        return pahseId;
+    public String getPhase() {
+        return phase;
     }
 
-    public void setPahseId(Long pahseId) {
-        this.pahseId = pahseId;
+    public void setPhase(String phase) {
+        this.phase = phase == null ? null : phase.trim();
     }
 
     public Long getViewCount() {

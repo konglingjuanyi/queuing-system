@@ -875,63 +875,73 @@ public class InterviewerExample {
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdIsNull() {
-            addCriterion("pahse_id is null");
+        public Criteria andPhaseIsNull() {
+            addCriterion("phase is null");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdIsNotNull() {
-            addCriterion("pahse_id is not null");
+        public Criteria andPhaseIsNotNull() {
+            addCriterion("phase is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdEqualTo(Long value) {
-            addCriterion("pahse_id =", value, "pahseId");
+        public Criteria andPhaseEqualTo(String value) {
+            addCriterion("phase =", value, "phase");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdNotEqualTo(Long value) {
-            addCriterion("pahse_id <>", value, "pahseId");
+        public Criteria andPhaseNotEqualTo(String value) {
+            addCriterion("phase <>", value, "phase");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdGreaterThan(Long value) {
-            addCriterion("pahse_id >", value, "pahseId");
+        public Criteria andPhaseGreaterThan(String value) {
+            addCriterion("phase >", value, "phase");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdGreaterThanOrEqualTo(Long value) {
-            addCriterion("pahse_id >=", value, "pahseId");
+        public Criteria andPhaseGreaterThanOrEqualTo(String value) {
+            addCriterion("phase >=", value, "phase");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdLessThan(Long value) {
-            addCriterion("pahse_id <", value, "pahseId");
+        public Criteria andPhaseLessThan(String value) {
+            addCriterion("phase <", value, "phase");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdLessThanOrEqualTo(Long value) {
-            addCriterion("pahse_id <=", value, "pahseId");
+        public Criteria andPhaseLessThanOrEqualTo(String value) {
+            addCriterion("phase <=", value, "phase");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdIn(List<Long> values) {
-            addCriterion("pahse_id in", values, "pahseId");
+        public Criteria andPhaseLike(String value) {
+            addCriterion("phase like", value, "phase");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdNotIn(List<Long> values) {
-            addCriterion("pahse_id not in", values, "pahseId");
+        public Criteria andPhaseNotLike(String value) {
+            addCriterion("phase not like", value, "phase");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdBetween(Long value1, Long value2) {
-            addCriterion("pahse_id between", value1, value2, "pahseId");
+        public Criteria andPhaseIn(List<String> values) {
+            addCriterion("phase in", values, "phase");
             return (Criteria) this;
         }
 
-        public Criteria andPahseIdNotBetween(Long value1, Long value2) {
-            addCriterion("pahse_id not between", value1, value2, "pahseId");
+        public Criteria andPhaseNotIn(List<String> values) {
+            addCriterion("phase not in", values, "phase");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhaseBetween(String value1, String value2) {
+            addCriterion("phase between", value1, value2, "phase");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhaseNotBetween(String value1, String value2) {
+            addCriterion("phase not between", value1, value2, "phase");
             return (Criteria) this;
         }
 
