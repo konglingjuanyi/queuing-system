@@ -89,8 +89,9 @@ function doUpd(id,password){
 	if(rd!=''){
 		var rds=rd.split(",");
 		for(var i=0;i<rds.length;i++){
-			$('input[name="updfirstname"]').each(function(){    
+			$('input[name="updfirstname"]').each(function(){  
 				if($(this).val()==rds[i]){
+					alert(1231232)
 					$(this).attr("checked",'true');
 				}   
 			});

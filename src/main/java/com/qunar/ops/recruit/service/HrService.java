@@ -25,15 +25,6 @@ public class HrService {
 	HrMapper hrMapper;
 	
 	SimpleDateFormat sdf =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-	private HrService(){
-		System.err.println("init excute!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	}
-	
-	@PostConstruct
-	private void test(){
-		System.err.println("post excute!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-	}
 	
 	public List<Interviewer> getAllInterviewer() {
 		return null;
