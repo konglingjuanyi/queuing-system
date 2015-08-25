@@ -71,7 +71,7 @@
 							<div class="control-group">
 								<label class="control-label" for="job">职位</label>
 								<div class="controls">
-								  <input type="password" id="job" placeholder="必填">
+								  <input type="text" id="job" placeholder="必填">
 								</div>
 							</div>
 							<div class="control-group">

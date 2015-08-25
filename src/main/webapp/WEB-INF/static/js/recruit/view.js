@@ -43,7 +43,6 @@ function addViewer(){
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify(params),
           success: function (returnedData) {
-        	  	alert(12321321);
         	  	$("#addform").modal("hide");
         	  	$('#content').load('/hr/getInterviewers');
 		  },
