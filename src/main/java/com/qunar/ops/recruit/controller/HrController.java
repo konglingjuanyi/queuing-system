@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.logging.LogException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,10 +137,10 @@ public class HrController {
 //		DataResult dataResult = new DataResult();
 //		dataResult.setCount(list.size());
 //		dataResult.setTableInfos(retList);
-
+		logger.debug("getInterviewerInfo");
 		Interviewer inter = interService.getInterviewersById(id);
 		model.addAttribute("message", inter);
-		return null;
+		return BaseResult.getSuccessResult(inter);
 	}
 
 }
