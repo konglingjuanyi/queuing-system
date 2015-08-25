@@ -52,22 +52,21 @@ public class LoginController {
 		Object user = request.getSession().getAttribute("user");
 		if(user == null){
 			if(username != null && password != null){
-				Hr hr = hrService.getHrByUserName(username);
+				Hr hr = hrService.getHrByUserNameAndPass(username,password);
 				Interviewer inter = interservice.getInterviewerByNameAndPass(username, password);
+				System.out.println(hr+"====="+inter);
 				if(hr == null && inter == null){
 					String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
 					model.addAttribute("message",message);
 					model.addAttribute("flag",-1);
 					return "/login";
 				}else if(hr != null){
-					String message= RecruitConst.PHONE_NAME_MISS_MATCH_MSG;
-					model.addAttribute("message","success");
 					model.addAttribute("flag",0);
+					request.getSession().setAttribute("user", hr);
 					return "/hr_index";
 				}else{
-					String message= RecruitConst.PHONE_NAME_MISS_MATCH_MSG;
-					model.addAttribute("message","success");
 					model.addAttribute("flag",1);
+					request.getSession().setAttribute("user", inter);
 					return "/view_index";
 				}
 			}else{
@@ -85,7 +84,6 @@ public class LoginController {
 				return "/login";
 			}
 		}
-
 	}
 	
 }

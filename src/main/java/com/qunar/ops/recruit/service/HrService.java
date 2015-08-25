@@ -5,11 +5,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.qunar.ops.recruit.dao.HrMapper;
 import com.qunar.ops.recruit.dao.InterviewerMapper;
 import com.qunar.ops.recruit.model.Hr;
+import com.qunar.ops.recruit.model.HrExample;
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.InterviewerExample;
 
@@ -18,6 +19,8 @@ public class HrService {
 
 	@Autowired
 	InterviewerMapper interMapper;
+	@Autowired
+	HrMapper hrMapper;
 	
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -69,8 +72,15 @@ public class HrService {
 		return null;
 	}
 
-	public Hr getHrByUserName(String username) {
-		// TODO Auto-generated method stub
+	public Hr getHrByUserNameAndPass(String username,String password) {
+		HrExample hr = new HrExample();
+		HrExample.Criteria criteria = hr.createCriteria();
+		criteria.andUserNameEqualTo(username);
+		criteria.andPassWordEqualTo(password);
+		List<Hr> inter = hrMapper.selectByExample(hr);
+		if(inter != null && inter.size() > 0){
+			return inter.get(0);
+		}
 		return null;
 	}
 
