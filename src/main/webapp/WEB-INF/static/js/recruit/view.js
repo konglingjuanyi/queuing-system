@@ -211,6 +211,7 @@ function doclose(){
 	});
 	$("#updform").modal("hide");
 	$("#addform").modal("hide");
+	$("#getform").modal("hide");
 }
 
 function doSel(id){
@@ -220,8 +221,52 @@ function doSel(id){
         dataType: "json",
         data: {'id':id},
         success: function (returnedData) {
-      	  	alert(returnedData);
-      	  	$("#getform").modal("show");
+        	$("#getuserName").val(returnedData.data.userName);
+        	$("#getjob").val(returnedData.data.job);
+        	$("#getpassword").val(returnedData.data.password);
+        	$("#getpassword").val(returnedData.data.password);
+        	$("#firstrd").text(returnedData.data.firstRd);
+        	$("#firstfe").text(returnedData.data.firstFe);
+        	$("#firstqa").text(returnedData.data.firstQa);
+        	$("#secondrd").text(returnedData.data.secondRd);
+        	$("#secondfe").text(returnedData.data.secondFe);
+        	$("#secondqa").text(returnedData.data.secondQa);
+
+//        	console.dir(returnedData)
+        	rd = returnedData.data.oneView;
+        	fe = returnedData.data.twoView;
+        	qa = returnedData.data.determine;
+        	if(rd!=''){
+        		var rds=rd.split(",");
+        		for(var i=0;i<rds.length;i++){
+        			$('input[name="getfirstname"]').each(function(){
+        				if($(this).val()==rds[i]){
+        					$(this).prop("checked",'true');
+        				}   
+        			});
+        		}
+        	}
+        	if(fe!=''){
+        		var rds=fe.split(",");
+        		for(var i=0;i<rds.length;i++){
+        			$('input[name="getsecondname"]').each(function(){    
+        				if($(this).val()==rds[i]){
+        					$(this).prop("checked",'true');
+        				}   
+        			});
+        		}
+        	}
+        	if(qa!=''){
+        		var rds=qa.split(",");
+        		for(var i=0;i<rds.length;i++){
+        			$('input[name="getfinishname"]').each(function(){    
+        				if($(this).val()==rds[i]){
+        					$(this).prop("checked",'true');
+        				}   
+        			});
+        		}
+        	}
+        	$("#getform").modal("show");
       	  	
 		},
         error: function () {

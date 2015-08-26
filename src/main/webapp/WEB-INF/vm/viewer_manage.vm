@@ -242,19 +242,19 @@
 							<div class="control-group">
 								<label class="control-label" for="name">面试官姓名</label>
 								<div class="controls">
-								  <input type="text" id="getuserName" placeholder="必填">
+								  <input type="text" id="getuserName" placeholder="必填" disabled="disabled">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="job">职位</label>
 								<div class="controls">
-								  <input type="text" id="getjob" placeholder="必填">
+								  <input type="text" id="getjob" placeholder="必填" disabled="disabled">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label" for="password">密码</label>
 								<div class="controls">
-								  <input type="text" id="getpassword" placeholder="必填">
+								  <input type="text" id="getpassword" placeholder="必填" disabled="disabled">
 								</div>
 							</div>
 							<div class="control-group">
@@ -273,37 +273,37 @@
 											<tr>
 												<td>RD</td>
 												<td>
-													<input id="getfirstid" name="getfirstname" type="checkbox"  value="RD">
+													<input id="getfirstid" name="getfirstname" type="checkbox"  value="RD" DISABLED>
 												</td>
 												<td>
-													<input id="getsecondid" name="getsecondname" type="checkbox"  value="RD">
+													<input id="getsecondid" name="getsecondname" type="checkbox"  value="RD" DISABLED>
 												</td>
 												<td>
-													<input id="getfinishid" name="getfinishname" type="checkbox"  value="RD">
+													<input id="getfinishid" name="getfinishname" type="checkbox"  value="RD" DISABLED>
 												</td>
 											</tr>
 											<tr>
 												<td>FE</td>
 												<td>
-													<input id="getfirstid" name="getfirstname" type="checkbox"  value="FE">
+													<input id="getfirstid" name="getfirstname" type="checkbox"  value="FE" DISABLED>
 												</td>
 												<td>
-													<input id="getsecondid" name="getsecondname" type="checkbox"  value="FE">
+													<input id="getsecondid" name="getsecondname" type="checkbox"  value="FE" DISABLED>
 												</td>
 												<td>
-													<input id="getfinishid" name="getfinishname" type="checkbox"  value="FE">
+													<input id="getfinishid" name="getfinishname" type="checkbox"  value="FE" DISABLED>
 												</td>
 											</tr>
 											<tr>
 												<td>QA</td>
 												<td>
-													<input id="getfirstid" name="getfirstname" type="checkbox"  value="QA">
+													<input id="getfirstid" name="getfirstname" type="checkbox"  value="QA" DISABLED>
 												</td>
 												<td>
-													<input id="getsecondid" name="getsecondname" type="checkbox"  value="QA">
+													<input id="getsecondid" name="getsecondname" type="checkbox"  value="QA" DISABLED>
 												</td>
 												<td>
-													<input id="getfinishid" name="getfinishname" type="checkbox"  value="QA">
+													<input id="getfinishid" name="getfinishname" type="checkbox"  value="QA" DISABLED>
 												</td>
 											</tr>
 						              </tbody>
@@ -343,7 +343,7 @@
 							</div>
 							<div class="modal-footer" style="text-align:center;">
 								<div>
-								  <button type="button" class="btn " onclick="close()">取消</button>
+								  <button type="button" class="btn " onclick="doclose()">取消</button>
 								</div>
 							</div>
 						</form>

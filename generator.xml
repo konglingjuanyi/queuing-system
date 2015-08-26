@@ -45,6 +45,9 @@
         <table tableName="student_assess" domainObjectName="StudentAssess" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('student_assess_id_seq')"/>
         </table>
+        <table tableName="phase_interviewer" domainObjectName="PhaseInterviewer" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('phase_interviewer_id_seq')"/>
+        </table>
         <!-- 
         <table tableName="form_approve_log" domainObjectName="FormApproveLog" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('form_approve_log_id_seq')"/>

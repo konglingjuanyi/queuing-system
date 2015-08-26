@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.model.Interviewer;
+import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
@@ -27,7 +28,6 @@ import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.service.WaitService;
-import com.qunar.ops.recruit.util.QUtils;
 import com.qunar.ops.recruit.util.RecruitConst;
 import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
@@ -159,37 +159,37 @@ public class InterviewerController {
 	@RequestMapping(value = "/interview/getNextStudent")
 	@ResponseBody
 	public BaseResult getNextStudent(HttpServletRequest request) {
-		Object obj = request.getSession().getAttribute("user");
-		if(obj != null){
-			if(obj instanceof Interviewer){
-				Interviewer inter = (Interviewer) obj;
-				StudentWaiter  stu;
-				if(!"".equals(inter.getTwoView())){
-					//如果面试官的二面角色不为空,先从二面队列中拿数据
-					//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
-					stu = waitService.getTwoView(inter.getCity(),inter.getTwoView(),inter.getUserName());
-					if(stu==null && !"".equals(inter.getOneView())){
-						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
-						stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
-					}
-				}else{
-					//只有一面角色从一面队列中拿数据`
-					stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
-				}
-				if(stu == null){
-					return BaseResult.getSuccessResult(RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
-				}else{
-					
-					return null;
-				}
-			}else{
-				return BaseResult.getErrorResult(RecruitConst.AUTHORITY_ERROR);
-			}
-		}else{
-			return BaseResult.getErrorResult(RecruitConst.NO_LOGIN);
-		}
-		
-
+//		Object obj = request.getSession().getAttribute("user");
+//		if(obj != null){
+//			if(obj instanceof Interviewer){
+//				PhaseInterviewer inter = (PhaseInterviewer) obj;
+//				StudentWaiter  stu;
+//				if(!"".equals(inter.getTwoView())){
+//					//如果面试官的二面角色不为空,先从二面队列中拿数据
+//					//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
+//					stu = waitService.getTwoView(inter.getCity(),inter.getTwoView(),inter.getUserName());
+//					if(stu==null && !"".equals(inter.getOneView())){
+//						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
+//						stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
+//					}
+//				}else{
+//					//只有一面角色从一面队列中拿数据`
+//					stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
+//				}
+//				if(stu == null){
+//					return BaseResult.getSuccessResult(RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
+//				}else{
+//					
+//					return null;
+//				}
+//			}else{
+//				return BaseResult.getErrorResult(RecruitConst.AUTHORITY_ERROR);
+//			}
+//		}else{
+//			return BaseResult.getErrorResult(RecruitConst.NO_LOGIN);
+//		}
+//		
+		return null;
 	}
 	
 	/**
