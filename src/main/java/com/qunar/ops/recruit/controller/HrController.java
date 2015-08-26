@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.model.Interviewer;
+import com.qunar.ops.recruit.model.connect_table.InterviewerInfoToPage;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
@@ -109,15 +110,13 @@ public class HrController {
 		String year = "2015";
 		String phase = "秋季校园招聘";
 		String city = "北京";
-		List<Interviewer> list = null;
-		logger.error("list.size()==>"+list.size());
-		System.out.println("list size()"+list);
+		List<InterviewerInfoToPage> list = joinService.getInterviewerInfoToPages();
 		List<ResultPlusAdditionalInfo> rets = new LinkedList<ResultPlusAdditionalInfo>();
-		for (Interviewer interviewer : list) {
+		for (InterviewerInfoToPage interviewer : list) {
 			ResultPlusAdditionalInfo info = new ResultPlusAdditionalInfo();
 			info.setObj(interviewer);
-//			info.addStringInfo(interviewer.getFirstFe()+interviewer.getFirstQa()+interviewer.getFirstRd()+"");
-//			info.addStringInfo(interviewer.getSecondFe()+interviewer.getSecondQa()+interviewer.getSecondRd()+"");
+			info.addStringInfo(interviewer.getPi().getFirstFe()+interviewer.getPi().getFirstQa()+interviewer.getPi().getFirstRd()+"");
+			info.addStringInfo(interviewer.getPi().getSecondFe()+interviewer.getPi().getSecondQa()+interviewer.getPi().getSecondRd()+"");
 			rets.add(info);
 		}
 		model.addAttribute("message", rets);
@@ -144,7 +143,7 @@ public class HrController {
 //		dataResult.setCount(list.size());
 //		dataResult.setTableInfos(retList);
 		logger.debug("getInterviewerInfo");
-		Interviewer inter = interService.getInterviewersById(id);
+		InterviewerInfoToPage inter = joinService.getInterviewerInfoToPage(id);
 		model.addAttribute("message", inter);
 		return BaseResult.getSuccessResult(inter);
 	}

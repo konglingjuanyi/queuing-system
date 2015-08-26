@@ -220,14 +220,14 @@ function doSel(id){
         	$("#getjob").val(returnedData.data.job);
         	$("#getpassword").val(returnedData.data.password);
         	$("#getpassword").val(returnedData.data.password);
-        	$("#firstrd").text(returnedData.data.firstRd);
-        	$("#firstfe").text(returnedData.data.firstFe);
-        	$("#firstqa").text(returnedData.data.firstQa);
-        	$("#secondrd").text(returnedData.data.secondRd);
-        	$("#secondfe").text(returnedData.data.secondFe);
-        	$("#secondqa").text(returnedData.data.secondQa);
+        	$("#firstrd").text(returnedData.data.pi.firstRd);
+        	$("#firstfe").text(returnedData.data.pi.firstFe);
+        	$("#firstqa").text(returnedData.data.pi.firstQa);
+        	$("#secondrd").text(returnedData.data.pi.secondRd);
+        	$("#secondfe").text(returnedData.data.pi.secondFe);
+        	$("#secondqa").text(returnedData.data.pi.secondQa);
 
-//        	console.dir(returnedData)
+        	console.dir(returnedData)
         	rd = returnedData.data.oneView;
         	fe = returnedData.data.twoView;
         	qa = returnedData.data.determine;
