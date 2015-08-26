@@ -12,7 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.service.PhaseService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.WaitService;
 import com.qunar.ops.recruit.util.QUtils;
@@ -24,6 +26,8 @@ public class CommonController {
 	WaitService ws;
 	@Autowired
 	StudentService ss;
+	@Autowired
+	PhaseService ps;
 	
 	/**
 	 * login
@@ -65,13 +69,11 @@ public class CommonController {
 		return "success";
 	}
 	
-	@RequestMapping(value = "/getFirstPhases")
+	@RequestMapping(value = "/getFirstPhase")
 	@ResponseBody
 	public String getFirstPhases(HttpServletRequest request,HttpServletResponse response) {
-		List<Student> l1 = ss.getOneList();
-		List<Student> l2 = ss.getTwoList();
-		ws.recovery(l1, l2);
-		return "success";
+		Phase p = ps.getFirstPhase();
+		return p.getPhaseName();
 	}
 	
 }

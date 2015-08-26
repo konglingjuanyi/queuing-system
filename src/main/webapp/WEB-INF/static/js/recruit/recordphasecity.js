@@ -1,16 +1,17 @@
 $(document).ready(function () {
-//	alert("already ready!!");
-    $.ajax({
-        url: "/getFirstPhases",
-        type: "POST",
-        dataType: "json",
-        contentType: 'application/json; charset=utf-8',
-        success: function (returnedData) {
-        	alert(returnedData)
-        error: function () {
-             alert("系统发生了错误请稍后重试");
-        }
- });
+	 $.ajax({
+	      url: "/getFirstPhase",
+	      type: "POST",
+	      dataType: "json",
+	      contentType: 'application/json; charset=utf-8',
+	      success: function (returnedData) {
+	    	  alert(returnedData);
+	    	  
+		  },
+	      error: function () {
+	           alert("系统发生了错误请稍后重试");
+	      }
+	    });
 });
 
 function addViewer(){

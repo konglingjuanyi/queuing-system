@@ -58,5 +58,16 @@ public class PhaseService {
 		phMapper.insert(inter);
 	}
 
+	public Phase getFirstPhase() {
+		PhaseExample example = new PhaseExample();
+		PhaseExample.Criteria criteria = example.createCriteria();
+		example.setOrderByClause("id desc");
+		List<Phase> list = phMapper.selectByExample(example);
+		if(list != null && list.size() > 0){
+			return list.get(0);
+		}
+		return null;
+	}
+
 	
 }

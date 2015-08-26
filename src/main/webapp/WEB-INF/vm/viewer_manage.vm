@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="/static/css/style.css" />
 	<link rel="stylesheet" href="/static/css/module.css" />
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/view_manage.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
 </head>
 
@@ -41,7 +42,7 @@
 				                  <td>$info.obj.twoView</td>
 				                  <td>$info.obj.determine</td>
 				                  <td>
-				                  	<a href="#" id="upd" onclick="doUpd($info.obj.id,$info.obj.password)">修改</a>
+				                  	<a href="#" id="upd" onclick="doUpd($info.obj.id,'$info.obj.password')">修改</a>
 				                  	<a href="#" id="del" onclick="doDel($info.obj.id)">删除</a>
 				                  </td>	
 				                </tr>
@@ -134,7 +135,7 @@
 					<div class="modal-footer" style="text-align:center;">
 								<div>
 								  <button id="addview" type="button" class="btn ">保存</button>
-								  <button type="button" class="btn " onclick="doclose()">取消</button>
+								  <button type="button" class="btn " onclick="alert(123);doclose()">取消</button>
 								</div>
 					</div>
 				</div>
