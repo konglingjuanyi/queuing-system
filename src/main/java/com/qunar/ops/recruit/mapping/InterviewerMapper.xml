@@ -5,24 +5,11 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="CHAR" />
-    <result column="city" property="city" jdbcType="CHAR" />
     <result column="one_view" property="oneView" jdbcType="CHAR" />
     <result column="two_view" property="twoView" jdbcType="CHAR" />
-    <result column="one_count" property="oneCount" jdbcType="INTEGER" />
-    <result column="two_count" property="twoCount" jdbcType="INTEGER" />
-    <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="phase" property="phase" jdbcType="VARCHAR" />
     <result column="view_count" property="viewCount" jdbcType="BIGINT" />
-    <result column="room" property="room" jdbcType="VARCHAR" />
-    <result column="enable" property="enable" jdbcType="BIGINT" />
     <result column="determine" property="determine" jdbcType="VARCHAR" />
     <result column="job" property="job" jdbcType="VARCHAR" />
-    <result column="first_rd" property="firstRd" jdbcType="INTEGER" />
-    <result column="second_rd" property="secondRd" jdbcType="INTEGER" />
-    <result column="first_fe" property="firstFe" jdbcType="INTEGER" />
-    <result column="second_fe" property="secondFe" jdbcType="INTEGER" />
-    <result column="first_qa" property="firstQa" jdbcType="INTEGER" />
-    <result column="second_qa" property="secondQa" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -83,9 +70,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_name, password, city, one_view, two_view, one_count, two_count, status, 
-    phase, view_count, room, enable, determine, job, first_rd, second_rd, first_fe, second_fe, 
-    first_qa, second_qa
+    id, user_name, password, one_view, two_view, view_count, determine, job
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.InterviewerExample" >
     select
@@ -122,20 +107,12 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       select currval('interviewer_id_seq')
     </selectKey>
-    insert into interviewer (user_name, password, city, 
-      one_view, two_view, one_count, 
-      two_count, status, phase, 
-      view_count, room, enable, 
-      determine, job, first_rd, 
-      second_rd, first_fe, second_fe, 
-      first_qa, second_qa)
-    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, #{city,jdbcType=CHAR}, 
-      #{oneView,jdbcType=CHAR}, #{twoView,jdbcType=CHAR}, #{oneCount,jdbcType=INTEGER}, 
-      #{twoCount,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{phase,jdbcType=VARCHAR}, 
-      #{viewCount,jdbcType=BIGINT}, #{room,jdbcType=VARCHAR}, #{enable,jdbcType=BIGINT}, 
-      #{determine,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{firstRd,jdbcType=INTEGER}, 
-      #{secondRd,jdbcType=INTEGER}, #{firstFe,jdbcType=INTEGER}, #{secondFe,jdbcType=INTEGER}, 
-      #{firstQa,jdbcType=INTEGER}, #{secondQa,jdbcType=INTEGER})
+    insert into interviewer (user_name, password, one_view, 
+      two_view, view_count, determine, 
+      job)
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, #{oneView,jdbcType=CHAR}, 
+      #{twoView,jdbcType=CHAR}, #{viewCount,jdbcType=BIGINT}, #{determine,jdbcType=VARCHAR}, 
+      #{job,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Interviewer" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -149,59 +126,20 @@
       <if test="password != null" >
         password,
       </if>
-      <if test="city != null" >
-        city,
-      </if>
       <if test="oneView != null" >
         one_view,
       </if>
       <if test="twoView != null" >
         two_view,
       </if>
-      <if test="oneCount != null" >
-        one_count,
-      </if>
-      <if test="twoCount != null" >
-        two_count,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="phase != null" >
-        phase,
-      </if>
       <if test="viewCount != null" >
         view_count,
-      </if>
-      <if test="room != null" >
-        room,
-      </if>
-      <if test="enable != null" >
-        enable,
       </if>
       <if test="determine != null" >
         determine,
       </if>
       <if test="job != null" >
         job,
-      </if>
-      <if test="firstRd != null" >
-        first_rd,
-      </if>
-      <if test="secondRd != null" >
-        second_rd,
-      </if>
-      <if test="firstFe != null" >
-        first_fe,
-      </if>
-      <if test="secondFe != null" >
-        second_fe,
-      </if>
-      <if test="firstQa != null" >
-        first_qa,
-      </if>
-      <if test="secondQa != null" >
-        second_qa,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -211,59 +149,20 @@
       <if test="password != null" >
         #{password,jdbcType=CHAR},
       </if>
-      <if test="city != null" >
-        #{city,jdbcType=CHAR},
-      </if>
       <if test="oneView != null" >
         #{oneView,jdbcType=CHAR},
       </if>
       <if test="twoView != null" >
         #{twoView,jdbcType=CHAR},
       </if>
-      <if test="oneCount != null" >
-        #{oneCount,jdbcType=INTEGER},
-      </if>
-      <if test="twoCount != null" >
-        #{twoCount,jdbcType=INTEGER},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=INTEGER},
-      </if>
-      <if test="phase != null" >
-        #{phase,jdbcType=VARCHAR},
-      </if>
       <if test="viewCount != null" >
         #{viewCount,jdbcType=BIGINT},
-      </if>
-      <if test="room != null" >
-        #{room,jdbcType=VARCHAR},
-      </if>
-      <if test="enable != null" >
-        #{enable,jdbcType=BIGINT},
       </if>
       <if test="determine != null" >
         #{determine,jdbcType=VARCHAR},
       </if>
       <if test="job != null" >
         #{job,jdbcType=VARCHAR},
-      </if>
-      <if test="firstRd != null" >
-        #{firstRd,jdbcType=INTEGER},
-      </if>
-      <if test="secondRd != null" >
-        #{secondRd,jdbcType=INTEGER},
-      </if>
-      <if test="firstFe != null" >
-        #{firstFe,jdbcType=INTEGER},
-      </if>
-      <if test="secondFe != null" >
-        #{secondFe,jdbcType=INTEGER},
-      </if>
-      <if test="firstQa != null" >
-        #{firstQa,jdbcType=INTEGER},
-      </if>
-      <if test="secondQa != null" >
-        #{secondQa,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -285,59 +184,20 @@
       <if test="record.password != null" >
         password = #{record.password,jdbcType=CHAR},
       </if>
-      <if test="record.city != null" >
-        city = #{record.city,jdbcType=CHAR},
-      </if>
       <if test="record.oneView != null" >
         one_view = #{record.oneView,jdbcType=CHAR},
       </if>
       <if test="record.twoView != null" >
         two_view = #{record.twoView,jdbcType=CHAR},
       </if>
-      <if test="record.oneCount != null" >
-        one_count = #{record.oneCount,jdbcType=INTEGER},
-      </if>
-      <if test="record.twoCount != null" >
-        two_count = #{record.twoCount,jdbcType=INTEGER},
-      </if>
-      <if test="record.status != null" >
-        status = #{record.status,jdbcType=INTEGER},
-      </if>
-      <if test="record.phase != null" >
-        phase = #{record.phase,jdbcType=VARCHAR},
-      </if>
       <if test="record.viewCount != null" >
         view_count = #{record.viewCount,jdbcType=BIGINT},
-      </if>
-      <if test="record.room != null" >
-        room = #{record.room,jdbcType=VARCHAR},
-      </if>
-      <if test="record.enable != null" >
-        enable = #{record.enable,jdbcType=BIGINT},
       </if>
       <if test="record.determine != null" >
         determine = #{record.determine,jdbcType=VARCHAR},
       </if>
       <if test="record.job != null" >
         job = #{record.job,jdbcType=VARCHAR},
-      </if>
-      <if test="record.firstRd != null" >
-        first_rd = #{record.firstRd,jdbcType=INTEGER},
-      </if>
-      <if test="record.secondRd != null" >
-        second_rd = #{record.secondRd,jdbcType=INTEGER},
-      </if>
-      <if test="record.firstFe != null" >
-        first_fe = #{record.firstFe,jdbcType=INTEGER},
-      </if>
-      <if test="record.secondFe != null" >
-        second_fe = #{record.secondFe,jdbcType=INTEGER},
-      </if>
-      <if test="record.firstQa != null" >
-        first_qa = #{record.firstQa,jdbcType=INTEGER},
-      </if>
-      <if test="record.secondQa != null" >
-        second_qa = #{record.secondQa,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -349,24 +209,11 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
       password = #{record.password,jdbcType=CHAR},
-      city = #{record.city,jdbcType=CHAR},
       one_view = #{record.oneView,jdbcType=CHAR},
       two_view = #{record.twoView,jdbcType=CHAR},
-      one_count = #{record.oneCount,jdbcType=INTEGER},
-      two_count = #{record.twoCount,jdbcType=INTEGER},
-      status = #{record.status,jdbcType=INTEGER},
-      phase = #{record.phase,jdbcType=VARCHAR},
       view_count = #{record.viewCount,jdbcType=BIGINT},
-      room = #{record.room,jdbcType=VARCHAR},
-      enable = #{record.enable,jdbcType=BIGINT},
       determine = #{record.determine,jdbcType=VARCHAR},
-      job = #{record.job,jdbcType=VARCHAR},
-      first_rd = #{record.firstRd,jdbcType=INTEGER},
-      second_rd = #{record.secondRd,jdbcType=INTEGER},
-      first_fe = #{record.firstFe,jdbcType=INTEGER},
-      second_fe = #{record.secondFe,jdbcType=INTEGER},
-      first_qa = #{record.firstQa,jdbcType=INTEGER},
-      second_qa = #{record.secondQa,jdbcType=INTEGER}
+      job = #{record.job,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -380,59 +227,20 @@
       <if test="password != null" >
         password = #{password,jdbcType=CHAR},
       </if>
-      <if test="city != null" >
-        city = #{city,jdbcType=CHAR},
-      </if>
       <if test="oneView != null" >
         one_view = #{oneView,jdbcType=CHAR},
       </if>
       <if test="twoView != null" >
         two_view = #{twoView,jdbcType=CHAR},
       </if>
-      <if test="oneCount != null" >
-        one_count = #{oneCount,jdbcType=INTEGER},
-      </if>
-      <if test="twoCount != null" >
-        two_count = #{twoCount,jdbcType=INTEGER},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=INTEGER},
-      </if>
-      <if test="phase != null" >
-        phase = #{phase,jdbcType=VARCHAR},
-      </if>
       <if test="viewCount != null" >
         view_count = #{viewCount,jdbcType=BIGINT},
-      </if>
-      <if test="room != null" >
-        room = #{room,jdbcType=VARCHAR},
-      </if>
-      <if test="enable != null" >
-        enable = #{enable,jdbcType=BIGINT},
       </if>
       <if test="determine != null" >
         determine = #{determine,jdbcType=VARCHAR},
       </if>
       <if test="job != null" >
         job = #{job,jdbcType=VARCHAR},
-      </if>
-      <if test="firstRd != null" >
-        first_rd = #{firstRd,jdbcType=INTEGER},
-      </if>
-      <if test="secondRd != null" >
-        second_rd = #{secondRd,jdbcType=INTEGER},
-      </if>
-      <if test="firstFe != null" >
-        first_fe = #{firstFe,jdbcType=INTEGER},
-      </if>
-      <if test="secondFe != null" >
-        second_fe = #{secondFe,jdbcType=INTEGER},
-      </if>
-      <if test="firstQa != null" >
-        first_qa = #{firstQa,jdbcType=INTEGER},
-      </if>
-      <if test="secondQa != null" >
-        second_qa = #{secondQa,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -441,24 +249,11 @@
     update interviewer
     set user_name = #{userName,jdbcType=VARCHAR},
       password = #{password,jdbcType=CHAR},
-      city = #{city,jdbcType=CHAR},
       one_view = #{oneView,jdbcType=CHAR},
       two_view = #{twoView,jdbcType=CHAR},
-      one_count = #{oneCount,jdbcType=INTEGER},
-      two_count = #{twoCount,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
-      phase = #{phase,jdbcType=VARCHAR},
       view_count = #{viewCount,jdbcType=BIGINT},
-      room = #{room,jdbcType=VARCHAR},
-      enable = #{enable,jdbcType=BIGINT},
       determine = #{determine,jdbcType=VARCHAR},
-      job = #{job,jdbcType=VARCHAR},
-      first_rd = #{firstRd,jdbcType=INTEGER},
-      second_rd = #{secondRd,jdbcType=INTEGER},
-      first_fe = #{firstFe,jdbcType=INTEGER},
-      second_fe = #{secondFe,jdbcType=INTEGER},
-      first_qa = #{firstQa,jdbcType=INTEGER},
-      second_qa = #{secondQa,jdbcType=INTEGER}
+      job = #{job,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

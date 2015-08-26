@@ -39,8 +39,8 @@ public class HrService {
 			Date end, String cityName) {
 		InterviewerExample example = new InterviewerExample();
 		InterviewerExample.Criteria criteria = example.createCriteria();
-		if(cityName != null)
-			criteria.andCityEqualTo(cityName);
+//		if(cityName != null)
+//			criteria.andCityEqualTo(cityName);
 //		example.setOffset(offset);
 ////		System.out.println("hahahahhahaa-----");
 //		example.setLimit(limit);

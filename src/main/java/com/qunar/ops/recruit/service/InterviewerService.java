@@ -69,10 +69,10 @@ public class InterviewerService {
 			String city) {
 		InterviewerExample example = new InterviewerExample();
 		InterviewerExample.Criteria criteria = example.createCriteria();
-		if(city != null)
-			criteria.andCityEqualTo(city);
-		if(phase != null)
-			criteria.andPhaseEqualTo(phase);
+//		if(city != null)
+//			criteria.andCityEqualTo(city);
+//		if(phase != null)
+//			criteria.andPhaseEqualTo(phase);
 //		example.setOffset(offset);
 ////		System.out.println("hahahahhahaa-----");
 //		example.setLimit(limit);
@@ -96,19 +96,19 @@ public class InterviewerService {
 		}
 		inter.setUserName(userName);
 		inter.setPassword(password);
-		inter.setCity(city);
+//		inter.setCity(city);
 		inter.setJob(job);
 		inter.setOneView(first_value);
 		inter.setTwoView(second_value);
 		inter.setDetermine(finish_value);
-		inter.setOneCount(0);
-		inter.setTwoCount(0);
-		inter.setFirstFe(0);
-		inter.setFirstQa(0);
-		inter.setFirstRd(0);
-		inter.setSecondFe(0);
-		inter.setSecondQa(0);
-		inter.setSecondRd(0);
+//		inter.setOneCount(0);
+//		inter.setTwoCount(0);
+//		inter.setFirstFe(0);
+//		inter.setFirstQa(0);
+//		inter.setFirstRd(0);
+//		inter.setSecondFe(0);
+//		inter.setSecondQa(0);
+//		inter.setSecondRd(0);
 		return inter;
 	}
 	
@@ -127,7 +127,7 @@ public class InterviewerService {
 		}
 		inter.setUserName(userName);
 		inter.setPassword(password);
-		inter.setCity(city);
+//		inter.setCity(city);
 		inter.setJob(job);
 		first_value = first_value == null ? "":first_value;
 		second_value = second_value == null ? "":second_value;

@@ -104,14 +104,18 @@ public class HrController {
 //		DataResult dataResult = new DataResult();
 //		dataResult.setCount(list.size());
 //		dataResult.setTableInfos(retList);
-
+		String year = "2015";
+		String phase = "秋季校园招聘";
+		String city = "北京";
 		List<Interviewer> list = interService.getInterviewers();
+		logger.error("list.size()==>"+list.size());
+		System.out.println("list size()"+list);
 		List<ResultPlusAdditionalInfo> rets = new LinkedList<ResultPlusAdditionalInfo>();
 		for (Interviewer interviewer : list) {
 			ResultPlusAdditionalInfo info = new ResultPlusAdditionalInfo();
 			info.setObj(interviewer);
-			info.addStringInfo(interviewer.getFirstFe()+interviewer.getFirstQa()+interviewer.getFirstRd()+"");
-			info.addStringInfo(interviewer.getSecondFe()+interviewer.getSecondQa()+interviewer.getSecondRd()+"");
+//			info.addStringInfo(interviewer.getFirstFe()+interviewer.getFirstQa()+interviewer.getFirstRd()+"");
+//			info.addStringInfo(interviewer.getSecondFe()+interviewer.getSecondQa()+interviewer.getSecondRd()+"");
 			rets.add(info);
 		}
 		model.addAttribute("message", rets);

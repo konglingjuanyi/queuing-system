@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qunar.ops.recruit.dao.PhaseInterviewerMapper" >
+  <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.PhaseInterviewer" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="year" property="year" jdbcType="VARCHAR" />
+    <result column="phase" property="phase" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="intervier_name" property="intervierName" jdbcType="VARCHAR" />
+    <result column="room" property="room" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="one_count" property="oneCount" jdbcType="INTEGER" />
+    <result column="two_count" property="twoCount" jdbcType="INTEGER" />
+    <result column="first_rd" property="firstRd" jdbcType="INTEGER" />
+    <result column="first_fe" property="firstFe" jdbcType="INTEGER" />
+    <result column="first_qa" property="firstQa" jdbcType="INTEGER" />
+    <result column="second_rd" property="secondRd" jdbcType="INTEGER" />
+    <result column="second_fe" property="secondFe" jdbcType="INTEGER" />
+    <result column="second_qa" property="secondQa" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, year, phase, city, intervier_name, room, status, one_count, two_count, first_rd, 
+    first_fe, first_qa, second_rd, second_fe, second_qa
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.PhaseInterviewerExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from phase_interviewer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from phase_interviewer
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from phase_interviewer
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.PhaseInterviewerExample" >
+    delete from phase_interviewer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.qunar.ops.recruit.model.PhaseInterviewer" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      select currval('phase_interviewer_id_seq')
+    </selectKey>
+    insert into phase_interviewer (year, phase, city, 
+      intervier_name, room, status, 
+      one_count, two_count, first_rd, 
+      first_fe, first_qa, second_rd, 
+      second_fe, second_qa)
+    values (#{year,jdbcType=VARCHAR}, #{phase,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{intervierName,jdbcType=VARCHAR}, #{room,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{oneCount,jdbcType=INTEGER}, #{twoCount,jdbcType=INTEGER}, #{firstRd,jdbcType=INTEGER}, 
+      #{firstFe,jdbcType=INTEGER}, #{firstQa,jdbcType=INTEGER}, #{secondRd,jdbcType=INTEGER}, 
+      #{secondFe,jdbcType=INTEGER}, #{secondQa,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.PhaseInterviewer" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      select currval('phase_interviewer_id_seq')
+    </selectKey>
+    insert into phase_interviewer
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="year != null" >
+        year,
+      </if>
+      <if test="phase != null" >
+        phase,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="intervierName != null" >
+        intervier_name,
+      </if>
+      <if test="room != null" >
+        room,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="oneCount != null" >
+        one_count,
+      </if>
+      <if test="twoCount != null" >
+        two_count,
+      </if>
+      <if test="firstRd != null" >
+        first_rd,
+      </if>
+      <if test="firstFe != null" >
+        first_fe,
+      </if>
+      <if test="firstQa != null" >
+        first_qa,
+      </if>
+      <if test="secondRd != null" >
+        second_rd,
+      </if>
+      <if test="secondFe != null" >
+        second_fe,
+      </if>
+      <if test="secondQa != null" >
+        second_qa,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="year != null" >
+        #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="phase != null" >
+        #{phase,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="intervierName != null" >
+        #{intervierName,jdbcType=VARCHAR},
+      </if>
+      <if test="room != null" >
+        #{room,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="oneCount != null" >
+        #{oneCount,jdbcType=INTEGER},
+      </if>
+      <if test="twoCount != null" >
+        #{twoCount,jdbcType=INTEGER},
+      </if>
+      <if test="firstRd != null" >
+        #{firstRd,jdbcType=INTEGER},
+      </if>
+      <if test="firstFe != null" >
+        #{firstFe,jdbcType=INTEGER},
+      </if>
+      <if test="firstQa != null" >
+        #{firstQa,jdbcType=INTEGER},
+      </if>
+      <if test="secondRd != null" >
+        #{secondRd,jdbcType=INTEGER},
+      </if>
+      <if test="secondFe != null" >
+        #{secondFe,jdbcType=INTEGER},
+      </if>
+      <if test="secondQa != null" >
+        #{secondQa,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.qunar.ops.recruit.model.PhaseInterviewerExample" resultType="java.lang.Integer" >
+    select count(*) from phase_interviewer
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update phase_interviewer
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.year != null" >
+        year = #{record.year,jdbcType=VARCHAR},
+      </if>
+      <if test="record.phase != null" >
+        phase = #{record.phase,jdbcType=VARCHAR},
+      </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
+      <if test="record.intervierName != null" >
+        intervier_name = #{record.intervierName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.room != null" >
+        room = #{record.room,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.oneCount != null" >
+        one_count = #{record.oneCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.twoCount != null" >
+        two_count = #{record.twoCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.firstRd != null" >
+        first_rd = #{record.firstRd,jdbcType=INTEGER},
+      </if>
+      <if test="record.firstFe != null" >
+        first_fe = #{record.firstFe,jdbcType=INTEGER},
+      </if>
+      <if test="record.firstQa != null" >
+        first_qa = #{record.firstQa,jdbcType=INTEGER},
+      </if>
+      <if test="record.secondRd != null" >
+        second_rd = #{record.secondRd,jdbcType=INTEGER},
+      </if>
+      <if test="record.secondFe != null" >
+        second_fe = #{record.secondFe,jdbcType=INTEGER},
+      </if>
+      <if test="record.secondQa != null" >
+        second_qa = #{record.secondQa,jdbcType=INTEGER},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update phase_interviewer
+    set id = #{record.id,jdbcType=INTEGER},
+      year = #{record.year,jdbcType=VARCHAR},
+      phase = #{record.phase,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
+      intervier_name = #{record.intervierName,jdbcType=VARCHAR},
+      room = #{record.room,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      one_count = #{record.oneCount,jdbcType=INTEGER},
+      two_count = #{record.twoCount,jdbcType=INTEGER},
+      first_rd = #{record.firstRd,jdbcType=INTEGER},
+      first_fe = #{record.firstFe,jdbcType=INTEGER},
+      first_qa = #{record.firstQa,jdbcType=INTEGER},
+      second_rd = #{record.secondRd,jdbcType=INTEGER},
+      second_fe = #{record.secondFe,jdbcType=INTEGER},
+      second_qa = #{record.secondQa,jdbcType=INTEGER}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.PhaseInterviewer" >
+    update phase_interviewer
+    <set >
+      <if test="year != null" >
+        year = #{year,jdbcType=VARCHAR},
+      </if>
+      <if test="phase != null" >
+        phase = #{phase,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="intervierName != null" >
+        intervier_name = #{intervierName,jdbcType=VARCHAR},
+      </if>
+      <if test="room != null" >
+        room = #{room,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="oneCount != null" >
+        one_count = #{oneCount,jdbcType=INTEGER},
+      </if>
+      <if test="twoCount != null" >
+        two_count = #{twoCount,jdbcType=INTEGER},
+      </if>
+      <if test="firstRd != null" >
+        first_rd = #{firstRd,jdbcType=INTEGER},
+      </if>
+      <if test="firstFe != null" >
+        first_fe = #{firstFe,jdbcType=INTEGER},
+      </if>
+      <if test="firstQa != null" >
+        first_qa = #{firstQa,jdbcType=INTEGER},
+      </if>
+      <if test="secondRd != null" >
+        second_rd = #{secondRd,jdbcType=INTEGER},
+      </if>
+      <if test="secondFe != null" >
+        second_fe = #{secondFe,jdbcType=INTEGER},
+      </if>
+      <if test="secondQa != null" >
+        second_qa = #{secondQa,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.PhaseInterviewer" >
+    update phase_interviewer
+    set year = #{year,jdbcType=VARCHAR},
+      phase = #{phase,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      intervier_name = #{intervierName,jdbcType=VARCHAR},
+      room = #{room,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      one_count = #{oneCount,jdbcType=INTEGER},
+      two_count = #{twoCount,jdbcType=INTEGER},
+      first_rd = #{firstRd,jdbcType=INTEGER},
+      first_fe = #{firstFe,jdbcType=INTEGER},
+      first_qa = #{firstQa,jdbcType=INTEGER},
+      second_rd = #{secondRd,jdbcType=INTEGER},
+      second_fe = #{secondFe,jdbcType=INTEGER},
+      second_qa = #{secondQa,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
