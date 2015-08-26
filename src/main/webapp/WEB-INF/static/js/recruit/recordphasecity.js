@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	 $.ajax({
+	/* $.ajax({
 	      url: "/getFirstPhase",
 	      type: "POST",
 	      dataType: "json",
@@ -11,7 +11,7 @@ $(document).ready(function () {
 	      error: function () {
 	           alert("系统发生了错误请稍后重试");
 	      }
-	    });
+	    });*/
 });
 
 function addViewer(){

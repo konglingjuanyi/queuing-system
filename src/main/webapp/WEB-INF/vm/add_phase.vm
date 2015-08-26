@@ -8,47 +8,20 @@
 	<link rel="stylesheet" href="/static/css/module.css" />
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
-	<script type="text/javascript" src="/static/js/recruit/phase.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/phase_manage.js"></script>
 </head>
 <body>
 	<div class="l-fullsreen">
-		<div class="l-nav">
-			<div class="m-title">
-				<h1>校招系统</h1>	
-				<select name="" id="">
-					<option value="">2015秋季校招</option>
-					<option value="">2015秋季校招1</option>
-					<option value="">2015秋季校招2</option>
-					<option value="">2015秋季校招3</option>
-				</select>
-				<select name="" id="">
-					<option value="">北京</option>
-					<option value="">北京</option>
-					<option value="">北京</option>
-					<option value="">北京</option>
-				</select>
-			</div>
-			<div class="m-nav">
-				<ul class="nav nav-tabs">
-					<li id="firstpage">
-						<a href="/login">首页</a>
-					</li>
-					<li id="viewsatge"><a href="#">面试平台</a></li>
-					<li id="viewpage"><a href="javascript:void(0);" id="view_list">面试官监控</a></li>
-					<li id="managepage"><a href="javascript:void(0);" id="manage_list">面试官管理</a></li>
-					<li id="stupage"><a href="#">候选人管理</a></li>
-					<li id="phasepage" class="active"><a href="javascript:void(0);" id="phase_list">批次管理</a></li>
-				</ul>
-			</div>
-		</div>
 		<!-- 内容start -->
 				<div class="l-container m-addbatch">
 					<div class="m-addbatch-hd">
                 		<div class="form-inline">
                 		<label class="control-label" for="">年份</label>
                     	<input type="text" class="input-small" placeholder="必填" value="$ph.yearInfo" disabled>
+                    	<input type="hidden" id="yearid" value="$ph.yearInfo" disabled>
                     	<label class="control-label" for="">批次名称</label>
                     	<input type="text" placeholder="必填" value="$ph.phaseName" disabled>
+                    	<input type="hidden" id="phaseid" value="$ph.phaseName" disabled>
                     	<label class="control-label" for="">城市</label>
                     	<input type="text" id="cityname" name="cityname" class="input-small" placeholder="必填">
                     	<button type="button" class="btn" id="addcity">添加</button>
@@ -60,25 +33,7 @@
     							<div class="form-horizontal">
     							<table class="table">
     							<tbody id="bodyid">
-    								<tr>
-    									<td>北京</td>
-    									<td><a href="javascript:void(0);" onclick="showView('td北京')">添加面试官</a></td>
-    									<td id="td北京">
-    										<label class="control-label" for="inputEmail">
-    											刘玥
-    											<input class="input-mini" type="text" id="inputEmail" placeholder="房间号">
-    										</label>
-    										<label class="control-label" for="inputEmail">
-    											孙立
-    											<input class="input-mini" type="text" id="inputEmail" placeholder="房间号">
-    										</label>
-    										<label class="control-label" for="inputEmail">
-    											三丰
-    											<input class="input-mini" type="text" id="inputEmail" placeholder="房间号">
-    										</label>
-    									</td>
-                                        <td><a href="#" onclick="removetr(this)">删除</a></td>
-    				                </tr>
+    								
     			                </tbody>
     							</table>
     							<div class="m-addbatch-btn">

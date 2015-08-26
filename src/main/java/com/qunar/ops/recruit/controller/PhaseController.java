@@ -17,6 +17,7 @@ import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.service.InterviewerService;
+import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.PhaseService;
 import com.qunar.ops.recruit.util.RecruitConst;
 
@@ -27,6 +28,8 @@ public class PhaseController {
 	private PhaseService phService;
 	@Autowired
 	private InterviewerService interService;
+	@Autowired
+	private PhaseInterviewService piService;
 	/**
 	 * 期次管理
 	 * @param request
@@ -60,12 +63,34 @@ public class PhaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/hr/gotoaddPhaseInfos")
-	public String gotoaddPhaseInfos(HttpServletRequest request,String yearinfo,String phasename, ModelMap model) {
-		Phase ph = (Phase) phService.getPhaseInfoBy(yearinfo,phasename);
+	public String gotoaddPhaseInfos(HttpServletRequest request, ModelMap model,@RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		Phase ph = (Phase) phService.getPhaseInfoBy(vars.get("yearinfo"),vars.get("phasename"));
 		List<Interviewer> list =  interService.getInterviewers();
 		model.addAttribute("ph", ph);
 		model.addAttribute("list", list);
 		return "/add_phase";
+	}
+	
+	/**
+	 * goto添加期次页面
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/hr/addAllcity")
+	@ResponseBody
+	public BaseResult addAllcity(HttpServletRequest request, ModelMap model,@RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		String phase=vars.get("phase");
+		String year=vars.get("year");
+		String all_value=vars.get("all_value");
+		if(all_value!=null && !"".equals(all_value)){
+			piService.addPhaseInterviewInfo(all_value,phase,year);
+			return BaseResult.getSuccessResult("success");
+		}else{
+			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_PHASE_INTERVIEW_ERROR_MSG);
+		}
 	}
 	
 }
