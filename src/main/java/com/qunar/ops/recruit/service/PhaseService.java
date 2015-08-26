@@ -69,5 +69,24 @@ public class PhaseService {
 		return null;
 	}
 
+	public List<Phase> getPhases() {
+		PhaseExample example = new PhaseExample();
+		PhaseExample.Criteria criteria = example.createCriteria();
+		example.setOrderByClause("id desc");
+		List<Phase> list = phMapper.selectByExample(example);
+		return list;
+	}
+
+	public Phase getCityByPhase(String phase) {
+		PhaseExample example = new PhaseExample();
+		PhaseExample.Criteria criteria = example.createCriteria();
+		criteria.andPhaseNameEqualTo(phase);
+		List<Phase> list = phMapper.selectByExample(example);
+		if(list != null && list.size() > 0){
+			return list.get(0);
+		}
+		return null;
+	}
+
 	
 }

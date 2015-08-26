@@ -41,6 +41,8 @@ public class RecruitConst {
 	public static final int ALREADY_EXIST_USER_ERROR = 110;
 	public static final String ALREADY_EXIST_USER_ERROR_MSG = "用户名已经存在";
 	public static String USERNAM_OR_PASSWORD_ERROR_MSG = "用户名或密码错误";
+	public static String phase;
+	public static String city;
 	public static final String ALREADY_EXIST_YEAR_PHASE_ERROR_MSG = "批次已经存在";
 	public static final String ALREADY_EXIST_PHASE_INTERVIEW_ERROR_MSG = "添加失败";
 }
