@@ -9,9 +9,9 @@
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/js/recruit/view.js"></script>
 	<script type="text/javascript" src="/static/js/recruit/phase.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/recordphasecity.js"></script>
 </head>
 <body>
-	<div class="l-fullsreen">
 		<div class="l-nav">
 			<div class="m-title">
 				<h1>校招系统</h1>	
@@ -41,10 +41,6 @@
 				</ul>
 			</div>
 		</div>
-		<div class="l-container">
-			<!--<div class="l-sidebar"></div>-->
-			<div id="content" class="l-content"></div>
-		</div>
-	</div>
+		<div class="l-container" id="content"></div>
 </body>
 </html>

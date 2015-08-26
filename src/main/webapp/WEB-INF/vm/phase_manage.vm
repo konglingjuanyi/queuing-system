@@ -12,7 +12,7 @@
 	<script type="text/javascript" src="/static/js/recruit/view.js"></script>
 </head>
 <body>
-	<div class="l-fullsreen">
+	 <div class="l-fullsreen">
 		<div class="l-container">
 			<div class="l-content">
 				<div class="l-inner">

@@ -65,4 +65,13 @@ public class CommonController {
 		return "success";
 	}
 	
+	@RequestMapping(value = "/getFirstPhases")
+	@ResponseBody
+	public String getFirstPhases(HttpServletRequest request,HttpServletResponse response) {
+		List<Student> l1 = ss.getOneList();
+		List<Student> l2 = ss.getTwoList();
+		ws.recovery(l1, l2);
+		return "success";
+	}
+	
 }
