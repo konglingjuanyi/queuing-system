@@ -13,6 +13,35 @@
 </head>
 <body>
 	<div class="l-fullsreen">
+		<div class="l-nav">
+			<div class="m-title">
+				<h1>校招系统</h1>	
+				<select name="" id="">
+					<option value="">2015秋季校招</option>
+					<option value="">2015秋季校招1</option>
+					<option value="">2015秋季校招2</option>
+					<option value="">2015秋季校招3</option>
+				</select>
+				<select name="" id="">
+					<option value="">北京</option>
+					<option value="">北京</option>
+					<option value="">北京</option>
+					<option value="">北京</option>
+				</select>
+			</div>
+			<div class="m-nav">
+				<ul class="nav nav-tabs">
+					<li id="firstpage">
+						<a href="/login">首页</a>
+					</li>
+					<li id="viewsatge"><a href="#">面试平台</a></li>
+					<li id="viewpage"><a href="javascript:void(0);" id="view_list">面试官监控</a></li>
+					<li id="managepage"><a href="javascript:void(0);" id="manage_list">面试官管理</a></li>
+					<li id="stupage"><a href="#">候选人管理</a></li>
+					<li id="phasepage" class="active"><a href="javascript:void(0);" id="phase_list">批次管理</a></li>
+				</ul>
+			</div>
+		</div>
 		<div class="l-container">
 			<div class="l-content">
 				<div class="l-inner">

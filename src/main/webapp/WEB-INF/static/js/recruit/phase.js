@@ -1,11 +1,6 @@
 $(document).ready(function () {
 	$('#phase_list').click(function(){
-		$("#firstpage").removeClass("active");
-		$("#viewsatge").removeClass("active");
-		$("#stupage").removeClass("active");
-		$("#viewpage").removeClass("active");
-		$("#phasepage").addClass("active");
-		$('#content').load('/hr/getPhaseInfos');
+		window.location.href="/hr/getPhaseInfos";
 	});
 	
 	
@@ -63,7 +58,7 @@ function doAddPhase(){
 }
 
 function addOrupd(yearinfo,phasename){
-	$('#content').load('/hr/gotoaddPhaseInfos?yearinfo='+yearinfo+'&phasename='+phasename); 
+	window.location.href='/hr/gotoaddPhaseInfos?yearinfo='+yearinfo+'&phasename='+phasename; 
 }
 
 function doAddCity(){
@@ -83,19 +78,51 @@ function doAddCity(){
 	if(success==false){
 		return false;
 	}else{
+		var href_ = "showView('td"+cityname+"')";
 		$("#bodyid").append("<tr>"
 				+"<td>"+cityname+"</td>"
-				+"<td><a href='#'>添加面试官</a></td>"
+				+"<td><a href='javascript:void(0)' onclick="+href_+">添加面试官</a></td>"
 				+"<td id=td"+cityname+"></td>"
-				+"<td><a href='#'>删除</a></td>"
+				+"<td><a href='#' onclick='removetr(this)'>删除</a></td>"
 				+"</tr>"
 		);
 	}
 	$("#cityname").val("");
 }
 
-function showView(){
+function showView(id){
+	$("#viewid").val(id);
 	$("#allview").css("display","");
+}
+
+function doaddview(){
+	var viewid=$("#viewid").val().trim();
+	var view_name =[];
+	$('input[name="viewnames"]:checked').each(function(){    
+		view_name.push($(this).val());    
+	});
+	if(view_name.length==0){
+		alert("至少选择一个面试官");
+		return false;
+	}
+	for(var i=0;i<view_name.length;i++){
+		$("#"+viewid).append("<label class='control-label' for='inputEmail'>"
+				+view_name[i]+"<input class='input-mini' type='text' id='in"+view_name[i]+"' placeholder='房间号'>"
+				+"</label>"
+		);
+	}
+	doclose();
+}
+
+function doclose(){
+	$("#allview").css("display","none");
+	$("input[type=checkbox]").each(function(){
+		$(this).attr("checked",false);
+	});
+}
+
+function removetr(obj){
+	 $(obj).parent().parent().remove(); 
 }
 
 

@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
+import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.PhaseService;
 import com.qunar.ops.recruit.util.RecruitConst;
 
@@ -23,6 +25,8 @@ public class PhaseController {
 	
 	@Autowired
 	private PhaseService phService;
+	@Autowired
+	private InterviewerService interService;
 	/**
 	 * 期次管理
 	 * @param request
@@ -58,7 +62,9 @@ public class PhaseController {
 	@RequestMapping(value = "/hr/gotoaddPhaseInfos")
 	public String gotoaddPhaseInfos(HttpServletRequest request,String yearinfo,String phasename, ModelMap model) {
 		Phase ph = (Phase) phService.getPhaseInfoBy(yearinfo,phasename);
+		List<Interviewer> list =  interService.getInterviewers();
 		model.addAttribute("ph", ph);
+		model.addAttribute("list", list);
 		return "/add_phase";
 	}
 	
