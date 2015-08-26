@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.ibatis.logging.LogException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,7 @@ import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
 import com.qunar.ops.recruit.service.InterviewerService;
+import com.qunar.ops.recruit.service.JoinService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.WaitService;
 import com.qunar.ops.recruit.util.RecruitConst;
@@ -37,6 +37,8 @@ public class HrController {
 	StudentService studentService;
 	@Autowired
 	WaitService waitService;
+	@Autowired
+	JoinService joinService;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
@@ -107,7 +109,7 @@ public class HrController {
 		String year = "2015";
 		String phase = "秋季校园招聘";
 		String city = "北京";
-		List<Interviewer> list = interService.getInterviewers();
+		List<Interviewer> list = null;
 		logger.error("list.size()==>"+list.size());
 		System.out.println("list size()"+list);
 		List<ResultPlusAdditionalInfo> rets = new LinkedList<ResultPlusAdditionalInfo>();

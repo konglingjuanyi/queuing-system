@@ -37,10 +37,10 @@
         	<generatedKey column="id" identity="true" sqlStatement="select currval('student_info_id_seq')"/>
         </table>
         <table tableName="phase_info" domainObjectName="Phase" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id_" identity="true" sqlStatement="select currval('phase_info_id_seq')"/>
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('phase_info_id_seq')"/>
         </table>
         <table tableName="hr_info" domainObjectName="Hr" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id_" identity="true" sqlStatement="select currval('hr_info_id_seq')"/>
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('hr_info_id_seq')"/>
         </table>
         <table tableName="student_assess" domainObjectName="StudentAssess" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('student_assess_id_seq')"/>
