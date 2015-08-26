@@ -2,6 +2,7 @@ package com.qunar.ops.recruit.service;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,39 @@ public class PhaseService {
 		// TODO Auto-generated method stub
 		PhaseExample ie = new PhaseExample();
 		return phMapper.selectByExample(ie);
+	}
+
+	public Phase createPhaseInfo(Map<String, String> vars) {
+		// TODO Auto-generated method stub
+		Phase ph = new Phase();
+		String yearInfo=vars.get("yearInfo");
+		String phaseName=vars.get("phaseName");
+		String id=vars.get("updid");
+		if(id!=null){
+			ph.setId(Integer.parseInt(id));
+		}
+		ph.setCityName("");
+		ph.setPhaseName(phaseName);
+		ph.setYearInfo(yearInfo);
+		return ph;
+	}
+
+	public Object getPhaseInfoBy(String yearInfo, String phaseName) {
+		// TODO Auto-generated method stub
+		PhaseExample example = new PhaseExample();
+		PhaseExample.Criteria criteria = example.createCriteria();
+		criteria.andYearInfoEqualTo(yearInfo);
+		criteria.andPhaseNameEqualTo(phaseName);
+		List<Phase> inter = phMapper.selectByExample(example);
+		if(inter != null && inter.size() > 0){
+			return inter.get(0);
+		}
+		return null;
+	}
+
+	public void addPhaseInfo(Phase inter) {
+		// TODO Auto-generated method stub
+		phMapper.insert(inter);
 	}
 
 	

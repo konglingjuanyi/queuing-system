@@ -134,13 +134,13 @@
 						            </table>
 								</div>
 							</div>
-							<div class="modal-footer" style="text-align:center;">
+						</form>
+					</div>
+					<div class="modal-footer" style="text-align:center;">
 								<div>
 								  <button id="addview" type="button" class="btn ">保存</button>
 								  <button type="button" class="btn " onclick="doclose()">取消</button>
 								</div>
-							</div>
-						</form>
 					</div>
 				</div>
 				<div id="updform" class="l-inner modal hide fade in" style="display: none;">

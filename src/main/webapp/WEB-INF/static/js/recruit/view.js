@@ -1,5 +1,10 @@
 $(document).ready(function () {
 	$('#view_list').click(function(){
+		$("#firstpage").removeClass("active");
+		$("#viewsatge").removeClass("active");
+		$("#stupage").removeClass("active");
+		$("#phasepage").removeClass("active");
+		$("#viewpage").addClass("active");
 		$('#content').load('/hr/getInterviewers');
 	});
 	
