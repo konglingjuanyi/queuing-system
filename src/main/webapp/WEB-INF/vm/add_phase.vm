@@ -17,12 +17,12 @@
 					<div class="m-addbatch-hd">
                 		<div class="form-inline">
                 		<label class="control-label" for="">年份</label>
-                    	$ph
+                    	<input type="text" class="input-small" placeholder="必填" value="$ph.yearInfo" disabled>
                     	<label class="control-label" for="">批次名称</label>
-                    	$ph
+                    	<input type="text" placeholder="必填" value="$ph.phaseName" disabled>
                     	<label class="control-label" for="">城市</label>
-                    	<input type="text" class="input-small" placeholder="必填">
-                    	<button type="button" class="btn">添加</button>
+                    	<input type="text" id="cityname" name="cityname" class="input-small" placeholder="必填">
+                    	<button type="button" class="btn" id="addcity">添加</button>
                 		</div>
             		</div>
             		<div class="l-content">
@@ -30,10 +30,10 @@
             				<div class="m-addbatch-bd">
     							<div class="form-horizontal">
     							<table class="table">
-    							<tbody>
+    							<tbody id="bodyid">
     								<tr>
     									<td>北京</td>
-    									<td><a href="#">添加面试官</a></td>
+    									<td><a href="javascript:void(0);" onclick="showView()">添加面试官</a></td>
     									<td>
     										<label class="control-label" for="inputEmail">
     											刘玥
@@ -58,7 +58,7 @@
     							</div>
     						</div>
     					</div>
-				<div class="m-pop alert alert-info" style="display:none">
+				<div id="allview" class="m-pop alert alert-info" style="display:none">
 					<div class="m-pop-hd">
 						<button type="button" class="close" data-dismiss="alert">&times;</button>
 					</div>
@@ -84,7 +84,6 @@
 								  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
 								</label>
 							</div>
-
 						</div>
 					</div>
 					<div class="m-pop-ft">
