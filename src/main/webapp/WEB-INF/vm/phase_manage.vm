@@ -9,6 +9,7 @@
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
 	<script type="text/javascript" src="/static/js/recruit/phase.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/view.js"></script>
 </head>
 <body>
 	<div class="l-fullsreen">
@@ -34,7 +35,7 @@
 			                  <td>$info.cityName</td>
 			                  <td>
 			                  	<a href="#">查看</a>
-			                  	<a href="#" id="edit" onclick="addOrupd($info.yearInfo,$info.phaseName)">添加或修改</a>
+			                  	<a href="#" id="edit" onclick="addOrupd('$info.yearInfo','$info.phaseName')">添加或修改</a>
 			                  </td>
 			                </tr>
 			                #end

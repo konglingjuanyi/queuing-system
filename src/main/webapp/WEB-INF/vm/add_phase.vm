@@ -17,9 +17,9 @@
 					<div class="m-addbatch-hd">
                 		<div class="form-inline">
                 		<label class="control-label" for="">年份</label>
-                    	<input type="text" class="input-small" placeholder="必填">
+                    	$ph
                     	<label class="control-label" for="">批次名称</label>
-                    	<input type="text" placeholder="必填">
+                    	$ph
                     	<label class="control-label" for="">城市</label>
                     	<input type="text" class="input-small" placeholder="必填">
                     	<button type="button" class="btn">添加</button>

@@ -56,7 +56,11 @@ public class PhaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/hr/gotoaddPhaseInfos")
-	public String gotoaddPhaseInfos(HttpServletRequest request,  ModelMap model) {
+	public String gotoaddPhaseInfos(HttpServletRequest request,String yearinfo,String phasename, ModelMap model) {
+		System.out.println(yearinfo+"============"+phasename);
+		Phase ph = (Phase) phService.getPhaseInfoBy(yearinfo,phasename);
+		System.out.println(ph.getPhaseName());
+		model.addAttribute("ph", ph);
 		return "/add_phase";
 	}
 	

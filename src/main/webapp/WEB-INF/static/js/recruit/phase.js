@@ -10,7 +10,6 @@ $(document).ready(function () {
 	
 	
 	$('#showPhase').click(function(){
-		//$('#content').load('/hr/gotoaddPhaseInfos');
 		$("#addphaseform").modal("show");
 	});
 	
@@ -57,8 +56,8 @@ function doAddPhase(){
                alert("系统发生了错误请稍后重试");
           }
    });
-    
-function addOrupd(yearinfo,phasename){
-	
 }
+
+function addOrupd(yearinfo,phasename){
+	$('#content').load('/hr/gotoaddPhaseInfos?yearinfo='+yearinfo+'&phasename='+phasename); 
 }
