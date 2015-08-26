@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.service.PhaseService;
 import com.qunar.ops.recruit.service.StudentService;
@@ -95,11 +96,13 @@ public class CommonController {
 	
 	@RequestMapping(value = "/updateOprateCity")
 	@ResponseBody
-	public void updateOprateCity(HttpServletRequest request,HttpServletResponse response, @RequestBody CommonRequest commonRequest) {
-		
+	public BaseResult updateOprateCity(HttpServletRequest request,HttpServletResponse response, @RequestBody CommonRequest commonRequest) {
+		System.out.println("=====");
 		Map<String, String> vars = commonRequest.getVars();
 		String city = vars.get("city");
+		System.out.println(city);
 		RecruitConst.city = city;
+		return BaseResult.getSuccessResult("success");
 	}
 	
 	private void updatePhaseAndCity(Phase phase) {
