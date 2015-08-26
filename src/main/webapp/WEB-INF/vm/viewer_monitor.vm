@@ -30,11 +30,11 @@
 			</div>
 			<div class="m-nav">
 				<ul class="nav nav-tabs">
-					<li id="firstpage" class="active">
+					<li id="firstpage">
 						<a href="/login">首页</a>
 					</li>
 					<li id="viewsatge"><a href="#">面试平台</a></li>
-					<li id="viewpage"><a href="javascript:void(0);" id="view_list">面试官监控</a></li>
+					<li id="viewpage" class="active"><a href="javascript:void(0);" id="view_list">面试官监控</a></li>
 					<li id="managepage"><a href="javascript:void(0);" id="manage_list">面试官管理</a></li>
 					<li id="stupage"><a href="#">候选人管理</a></li>
 					<li id="phasepage"><a href="javascript:void(0);" id="phase_list">批次管理</a></li>
@@ -45,10 +45,6 @@
 			<div class="l-content">
 				<div class="l-inner">
 					<div class="m-manage">
-						<div class="m-manage-hd">
-							<button id="doadd" class="btn btn-info" type="button">添加面试官</button>
-							<!--<button class="btn btn-info" type="button">批量导入</button>-->
-						</div>
 						<div class="m-manage-bd">
 							<table class="table  table-striped table-bordered">
 				              <thead>
@@ -58,6 +54,8 @@
 				                  <th>初试</th>
 				                  <th>复试</th>
 				                  <th>一次决定权</th>
+				                  <th>初试人数</th>
+				                  <th>复试人数</th>
 				                  <th>操作</th>
 				                </tr>
 				              </thead>
@@ -69,190 +67,16 @@
 				                  <td>$info.obj.oneView</td>
 				                  <td>$info.obj.twoView</td>
 				                  <td>$info.obj.determine</td>
+				                  <td>$info.additionalInfos.get(0)</td>
+				                  <td>$info.additionalInfos.get(1)</td>
 				                  <td>
-				                  	<a href="#" id="upd" onclick="doUpd($info.obj.id,$info.obj.password)">修改</a>
-				                  	<a href="#" id="del" onclick="doDel($info.obj.id)">删除</a>
+				                  	<a href="#" id="sel" onclick="doSel($info.obj.id)">查看</a>
 				                  </td>	
 				                </tr>
 				                #end
 				              </tbody>
 				            </table>
 						</div>
-					</div>
-				</div>
-				<div id="addform" class="l-inner modal hide fade in" style="display: none;">
-					<div class="modal-header" style="text-align:center">
-        				<a class="close" data-dismiss="modal" onclick="doclose()">×</a>
-        				<h3>添加面试官</h3>
-    				</div>
-					<div class="modal-body">
-						<form class="form-horizontal">
-							<div class="control-group">
-								<label class="control-label" for="name">面试官姓名</label>
-								<div class="controls">
-								  <input type="text" id="userName" placeholder="必填">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="job">职位</label>
-								<div class="controls">
-								  <input type="text" id="job" placeholder="必填">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="password">密码</label>
-								<div class="controls">
-								  <input type="password" id="password" placeholder="必填">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="project">面试项目</label>
-								<div class="controls">
-									<table class="table table-bordered">
-						              <thead>
-						                <tr>
-						                  <th></th>
-						                  <th>初试</th>
-						                  <th>复试</th>
-						                  <th>一次决定权</th>
-						                </tr>
-						              </thead>
-						              <tbody>
-											<tr>
-												<td>RD</td>
-												<td>
-													<input id="firstid" name="firstname" type="checkbox"  value="RD">
-												</td>
-												<td>
-													<input id="secondid" name="secondname" type="checkbox"  value="RD">
-												</td>
-												<td>
-													<input id="finishid" name="finishname" type="checkbox"  value="RD">
-												</td>
-											</tr>
-											<tr>
-												<td>FE</td>
-												<td>
-													<input id="firstid" name="firstname" type="checkbox"  value="FE">
-												</td>
-												<td>
-													<input id="secondid" name="secondname" type="checkbox"  value="FE">
-												</td>
-												<td>
-													<input id="finishid" name="finishname" type="checkbox"  value="FE">
-												</td>
-											</tr>
-											<tr>
-												<td>QA</td>
-												<td>
-													<input id="firstid" name="firstname" type="checkbox"  value="QA">
-												</td>
-												<td>
-													<input id="secondid" name="secondname" type="checkbox"  value="QA">
-												</td>
-												<td>
-													<input id="finishid" name="finishname" type="checkbox"  value="QA">
-												</td>
-											</tr>
-						              </tbody>
-						            </table>
-								</div>
-							</div>
-						</form>
-					</div>
-					<div class="modal-footer" style="text-align:center;">
-								<div>
-								  <button id="addview" type="button" class="btn ">保存</button>
-								  <button type="button" class="btn " onclick="doclose()">取消</button>
-								</div>
-					</div>
-				</div>
-				<div id="updform" class="l-inner modal hide fade in" style="display: none;">
-					<div class="modal-header" style="text-align:center">
-        				<a class="close" data-dismiss="modal" onclick="doclose()">×</a>
-        				<h3>修改面试官</h3>
-    				</div>
-					<div class="modal-body">
-						<form class="form-horizontal">
-							<input type="hidden" id="updid" name="updid" value="">
-							<div class="control-group">
-								<label class="control-label" for="name">面试官姓名</label>
-								<div class="controls">
-								  <input type="text" id="upduserName" placeholder="必填">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="job">职位</label>
-								<div class="controls">
-								  <input type="text" id="updjob" placeholder="必填">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="password">密码</label>
-								<div class="controls">
-								  <input type="text" id="updpassword" placeholder="必填">
-								</div>
-							</div>
-							<div class="control-group">
-								<label class="control-label" for="project">面试项目</label>
-								<div class="controls">
-									<table class="table table-bordered">
-						              <thead>
-						                <tr>
-						                  <th></th>
-						                  <th>初试</th>
-						                  <th>复试</th>
-						                  <th>一次决定权</th>
-						                </tr>
-						              </thead>
-						              <tbody>
-											<tr>
-												<td>RD</td>
-												<td>
-													<input id="updfirstid" name="updfirstname" type="checkbox"  value="RD">
-												</td>
-												<td>
-													<input id="updsecondid" name="updsecondname" type="checkbox"  value="RD">
-												</td>
-												<td>
-													<input id="updfinishid" name="updfinishname" type="checkbox"  value="RD">
-												</td>
-											</tr>
-											<tr>
-												<td>FE</td>
-												<td>
-													<input id="updfirstid" name="updfirstname" type="checkbox"  value="FE">
-												</td>
-												<td>
-													<input id="updsecondid" name="updsecondname" type="checkbox"  value="FE">
-												</td>
-												<td>
-													<input id="updfinishid" name="updfinishname" type="checkbox"  value="FE">
-												</td>
-											</tr>
-											<tr>
-												<td>QA</td>
-												<td>
-													<input id="updfirstid" name="updfirstname" type="checkbox"  value="QA">
-												</td>
-												<td>
-													<input id="updsecondid" name="updsecondname" type="checkbox"  value="QA">
-												</td>
-												<td>
-													<input id="updfinishid" name="updfinishname" type="checkbox"  value="QA">
-												</td>
-											</tr>
-						              </tbody>
-						            </table>
-								</div>
-							</div>
-							<div class="modal-footer" style="text-align:center;">
-								<div>
-								  <button id="updview" type="button" class="btn ">保存</button>
-								  <button type="button" class="btn" onclick="doclose()">取消</button>
-								</div>
-							</div>
-						</form>
 					</div>
 				</div>
 				<div id="getform" class="l-inner modal hide fade in" style="display: none;">

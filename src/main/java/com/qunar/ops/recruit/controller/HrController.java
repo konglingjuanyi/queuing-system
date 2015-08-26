@@ -120,6 +120,22 @@ public class HrController {
 			rets.add(info);
 		}
 		model.addAttribute("message", rets);
+		return "/viewer_monitor";
+	}
+	
+	@RequestMapping(value = "/hr/getInterviewersForManage")
+	public String getInterviewersForManage(HttpServletRequest request,  ModelMap model) {
+		String year = "2015";
+		String phase = "秋季校园招聘";
+		String city = "北京";
+		List<Interviewer> list =  interService.getInterviewers();
+		List<ResultPlusAdditionalInfo> rets = new LinkedList<ResultPlusAdditionalInfo>();
+		for (Interviewer interviewer : list) {
+			ResultPlusAdditionalInfo info = new ResultPlusAdditionalInfo();
+			info.setObj(interviewer);
+			rets.add(info);
+		}
+		model.addAttribute("message", rets);
 		return "/viewer_manage";
 	}
 

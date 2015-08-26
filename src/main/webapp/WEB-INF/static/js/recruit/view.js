@@ -1,11 +1,9 @@
 $(document).ready(function () {
 	$('#view_list').click(function(){
-		$("#firstpage").removeClass("active");
-		$("#viewsatge").removeClass("active");
-		$("#stupage").removeClass("active");
-		$("#phasepage").removeClass("active");
-		$("#viewpage").addClass("active");
-		$('#content').load('/hr/getInterviewers');
+		window.location.href = '/hr/getInterviewers';
+	});
+	$('#manage_list').click(function(){
+		window.location.href = '/hr/getInterviewersForManage';
 	});
 	
 	$('#doadd').click(function(){
@@ -70,7 +68,7 @@ function addViewer(){
           success: function (returnedData) {
         	  if(returnedData.errorCode==0){
         		  $("#addform").modal("hide");
-            	  $('#content').load('/hr/getInterviewers'); 
+            	  $('#content').load('/hr/getInterviewersForManage'); 
         	  }else{
         		  alert(returnedData.errorMessage);
         	  }
@@ -175,7 +173,7 @@ function updViewer(){
           success: function (returnedData) {
         	  	if(returnedData.errorCode==0){
         	  		$("#updform").modal("hide");
-            	  	$('#content').load('/hr/getInterviewers');
+            	  	$('#content').load('/hr/getInterviewersForManage');
           	  }else{
           		  alert(returnedData.errorMessage);
           	  }
@@ -194,7 +192,7 @@ function doDel(id){
 	        dataType: "json",
 	        data: {'id':id},
 	        success: function (returnedData) {
-	      	  	$('#content').load('/hr/getInterviewers');
+	      	  	$('#content').load('/hr/getInterviewersForManage');
 			  },
 	        error: function () {
 	              alert("系统发生了错误请稍后重试");
