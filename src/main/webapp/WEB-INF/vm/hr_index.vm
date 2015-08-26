@@ -16,16 +16,8 @@
 			<div class="m-title">
 				<h1>校招系统</h1>	
 				<select name="" id="phase">
-					<option value="">2015秋季校招</option>
-					<option value="">2015秋季校招1</option>
-					<option value="">2015秋季校招2</option>
-					<option value="">2015秋季校招3</option>
 				</select>
 				<select name="" id="city">
-					<option value="">北京</option>
-					<option value="">北京</option>
-					<option value="">北京</option>
-					<option value="">北京</option>
 				</select>
 			</div>
 			<div class="m-nav" style="width:600px">

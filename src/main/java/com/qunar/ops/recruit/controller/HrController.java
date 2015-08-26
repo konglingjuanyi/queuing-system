@@ -91,6 +91,7 @@ public class HrController {
 
 	@RequestMapping(value = "/hr/getInterviewers")
 	public String getInterviewers(HttpServletRequest request,  ModelMap model) {
+		System.out.println(RecruitConst.city+" "+RecruitConst.phase); 
 //		System.out.println("===========================");
 //		Map<String, String> vars = commonRequest.getVars();
 //		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
