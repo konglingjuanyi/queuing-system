@@ -9,13 +9,14 @@
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
 	<script type="text/javascript" src="/static/js/recruit/phase.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/view.js"></script>
 </head>
 <body>
 	<div class="l-fullsreen">
 		<div class="l-container">
 			<div class="l-content">
 				<div class="l-inner">
-					<button class="btn btn-info" type="button" id="addphase">新建批次</button>
+					<button class="btn btn-info" type="button" id="showPhase">新建批次</button>
 					<div class="m-table">
 						<table class="table  table-striped table-bordered">
 			              <thead>
@@ -32,18 +33,45 @@
 			                  <td>$info.yearInfo</td>
 			                  <td>$info.phaseName</td>
 			                  <td>$info.cityName</td>
-			                  <td><a href="#">查看</a></td>
+			                  <td>
+			                  	<a href="#">查看</a>
+			                  	<a href="#" id="edit" onclick="addOrupd('$info.yearInfo','$info.phaseName')">添加或修改</a>
+			                  </td>
 			                </tr>
 			                #end
 			              </tbody>
 			            </table>
 					</div>
 				</div>
-				<!-- 内容start -->
-				
-				
-				<!-- 内容end -->
 			</div>
+		</div>
+		<div id="addphaseform" class="l-inner modal hide fade in" style="display:none;">
+					<div class="modal-header" style="text-align:center">
+        				<a class="close" data-dismiss="modal" onclick="doclose()">×</a>
+        				<h3>添加批次</h3>
+    				</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+                			<div class="control-group">
+								<label class="control-label" for="yearInfo">年份</label>
+								<div class="controls">
+								  <input type="text" id="yearInfo" placeholder="必填">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="phaseName">批次名称</label>
+								<div class="controls">
+								  <input type="text" id="phaseName" placeholder="必填">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer" style="text-align:center;">
+						<div>
+							<button id="addPhase" type="button" class="btn">添加</button>
+                    		<button onclick="doclose()" type="button" class="btn">取消</button>
+						</div>
+					</div>
 		</div>
 	</div>
 </body>

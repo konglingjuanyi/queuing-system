@@ -30,13 +30,13 @@
 			</div>
 			<div class="m-nav">
 				<ul class="nav nav-tabs">
-					<li class="active">
+					<li id="firstpage" class="active">
 						<a href="/login">首页</a>
 					</li>
-					<li><a href="#">面试平台</a></li>
-					<li><a href="javascript:void(0);" id="view_list">面试官管理</a></li>
-					<li><a href="#">候选人管理</a></li>
-					<li><a href="javascript:void(0);" id="phase_list">批次管理</a></li>
+					<li id="viewsatge"><a href="#">面试平台</a></li>
+					<li id="viewpage"><a href="javascript:void(0);" id="view_list">面试官管理</a></li>
+					<li id="stupage"><a href="#">候选人管理</a></li>
+					<li id="phasepage"><a href="javascript:void(0);" id="phase_list">批次管理</a></li>
 				</ul>
 			</div>
 		</div>
