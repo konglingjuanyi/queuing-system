@@ -46,4 +46,8 @@ public class RecruitConst {
 	public static String year;
 	public static final String ALREADY_EXIST_YEAR_PHASE_ERROR_MSG = "批次已经存在";
 	public static final String ALREADY_EXIST_PHASE_INTERVIEW_ERROR_MSG = "添加失败";
+	public static final String ALREADY_EXIST_IMPORT_ERROR_MSG = "请选择正确格式的Excel文件";
+	public static final String ALREADY_EXIST_SIZE_ERROR_MSG = "选择导入的文件太大";
+	public static final String ALREADY_EXIST_IMPORT_SUCCESS_MSG = "导入成功";
+	public static final String ALREADY_EXIST_IMPORT_FAILE_MSG = "导入失败";
 }
