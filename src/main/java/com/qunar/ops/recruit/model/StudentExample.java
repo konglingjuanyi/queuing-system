@@ -2944,6 +2944,216 @@ public class StudentExample {
             addCriterion("one_overtime not between", value1, value2, "oneOvertime");
             return (Criteria) this;
         }
+
+        public Criteria andStateIsNull() {
+            addCriterion("state is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateIsNotNull() {
+            addCriterion("state is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateEqualTo(String value) {
+            addCriterion("state =", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateNotEqualTo(String value) {
+            addCriterion("state <>", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateGreaterThan(String value) {
+            addCriterion("state >", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateGreaterThanOrEqualTo(String value) {
+            addCriterion("state >=", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateLessThan(String value) {
+            addCriterion("state <", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateLessThanOrEqualTo(String value) {
+            addCriterion("state <=", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateLike(String value) {
+            addCriterion("state like", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateNotLike(String value) {
+            addCriterion("state not like", value, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateIn(List<String> values) {
+            addCriterion("state in", values, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateNotIn(List<String> values) {
+            addCriterion("state not in", values, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateBetween(String value1, String value2) {
+            addCriterion("state between", value1, value2, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andStateNotBetween(String value1, String value2) {
+            addCriterion("state not between", value1, value2, "state");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerIsNull() {
+            addCriterion("assigned_interviewer is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerIsNotNull() {
+            addCriterion("assigned_interviewer is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerEqualTo(String value) {
+            addCriterion("assigned_interviewer =", value, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerNotEqualTo(String value) {
+            addCriterion("assigned_interviewer <>", value, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerGreaterThan(String value) {
+            addCriterion("assigned_interviewer >", value, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerGreaterThanOrEqualTo(String value) {
+            addCriterion("assigned_interviewer >=", value, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerLessThan(String value) {
+            addCriterion("assigned_interviewer <", value, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerLessThanOrEqualTo(String value) {
+            addCriterion("assigned_interviewer <=", value, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerLike(String value) {
+            addCriterion("assigned_interviewer like", value, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerNotLike(String value) {
+            addCriterion("assigned_interviewer not like", value, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerIn(List<String> values) {
+            addCriterion("assigned_interviewer in", values, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerNotIn(List<String> values) {
+            addCriterion("assigned_interviewer not in", values, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerBetween(String value1, String value2) {
+            addCriterion("assigned_interviewer between", value1, value2, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andAssignedInterviewerNotBetween(String value1, String value2) {
+            addCriterion("assigned_interviewer not between", value1, value2, "assignedInterviewer");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearIsNull() {
+            addCriterion("year is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearIsNotNull() {
+            addCriterion("year is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearEqualTo(String value) {
+            addCriterion("year =", value, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearNotEqualTo(String value) {
+            addCriterion("year <>", value, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearGreaterThan(String value) {
+            addCriterion("year >", value, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearGreaterThanOrEqualTo(String value) {
+            addCriterion("year >=", value, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearLessThan(String value) {
+            addCriterion("year <", value, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearLessThanOrEqualTo(String value) {
+            addCriterion("year <=", value, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearLike(String value) {
+            addCriterion("year like", value, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearNotLike(String value) {
+            addCriterion("year not like", value, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearIn(List<String> values) {
+            addCriterion("year in", values, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearNotIn(List<String> values) {
+            addCriterion("year not in", values, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearBetween(String value1, String value2) {
+            addCriterion("year between", value1, value2, "year");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearNotBetween(String value1, String value2) {
+            addCriterion("year not between", value1, value2, "year");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

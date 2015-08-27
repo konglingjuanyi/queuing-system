@@ -87,6 +87,12 @@ public class Student {
 
     private Date oneOvertime;
 
+    private String state;
+
+    private String assignedInterviewer;
+
+    private String year;
+
     public Integer getId() {
         return id;
     }
@@ -421,5 +427,29 @@ public class Student {
 
     public void setOneOvertime(Date oneOvertime) {
         this.oneOvertime = oneOvertime;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state == null ? null : state.trim();
+    }
+
+    public String getAssignedInterviewer() {
+        return assignedInterviewer;
+    }
+
+    public void setAssignedInterviewer(String assignedInterviewer) {
+        this.assignedInterviewer = assignedInterviewer == null ? null : assignedInterviewer.trim();
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year == null ? null : year.trim();
     }
 }
