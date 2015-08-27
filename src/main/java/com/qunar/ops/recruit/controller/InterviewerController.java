@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -168,40 +168,58 @@ public class InterviewerController {
 	 * @return
 	 */
 	@RequestMapping(value = "/interview/getNextStudent")
-	public String getNextStudent(HttpServletRequest request) {
-//		Object obj = request.getSession().getAttribute("user");
-//		if(obj != null){
-//			if(obj instanceof Interviewer){
-//				Interviewer inter = (Interviewer) obj;
-//				Interviewer newInter = interServe.getInterviewerByUserName(inter.getUserName());
-//				StudentWaiter  stu;
-//				if(inter.getTwoView() !=null && !"".equals(inter.getTwoView())){
-//					//如果面试官的二面角色不为空,先从二面队列中拿数据
-//					//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
-//					stu = waitService.getTwoView(inter.getCity(),inter.getTwoView(),inter.getUserName());
-//					if(stu==null && !"".equals(inter.getOneView())){
-//						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
-//						stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
-//					}
-//				}else{
-//					//只有一面角色从一面队列中拿数据`
-//					stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
-//				}
-//				if(stu == null){
-//					return null;
-//				}else{
-//					
-//					return null;
-//				}
-//			}else{
-//				//不是interviewer，無權訪問
-//				return "redirect:/login";
-//			}
-//		}else{
-//			return "redirect:/login";
-//		}
-		
-		return "first";
+	public String getNextStudent(HttpServletRequest request, HttpSession session, ModelMap mm) {
+		System.out.println("******************************");
+		Object obj = request.getSession().getAttribute("user");
+		if(obj != null){
+			if(obj instanceof Interviewer){
+				Interviewer inter = (Interviewer) obj;
+				Interviewer newInter = interServe.getInterviewerByUserName(inter.getUserName());
+				String year = (String)session.getAttribute("year");
+				String phase = (String)session.getAttribute("phase");
+				String city = (String)session.getAttribute("city");
+				PhaseInterviewer pi = pis.getPhaseInterviewerBy(year, phase, city, inter.getUserName());
+				StudentWaiter  stuW;
+				int oneOrtwo = 1;
+				if(inter.getTwoView() !=null && !"".equals(inter.getTwoView())){
+					//如果面试官的二面角色不为空,先从二面队列中拿数据
+					//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
+					oneOrtwo = 2;
+					stuW = waitService.removeHighestPriorityFromTwoList(year, phase, city ,inter.getTwoView(), inter.getUserName());
+					if(stuW==null && !"".equals(inter.getOneView())){
+						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
+						stuW = waitService.removeHighestPriorityFromList(year, phase, city, inter.getOneView());
+						oneOrtwo = 1;
+					}
+				}else{
+					//只有一面角色从一面队列中拿数据
+					stuW = waitService.removeHighestPriorityFromList(year, phase, city, inter.getOneView());
+				}
+				if(stuW == null){
+					System.out.println("等待队列为空");
+					mm.addAttribute("message", RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
+					return "first";
+				}else{
+					if(oneOrtwo == 1){
+						mm.addAttribute("message", RecruitConst.SUCCESS);
+						mm.addAttribute("student", stuW.getStu());
+						mm.addAttribute("interviewer", pi);
+						System.out.println("拿到一面同学");
+					}else{
+						mm.addAttribute("message", RecruitConst.SUCCESS);
+						mm.addAttribute("student", stuW.getStu());
+						mm.addAttribute("interviewer", pi);
+						System.out.println("拿到二面同学");
+					}
+					return "view_index";
+				}
+			}else{
+				//不是interviewer，無權訪問
+				return "redirect:/login";
+			}
+		}else{
+			return "redirect:/login";
+		}
 	}
 	
 	//備份

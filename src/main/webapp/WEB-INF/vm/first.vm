@@ -37,6 +37,12 @@
                     <div class="m-firsttry-btn">
                         <button class="btn">开始面试</button>
                     </div>
+                    <div class="m-firsttry-btn">
+                        <button class="btn">结束面试</button>
+                    </div>
+                    <div class="m-firsttry-btn">
+                        <button class="btn">面试者未到，结束面试</button>
+                    </div>
                 </div>
             </div>
             <div class="l-content">
@@ -45,10 +51,10 @@
                         <div class="m-firsttry-bd">
                             <div class="interviewee-info">
                                 <div class="item">
-                                    <h3>面试人姓名：<span class="text">张三丰</span></h3>
+                                    <h3>面试人姓名：<span class="text">$student.name</span></h3>
                                 </div>
                                 <div class="item">
-                                    <h3>复试面职位：<span class="text" id="jobTitle">DEV</span></h3>
+                                    <h3>复试面职位：<span class="text" id="jobTitle">$student.job</span></h3>
                                 </div>
                                 <div class="item">
                                     <h3>初试面试官：<span class="text">张无忌</span></h3>

@@ -81,21 +81,7 @@ public class WaitService {
 			System.out.println(l.get(i).getName()+"++"+l.get(i).getShouldComeTime()+"==="+l.get(i).getRealComeTime()+"***"+l.get(i).getNowtime());
 		}
 		return 0;
-	}
-	
-	public synchronized StudentWaiter removeHighestPriorityFromList(String city, String twoView, String userName){
-		StudentWaiter ret = null;
-		for (StudentWaiter t : list) {
-			if(ret == null){
-				ret = t;
-			}else{
-				ret = ret.compareTo(t) < 0 ? t:ret;
-			}
-		}
-		list.remove(ret);
-		Collections.sort(list);
-		return ret;
-	}
+	}	
 
 
 	/**
@@ -164,6 +150,61 @@ public class WaitService {
 		Collections.sort(list);
 		Collections.sort(twoList);
 		
+	}
+	
+	public synchronized StudentWaiter removeHighestPriorityFromList(String year, String phase, String city, String oneView){
+//		System.out.println(year+"====================="+phase+city);
+//		System.out.println(list.get(0).getStu().getLocation());
+//		System.out.println(list.get(0).getStu().getPhaseNo());
+//		System.out.println(list.get(0).getStu().getYear());
+//		System.out.println(list.get(0).getStu().getJob());
+//		System.out.println(oneView);
+		List<StudentWaiter> tmpList = new LinkedList<StudentWaiter>();
+		for (StudentWaiter t : list) {
+			Student stu = t.getStu();
+			if(stu.getYear().equals(year) && stu.getPhaseNo().equals(phase)
+					&& stu.getLocation().equals(city)
+					&& oneView.contains(stu.getJob())){
+				tmpList.add(t);
+			}
+		}
+		StudentWaiter ret = null;
+		for (StudentWaiter t : tmpList) {
+			if(ret == null){
+				ret = t;
+			}else{
+				ret = ret.compareTo(t) < 0 ? t:ret;
+			}
+		}
+		System.out.println(ret);
+		if(ret != null)
+			list.remove(ret);
+		return ret;
+	}
+	
+	public synchronized StudentWaiter removeHighestPriorityFromTwoList(String year,
+			String phase, String city, String twoView, String interviewName) {
+		List<StudentWaiter> tmpList = new LinkedList<StudentWaiter>();
+		for (StudentWaiter t : twoList) {
+			Student stu = t.getStu();
+			if(stu.getYear().equals(year) && stu.getPhaseNo().equals(phase)
+					&& stu.getLocation().equals(city)
+					&& !stu.getFirstTry().equals(interviewName)
+					&& twoView.contains(stu.getJob())){
+				tmpList.add(t);
+			}
+		}
+		StudentWaiter ret = null;
+		for (StudentWaiter t : tmpList) {
+			if(ret == null){
+				ret = t;
+			}else{
+				ret = ret.compareTo(t) < 0 ? t:ret;
+			}
+		}
+		if(ret != null)
+			twoList.remove(ret);
+		return ret;
 	}
 	
 	

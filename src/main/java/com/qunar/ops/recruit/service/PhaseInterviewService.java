@@ -135,7 +135,6 @@ public class PhaseInterviewService {
 	
 	public List<PhaseInterviewer> getCitysByYearPhaseAndName(String year,
 			String phase, String userName) {
-		System.out.println(year+" "+phase+" "+userName);
 		PhaseInterviewerExample example = new PhaseInterviewerExample();
 		PhaseInterviewerExample.Criteria criteria = example.createCriteria();
 		criteria.andYearEqualTo(year);
@@ -144,6 +143,22 @@ public class PhaseInterviewService {
 		criteria.andEnableEqualTo("1");
 		List<PhaseInterviewer> list = interMapper.selectByExample(example);
 		return list;
+	}
+
+	public PhaseInterviewer getPhaseInterviewerBy(String year, String phase,
+			String city, String userName) {
+		PhaseInterviewerExample example = new PhaseInterviewerExample();
+		PhaseInterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andYearEqualTo(year);
+		criteria.andPhaseEqualTo(phase);
+		criteria.andCityEqualTo(city);
+		criteria.andIntervierNameEqualTo(userName);
+		criteria.andEnableEqualTo("1");
+		List<PhaseInterviewer> list = interMapper.selectByExample(example);
+		if(list != null && list.size() > 0){
+			return list.get(0);
+		}
+		return null;
 	}
 
 	

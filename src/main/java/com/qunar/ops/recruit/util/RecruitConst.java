@@ -50,4 +50,5 @@ public class RecruitConst {
 	public static final String ALREADY_EXIST_SIZE_ERROR_MSG = "选择导入的文件太大";
 	public static final String ALREADY_EXIST_IMPORT_SUCCESS_MSG = "导入成功";
 	public static final String ALREADY_EXIST_IMPORT_FAILE_MSG = "导入失败";
+	public static final Object SUCCESS = "成功";
 }
