@@ -1,0 +1,62 @@
+@charset "utf-8";
+.l-container,.l-fullsreen{overflow:hidden;position:relative}
+.m-firsttry-bd table.table td,.m-firsttry-bd table.table th,.m-pop td,.m-studentmanage-hd .icon,.m-studentmanage-hd .text,.m-title h1,.m-title select{vertical-align:middle}
+.m-addbatch-btn,.m-addbatch-hd,.m-addmanage .table td,.m-addmanage .table th,.m-login,.m-manage-bd td,.m-manage-bd th,.m-studentmanage-bd table td,.m-studentmanage-bd table th,.m-table th,.m-table tr td,.text-center{text-align:center}
+body,html{height:100%}
+.l-fullsreen{width:100%;height:100%}
+.l-nav{height:48px;overflow:hidden;background:#1ba9ba}
+.l-container{height:100%}
+.l-container .l-sidebar{float:left;height:100%;width:260px;display:inline-block;background:#eee}
+.l-container .l-content{position:relative;height:100%;overflow-y:auto}
+.l-inner{padding:20px}
+.form-horizontal{margin:0 auto}
+.form-horizontal .table td,.form-horizontal .table th{vertical-align:middle;padding:3px}
+.m-title{padding:10px 20px;float:left}
+.m-title h1{font-size:18px;line-height:30px!important;color:#fff;float:left;margin:0 30px}
+.m-title select{margin-left:10px;width:auto}
+.m-nav{float:right;padding-top:10px;width:500px}
+.m-nav li a{color:#fff}
+.m-nav li a:hover{color:#333}
+.m-pop{position:fixed;left:50%;top:50%;margin-left:-150px;margin-top:-150px;width:300px;min-height:150px}
+.m-pop-big{width:500px;height:300px;margin-left:-250px}
+.m-pop .close{position:absolute;right:10px;top:5px}
+.m-pop-bd{position:relative;height:60%;overflow-y:auto;margin-right:-30px}
+.m-pop-bd .item{margin-bottom:5px}
+.m-pop-ft{position:absolute;bottom:0;width:100%;left:0}
+.m-pop-ft .btn{margin:0 10px}
+.m-addmanage-btn .btn,.m-manage-hd .btn,.m-studentmanage-hd .btn{margin-right:10px}
+.m-login-btn{position:absolute;left:50%;top:50%;margin-left:-55px;margin-top:-22px}
+.m-manage-bd,.m-table{margin-top:30px}
+.m-addmanage .table{width:500px}
+.m-login{padding:10px;border-bottom:1px solid #ddd}
+.m-login form{margin-bottom:0}
+.m-studentmanage-hd .iconbox{margin-left:30px}
+.m-studentmanage-hd .icon{width:10px;height:10px;border:1px solid #333;display:inline-block}
+.m-studentmanage-hd .text{margin-right:20px}
+.m-studentmanage-hd i.success{background:#dff0d8}
+.m-studentmanage-hd i.error{background:#f2dede}
+.m-studentmanage-hd i.warning{background:#fcf8e3}
+.m-studentmanage-hd i.info{background:#d9edf7}
+.m-studentmanage-bd{padding-top:20px}
+.m-addbatch-hd{padding:10px;border-bottom:1px solid #ddd}
+.m-addbatch-bd{margin:0 auto}
+.interviewee-info .item,.m-firsttry-sidebar .item{margin-bottom:5px}
+.m-firsttry-sidebar{padding:20px;background:#eee}
+.m-firsttry-btn,.m-firsttry-info{padding-top:20px}
+.interviewee-info{position:relative;height:150px}
+.interviewee-info h3{font-size:18px;line-height:24px;color:#aaa}
+.interviewee-info h3 .text{margin-left:20px;border-bottom:1px solid #333;width:200px;display:inline-block;color:#333}
+.interviewee-info .picture{position:absolute;top:0;right:0;width:100px;height:150px;background:#eee;border:1px solid #ccc}
+.interviewee-info .picture .btn{position:absolute;left:50%;top:50%;margin-left:-41px;margin-top:-15px}
+.row-fluid .span10{position:relative;overflow-y:auto}
+.m-firsttry-bd table{margin-bottom:30px}
+.m-firsttry-bd table select{width:auto}
+.m-firsttry-bd table input,.m-firsttry-bd table select,.m-firsttry-bd table textarea,.table{margin-bottom:0}
+.table .w_1{width:150px}
+.table .w_2{width:100px}
+.m-pop-table{width:880px;min-height:370px;margin-left:-450px;padding-bottom:15px}
+.m-pop-table-inner{padding-top:5px}
+.m-pop-table2{width:500px;margin-left:-250px}
+.m-pop-table2 .title{background:#fff}
+.m-pop-table2 td,.m-pop-table2 th{padding:3px;text-align:center}
+.alert-info{height:150px}
