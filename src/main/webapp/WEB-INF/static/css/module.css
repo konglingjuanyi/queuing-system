@@ -1,5 +1,7 @@
 @charset "utf-8";
 
+@import url("style.css");
+
 .m-title{
 	padding: 10px 20px;
 	float: left;
@@ -21,38 +23,44 @@
 .m-nav{
 	float: right;
 	padding-top: 10px;	
-	width: 600px;
+	width: 500px;
 }
 .m-nav li a{
 	color: #fff;
 }
-
+.m-nav li a:hover{
+	color: #333;
+}
 
 .m-pop{
 	position: fixed;
 	left: 50%;
 	top: 50%;
-	margin-left: -200px;
+	margin-left: -150px;
 	margin-top: -150px;
 	width: 300px;
-	height: 150px;
+	min-height: 150px;
 	
 }
 .m-pop-big{
 	width: 500px;
 	height: 300px;
+	margin-left: -250px;
 }
-.m-pop-hd .close{
+.m-pop .close{
 	position: absolute;
 	right: 10px;
 	top: 5px;
 }
 .m-pop-bd{
 	position: relative;
-	height: 80%;
+	height: 60%;
 	overflow-y: auto;
+	margin-right: -30px;
 }
-
+.m-pop-bd .item{
+	margin-bottom: 5px;
+}
 .m-pop-ft{
 	position: absolute;
 	bottom: 0;
@@ -231,7 +239,9 @@
 .m-firsttry-bd table input{
 	margin-bottom: 0;
 }
-
+.table{
+	margin-bottom: 0;
+}
 .table .w_1{
 	width: 150px;
 }
@@ -239,11 +249,30 @@
 	width: 100px;
 }
 
+.m-pop td{
+	vertical-align: middle;
+}
+.m-pop-table{
+	width:880px;
+	min-height:370px;
+	margin-left:-450px;
+	padding-bottom: 15px;
+}
+.m-pop-table-inner{
+	padding-top: 5px;
+}
 
-
-
-
-
-
-
-
+.m-pop-table2{
+	width: 500px;
+	margin-left:-250px;
+}
+.m-pop-table2 .title{
+	background: #fff;
+}
+.m-pop-table2 th, .m-pop-table2  td{
+	padding: 3px;
+	text-align: center;
+}
+.alert-info{
+	height: 150px;
+}

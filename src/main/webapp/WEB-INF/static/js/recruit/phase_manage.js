@@ -148,18 +148,18 @@ function saveviewsAndcitys(){
 	}
 	var all_value ="";
 	for(var i=0;i<trlen;i++){
-		var city=$("#bodyid tr:eq("+i+")").children("td").eq(0).text();
+		var city=$("#bodyid tr:eq("+i+")").children("td").eq(0).text().trim();
 		var la=$("#bodyid tr:eq("+i+")").children("td").eq(2).children("label").length;
 		var view_value ="";
 		for(var j=0;j<la;j++){
-			var view=$("#bodyid tr:eq("+i+")").children("td").eq(2).children("label").eq(j).text();
-			var room=$("#bodyid tr:eq("+i+")").children("td").eq(2).children("label").eq(j).children("input").val();
+			var view=$("#bodyid tr:eq("+i+")").children("td").eq(2).children("label").eq(j).text().trim();
+			var room=$("#bodyid tr:eq("+i+")").children("td").eq(2).children("label").eq(j).children("input").val().trim();
 			view_value=view_value+city+"_"+view+"_"+room+",";
 		}
 		var view_value_tmp=view_value.substr(0,view_value.length-1);
 		all_value=all_value+view_value_tmp+"|";
 	}
-	vars['all_value']=all_value.substr(0,all_value.length-1);
+	vars['all_value']=all_value.substr(0,all_value.length-1).trim();
 	vars['year']=year;
 	vars['phase']=phase;
 	var params = {"vars": vars};

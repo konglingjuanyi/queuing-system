@@ -1,7 +1,12 @@
 package com.qunar.ops.recruit.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.Phase;
+import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.service.InterviewerService;
@@ -67,6 +73,28 @@ public class PhaseController {
 		Map<String, String> vars = commonRequest.getVars();
 		Phase ph = (Phase) phService.getPhaseInfoBy(vars.get("yearinfo"),vars.get("phasename"));
 		List<Interviewer> list =  interService.getInterviewers();
+		List<PhaseInterviewer> pi=piService.getPhaseInterviewerBy(vars.get("yearinfo"),vars.get("phasename"));
+		List<Map<String,List<Map<String,String>>>> list1= new ArrayList();
+		Set<String> cityset=new HashSet();
+		for(PhaseInterviewer pview:pi){
+			cityset.add(pview.getCity());
+		}
+		Iterator<String> it=cityset.iterator();
+		while(it.hasNext())
+		{
+			String name=it.next();
+			List<PhaseInterviewer> singlecity=piService.getSinglecityBy(name);
+			List<Map<String,String>> list2=new ArrayList();
+			for(PhaseInterviewer val:singlecity){
+				Map<String,String> m1=new HashMap();
+				m1.put(val.getIntervierName(), val.getRoom());
+				list2.add(m1);
+			}
+			Map<String,List<Map<String,String>>> m2=new HashMap();
+			m2.put(name, list2);
+			list1.add(m2);
+		}
+		model.addAttribute("listcity", list1);
 		model.addAttribute("ph", ph);
 		model.addAttribute("list", list);
 		return "/add_phase";

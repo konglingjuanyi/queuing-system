@@ -33,7 +33,24 @@
     							<div class="form-horizontal">
     							<table class="table">
     							<tbody id="bodyid">
-    								
+    							#foreach($info in $listcity)
+    								<tr>
+    								#foreach($city in $info.entrySet())
+										<td>$city.key</td>
+										<td><a href="javascript:void(0);" onclick="showView('td$city.key')">添加面试官</a></td>
+										<td id="td$city.key">
+											#foreach($room in $city.value)
+											#foreach($val in $room.entrySet())
+											<label class="control-label" for="inputEmail">$val.key
+											<input class="input-mini" type="text" id="inputEmail" placeholder="房间号" value="$val.value">
+											</label>
+											#end
+											#end
+										</td>
+										<td><a href="#" onclick="removetr(this)">删除</a></td>
+									#end
+									</tr>
+								#end
     			                </tbody>
     							</table>
     							<div class="m-addbatch-btn">

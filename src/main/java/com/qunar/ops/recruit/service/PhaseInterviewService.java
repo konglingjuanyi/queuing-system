@@ -2,6 +2,7 @@ package com.qunar.ops.recruit.service;
 
 import java.text.SimpleDateFormat;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,6 +14,7 @@ import com.qunar.ops.recruit.dao.PhaseMapper;
 import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.model.PhaseExample;
 import com.qunar.ops.recruit.model.PhaseInterviewer;
+import com.qunar.ops.recruit.model.PhaseInterviewerExample;
 
 @Component
 public class PhaseInterviewService {
@@ -26,16 +28,37 @@ public class PhaseInterviewService {
 
 	public void addPhaseInterviewInfo(String all_value, String phase, String year) {
 		// TODO Auto-generated method stub
+		PhaseInterviewer allval=new PhaseInterviewer();
+		allval.setEnable("0");
+		PhaseInterviewerExample example0 = new PhaseInterviewerExample();
+		PhaseInterviewerExample.Criteria criteria0 = example0.createCriteria();
+		criteria0.andYearEqualTo(year);
+		criteria0.andPhaseEqualTo(phase);
+		interMapper.updateByExampleSelective(allval, example0);
+		
 		String[] all_citys=all_value.split("\\|");
 		Set sval=new HashSet();
 		for(int i=0;i<all_citys.length;i++){
 			String[] all_rooms=all_citys[i].split(",");
 			for(int j=0;j<all_rooms.length;j++){
 				String[] city_room=all_rooms[j].split("_");
-				//allcitys=allcitys+city_room[0]+"|";
 				sval.add(city_room[0]);
-				PhaseInterviewer pi=this.createPhaseInterview(city_room,phase,year);
-				interMapper.insert(pi);
+				PhaseInterviewerExample example1 = new PhaseInterviewerExample();
+				PhaseInterviewerExample.Criteria criteria1 = example1.createCriteria();
+				criteria1.andYearEqualTo(year);
+				criteria1.andPhaseEqualTo(phase);
+				criteria1.andCityEqualTo(city_room[0]);
+				criteria1.andIntervierNameEqualTo(city_room[1]);
+				List<PhaseInterviewer> ishave=interMapper.selectByExample(example1);
+				if(ishave.size()>0){
+					PhaseInterviewer updpi=new PhaseInterviewer();
+					updpi.setRoom(city_room[2]);
+					updpi.setEnable(String.valueOf(1));
+					interMapper.updateByExampleSelective(updpi, example1);
+				}else{
+					PhaseInterviewer pi=this.createPhaseInterview(city_room,phase,year);
+					interMapper.insert(pi);
+				}
 			}
 		}
 		String allcitys = StringUtils.join(sval.toArray(), "|");
@@ -65,7 +88,29 @@ public class PhaseInterviewService {
 		pi.setStatus(0);
 		pi.setTwoCount(0);
 		pi.setYear(year);
+		pi.setEnable(String.valueOf(1));
 		return pi;
+	}
+
+	public List<PhaseInterviewer> getPhaseInterviewerBy(String year, String phase) {
+		// TODO Auto-generated method stub
+		PhaseInterviewerExample example = new PhaseInterviewerExample();
+		PhaseInterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andYearEqualTo(year);
+		criteria.andPhaseEqualTo(phase);
+		criteria.andEnableEqualTo("1");
+		List<PhaseInterviewer> list = interMapper.selectByExample(example);
+		return list;
+	}
+
+	public List<PhaseInterviewer> getSinglecityBy(String city) {
+		// TODO Auto-generated method stub
+		PhaseInterviewerExample example = new PhaseInterviewerExample();
+		PhaseInterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andCityEqualTo(city);
+		criteria.andEnableEqualTo("1");
+		List<PhaseInterviewer> list = interMapper.selectByExample(example);
+		return list;
 	}
 
 	
