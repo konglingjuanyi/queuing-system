@@ -157,8 +157,7 @@ public class InterviewerController {
 	 * @return
 	 */
 	@RequestMapping(value = "/interview/getNextStudent")
-	@ResponseBody
-	public BaseResult getNextStudent(HttpServletRequest request) {
+	public String getNextStudent(HttpServletRequest request) {
 //		Object obj = request.getSession().getAttribute("user");
 //		if(obj != null){
 //			if(obj instanceof Interviewer){
@@ -189,7 +188,7 @@ public class InterviewerController {
 //			return BaseResult.getErrorResult(RecruitConst.NO_LOGIN);
 //		}
 //		
-		return null;
+		return "first";
 	}
 	
 	/**

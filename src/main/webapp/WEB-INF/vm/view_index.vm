@@ -7,41 +7,26 @@
 	<link rel="stylesheet" href="/static/css/style.css" />
 	<link rel="stylesheet" href="/static/css/module.css" />
 </head>
+<script type="text/javascript">
+	function getNextStudent(){
+		window.location.href = '/interview/getNextStudent';
+	}
+</script>
 <body>
 	<div class="l-fullsreen">
 		<div class="l-nav">
 			<div class="m-title">
 				<h1>校招系统</h1>	
-				<select name="" id="">
-					<option value="">2015秋季校招</option>
-					<option value="">2015秋季校招1</option>
-					<option value="">2015秋季校招2</option>
-					<option value="">2015秋季校招3</option>
-				</select>
-				<select name="" id="">
-					<option value="">北京</option>
-					<option value="">北京</option>
-					<option value="">北京</option>
-					<option value="">北京</option>
-				</select>
 			</div>
-			<div class="m-nav">
-				<ul class="nav nav-tabs">
-					<li class="active">
-						<a href="#">首页</a>
-					</li>
-					<li><a href="#">面试平台</a></li>
-					<li><a href="#">面试管理</a></li>
-					<li><a href="#">面试学生管理</a></li>
-					<li><a href="#">批次管理</a></li>
-				</ul>
+			<div class="m-title">
+				
 			</div>
 		</div>
 		<div class="l-container">
 			<div class="l-content">
 				<!-- 内容start -->
 				<div class="m-pop alert">
-					<button class="m-login-btn btn btn-large btn-info " type="button">开始面试</button>
+					<button class="m-login-btn btn btn-large btn-info" type="button" id="startInterview" onclick='getNextStudent()'>开始面试</button>
 				</div>
 				<!-- 内容end -->
 			</div>

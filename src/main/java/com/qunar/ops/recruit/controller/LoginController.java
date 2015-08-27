@@ -61,6 +61,7 @@ public class LoginController {
 					model.addAttribute("flag",-1);
 					return "/login";
 				}else if(hr != null){
+					System.out.println("hr login");
 					model.addAttribute("flag",0);
 					request.getSession().setAttribute("user", hr);
 					return "/hr_index";
