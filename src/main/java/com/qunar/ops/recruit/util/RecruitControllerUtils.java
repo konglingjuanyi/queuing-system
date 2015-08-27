@@ -176,6 +176,23 @@ public class RecruitControllerUtils {
         //}
         return date;
     }
+    
+    /**
+     * 日期转为字符串
+     *
+     * @param timeStr
+     * @return
+     */
+    public static Date strToDateII(String timeStr) {
+        Date date = null;
+            try {
+                date = sdfII.parse(timeStr);
+            } catch (ParseException e) {
+                throw new NumberFormatException("日期格式错误");
+            }
+        //}
+        return date;
+    }
 
     /**
      * 将审批过程中的英文转为中文.

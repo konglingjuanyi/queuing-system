@@ -36,5 +36,6 @@
 			</div>
 		</div>
 		<div class="l-container" id="content"></div>
+		<input type="hidden" id="importmessage" value="${importmessage}">
 </body>
 </html>

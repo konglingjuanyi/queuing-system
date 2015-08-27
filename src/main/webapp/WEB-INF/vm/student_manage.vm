@@ -66,81 +66,23 @@
 				                </tr>
 				              </thead>
 				              <tbody>
+				              	#foreach($in in $list)
 				                <tr class="success">
-				                  <td>刘玥</td>
-				                  <td>男</td>
-				                  <td>西北农林科技大学</td>
-				                  <td>信息管理与信息系统</td>
-				                  <td>本科</td>
-				                  <td>13988888888</td>
-				                  <td>9月10日12:00</td>
-				                  <td>RD</td>
-				                  <td>面试中</td>	              
+				                  <td>$in.obj.name</td>
+				                  <td>$in.obj.sex</td>
+				                  <td>$in.obj.school</td>
+				                  <td>$in.obj.profession</td>
+				                  <td>$in.obj.education</td>
+				                  <td>$in.obj.phone</td>
+				                  <td>$in.additionalInfos.get(0)</td>
+				                  <td>$in.obj.job</td>
+				                  <td>$in.obj.state</td>	              
 				                  <td>
 				                  	<a href="#">查看</a>
 				                  	<a href="#">删除</a>
 				                  </td>	
 				                </tr>
-			               		<tr class="success">
-				                  <td>刘玥</td>
-				                  <td>男</td>
-				                  <td>西北农林科技大学</td>
-				                  <td>信息管理与信息系统</td>
-				                  <td>本科</td>
-				                  <td>13988888888</td>
-				                  <td>9月10日12:00</td>
-				                  <td>RD</td>
-				                  <td>面试中</td>	              
-				                  <td>
-				                  	<a href="#">查看</a>
-				                  	<a href="#">删除</a>
-				                  </td>	
-				                </tr>
-				                <tr class="error">
-				                  <td>刘玥</td>
-				                  <td>男</td>
-				                  <td>西北农林科技大学</td>
-				                  <td>信息管理与信息系统</td>
-				                  <td>本科</td>
-				                  <td>13988888888</td>
-				                  <td>9月10日12:00</td>
-				                  <td>RD</td>
-				                  <td>未签到</td>	              
-				                  <td>
-				                  	<a href="#">查看</a>
-				                  	<a href="#">删除</a>
-				                  </td>	
-				                </tr>
-				                <tr class="warning">
-				                  <td>刘玥</td>
-				                  <td>男</td>
-				                  <td>西北农林科技大学</td>
-				                  <td>信息管理与信息系统</td>
-				                  <td>本科</td>
-				                  <td>13988888888</td>
-				                  <td>9月10日12:00</td>
-				                  <td>RD</td>
-				                  <td>一面通过</td>	              
-				                  <td>
-				                  	<a href="#">查看</a>
-				                  	<a href="#">删除</a>
-				                  </td>	
-				                </tr>
-				                <tr class="info">
-				                  <td>刘玥</td>
-				                  <td>男</td>
-				                  <td>西北农林科技大学</td>
-				                  <td>信息管理与信息系统</td>
-				                  <td>本科</td>
-				                  <td>13988888888</td>
-				                  <td>9月10日12:00</td>
-				                  <td>RD</td>
-				                  <td>等待⾯试</td>	              
-				                  <td>
-				                  	<a href="#">查看</a>
-				                  	<a href="#">删除</a>
-				                  </td>	
-				                </tr>
+				                 #end
 				              </tbody>
 				            </table>
 						</div>

@@ -1,6 +1,7 @@
 package com.qunar.ops.recruit.controller;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,10 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
 import com.qunar.ops.recruit.service.StudentManageService;
 import com.qunar.ops.recruit.util.RecruitConst;
+import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
 @Controller
 public class StudentManageController {
@@ -33,16 +37,32 @@ public class StudentManageController {
 	 * @param request
 	 * @param model
 	 * @return
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/hr/getAllStudentInfos")
-	public String getAllStudentInfos(HttpServletRequest request,  ModelMap model) {
-		System.out.println("+++++++++++++++");
+	public String getAllStudentInfos(HttpServletRequest request,  ModelMap model) throws Exception {
+		List<Student> list=new ArrayList<Student>();
+		String city=(String) request.getSession().getAttribute("city");
+		String year=(String) request.getSession().getAttribute("year");
+		String phase=(String) request.getSession().getAttribute("phase");
+		list=stuService.getAllStudentInfos(city,year,phase);
+		List<ResultPlusAdditionalInfo> info=new LinkedList<ResultPlusAdditionalInfo>();
+		if(list!=null && list.size()>0){
+			for(Student stu:list){
+				String str=RecruitControllerUtils.dateToStr(stu.getInterviewTime());
+				ResultPlusAdditionalInfo val=new ResultPlusAdditionalInfo();
+				val.setObj(stu);
+				val.addStringInfo(str);
+				info.add(val);
+			}
+		}
+		model.addAttribute("list", info);
 		return "/student_manage";
 	}
 	
 	@RequestMapping(value="/hr/importStudentInfos",method=RequestMethod.POST)
 	public String importStaffInfo(@RequestParam("fileField") MultipartFile clientFile,
-			HttpServletResponse response, HttpServletRequest request,  ModelMap model) {
+			HttpServletResponse response, HttpServletRequest request,  RedirectAttributesModelMap  model) {
 		// message记录导入相关的信息
 		String fileType = "";
 		try {
@@ -59,12 +79,12 @@ public class StudentManageController {
 
 		if (!fileType.toLowerCase().equals("xls")
 				&& !fileType.toLowerCase().equals("xlsx")) {
-			model.addAttribute("importmessage", RecruitConst.ALREADY_EXIST_IMPORT_ERROR_MSG);
-			return "/student_manage";
+			model.addFlashAttribute("importmessage", RecruitConst.ALREADY_EXIST_IMPORT_ERROR_MSG);
+			return "redirect:/login";
 		}else{
 			if (clientFile.getSize()!=0 && clientFile.getSize()>40000000) {
-				model.addAttribute("importmessage", RecruitConst.ALREADY_EXIST_IMPORT_ERROR_MSG);
-				return "/student_manage";
+				model.addFlashAttribute("importmessage", RecruitConst.ALREADY_EXIST_IMPORT_ERROR_MSG);
+				return "redirect:/login";
 			}
 		}
 		List<Student> student =new ArrayList<Student>(); 
@@ -86,12 +106,20 @@ public class StudentManageController {
 				// 行不为空
 				if (row != null) {
 					Student stu=stuService.createStudent(row);
+					student.add(stu);
 				}
 			}
-			model.addAttribute("importmessage", RecruitConst.ALREADY_EXIST_IMPORT_SUCCESS_MSG);
+			int flag=stuService.insertStudentInfo(student);
+			if(flag>0){
+				model.addFlashAttribute("importmessage", RecruitConst.ALREADY_EXIST_IMPORT_SUCCESS_MSG);
+			}else{
+				model.addFlashAttribute("importmessage", RecruitConst.ALREADY_EXIST_IMPORT_FAILE_MSG);
+			}
 		} catch (Exception e) {
-			model.addAttribute("importmessage", RecruitConst.ALREADY_EXIST_IMPORT_FAILE_MSG);
+			model.addAttribute("importmessage", "出现异常");
+			System.out.println(e);
+			System.out.println(e.getMessage());
 		}
-		return "/student_manage";
+		return "redirect:/login";
 	}
 }
