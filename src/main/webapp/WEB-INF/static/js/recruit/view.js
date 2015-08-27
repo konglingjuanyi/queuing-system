@@ -32,12 +32,16 @@ $(document).ready(function () {
 		    });
 	});
 	$('#index_list').click(function(){
-  	  	active($('#firstpage'));
-  	  $('#content').html('');
+  	    backToIndex();
 	});
 
 
 });
+
+function backToIndex(){
+	active($('#firstpage'));
+	 $('#content').html("");
+}
 
 function active(obj){
 	$('#firstpage').removeClass("active");

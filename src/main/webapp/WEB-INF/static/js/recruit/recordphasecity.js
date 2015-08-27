@@ -19,6 +19,7 @@ $(document).ready(function () {
 	$("#year").change(function(){
 		 var year = $("#year").find("option:selected").text();
 		 getPhaseAndCity(year);
+		 backToIndex();
 		
 	 });
 	 $("#phase").change(function(){
@@ -39,6 +40,7 @@ $(document).ready(function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
+		 backToIndex();
 	 });
 	 $("#city").change(function(){
 		 var city = $("#city").find("option:selected").text();
@@ -58,6 +60,7 @@ $(document).ready(function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
+		 backToIndex();
 	 });
 });
 
