@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="/static/js/recruit/view.js"></script>
 	<script type="text/javascript" src="/static/js/recruit/phase.js"></script>
 	<script type="text/javascript" src="/static/js/recruit/recordphasecity.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/student.js"></script>
 </head>
 <body>
 		<div class="l-nav">
@@ -30,7 +31,7 @@
 					<li id="viewsatge"><a href="#">面试平台</a></li>
 					<li id="viewpage"><a href="javascript:void(0);" id="view_list">面试官监控</a></li>
 					<li id="managepage"><a href="javascript:void(0);" id="manage_list">面试官管理</a></li>
-					<li id="stupage"><a href="#">候选人管理</a></li>
+					<li id="stupage"><a href="javascript:void(0);" id="student_list">候选人管理</a></li>
 					<li id="phasepage"><a href="javascript:void(0);" id="phase_list">批次管理</a></li>
 				</ul>
 			</div>
