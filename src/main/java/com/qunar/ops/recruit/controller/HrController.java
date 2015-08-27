@@ -89,10 +89,9 @@ public class HrController {
 		}
 	}
 
-	@RequestMapping(value = "/hr/getInterviewers")
-	public String getInterviewers(HttpServletRequest request,  ModelMap model) {
-		System.out.println(RecruitConst.city+" "+RecruitConst.phase); 
-//		System.out.println("===========================");
+	@RequestMapping(value = "/hr/getInterviewersForMonitor")
+	public String getInterviewersForMonitor(HttpServletRequest request,  ModelMap model) {
+//		System.out.println(RecruitConst.year+" "+RecruitConst.city+" "+RecruitConst.phase); 
 //		Map<String, String> vars = commonRequest.getVars();
 //		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
 //		int pageSize = noSize[0];
@@ -101,16 +100,6 @@ public class HrController {
 //		int pageNo = 1;
 //		pageNo = pageNo <= 0 ? 1 : pageNo;
 //		pageSize = pageSize > 0 ? pageSize : 20;
-//		String phase = vars.get("phase");
-//		String city = vars.get("city");
-//		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize, phase, city);
-//		List<String[]> retList = tranfer2stringArray(list);
-//		DataResult dataResult = new DataResult();
-//		dataResult.setCount(list.size());
-//		dataResult.setTableInfos(retList);
-		String year = "2015";
-		String phase = "秋季校园招聘";
-		String city = "北京";
 		List<InterviewerInfoToPage> list = joinService.getInterviewerInfoToPages();
 		List<ResultPlusAdditionalInfo> rets = new LinkedList<ResultPlusAdditionalInfo>();
 		for (InterviewerInfoToPage interviewer : list) {

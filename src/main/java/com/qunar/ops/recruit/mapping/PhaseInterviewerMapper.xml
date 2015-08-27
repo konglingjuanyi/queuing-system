@@ -17,6 +17,7 @@
     <result column="second_rd" property="secondRd" jdbcType="INTEGER" />
     <result column="second_fe" property="secondFe" jdbcType="INTEGER" />
     <result column="second_qa" property="secondQa" jdbcType="INTEGER" />
+    <result column="enable" property="enable" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -78,7 +79,7 @@
   </sql>
   <sql id="Base_Column_List" >
     id, year, phase, city, intervier_name, room, status, one_count, two_count, first_rd, 
-    first_fe, first_qa, second_rd, second_fe, second_qa
+    first_fe, first_qa, second_rd, second_fe, second_qa, enable
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.PhaseInterviewerExample" >
     select
@@ -119,12 +120,14 @@
       intervier_name, room, status, 
       one_count, two_count, first_rd, 
       first_fe, first_qa, second_rd, 
-      second_fe, second_qa)
+      second_fe, second_qa, enable
+      )
     values (#{year,jdbcType=VARCHAR}, #{phase,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
       #{intervierName,jdbcType=VARCHAR}, #{room,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{oneCount,jdbcType=INTEGER}, #{twoCount,jdbcType=INTEGER}, #{firstRd,jdbcType=INTEGER}, 
       #{firstFe,jdbcType=INTEGER}, #{firstQa,jdbcType=INTEGER}, #{secondRd,jdbcType=INTEGER}, 
-      #{secondFe,jdbcType=INTEGER}, #{secondQa,jdbcType=INTEGER})
+      #{secondFe,jdbcType=INTEGER}, #{secondQa,jdbcType=INTEGER}, #{enable,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.PhaseInterviewer" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -174,6 +177,9 @@
       <if test="secondQa != null" >
         second_qa,
       </if>
+      <if test="enable != null" >
+        enable,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="year != null" >
@@ -217,6 +223,9 @@
       </if>
       <if test="secondQa != null" >
         #{secondQa,jdbcType=INTEGER},
+      </if>
+      <if test="enable != null" >
+        #{enable,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -274,6 +283,9 @@
       <if test="record.secondQa != null" >
         second_qa = #{record.secondQa,jdbcType=INTEGER},
       </if>
+      <if test="record.enable != null" >
+        enable = #{record.enable,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -295,7 +307,8 @@
       first_qa = #{record.firstQa,jdbcType=INTEGER},
       second_rd = #{record.secondRd,jdbcType=INTEGER},
       second_fe = #{record.secondFe,jdbcType=INTEGER},
-      second_qa = #{record.secondQa,jdbcType=INTEGER}
+      second_qa = #{record.secondQa,jdbcType=INTEGER},
+      enable = #{record.enable,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -345,6 +358,9 @@
       <if test="secondQa != null" >
         second_qa = #{secondQa,jdbcType=INTEGER},
       </if>
+      <if test="enable != null" >
+        enable = #{enable,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -363,7 +379,8 @@
       first_qa = #{firstQa,jdbcType=INTEGER},
       second_rd = #{secondRd,jdbcType=INTEGER},
       second_fe = #{secondFe,jdbcType=INTEGER},
-      second_qa = #{secondQa,jdbcType=INTEGER}
+      second_qa = #{secondQa,jdbcType=INTEGER},
+      enable = #{enable,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

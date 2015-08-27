@@ -164,6 +164,76 @@ public class PhaseExample {
             return (Criteria) this;
         }
 
+        public Criteria andYearInfoIsNull() {
+            addCriterion("year_info is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoIsNotNull() {
+            addCriterion("year_info is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoEqualTo(String value) {
+            addCriterion("year_info =", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoNotEqualTo(String value) {
+            addCriterion("year_info <>", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoGreaterThan(String value) {
+            addCriterion("year_info >", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoGreaterThanOrEqualTo(String value) {
+            addCriterion("year_info >=", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoLessThan(String value) {
+            addCriterion("year_info <", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoLessThanOrEqualTo(String value) {
+            addCriterion("year_info <=", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoLike(String value) {
+            addCriterion("year_info like", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoNotLike(String value) {
+            addCriterion("year_info not like", value, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoIn(List<String> values) {
+            addCriterion("year_info in", values, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoNotIn(List<String> values) {
+            addCriterion("year_info not in", values, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoBetween(String value1, String value2) {
+            addCriterion("year_info between", value1, value2, "yearInfo");
+            return (Criteria) this;
+        }
+
+        public Criteria andYearInfoNotBetween(String value1, String value2) {
+            addCriterion("year_info not between", value1, value2, "yearInfo");
+            return (Criteria) this;
+        }
+
         public Criteria andPhaseNameIsNull() {
             addCriterion("phase_name is null");
             return (Criteria) this;
@@ -301,76 +371,6 @@ public class PhaseExample {
 
         public Criteria andCityNameNotBetween(String value1, String value2) {
             addCriterion("city_name not between", value1, value2, "cityName");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoIsNull() {
-            addCriterion("year_info is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoIsNotNull() {
-            addCriterion("year_info is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoEqualTo(String value) {
-            addCriterion("year_info =", value, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoNotEqualTo(String value) {
-            addCriterion("year_info <>", value, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoGreaterThan(String value) {
-            addCriterion("year_info >", value, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoGreaterThanOrEqualTo(String value) {
-            addCriterion("year_info >=", value, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoLessThan(String value) {
-            addCriterion("year_info <", value, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoLessThanOrEqualTo(String value) {
-            addCriterion("year_info <=", value, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoLike(String value) {
-            addCriterion("year_info like", value, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoNotLike(String value) {
-            addCriterion("year_info not like", value, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoIn(List<String> values) {
-            addCriterion("year_info in", values, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoNotIn(List<String> values) {
-            addCriterion("year_info not in", values, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoBetween(String value1, String value2) {
-            addCriterion("year_info between", value1, value2, "yearInfo");
-            return (Criteria) this;
-        }
-
-        public Criteria andYearInfoNotBetween(String value1, String value2) {
-            addCriterion("year_info not between", value1, value2, "yearInfo");
             return (Criteria) this;
         }
     }

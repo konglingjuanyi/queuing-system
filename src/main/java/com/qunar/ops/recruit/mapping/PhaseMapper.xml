@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qunar.ops.recruit.dao.PhaseMapper" >
   <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.Phase" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="year_info" property="yearInfo" jdbcType="VARCHAR" />
     <result column="phase_name" property="phaseName" jdbcType="VARCHAR" />
     <result column="city_name" property="cityName" jdbcType="VARCHAR" />
-    <result column="year_info" property="yearInfo" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -66,7 +66,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, phase_name, city_name, year_info
+    id, year_info, phase_name, city_name
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.PhaseExample" >
     select
@@ -83,16 +83,6 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from phase_info
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from phase_info
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
   <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.PhaseExample" >
     delete from phase_info
     <if test="_parameter != null" >
@@ -103,9 +93,9 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       select currval('phase_info_id_seq')
     </selectKey>
-    insert into phase_info (phase_name, city_name, year_info
+    insert into phase_info (year_info, phase_name, city_name
       )
-    values (#{phaseName,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}, #{yearInfo,jdbcType=VARCHAR}
+    values (#{yearInfo,jdbcType=VARCHAR}, #{phaseName,jdbcType=VARCHAR}, #{cityName,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Phase" >
@@ -114,25 +104,25 @@
     </selectKey>
     insert into phase_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="yearInfo != null" >
+        year_info,
+      </if>
       <if test="phaseName != null" >
         phase_name,
       </if>
       <if test="cityName != null" >
         city_name,
       </if>
-      <if test="yearInfo != null" >
-        year_info,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="yearInfo != null" >
+        #{yearInfo,jdbcType=VARCHAR},
+      </if>
       <if test="phaseName != null" >
         #{phaseName,jdbcType=VARCHAR},
       </if>
       <if test="cityName != null" >
         #{cityName,jdbcType=VARCHAR},
-      </if>
-      <if test="yearInfo != null" >
-        #{yearInfo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -148,14 +138,14 @@
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
       </if>
+      <if test="record.yearInfo != null" >
+        year_info = #{record.yearInfo,jdbcType=VARCHAR},
+      </if>
       <if test="record.phaseName != null" >
         phase_name = #{record.phaseName,jdbcType=VARCHAR},
       </if>
       <if test="record.cityName != null" >
         city_name = #{record.cityName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.yearInfo != null" >
-        year_info = #{record.yearInfo,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null" >
@@ -165,33 +155,11 @@
   <update id="updateByExample" parameterType="map" >
     update phase_info
     set id = #{record.id,jdbcType=INTEGER},
+      year_info = #{record.yearInfo,jdbcType=VARCHAR},
       phase_name = #{record.phaseName,jdbcType=VARCHAR},
-      city_name = #{record.cityName,jdbcType=VARCHAR},
-      year_info = #{record.yearInfo,jdbcType=VARCHAR}
+      city_name = #{record.cityName,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
-  </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.Phase" >
-    update phase_info
-    <set >
-      <if test="phaseName != null" >
-        phase_name = #{phaseName,jdbcType=VARCHAR},
-      </if>
-      <if test="cityName != null" >
-        city_name = #{cityName,jdbcType=VARCHAR},
-      </if>
-      <if test="yearInfo != null" >
-        year_info = #{yearInfo,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.Phase" >
-    update phase_info
-    set phase_name = #{phaseName,jdbcType=VARCHAR},
-      city_name = #{cityName,jdbcType=VARCHAR},
-      year_info = #{yearInfo,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

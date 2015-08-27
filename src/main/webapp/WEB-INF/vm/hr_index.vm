@@ -14,7 +14,9 @@
 <body>
 		<div class="l-nav">
 			<div class="m-title">
-				<h1>校招系统</h1>	
+				<h1>校招系统</h1>
+				<select name="" id="year">
+				</select>
 				<select name="" id="phase">
 				</select>
 				<select name="" id="city">
@@ -23,7 +25,7 @@
 			<div class="m-nav" style="width:600px">
 				<ul class="nav nav-tabs">
 					<li id="firstpage" class="active">
-						<a href="/login">首页</a>
+						<a href="#" id="index_list">首页</a>
 					</li>
 					<li id="viewsatge"><a href="#">面试平台</a></li>
 					<li id="viewpage"><a href="javascript:void(0);" id="view_list">面试官监控</a></li>

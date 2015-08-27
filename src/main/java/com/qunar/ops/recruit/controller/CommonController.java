@@ -1,7 +1,9 @@
 package com.qunar.ops.recruit.controller;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -74,23 +76,62 @@ public class CommonController {
 		return "success";
 	}
 	
-	@RequestMapping(value = "/getFirstPhase")
+	@RequestMapping(value = "/getAllCitys")
 	@ResponseBody
-	public List<Phase> getFirstPhases(HttpServletRequest request,HttpServletResponse response) {
+	public Set<String> getAllCitys(HttpServletRequest request,HttpServletResponse response) {
+		Set<String> set = new HashSet<String>();
+		List<Phase> list = ps.getPhases();
+		if(list != null){
+			for (Phase phase : list) {
+				set.add(phase.getYearInfo());
+			}
+		}
+		return set;
+	}
+	
+	private void updateYearPhaseAndCity(Phase phase) {
+		// TODO Auto-generated method stub
+		if(phase != null){
+			RecruitConst.year = phase.getYearInfo();
+			RecruitConst.phase = phase.getPhaseName();
+			if(phase.getCityName() != null){
+				String[] aa = phase.getCityName().split("\\|");
+				if(aa.length > 0)
+					RecruitConst.city = aa[0];
+			}
+		}
+	}
+
+
+	@RequestMapping(value = "/getAllPhases")
+	@ResponseBody
+	public List<Phase> getFirstPhase(HttpServletRequest request,HttpServletResponse response) {
 		List<Phase> list = ps.getPhases();
 		if(list != null && list.size() > 0){
-			updatePhaseAndCity(list.get(0));
+			updateYearPhaseAndCity(list.get(0));
 		}
 		return list;
 	}
 
+	@RequestMapping(value = "/getPhaseAndCityByYear")
+	@ResponseBody
+	public List<Phase> getPhaseAndCityByYear(HttpServletRequest request,HttpServletResponse response, @RequestBody CommonRequest commonRequest) {
+		
+		Map<String, String> vars = commonRequest.getVars();
+		List<Phase> phases = ps.getPhaseAndCityByYear(vars.get("year"));
+		if(phases != null && phases.size() > 0){
+			updateYearPhaseAndCity(phases.get(0));
+		}
+		return phases;
+	}
+	
 	@RequestMapping(value = "/getCityByPhase")
 	@ResponseBody
 	public Phase getCityByPhase(HttpServletRequest request,HttpServletResponse response, @RequestBody CommonRequest commonRequest) {
 		
 		Map<String, String> vars = commonRequest.getVars();
 		Phase phase = ps.getCityByPhase(vars.get("phaseName"));
-		updatePhaseAndCity(phase);
+		updateYearPhaseAndCity(phase);
 		return phase;
 	}
 	
@@ -104,19 +145,6 @@ public class CommonController {
 		RecruitConst.city = city;
 		return BaseResult.getSuccessResult("success");
 	}
-	
-	private void updatePhaseAndCity(Phase phase) {
-//		System.out.println("update phase");
-		if(phase != null){
-			RecruitConst.phase = phase.getPhaseName();
-			if(phase.getCityName() != null){
-				String[] aa = phase.getCityName().split("\\|");
-				if(aa.length > 0)
-					RecruitConst.city = aa[0];
-			}
-		}
-//		System.out.println("phase"+RecruitConst.phase);
-//		System.out.println("city"+RecruitConst.city);
-	}
+
 	
 }

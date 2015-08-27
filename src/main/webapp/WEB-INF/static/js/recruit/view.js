@@ -3,7 +3,7 @@ $(document).ready(function () {
 //		window.location.href = '/hr/getInterviewers';
   	    active($('#viewpage'))
 	    $.ajax({
-	      url: "/hr/getInterviewers",
+	      url: "/hr/getInterviewersForMonitor",
 	      type: "POST",
 	      dataType: "html",
 	      contentType: 'application/json; charset=utf-8',
@@ -30,6 +30,10 @@ $(document).ready(function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
+	});
+	$('#index_list').click(function(){
+  	  	active($('#firstpage'));
+  	  $('#content').html('');
 	});
 
 

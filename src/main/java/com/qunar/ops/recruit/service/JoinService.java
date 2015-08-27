@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.qunar.ops.recruit.dao.JoinMapper;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.connect_table.InterviewerInfoToPage;
+import com.qunar.ops.recruit.util.RecruitConst;
 
 @Component
 public class JoinService {
@@ -31,12 +32,15 @@ public class JoinService {
 
 
 	public List<InterviewerInfoToPage> getInterviewerInfoToPages() {
-		return joinMapper.getInterviewersInfoToPages("2015", "2015秋季校园招聘", "北京");
+		return joinMapper.getInterviewersInfoToPages(RecruitConst.year, RecruitConst.phase, RecruitConst.city);
 	}
 
 
 	public InterviewerInfoToPage getInterviewerInfoToPage(int id) {
-		return joinMapper.getInterviewerInfoToPages("2015", "2015秋季校园招聘", "北京", id);
+		return joinMapper.getInterviewerInfoToPages(RecruitConst.year, RecruitConst.phase, RecruitConst.city, id);
+	}
+	
+	public void testqyd(){
 	}
 	
 

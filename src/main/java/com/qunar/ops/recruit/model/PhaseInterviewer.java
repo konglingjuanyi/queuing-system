@@ -31,6 +31,8 @@ public class PhaseInterviewer {
 
     private Integer secondQa;
 
+    private String enable;
+
     public Integer getId() {
         return id;
     }
@@ -149,5 +151,13 @@ public class PhaseInterviewer {
 
     public void setSecondQa(Integer secondQa) {
         this.secondQa = secondQa;
+    }
+
+    public String getEnable() {
+        return enable;
+    }
+
+    public void setEnable(String enable) {
+        this.enable = enable == null ? null : enable.trim();
     }
 }

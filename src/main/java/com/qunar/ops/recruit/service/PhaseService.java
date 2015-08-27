@@ -88,5 +88,13 @@ public class PhaseService {
 		return null;
 	}
 
+	public List<Phase> getPhaseAndCityByYear(String year) {
+		PhaseExample example = new PhaseExample();
+		PhaseExample.Criteria criteria = example.createCriteria();
+		criteria.andYearInfoEqualTo(year);
+		List<Phase> list = phMapper.selectByExample(example);
+		return list;
+	}
+
 	
 }
