@@ -58,7 +58,7 @@ public class HrController {
 	@ResponseBody
 	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
-		System.out.println(vars);
+//		System.out.println(vars);
 		Interviewer inter = interService.createInterviewer(vars);
 		if(interService.getInterviewerByUserName(inter.getUserName()) != null){
 			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_USER_ERROR_MSG);
@@ -79,7 +79,7 @@ public class HrController {
 	@ResponseBody
 	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
-		System.out.println(vars);
+//		System.out.println(vars);
 		Interviewer inter = interService.createUpdateInterviewer(vars);
 		if(interService.getInterviewerByUserNameExceptId(inter.getUserName(), inter.getId()) != null){
 			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_USER_ERROR_MSG);
@@ -115,9 +115,6 @@ public class HrController {
 	
 	@RequestMapping(value = "/hr/getInterviewersForManage")
 	public String getInterviewersForManage(HttpServletRequest request,  ModelMap model) {
-		String year = "2015";
-		String phase = "秋季校园招聘";
-		String city = "北京";
 		List<Interviewer> list =  interService.getInterviewers();
 		List<ResultPlusAdditionalInfo> rets = new LinkedList<ResultPlusAdditionalInfo>();
 		for (Interviewer interviewer : list) {

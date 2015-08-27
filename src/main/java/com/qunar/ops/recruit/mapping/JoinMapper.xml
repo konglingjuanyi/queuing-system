@@ -22,7 +22,7 @@
   </select>
   <select id="getInterviewersInfoToPages" resultMap="InterviewerInfoToPageMap">
   	select * from interviewer, phase_interviewer where interviewer.user_name=phase_interviewer.intervier_name 
-  	and phase_interviewer.year=#{year} and phase_interviewer.phase=#{phase} and phase_interviewer.city=#{city}
+  	and phase_interviewer.year=#{year} and phase_interviewer.phase=#{phase} and phase_interviewer.city=#{city} and phase_interviewer.enable = '1'
   </select>
   <select id="getInterviewerInfoToPages" resultMap="InterviewerInfoToPageMap">
   	select * from interviewer, phase_interviewer where interviewer.user_name=phase_interviewer.intervier_name 

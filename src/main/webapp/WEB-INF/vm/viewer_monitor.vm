@@ -8,6 +8,7 @@
 	<link rel="stylesheet" href="/static/css/style.css" />
 	<link rel="stylesheet" href="/static/css/module.css" />
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/view_monitor.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
 </head>
 <body>

@@ -14,7 +14,7 @@ public class SelectInterceptor {
 	
 	@PostConstruct
 	public void start(){
-		System.err.println("8888888888888888888888888888888888888888888888888");
+//		System.err.println("8888888888888888888888888888888888888888888888888");
 	}
 	
 	 @Pointcut("execution(* com.qunar.ops.recruit.service.JoinService.*(..))")
