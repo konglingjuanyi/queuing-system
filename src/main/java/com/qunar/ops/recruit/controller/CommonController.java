@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,9 +77,9 @@ public class CommonController {
 		return "success";
 	}
 	
-	@RequestMapping(value = "/getAllCitys")
+	@RequestMapping(value = "/getAllYears")
 	@ResponseBody
-	public Set<String> getAllCitys(HttpServletRequest request,HttpServletResponse response) {
+	public Set<String> getAllYears(HttpServletRequest request,HttpServletResponse response) {
 		Set<String> set = new HashSet<String>();
 		List<Phase> list = ps.getPhases();
 		if(list != null){
@@ -89,15 +90,15 @@ public class CommonController {
 		return set;
 	}
 	
-	private void updateYearPhaseAndCity(Phase phase) {
+	private void updateYearPhaseAndCity(Phase phase, HttpSession session) {
 		// TODO Auto-generated method stub
 		if(phase != null){
-			RecruitConst.year = phase.getYearInfo();
-			RecruitConst.phase = phase.getPhaseName();
+			session.setAttribute("year", phase.getYearInfo());
+			session.setAttribute("phase", phase.getPhaseName());
 			if(phase.getCityName() != null){
 				String[] aa = phase.getCityName().split("\\|");
 				if(aa.length > 0)
-					RecruitConst.city = aa[0];
+					session.setAttribute("city", aa[0]);
 			}
 		}
 	}
@@ -105,44 +106,44 @@ public class CommonController {
 
 	@RequestMapping(value = "/getAllPhases")
 	@ResponseBody
-	public List<Phase> getFirstPhase(HttpServletRequest request,HttpServletResponse response) {
+	public List<Phase> getFirstPhase(HttpServletRequest request,HttpSession session) {
 		List<Phase> list = ps.getPhases();
 		if(list != null && list.size() > 0){
-			updateYearPhaseAndCity(list.get(0));
+			updateYearPhaseAndCity(list.get(0), session);
 		}
 		return list;
 	}
 
 	@RequestMapping(value = "/getPhaseAndCityByYear")
 	@ResponseBody
-	public List<Phase> getPhaseAndCityByYear(HttpServletRequest request,HttpServletResponse response, @RequestBody CommonRequest commonRequest) {
+	public List<Phase> getPhaseAndCityByYear(HttpServletRequest request,HttpSession session, @RequestBody CommonRequest commonRequest) {
 		
 		Map<String, String> vars = commonRequest.getVars();
 		List<Phase> phases = ps.getPhaseAndCityByYear(vars.get("year"));
 		if(phases != null && phases.size() > 0){
-			updateYearPhaseAndCity(phases.get(0));
+			updateYearPhaseAndCity(phases.get(0), session);
 		}
 		return phases;
 	}
 	
 	@RequestMapping(value = "/getCityByPhase")
 	@ResponseBody
-	public Phase getCityByPhase(HttpServletRequest request,HttpServletResponse response, @RequestBody CommonRequest commonRequest) {
+	public Phase getCityByPhase(HttpServletRequest request,HttpSession session, @RequestBody CommonRequest commonRequest) {
 		
 		Map<String, String> vars = commonRequest.getVars();
 		Phase phase = ps.getCityByPhase(vars.get("phaseName"));
-		updateYearPhaseAndCity(phase);
+		updateYearPhaseAndCity(phase, session);
 		return phase;
 	}
 	
 	@RequestMapping(value = "/updateOprateCity")
 	@ResponseBody
-	public BaseResult updateOprateCity(HttpServletRequest request,HttpServletResponse response, @RequestBody CommonRequest commonRequest) {
+	public BaseResult updateOprateCity(HttpServletRequest request,HttpSession session, @RequestBody CommonRequest commonRequest) {
 		System.out.println("=====");
 		Map<String, String> vars = commonRequest.getVars();
 		String city = vars.get("city");
 		System.out.println(city);
-		RecruitConst.city = city;
+		session.setAttribute("city", city);
 		return BaseResult.getSuccessResult("success");
 	}
 

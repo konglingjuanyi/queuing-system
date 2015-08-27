@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,8 +91,8 @@ public class HrController {
 	}
 
 	@RequestMapping(value = "/hr/getInterviewersForMonitor")
-	public String getInterviewersForMonitor(HttpServletRequest request,  ModelMap model) {
-//		System.out.println(RecruitConst.year+" "+RecruitConst.city+" "+RecruitConst.phase); 
+	public String getInterviewersForMonitor(HttpServletRequest request, HttpSession session,  ModelMap model) {
+		System.out.println(session.getAttribute("year")+" "+session.getAttribute("phase")+" "+session.getAttribute("city")); 
 //		Map<String, String> vars = commonRequest.getVars();
 //		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
 //		int pageSize = noSize[0];

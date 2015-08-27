@@ -6,6 +6,8 @@
 	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/static/css/style.css" />
 	<link rel="stylesheet" href="/static/css/module.css" />
+	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script src="/static/js/recruit/interviewer_recordphasecity.js"></script>
 </head>
 <script type="text/javascript">
 	function getNextStudent(){
@@ -17,6 +19,12 @@
 		<div class="l-nav">
 			<div class="m-title">
 				<h1>校招系统</h1>	
+				<select name="" id="year">
+				</select>
+				<select name="" id="phase">
+				</select>
+				<select name="" id="city">
+				</select>
 			</div>
 			<div class="m-title">
 				
@@ -26,7 +34,7 @@
 			<div class="l-content">
 				<!-- 内容start -->
 				<div class="m-pop alert">
-					<button class="m-login-btn btn btn-large btn-info" type="button" id="startInterview" onclick='getNextStudent()'>开始面试</button>
+					<button class="m-login-btn btn btn-large btn-info" type="button" id="startInterview">开始面试</button>
 				</div>
 				<!-- 内容end -->
 			</div>

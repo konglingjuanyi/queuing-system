@@ -1,13 +1,13 @@
 $(document).ready(function () {
 	$.ajax({
-	      url: "/getAllYears",
+	      url: "interviewer/getAllYears",
 	      type: "POST",
 	      dataType: "json",
 	      contentType: 'application/json; charset=utf-8',
 	      success: function (set) {
 	    	  $.each(set, function(i, year){
 	    		  if(i == 0){
-	    			  getPhaseAndCity(year);
+	    			  getPhases(year);
 	    		  }
 	    		  $("#year").append("<option value=''>"+year+"</option>");
 	    	  });
@@ -18,37 +18,22 @@ $(document).ready(function () {
 	    });
 	$("#year").change(function(){
 		 var year = $("#year").find("option:selected").text();
-		 getPhaseAndCity(year);
-		 backToIndex();
+		 getPhases(year);
 		
 	 });
 	 $("#phase").change(function(){
+		 var year = $("#year").find("option:selected").text();
 		 var phaseName = $("#phase").find("option:selected").text();
-		 var vars = {};
-		 vars["phaseName"] = phaseName;
-	     var params = {"vars": vars};
-		 $.ajax({
-		      url: "/getCityByPhase",
-		      type: "POST",
-		      dataType: "json",
-		      contentType: 'application/json; charset=utf-8',
-		      data: JSON.stringify(params),
-		      success: function (phase) {
-		    	  setCityOption(phase.cityName)
-		      },
-		      error: function () {
-		           alert("系统发生了错误请稍后重试");
-		      }
-		    });
-		 backToIndex();
-	 });
+		 getCitys(year, phaseName);
+	 	});
+
 	 $("#city").change(function(){
 		 var city = $("#city").find("option:selected").text();
 		 var vars = {};
 		 vars["city"] = city;
 	     var params = {"vars": vars};
 		 $.ajax({
-		      url: "/updateOprateCity",
+		      url: "interviewer/updateOprateCity",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
@@ -60,16 +45,15 @@ $(document).ready(function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
-		 backToIndex();
 	 });
 });
 
-function getPhaseAndCity(year){
+function getPhases(year){
 	 var vars = {};
 	 vars["year"] = year;
      var params = {"vars": vars};
 	$.ajax({
-	      url: "/getPhaseAndCityByYear",
+	      url: "interviewer/getPhasesByYear",
 	      type: "POST",
 	      dataType: "json",
 	      contentType: 'application/json; charset=utf-8',
@@ -77,9 +61,9 @@ function getPhaseAndCity(year){
 	      success: function (list) {
 	    	  $("#phase").empty();
 	    	  $.each(list, function(i, phase){
-    			  $("#phase").append("<option value=''>"+phase.phaseName+"</option>");
+    			  $("#phase").append("<option value=''>"+phase+"</option>");
 	    		  if(i == 0){
-	    			  setCityOption(phase.cityName);
+	    			  getCitys(year, phase);
 	    		  }
 	    	  });
 	      },
@@ -89,6 +73,28 @@ function getPhaseAndCity(year){
 	    });
 }
 
+function getCitys(year, phase){
+	 var vars = {};
+	 vars["year"] = year;
+	 vars["phase"] = phase;
+    var params = {"vars": vars};
+	$.ajax({
+	      url: "interviewer/getCityByYearAndPhase",
+	      type: "POST",
+	      dataType: "json",
+	      contentType: 'application/json; charset=utf-8',
+	      data: JSON.stringify(params),
+	      success: function (list) {
+	    	  $("#city").empty();
+	    	  $.each(list, function(i, city){
+   			  $("#city").append("<option value=''>"+city+"</option>");
+	    	  });
+	      },
+	      error: function () {
+	           alert("系统发生了错误请稍后重试");
+	      }
+	    });
+}
 
 function isExistOption(select,value) {
 	var isExist = false;

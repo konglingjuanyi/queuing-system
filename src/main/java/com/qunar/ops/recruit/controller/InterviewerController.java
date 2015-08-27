@@ -3,11 +3,15 @@ package com.qunar.ops.recruit.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +23,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.model.Interviewer;
+import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.DataResult;
 import com.qunar.ops.recruit.service.InterviewerService;
+import com.qunar.ops.recruit.service.PhaseInterviewService;
+import com.qunar.ops.recruit.service.PhaseService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.service.WaitService;
@@ -36,11 +43,15 @@ public class InterviewerController {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Autowired
-	private InterviewerService inServe;
+	private InterviewerService interServe;
 	@Autowired
 	StudentService studentService;
 	@Autowired
 	WaitService waitService;
+	@Autowired
+	PhaseService ps;
+	@Autowired
+	PhaseInterviewService pis;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
@@ -65,7 +76,7 @@ public class InterviewerController {
 //		int pageNo = noSize[1];
 //		int pageSize = 3;
 //		int pageNo = 1;
-//		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize, null,null);
+//		List<Interviewer> list = interServe.getInterviewers((pageNo - 1) * pageSize, pageSize, null,null);
 //		System.out.println(list);
 //		for(Interviewer i: list){
 //			System.out.println(i.getName());
@@ -78,8 +89,8 @@ public class InterviewerController {
 	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 //		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
-		Interviewer inter = inServe.createInterviewer(vars);
-		inServe.addInterviewer(inter);
+		Interviewer inter = interServe.createInterviewer(vars);
+		interServe.addInterviewer(inter);
 		return BaseResult.getSuccessResult(null);
 	}
 	
@@ -88,8 +99,8 @@ public class InterviewerController {
 	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 //		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
-		Interviewer inter = inServe.createInterviewer(vars);
-		inServe.addInterviewer(inter);
+		Interviewer inter = interServe.createInterviewer(vars);
+		interServe.addInterviewer(inter);
 		return BaseResult.getSuccessResult(null);
 	}
 
@@ -125,7 +136,7 @@ public class InterviewerController {
 			}
 		}		
 		String cityName = vars.get("cityName");
-		List<Interviewer> list = inServe.getInterviewers((pageNo - 1) * pageSize, pageSize, _startTime, _endTime, cityName);
+		List<Interviewer> list = interServe.getInterviewers((pageNo - 1) * pageSize, pageSize, _startTime, _endTime, cityName);
 		List<String[]> retList = tranfer2stringArray(list);
 		DataResult dataResult = new DataResult();
 		dataResult.setCount(list.size());
@@ -161,6 +172,44 @@ public class InterviewerController {
 //		Object obj = request.getSession().getAttribute("user");
 //		if(obj != null){
 //			if(obj instanceof Interviewer){
+//				Interviewer inter = (Interviewer) obj;
+//				Interviewer newInter = interServe.getInterviewerByUserName(inter.getUserName());
+//				StudentWaiter  stu;
+//				if(inter.getTwoView() !=null && !"".equals(inter.getTwoView())){
+//					//如果面试官的二面角色不为空,先从二面队列中拿数据
+//					//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
+//					stu = waitService.getTwoView(inter.getCity(),inter.getTwoView(),inter.getUserName());
+//					if(stu==null && !"".equals(inter.getOneView())){
+//						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
+//						stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
+//					}
+//				}else{
+//					//只有一面角色从一面队列中拿数据`
+//					stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
+//				}
+//				if(stu == null){
+//					return null;
+//				}else{
+//					
+//					return null;
+//				}
+//			}else{
+//				//不是interviewer，無權訪問
+//				return "redirect:/login";
+//			}
+//		}else{
+//			return "redirect:/login";
+//		}
+		
+		return "first";
+	}
+	
+	//備份
+//	@RequestMapping(value = "/interview/getNextStudent")
+//	public String getNextStudent(HttpServletRequest request) {
+//		Object obj = request.getSession().getAttribute("user");
+//		if(obj != null){
+//			if(obj instanceof Interviewer){
 //				PhaseInterviewer inter = (PhaseInterviewer) obj;
 //				StudentWaiter  stu;
 //				if(!"".equals(inter.getTwoView())){
@@ -188,8 +237,8 @@ public class InterviewerController {
 //			return BaseResult.getErrorResult(RecruitConst.NO_LOGIN);
 //		}
 //		
-		return "first";
-	}
+//		return "first";
+//	}
 	
 	/**
 	 * 一面结束根据一面结果判断候选人是否通过是否需要进行二面
@@ -197,7 +246,7 @@ public class InterviewerController {
 	 * @param commonRequest
 	 * @return
 	 */
-	@RequestMapping(value = "/interview/finishOneView")
+	@RequestMapping(value = "/interviewer/finishOneView")
 	@ResponseBody
 	public BaseResult finishOneView(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
@@ -215,5 +264,81 @@ public class InterviewerController {
 			//结束面试
 			return BaseResult.getSuccessResult(null);
 		}
+	}
+	
+	@RequestMapping(value = "/interviewer/getAllYears")
+	@ResponseBody
+	public Set<String> getAllYears(HttpServletRequest request, HttpSession session) {
+		Set<String> set = new HashSet<String>();
+		Interviewer inter = (Interviewer) session.getAttribute("user");
+		List<PhaseInterviewer> list = pis.getPhaseIntersByName(inter.getUserName());
+		if(list != null){
+			for (PhaseInterviewer phase : list) {
+				set.add(phase.getYear());
+			}
+		}
+		return set;
+	}
+	
+	private void updateYearPhaseAndCity(Phase phase) {
+		// TODO Auto-generated method stub
+		if(phase != null){
+			RecruitConst.year = phase.getYearInfo();
+			RecruitConst.phase = phase.getPhaseName();
+			if(phase.getCityName() != null){
+				String[] aa = phase.getCityName().split("\\|");
+				if(aa.length > 0)
+					RecruitConst.city = aa[0];
+			}
+		}
+	}
+
+	@RequestMapping(value = "/interviewer/getPhasesByYear")
+	@ResponseBody
+	public Set<String> getPhasesByYear(HttpServletRequest request, HttpSession session, @RequestBody CommonRequest commonRequest) {
+		Set<String> set = new HashSet<String>();
+		Map<String, String> vars = commonRequest.getVars();
+		Interviewer inter = (Interviewer) session.getAttribute("user");
+		List<PhaseInterviewer> list = pis.getPhasesByYearAndName(vars.get("year"), inter.getUserName());
+		if(list != null){
+			for (PhaseInterviewer phase : list) {
+				set.add(phase.getPhase());
+			}
+		}
+		return set;
+	}
+	
+	@RequestMapping(value = "/interviewer/getCityByYearAndPhase")
+	@ResponseBody
+	public Set<String> getCityByYearAndPhase(HttpServletRequest request, HttpSession session, @RequestBody CommonRequest commonRequest) {
+		Set<String> set = new HashSet<String>();
+		Map<String, String> vars = commonRequest.getVars();
+		Interviewer inter = (Interviewer) session.getAttribute("user");
+		String year = vars.get("year");
+		String phase = vars.get("phase");
+		session.setAttribute("year", year);
+		session.setAttribute("phase", phase);
+		List<PhaseInterviewer> list = pis.getCitysByYearPhaseAndName(year, phase, inter.getUserName());
+		if(list != null){
+			boolean b = true;
+			for (PhaseInterviewer pi : list) {
+				set.add(pi.getCity());
+				if(b){
+					session.setAttribute("city", pi.getCity());
+					b = false;
+				}
+			}
+		}
+		return set;
+	}
+	
+	@RequestMapping(value = "interviewer/updateOprateCity")
+	@ResponseBody
+	public BaseResult updateOprateCity(HttpServletRequest request,HttpSession session, @RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		String city = vars.get("city");
+		System.out.println(city);
+		session.setAttribute("city", city);
+		return BaseResult.getSuccessResult("success");
 	}
 }

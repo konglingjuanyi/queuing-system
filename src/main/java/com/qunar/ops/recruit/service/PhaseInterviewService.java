@@ -113,5 +113,38 @@ public class PhaseInterviewService {
 		return list;
 	}
 
+	public List<PhaseInterviewer> getPhaseIntersByName(String name) {
+		PhaseInterviewerExample example = new PhaseInterviewerExample();
+		PhaseInterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andIntervierNameEqualTo(name);
+		criteria.andEnableEqualTo("1");
+		List<PhaseInterviewer> list = interMapper.selectByExample(example);
+		return list;
+	}
+
+	public List<PhaseInterviewer> getPhasesByYearAndName(String year,
+			String userName) {
+		PhaseInterviewerExample example = new PhaseInterviewerExample();
+		PhaseInterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andYearEqualTo(year);
+		criteria.andIntervierNameEqualTo(userName);
+		criteria.andEnableEqualTo("1");
+		List<PhaseInterviewer> list = interMapper.selectByExample(example);
+		return list;
+	}
+	
+	public List<PhaseInterviewer> getCitysByYearPhaseAndName(String year,
+			String phase, String userName) {
+		System.out.println(year+" "+phase+" "+userName);
+		PhaseInterviewerExample example = new PhaseInterviewerExample();
+		PhaseInterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andYearEqualTo(year);
+		criteria.andPhaseEqualTo(phase);
+		criteria.andIntervierNameEqualTo(userName);
+		criteria.andEnableEqualTo("1");
+		List<PhaseInterviewer> list = interMapper.selectByExample(example);
+		return list;
+	}
+
 	
 }

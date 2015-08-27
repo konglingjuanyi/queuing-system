@@ -3,39 +3,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>面试平台-初试</title>
+    <script src="/static/js/jquery-2.1.4.min.js"></script>
+	<script src="/static/js/data.js"></script>
+	<script src="/static/js/index.js"></script>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/static/css/style.min.css" />
 </head>
 <body>
     <div class="l-fullsreen">
-        <div class="l-nav">
-            <div class="m-title">
-                <h1>校招系统</h1>   
-                <select name="" id="">
-                    <option value="">2015秋季校招</option>
-                    <option value="">2015秋季校招1</option>
-                    <option value="">2015秋季校招2</option>
-                    <option value="">2015秋季校招3</option>
-                </select>
-                <select name="" id="">
-                    <option value="">北京</option>
-                    <option value="">北京</option>
-                    <option value="">北京</option>
-                    <option value="">北京</option>
-                </select>
-            </div>
-            <div class="m-nav">
-                <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a href="#">首页</a>
-                    </li>
-                    <li><a href="#">面试平台</a></li>
-                    <li><a href="#">面试管理</a></li>
-                    <li><a href="#">面试学生管理</a></li>
-                    <li><a href="#">批次管理</a></li>
-                </ul>
-            </div>
-        </div>
         <div class="l-container">
             <div class="l-sidebar">
                 <div class="m-firsttry-sidebar">
@@ -661,7 +636,4 @@
     </table>
 </div>
 </body>
-<script src="js/jquery-2.1.4.min.js"></script>
-<script src="js/data.js"></script>
-<script src="js/index.js"></script>
 </html>
