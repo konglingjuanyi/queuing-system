@@ -101,7 +101,10 @@ public class HrController {
 //		int pageNo = 1;
 //		pageNo = pageNo <= 0 ? 1 : pageNo;
 //		pageSize = pageSize > 0 ? pageSize : 20;
-		List<InterviewerInfoToPage> list = joinService.getInterviewerInfoToPages();
+		String year = (String)session.getAttribute("year");
+		String phase = (String)session.getAttribute("phase");
+		String city = (String)session.getAttribute("city");
+		List<InterviewerInfoToPage> list = joinService.getInterviewerInfoToPages(year, phase, city);
 		List<ResultPlusAdditionalInfo> rets = new LinkedList<ResultPlusAdditionalInfo>();
 		for (InterviewerInfoToPage interviewer : list) {
 			ResultPlusAdditionalInfo info = new ResultPlusAdditionalInfo();
@@ -129,7 +132,7 @@ public class HrController {
 
 	@RequestMapping(value = "/hr/getInterviewerInfo")
 	@ResponseBody
-	public BaseResult getInterviewerInfo(HttpServletRequest request,  int id, ModelMap model) {
+	public BaseResult getInterviewerInfo(HttpServletRequest request, HttpSession session, int id, ModelMap model) {
 //		System.out.println("===========================");
 //		Map<String, String> vars = commonRequest.getVars();
 //		int noSize[] = RecruitControllerUtils.getPageNoAndSize(vars);
@@ -147,7 +150,10 @@ public class HrController {
 //		dataResult.setCount(list.size());
 //		dataResult.setTableInfos(retList);
 		logger.debug("getInterviewerInfo");
-		InterviewerInfoToPage inter = joinService.getInterviewerInfoToPage(id);
+		String year = (String)session.getAttribute("year");
+		String phase = (String)session.getAttribute("phase");
+		String city = (String)session.getAttribute("city");
+		InterviewerInfoToPage inter = joinService.getInterviewerInfoToPage(year, phase, city, id);
 		model.addAttribute("message", inter);
 		return BaseResult.getSuccessResult(inter);
 	}
