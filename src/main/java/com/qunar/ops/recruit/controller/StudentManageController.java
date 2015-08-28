@@ -15,18 +15,16 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentForm;
-import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
 import com.qunar.ops.recruit.service.StudentManageService;
 import com.qunar.ops.recruit.util.RecruitConst;
@@ -134,9 +132,15 @@ public class StudentManageController {
 	}
 	
 	@RequestMapping(value = "/hr/AddStudentInfo")
-	public String  AddStudentInfo(HttpServletRequest request,@RequestBody CommonRequest commonRequest){
-		//System.out.println(stu.getName());
-		System.out.println(commonRequest.getVars());
+	public String  AddStudentInfo(HttpServletRequest request,@ModelAttribute("doaddform") StudentForm stu,BindingResult results){
+		Student result=stuService.makeStudentBy(stu);
+		int flag=stuService.insertOneStudentInfo(result);
+		return "forward:/hr/getAllStudentInfos";
+	}
+	
+	@RequestMapping(value = "/hr/deleteStudentInfo")
+	public String  deleteStudentInfo(HttpServletRequest request, int id){
+		stuService.deleteStudentInfoBy(id);
 		return "forward:/hr/getAllStudentInfos";
 	}
 }

@@ -67,7 +67,7 @@ function active(obj){
 	$('#viewpage').removeClass("active");
 	$('#managepage').removeClass("active");
 	$('#stupage').removeClass("active");
-	$('#stupage').removeClass("phasepage");
+	$('#phasepage').removeClass("active");
 	obj.addClass("active");
 }
 

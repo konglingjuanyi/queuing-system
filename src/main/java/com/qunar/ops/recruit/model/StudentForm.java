@@ -36,7 +36,7 @@ public class StudentForm {
 
     private String graduateDate;
 
-    private Double salary;
+    private String salary;
 
     private String assess;
 
@@ -228,11 +228,11 @@ public class StudentForm {
 		this.graduateDate = graduateDate;
 	}
 
-	public Double getSalary() {
+	public String getSalary() {
 		return salary;
 	}
 
-	public void setSalary(Double salary) {
+	public void setSalary(String salary) {
 		this.salary = salary;
 	}
 

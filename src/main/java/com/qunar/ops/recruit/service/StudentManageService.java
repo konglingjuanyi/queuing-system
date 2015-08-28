@@ -2,6 +2,7 @@ package com.qunar.ops.recruit.service;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Component;
 import com.qunar.ops.recruit.dao.StudentMapper;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentExample;
+import com.qunar.ops.recruit.model.StudentForm;
+import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
 @Component
 public class StudentManageService {
@@ -145,11 +148,31 @@ public class StudentManageService {
 		// TODO Auto-generated method stub
 		if(student.size()>0){
 			for(Student stu:student){
-				stuMapper.insertSelective(stu);
+				if(isHave(stu)){
+					stuMapper.updateByPrimaryKeySelective(stu);
+				}else{
+					stuMapper.insertSelective(stu);
+				}
 			}
 			return 1;
 		}else{
 			return -1;
+		}
+	}
+	
+	public boolean isHave(Student stu){
+		StudentExample example = new StudentExample();
+		StudentExample.Criteria criteria = example.createCriteria();
+		criteria.andYearEqualTo(stu.getYear());
+		criteria.andPhaseNoEqualTo(stu.getPhaseNo());
+		criteria.andLocationEqualTo(stu.getLocation());
+		criteria.andPhoneEqualTo(stu.getPhone());
+		criteria.andNameEqualTo(stu.getName());
+		List<Student> list=new ArrayList<Student>();
+		if(list!=null && list.size()>0){
+			return true;
+		}else{
+			return false;
 		}
 	}
 
@@ -160,7 +183,145 @@ public class StudentManageService {
 		criteria.andYearEqualTo(year);
 		criteria.andPhaseNoEqualTo(phase);
 		criteria.andLocationEqualTo(city);
+		criteria.andStateNotEqualTo("9");
 		return stuMapper.selectByExample(example);
+	}
+
+	public Student makeStudentBy(StudentForm stu) {
+		Student inter = new Student();
+		String noteNo = stu.getNoteNo();
+		String phaseNo = stu.getPhaseNo();
+		String interviewTime = stu.getInterviewTime();
+		String name = stu.getName();
+		String sex = stu.getSex();
+		String school = stu.getSchool();
+		String profession = stu.getProfession();
+		String education = stu.getEducation();
+		String phone = stu.getPhone();
+		String email = stu.getEmail();
+		String cardNo = stu.getCardNo();
+		String qqNo = stu.getQqNo();
+		String job = stu.getJob();
+		String workStart = stu.getWorkStart();
+		String workEnd = stu.getWorkEnd();
+		String graduateDate = stu.getGraduateDate();
+		String salary = stu.getSalary();
+		String assess = stu.getAssess();
+		String firstTry = stu.getFirstTry();
+		String secondTry = stu.getSecondTry();
+		String viewRemark = stu.getViewRemark();
+		String location = stu.getLocation();
+		String offerState = stu.getOfferState();
+		String threeSide = stu.getThreeSide();
+		String payTime = stu.getPayTime();
+		String threeState = stu.getThreeState();
+		String refuse = stu.getRefuse();
+		String refuseReson = stu.getRefuseReson();
+		String refuseDate = stu.getRefuseDate();
+		String breaker = stu.getBreaker();
+		String train = stu.getTrain();
+		String staffNo = stu.getStaffNo();
+		String interviewDept = stu.getInterviewDept();
+		String fenpeiDept = stu.getFenpeiDept();
+		String yuanDept = stu.getYuanDept();
+		String organize = stu.getOrganize();
+		String leader = stu.getLeader();
+		String year = stu.getYear();
+		
+		inter.setRefuse(refuse);
+		inter.setOfferState(offerState);
+		inter.setPhone(phone);
+		inter.setQqNo(qqNo);
+		inter.setProfession(profession);
+		inter.setSex(sex);
+		inter.setAssess(assess);
+		inter.setOrganize(organize);
+		inter.setNoteNo(noteNo);
+		inter.setPhaseNo(phaseNo);
+		inter.setBreaker(breaker);
+		inter.setCardNo(cardNo);
+		inter.setEducation(education);
+		inter.setEmail(email);
+		inter.setFenpeiDept(fenpeiDept);
+		inter.setFirstTry(firstTry);
+		inter.setInterviewDept(interviewDept);
+		inter.setJob(job);
+		inter.setLeader(leader);
+		inter.setLocation(location);
+		inter.setName(name);
+		inter.setYuanDept(yuanDept);
+		inter.setYear(year);
+		inter.setViewRemark(viewRemark);
+		inter.setTrain(train);
+		inter.setThreeState(threeState);
+		inter.setThreeSide(threeSide);
+		inter.setState("0");
+		if("".equals(salary) || salary==null){
+			inter.setSalary(Double.valueOf(0));
+		}else{
+			inter.setSalary(Double.valueOf(salary));
+		}
+		inter.setSchool(school);
+		inter.setSecondTry(secondTry);
+		inter.setStaffNo(staffNo);
+		inter.setRefuse(refuseDate);
+		inter.setRefuseReson(refuseReson);
+		if("".equals(interviewTime) || interviewTime==null){
+			inter.setInterviewTime(null);
+		}else{
+			inter.setInterviewTime(RecruitControllerUtils.strToDateII(interviewTime));
+		}
+		if("".equals(workStart) || workStart==null){
+			inter.setWorkStart(null);
+		}else{
+			inter.setWorkStart(RecruitControllerUtils.strToDateII(workStart));
+		}
+		if("".equals(workEnd) || workEnd==null){
+			inter.setWorkEnd(null);
+		}else{
+			inter.setWorkEnd(RecruitControllerUtils.strToDateII(workEnd));
+		}
+		if("".equals(graduateDate) || graduateDate==null){
+			inter.setGraduateDate(null);
+		}else{
+			inter.setGraduateDate(RecruitControllerUtils.strToDateII(graduateDate));
+		}
+		if("".equals(payTime) || payTime==null){
+			inter.setPayTime(null);
+		}else{
+			inter.setPayTime(RecruitControllerUtils.strToDateII(payTime));
+		}
+		if("".equals(refuseDate) || refuseDate==null){
+			inter.setRefuseDate(null);
+		}else{
+			inter.setRefuseDate(RecruitControllerUtils.strToDateII(refuseDate));
+		}
+		return inter;
+	}
+
+	public int insertOneStudentInfo(Student result) {
+		// TODO Auto-generated method stub
+		if(result!=null){
+			if(isHave(result)){
+				stuMapper.updateByPrimaryKeySelective(result);
+			}else{
+				stuMapper.insertSelective(result);
+			}
+			return 1;
+		}else{
+			return -1;
+		}
+	}
+
+	public void deleteStudentInfoBy(int id) {
+		// TODO Auto-generated method stub
+		Student stu=new Student();
+		stu.setState("9");
+		StudentExample example = new StudentExample();
+		StudentExample.Criteria criteria = example.createCriteria();
+		criteria.andIdEqualTo(id);
+		stuMapper.updateByExampleSelective(stu, example);
+		
 	}
 
 }

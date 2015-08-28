@@ -7,6 +7,7 @@
 	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="/static/css/module.css" />
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/jquery-form.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
     <script type="text/javascript" src="/static/My97DatePicker/WdatePicker.js" charset="UTF-8"></script>
 	<script type="text/javascript" src="/static/js/recruit/student_manage.js"></script>
@@ -61,7 +62,7 @@
 							<div class="control-group">
 								<label class="control-label">性别</label>
 								<div class="controls">
-								  	<label class="line-label" for="male"><input type="radio" name="sex" id="male" value="男"/>男</label>
+								  	<label class="line-label" for="male"><input type="radio" name="sex" id="male" value="男" checked/>男</label>
 								  	<label class="line-label" for="female"><input type="radio" name="sex" id="female" value="女"/>女</label>
 								</div>
 							</div>
@@ -111,9 +112,9 @@
 								<label class="control-label">应聘职位</label>
 								<div class="controls">
 									<select name="job" id="job">
-										<option value="">DEV</option>
-										<option value="">QA</option>
-										<option value="">FE</option>
+										<option value="DEV">DEV</option>
+										<option value="QA">QA</option>
+										<option value="FE">FE</option>
 									</select>
 								</div>
 							</div>
@@ -145,10 +146,10 @@
 								<label class="control-label">综合评价</label>
 								<div class="controls">
 								  <select name="assess" id="assess">
-                                    <option value="">合格</option>
-                                    <option value="">优秀</option>
-                                    <option value="">卓越</option>
-                                    <option value="">不合格</option>
+                                    <option value="合格">合格</option>
+                                    <option value="优秀">优秀</option>
+                                    <option value="卓越">卓越</option>
+                                    <option value="不合格">不合格</option>
                                   </select>
 								</div>
 							</div>
@@ -173,15 +174,15 @@
 							<div class="control-group">
 								<label class="control-label">offer状态</label>
 								<div class="controls">
-									<label class="line-label" ><input type="radio" name="location" id="access" value="接受"/>接受</label>
-									<label class="line-label" ><input type="radio" name="location" id="refuse" value="拒绝"/>拒绝</label>
+									<label class="line-label" ><input type="radio" name="offerState" id="access" value="接受" checked/>接受</label>
+									<label class="line-label" ><input type="radio" name="offerState" id="dorefuse" value="拒绝"/>拒绝</label>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">三方交付</label>
 								<div class="controls">
 									<label class="line-label" ><input type="radio" name="threeSide" id="yes" value="是"/>是</label>
-									<label class="line-label" ><input type="radio" name="threeSide" id="no" value="否"/>否</label>
+									<label class="line-label" ><input type="radio" name="threeSide" id="no" value="否" checked/>否</label>
 								</div>
 							</div>
 							<div class="control-group">
@@ -201,15 +202,15 @@
 							<div class="control-group">
 								<label class="control-label">拒签大类</label>
 								<div class="controls">
-									<label class="line-label" ><input type="checkbox" name="xinzi" id="xinzi" value="薪资"/>薪资</label>
-									<label class="line-label" ><input type="checkbox" name="pinpai" id="pinpai" value="品牌"/>品牌</label>
-									<label class="line-label" ><input type="checkbox" name="chengshi" id="chengshi" value="城市"/>城市</label>
-									<label class="line-label" ><input type="checkbox" name="hukou" id="hukou" value="户口"/>户口</label>
-									<label class="line-label" ><input type="checkbox" name="zhiwei" id="zhiwei" value="职位"/>职位</label>
-									<label class="line-label" ><input type="checkbox" name="jiankang" id="jiankang" value="健康"/>健康</label>
-									<label class="line-label" ><input type="checkbox" name="shenzao" id="shenzao" value="深造"/>深造</label>
-									<label class="line-label" ><input type="checkbox" name="jiating" id="jiating" value="家庭"/>家庭</label>
-									<label class="line-label" ><input type="checkbox" name="qita" id="qita" value="其他"/>其他</label>
+									<label class="line-label" ><input type="checkbox" name="refusetype" id="xinzi" value="薪资" onclick="doSel()"/>薪资</label>
+									<label class="line-label" ><input type="checkbox" name="refusetype" id="pinpai" value="品牌" onclick="doSel()"/>品牌</label>
+									<label class="line-label" ><input type="checkbox" name="refusetype" id="chengshi" value="城市" onclick="doSel()"/>城市</label>
+									<label class="line-label" ><input type="checkbox" name="refusetype" id="hukou" value="户口" onclick="doSel()"/>户口</label>
+									<label class="line-label" ><input type="checkbox" name="refusetype" id="zhiwei" value="职位" onclick="doSel()"/>职位</label>
+									<label class="line-label" ><input type="checkbox" name="refusetype" id="jiankang" value="健康" onclick="doSel()"/>健康</label>
+									<label class="line-label" ><input type="checkbox" name="refusetype" id="shenzao" value="深造" onclick="doSel()"/>深造</label>
+									<label class="line-label" ><input type="checkbox" name="refusetype" id="jiating" value="家庭" onclick="doSel()"/>家庭</label>
+									<label class="line-label" ><input type="checkbox" name="refusetype" id="qita" value="其他" onclick="doSel()"/>其他</label>
 								</div>
 								<input type="hidden" id="refuse" name="refuse" value=""/>
 							</div>
@@ -222,14 +223,14 @@
 							<div class="control-group">
 								<label class="control-label">拒绝时间</label>
 								<div class="controls">
-								  <input class="input-medium" name="refuseDate" type="text" style="width: 205px" onclick="showTime()" placeholder="应到时间">
+								  <input class="input-medium" name="refuseDate" type="text" style="width: 205px" onclick="showTime()" placeholder="拒绝时间">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">违约办理</label>
 								<div class="controls">
 									<label class="line-label" ><input type="radio" name="breaker" id="" value="是"/>是</label>
-									<label class="line-label" ><input type="radio" name="breaker" id="" value="否"/>否</label>
+									<label class="line-label" ><input type="radio" name="breaker" id="" value="否" checked/>否</label>
 								</div>
 							</div>
 							<div class="control-group">

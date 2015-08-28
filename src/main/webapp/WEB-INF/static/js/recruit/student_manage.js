@@ -6,7 +6,24 @@ $(document).ready(function () {
 	});
 	
 	$("#import").click(function(){
-		$("#impform").submit();
+		//$("#impform").submit();
+		if($('#fileField').val()==""){
+             alert("请先选择要导入文件！");
+             return false;
+        }else{
+           $('#impform').ajaxSubmit({
+                 url:"/hr/importStudentInfos",
+                 cache:false,
+                 dataType:'html',
+                 success: function(data) {
+                	 $("#selectfile").modal("hide");
+                	 $('#content').html(data);
+                 },
+                 error:function(){
+                     alert("error");
+                 }
+           });
+      }
 	});
 	
 	$('#addstu').click(function(){
@@ -27,9 +44,12 @@ $(document).ready(function () {
 	
 	$('#dosubmitstu').click(function(){
 	    //$("#doaddform").submit();
-		var vars=$('#doaddform').serializeObject();
+		/*var vars=$('#doaddform').serializeArray();
 		active($('#stupage'));
+		alert(vars);
 		var params = {"vars": vars};
+		alert(params);
+		alert(JSON.stringify(params));
 	    $.ajax({
 	      url: "/hr/AddStudentInfo",
 	      type: "POST",
@@ -42,7 +62,18 @@ $(document).ready(function () {
 	      error: function () {
 	           alert("系统发生了错误请稍后重试");
 	      }
-	    });
+	    });*/
+	    $('#doaddform').ajaxSubmit({
+            url:"/hr/AddStudentInfo",
+            cache:false,
+            dataType:'html',
+            success: function(data) {
+           	 	$('#content').html(data);
+            },
+            error:function(){
+                alert("error");
+            }
+      });
 	});
 	
 	$.ajax({
@@ -55,7 +86,7 @@ $(document).ready(function () {
 	    		  if(i == 0){
 	    			  getPhaseAndCity(year);
 	    		  }
-	    		  $("#year_").append("<option value=''>"+year+"</option>");
+	    		  $("#year_").append("<option value='"+year+"'>"+year+"</option>");
 	    	  });
 		  },
 	      error: function () {
@@ -145,7 +176,7 @@ function getPhaseAndCity(year){
 	      success: function (list) {
 	    	  $("#phase_").empty();
 	    	  $.each(list, function(i, phase){
-   			  $("#phase_").append("<option value=''>"+phase.phaseName+"</option>");
+   			  $("#phase_").append("<option value='"+phase.phaseName+"'>"+phase.phaseName+"</option>");
 	    		  if(i == 0){
 	    			  setCityOption(phase.cityName);
 	    		  }
@@ -177,7 +208,7 @@ function setCityOption(phaseName){
 		return;
 	array = phaseName.split("|");
 	$.each(array, function(i, cityName){
-		  $("#city_").append("<option value=''>"+cityName+"</option>");
+		  $("#city_").append("<option value='"+cityName+"'>"+cityName+"</option>");
 	});
 }
 
@@ -214,5 +245,35 @@ function setCityOption1(phaseName){
 
 function showTime() {
     WdatePicker({dateFmt: 'yyyy-MM-dd HH:mm:ss'});
+}
+
+function doSel(){
+	var finish_value =[];
+	$('input[name="refusetype"]:checked').each(function(){    
+		finish_value.push($(this).val());    
+	});
+	var refusetype="";
+	if(finish_value.length>0){
+		refusetype=finish_value.join(",");
+	}
+	$("#refuse").val(refusetype);
+}
+
+function dodelete(id){
+	if(confirm("确定要删除吗？")){
+		$.ajax({
+	        url: "/hr/deleteStudentInfo",
+            cache:false,
+            dataType:'html',
+            data: {'id':id},
+            success: function(data) {
+           	 $("#selectfile").modal("hide");
+           	 $('#content').html(data);
+            },
+            error:function(){
+                alert("error");
+            }
+	 });
+	}
 }
 
