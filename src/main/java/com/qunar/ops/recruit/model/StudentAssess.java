@@ -3,89 +3,113 @@ package com.qunar.ops.recruit.model;
 public class StudentAssess {
     private Integer id;
 
-    private Long studentId;
+    private Integer studenId;
 
     private String oneViewer;
 
-    private Long oneCode;
-
-    private Long oneSuanfa;
-
-    private Long oneIntenet;
-
-    private Long oneXiangmu;
-
-    private Long oneOther;
-
-    private Long oneCount;
-
-    private Long oneLuoji;
-
-    private Long oneChuangxin;
-
-    private Long oneTeam;
-
-    private Long oneStady;
-
-    private Long oneZhuoyue;
-
-    private Long oneSum;
-
-    private Long oneResult;
-
-    private String oneYewu;
-
-    private String oneSuzhi;
-
-    private String oneZonghe;
-
     private String twoViewer;
 
-    private Long twoCode;
+    private String job;
 
-    private Long twoSuanfa;
+    private Integer oneCode;
 
-    private Long twoIntenet;
+    private String oneCodeDetail;
 
-    private Long twoXiangmu;
+    private Integer oneAlgorithm;
 
-    private Long twoOther;
+    private String oneAlgorithmDetail;
 
-    private Long twoCount;
+    private Integer oneNetwork;
 
-    private Long twoLuoji;
+    private String oneNetworkDetail;
 
-    private Long twoChuangxin;
+    private Integer oneExperience;
 
-    private Long twoTeam;
+    private String oneExperienceDetail;
 
-    private Long twoStady;
+    private Integer oneOther;
 
-    private Long twoZhuoyue;
+    private String oneOtherDetail;
 
-    private Long twoSum;
+    private Integer oneLogic;
 
-    private Long twoResult;
+    private String oneLogicDetail;
 
-    private String twoYewu;
+    private Integer oneCreative;
 
-    private String twoSuzhi;
+    private String oneCreativeDetail;
 
-    private String twoZonghe;
+    private Integer oneTeam;
 
-    private String oneFenpei;
+    private String oneTeamDetail;
 
-    private String twoFenpei;
+    private Integer oneContinuouslearning;
 
-    private String hrYijian;
+    private String oneContinuouslearningDetail;
 
-    private Long oneSlary;
+    private Integer oneOutstanding;
 
-    private Long twoSlary;
+    private String oneOutstandingDetail;
 
-    private Long hrSlary;
+    private Integer twoCode;
+
+    private String twoCodeDetail;
+
+    private Integer twoAlgorithm;
+
+    private String twoAlgorithmDetail;
+
+    private Integer twoNetwork;
+
+    private String twoNetworkDetail;
+
+    private Integer twoExperience;
+
+    private String twoExperienceDetail;
+
+    private Integer twoOther;
+
+    private String twoOtherDetail;
+
+    private Integer twoLogic;
+
+    private String twoLogicDetail;
+
+    private Integer twoCreative;
+
+    private String twoCreativeDetail;
+
+    private Integer twoTeam;
+
+    private String twoTeamDetail;
+
+    private Integer twoContinuouslearning;
+
+    private String twoContinuouslearningDetail;
+
+    private Integer twoOutstanding;
+
+    private String twoOutstandingDetail;
+
+    private String oneConclusion;
+
+    private Integer oneSuggestSalary;
+
+    private String oneSuggestSalaryDetail;
+
+    private Integer twoConclusion;
+
+    private String twoConclusionDetail;
+
+    private String oneAllocationIdea;
+
+    private String twoAllocationIdea;
 
     private String hrName;
+
+    private Integer hrSuggestSalary;
+
+    private String hrDetailIdea;
 
     public Integer getId() {
         return id;
@@ -95,12 +119,12 @@ public class StudentAssess {
         this.id = id;
     }
 
-    public Long getStudentId() {
-        return studentId;
+    public Integer getStudenId() {
+        return studenId;
     }
 
-    public void setStudentId(Long studentId) {
-        this.studentId = studentId;
+    public void setStudenId(Integer studenId) {
+        this.studenId = studenId;
     }
 
     public String getOneViewer() {
@@ -111,134 +135,6 @@ public class StudentAssess {
         this.oneViewer = oneViewer == null ? null : oneViewer.trim();
     }
 
-    public Long getOneCode() {
-        return oneCode;
-    }
-
-    public void setOneCode(Long oneCode) {
-        this.oneCode = oneCode;
-    }
-
-    public Long getOneSuanfa() {
-        return oneSuanfa;
-    }
-
-    public void setOneSuanfa(Long oneSuanfa) {
-        this.oneSuanfa = oneSuanfa;
-    }
-
-    public Long getOneIntenet() {
-        return oneIntenet;
-    }
-
-    public void setOneIntenet(Long oneIntenet) {
-        this.oneIntenet = oneIntenet;
-    }
-
-    public Long getOneXiangmu() {
-        return oneXiangmu;
-    }
-
-    public void setOneXiangmu(Long oneXiangmu) {
-        this.oneXiangmu = oneXiangmu;
-    }
-
-    public Long getOneOther() {
-        return oneOther;
-    }
-
-    public void setOneOther(Long oneOther) {
-        this.oneOther = oneOther;
-    }
-
-    public Long getOneCount() {
-        return oneCount;
-    }
-
-    public void setOneCount(Long oneCount) {
-        this.oneCount = oneCount;
-    }
-
-    public Long getOneLuoji() {
-        return oneLuoji;
-    }
-
-    public void setOneLuoji(Long oneLuoji) {
-        this.oneLuoji = oneLuoji;
-    }
-
-    public Long getOneChuangxin() {
-        return oneChuangxin;
-    }
-
-    public void setOneChuangxin(Long oneChuangxin) {
-        this.oneChuangxin = oneChuangxin;
-    }
-
-    public Long getOneTeam() {
-        return oneTeam;
-    }
-
-    public void setOneTeam(Long oneTeam) {
-        this.oneTeam = oneTeam;
-    }
-
-    public Long getOneStady() {
-        return oneStady;
-    }
-
-    public void setOneStady(Long oneStady) {
-        this.oneStady = oneStady;
-    }
-
-    public Long getOneZhuoyue() {
-        return oneZhuoyue;
-    }
-
-    public void setOneZhuoyue(Long oneZhuoyue) {
-        this.oneZhuoyue = oneZhuoyue;
-    }
-
-    public Long getOneSum() {
-        return oneSum;
-    }
-
-    public void setOneSum(Long oneSum) {
-        this.oneSum = oneSum;
-    }
-
-    public Long getOneResult() {
-        return oneResult;
-    }
-
-    public void setOneResult(Long oneResult) {
-        this.oneResult = oneResult;
-    }
-
-    public String getOneYewu() {
-        return oneYewu;
-    }
-
-    public void setOneYewu(String oneYewu) {
-        this.oneYewu = oneYewu == null ? null : oneYewu.trim();
-    }
-
-    public String getOneSuzhi() {
-        return oneSuzhi;
-    }
-
-    public void setOneSuzhi(String oneSuzhi) {
-        this.oneSuzhi = oneSuzhi == null ? null : oneSuzhi.trim();
-    }
-
-    public String getOneZonghe() {
-        return oneZonghe;
-    }
-
-    public void setOneZonghe(String oneZonghe) {
-        this.oneZonghe = oneZonghe == null ? null : oneZonghe.trim();
-    }
-
     public String getTwoViewer() {
         return twoViewer;
     }
@@ -247,180 +143,388 @@ public class StudentAssess {
         this.twoViewer = twoViewer == null ? null : twoViewer.trim();
     }
 
-    public Long getTwoCode() {
+    public String getJob() {
+        return job;
+    }
+
+    public void setJob(String job) {
+        this.job = job == null ? null : job.trim();
+    }
+
+    public Integer getOneCode() {
+        return oneCode;
+    }
+
+    public void setOneCode(Integer oneCode) {
+        this.oneCode = oneCode;
+    }
+
+    public String getOneCodeDetail() {
+        return oneCodeDetail;
+    }
+
+    public void setOneCodeDetail(String oneCodeDetail) {
+        this.oneCodeDetail = oneCodeDetail == null ? null : oneCodeDetail.trim();
+    }
+
+    public Integer getOneAlgorithm() {
+        return oneAlgorithm;
+    }
+
+    public void setOneAlgorithm(Integer oneAlgorithm) {
+        this.oneAlgorithm = oneAlgorithm;
+    }
+
+    public String getOneAlgorithmDetail() {
+        return oneAlgorithmDetail;
+    }
+
+    public void setOneAlgorithmDetail(String oneAlgorithmDetail) {
+        this.oneAlgorithmDetail = oneAlgorithmDetail == null ? null : oneAlgorithmDetail.trim();
+    }
+
+    public Integer getOneNetwork() {
+        return oneNetwork;
+    }
+
+    public void setOneNetwork(Integer oneNetwork) {
+        this.oneNetwork = oneNetwork;
+    }
+
+    public String getOneNetworkDetail() {
+        return oneNetworkDetail;
+    }
+
+    public void setOneNetworkDetail(String oneNetworkDetail) {
+        this.oneNetworkDetail = oneNetworkDetail == null ? null : oneNetworkDetail.trim();
+    }
+
+    public Integer getOneExperience() {
+        return oneExperience;
+    }
+
+    public void setOneExperience(Integer oneExperience) {
+        this.oneExperience = oneExperience;
+    }
+
+    public String getOneExperienceDetail() {
+        return oneExperienceDetail;
+    }
+
+    public void setOneExperienceDetail(String oneExperienceDetail) {
+        this.oneExperienceDetail = oneExperienceDetail == null ? null : oneExperienceDetail.trim();
+    }
+
+    public Integer getOneOther() {
+        return oneOther;
+    }
+
+    public void setOneOther(Integer oneOther) {
+        this.oneOther = oneOther;
+    }
+
+    public String getOneOtherDetail() {
+        return oneOtherDetail;
+    }
+
+    public void setOneOtherDetail(String oneOtherDetail) {
+        this.oneOtherDetail = oneOtherDetail == null ? null : oneOtherDetail.trim();
+    }
+
+    public Integer getOneLogic() {
+        return oneLogic;
+    }
+
+    public void setOneLogic(Integer oneLogic) {
+        this.oneLogic = oneLogic;
+    }
+
+    public String getOneLogicDetail() {
+        return oneLogicDetail;
+    }
+
+    public void setOneLogicDetail(String oneLogicDetail) {
+        this.oneLogicDetail = oneLogicDetail == null ? null : oneLogicDetail.trim();
+    }
+
+    public Integer getOneCreative() {
+        return oneCreative;
+    }
+
+    public void setOneCreative(Integer oneCreative) {
+        this.oneCreative = oneCreative;
+    }
+
+    public String getOneCreativeDetail() {
+        return oneCreativeDetail;
+    }
+
+    public void setOneCreativeDetail(String oneCreativeDetail) {
+        this.oneCreativeDetail = oneCreativeDetail == null ? null : oneCreativeDetail.trim();
+    }
+
+    public Integer getOneTeam() {
+        return oneTeam;
+    }
+
+    public void setOneTeam(Integer oneTeam) {
+        this.oneTeam = oneTeam;
+    }
+
+    public String getOneTeamDetail() {
+        return oneTeamDetail;
+    }
+
+    public void setOneTeamDetail(String oneTeamDetail) {
+        this.oneTeamDetail = oneTeamDetail == null ? null : oneTeamDetail.trim();
+    }
+
+    public Integer getOneContinuouslearning() {
+        return oneContinuouslearning;
+    }
+
+    public void setOneContinuouslearning(Integer oneContinuouslearning) {
+        this.oneContinuouslearning = oneContinuouslearning;
+    }
+
+    public String getOneContinuouslearningDetail() {
+        return oneContinuouslearningDetail;
+    }
+
+    public void setOneContinuouslearningDetail(String oneContinuouslearningDetail) {
+        this.oneContinuouslearningDetail = oneContinuouslearningDetail == null ? null : oneContinuouslearningDetail.trim();
+    }
+
+    public Integer getOneOutstanding() {
+        return oneOutstanding;
+    }
+
+    public void setOneOutstanding(Integer oneOutstanding) {
+        this.oneOutstanding = oneOutstanding;
+    }
+
+    public String getOneOutstandingDetail() {
+        return oneOutstandingDetail;
+    }
+
+    public void setOneOutstandingDetail(String oneOutstandingDetail) {
+        this.oneOutstandingDetail = oneOutstandingDetail == null ? null : oneOutstandingDetail.trim();
+    }
+
+    public Integer getTwoCode() {
         return twoCode;
     }
 
-    public void setTwoCode(Long twoCode) {
+    public void setTwoCode(Integer twoCode) {
         this.twoCode = twoCode;
     }
 
-    public Long getTwoSuanfa() {
-        return twoSuanfa;
+    public String getTwoCodeDetail() {
+        return twoCodeDetail;
     }
 
-    public void setTwoSuanfa(Long twoSuanfa) {
-        this.twoSuanfa = twoSuanfa;
+    public void setTwoCodeDetail(String twoCodeDetail) {
+        this.twoCodeDetail = twoCodeDetail == null ? null : twoCodeDetail.trim();
     }
 
-    public Long getTwoIntenet() {
-        return twoIntenet;
+    public Integer getTwoAlgorithm() {
+        return twoAlgorithm;
     }
 
-    public void setTwoIntenet(Long twoIntenet) {
-        this.twoIntenet = twoIntenet;
+    public void setTwoAlgorithm(Integer twoAlgorithm) {
+        this.twoAlgorithm = twoAlgorithm;
     }
 
-    public Long getTwoXiangmu() {
-        return twoXiangmu;
+    public String getTwoAlgorithmDetail() {
+        return twoAlgorithmDetail;
     }
 
-    public void setTwoXiangmu(Long twoXiangmu) {
-        this.twoXiangmu = twoXiangmu;
+    public void setTwoAlgorithmDetail(String twoAlgorithmDetail) {
+        this.twoAlgorithmDetail = twoAlgorithmDetail == null ? null : twoAlgorithmDetail.trim();
     }
 
-    public Long getTwoOther() {
+    public Integer getTwoNetwork() {
+        return twoNetwork;
+    }
+
+    public void setTwoNetwork(Integer twoNetwork) {
+        this.twoNetwork = twoNetwork;
+    }
+
+    public String getTwoNetworkDetail() {
+        return twoNetworkDetail;
+    }
+
+    public void setTwoNetworkDetail(String twoNetworkDetail) {
+        this.twoNetworkDetail = twoNetworkDetail == null ? null : twoNetworkDetail.trim();
+    }
+
+    public Integer getTwoExperience() {
+        return twoExperience;
+    }
+
+    public void setTwoExperience(Integer twoExperience) {
+        this.twoExperience = twoExperience;
+    }
+
+    public String getTwoExperienceDetail() {
+        return twoExperienceDetail;
+    }
+
+    public void setTwoExperienceDetail(String twoExperienceDetail) {
+        this.twoExperienceDetail = twoExperienceDetail == null ? null : twoExperienceDetail.trim();
+    }
+
+    public Integer getTwoOther() {
         return twoOther;
     }
 
-    public void setTwoOther(Long twoOther) {
+    public void setTwoOther(Integer twoOther) {
         this.twoOther = twoOther;
     }
 
-    public Long getTwoCount() {
-        return twoCount;
+    public String getTwoOtherDetail() {
+        return twoOtherDetail;
     }
 
-    public void setTwoCount(Long twoCount) {
-        this.twoCount = twoCount;
+    public void setTwoOtherDetail(String twoOtherDetail) {
+        this.twoOtherDetail = twoOtherDetail == null ? null : twoOtherDetail.trim();
     }
 
-    public Long getTwoLuoji() {
-        return twoLuoji;
+    public Integer getTwoLogic() {
+        return twoLogic;
     }
 
-    public void setTwoLuoji(Long twoLuoji) {
-        this.twoLuoji = twoLuoji;
+    public void setTwoLogic(Integer twoLogic) {
+        this.twoLogic = twoLogic;
     }
 
-    public Long getTwoChuangxin() {
-        return twoChuangxin;
+    public String getTwoLogicDetail() {
+        return twoLogicDetail;
     }
 
-    public void setTwoChuangxin(Long twoChuangxin) {
-        this.twoChuangxin = twoChuangxin;
+    public void setTwoLogicDetail(String twoLogicDetail) {
+        this.twoLogicDetail = twoLogicDetail == null ? null : twoLogicDetail.trim();
     }
 
-    public Long getTwoTeam() {
+    public Integer getTwoCreative() {
+        return twoCreative;
+    }
+
+    public void setTwoCreative(Integer twoCreative) {
+        this.twoCreative = twoCreative;
+    }
+
+    public String getTwoCreativeDetail() {
+        return twoCreativeDetail;
+    }
+
+    public void setTwoCreativeDetail(String twoCreativeDetail) {
+        this.twoCreativeDetail = twoCreativeDetail == null ? null : twoCreativeDetail.trim();
+    }
+
+    public Integer getTwoTeam() {
         return twoTeam;
     }
 
-    public void setTwoTeam(Long twoTeam) {
+    public void setTwoTeam(Integer twoTeam) {
         this.twoTeam = twoTeam;
     }
 
-    public Long getTwoStady() {
-        return twoStady;
+    public String getTwoTeamDetail() {
+        return twoTeamDetail;
     }
 
-    public void setTwoStady(Long twoStady) {
-        this.twoStady = twoStady;
+    public void setTwoTeamDetail(String twoTeamDetail) {
+        this.twoTeamDetail = twoTeamDetail == null ? null : twoTeamDetail.trim();
     }
 
-    public Long getTwoZhuoyue() {
-        return twoZhuoyue;
+    public Integer getTwoContinuouslearning() {
+        return twoContinuouslearning;
     }
 
-    public void setTwoZhuoyue(Long twoZhuoyue) {
-        this.twoZhuoyue = twoZhuoyue;
+    public void setTwoContinuouslearning(Integer twoContinuouslearning) {
+        this.twoContinuouslearning = twoContinuouslearning;
     }
 
-    public Long getTwoSum() {
-        return twoSum;
+    public String getTwoContinuouslearningDetail() {
+        return twoContinuouslearningDetail;
     }
 
-    public void setTwoSum(Long twoSum) {
-        this.twoSum = twoSum;
+    public void setTwoContinuouslearningDetail(String twoContinuouslearningDetail) {
+        this.twoContinuouslearningDetail = twoContinuouslearningDetail == null ? null : twoContinuouslearningDetail.trim();
     }
 
-    public Long getTwoResult() {
-        return twoResult;
+    public Integer getTwoOutstanding() {
+        return twoOutstanding;
     }
 
-    public void setTwoResult(Long twoResult) {
-        this.twoResult = twoResult;
+    public void setTwoOutstanding(Integer twoOutstanding) {
+        this.twoOutstanding = twoOutstanding;
     }
 
-    public String getTwoYewu() {
-        return twoYewu;
+    public String getTwoOutstandingDetail() {
+        return twoOutstandingDetail;
     }
 
-    public void setTwoYewu(String twoYewu) {
-        this.twoYewu = twoYewu == null ? null : twoYewu.trim();
+    public void setTwoOutstandingDetail(String twoOutstandingDetail) {
+        this.twoOutstandingDetail = twoOutstandingDetail == null ? null : twoOutstandingDetail.trim();
     }
 
-    public String getTwoSuzhi() {
-        return twoSuzhi;
+    public String getOneConclusion() {
+        return oneConclusion;
     }
 
-    public void setTwoSuzhi(String twoSuzhi) {
-        this.twoSuzhi = twoSuzhi == null ? null : twoSuzhi.trim();
+    public void setOneConclusion(String oneConclusion) {
+        this.oneConclusion = oneConclusion == null ? null : oneConclusion.trim();
     }
 
-    public String getTwoZonghe() {
-        return twoZonghe;
+    public Integer getOneSuggestSalary() {
+        return oneSuggestSalary;
     }
 
-    public void setTwoZonghe(String twoZonghe) {
-        this.twoZonghe = twoZonghe == null ? null : twoZonghe.trim();
+    public void setOneSuggestSalary(Integer oneSuggestSalary) {
+        this.oneSuggestSalary = oneSuggestSalary;
     }
 
-    public String getOneFenpei() {
-        return oneFenpei;
+    public String getOneSuggestSalaryDetail() {
+        return oneSuggestSalaryDetail;
     }
 
-    public void setOneFenpei(String oneFenpei) {
-        this.oneFenpei = oneFenpei == null ? null : oneFenpei.trim();
+    public void setOneSuggestSalaryDetail(String oneSuggestSalaryDetail) {
+        this.oneSuggestSalaryDetail = oneSuggestSalaryDetail == null ? null : oneSuggestSalaryDetail.trim();
     }
 
-    public String getTwoFenpei() {
-        return twoFenpei;
+    public Integer getTwoConclusion() {
+        return twoConclusion;
     }
 
-    public void setTwoFenpei(String twoFenpei) {
-        this.twoFenpei = twoFenpei == null ? null : twoFenpei.trim();
+    public void setTwoConclusion(Integer twoConclusion) {
+        this.twoConclusion = twoConclusion;
     }
 
-    public String getHrYijian() {
-        return hrYijian;
+    public String getTwoConclusionDetail() {
+        return twoConclusionDetail;
     }
 
-    public void setHrYijian(String hrYijian) {
-        this.hrYijian = hrYijian == null ? null : hrYijian.trim();
+    public void setTwoConclusionDetail(String twoConclusionDetail) {
+        this.twoConclusionDetail = twoConclusionDetail == null ? null : twoConclusionDetail.trim();
     }
 
-    public Long getOneSlary() {
-        return oneSlary;
+    public String getOneAllocationIdea() {
+        return oneAllocationIdea;
     }
 
-    public void setOneSlary(Long oneSlary) {
-        this.oneSlary = oneSlary;
+    public void setOneAllocationIdea(String oneAllocationIdea) {
+        this.oneAllocationIdea = oneAllocationIdea == null ? null : oneAllocationIdea.trim();
     }
 
-    public Long getTwoSlary() {
-        return twoSlary;
+    public String getTwoAllocationIdea() {
+        return twoAllocationIdea;
     }
 
-    public void setTwoSlary(Long twoSlary) {
-        this.twoSlary = twoSlary;
-    }
-
-    public Long getHrSlary() {
-        return hrSlary;
-    }
-
-    public void setHrSlary(Long hrSlary) {
-        this.hrSlary = hrSlary;
+    public void setTwoAllocationIdea(String twoAllocationIdea) {
+        this.twoAllocationIdea = twoAllocationIdea == null ? null : twoAllocationIdea.trim();
     }
 
     public String getHrName() {
@@ -429,5 +533,21 @@ public class StudentAssess {
 
     public void setHrName(String hrName) {
         this.hrName = hrName == null ? null : hrName.trim();
+    }
+
+    public Integer getHrSuggestSalary() {
+        return hrSuggestSalary;
+    }
+
+    public void setHrSuggestSalary(Integer hrSuggestSalary) {
+        this.hrSuggestSalary = hrSuggestSalary;
+    }
+
+    public String getHrDetailIdea() {
+        return hrDetailIdea;
+    }
+
+    public void setHrDetailIdea(String hrDetailIdea) {
+        this.hrDetailIdea = hrDetailIdea == null ? null : hrDetailIdea.trim();
     }
 }

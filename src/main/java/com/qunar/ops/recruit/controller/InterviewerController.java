@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -22,16 +23,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.qunar.ops.recruit.model.Hr;
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.model.StudentAssess;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.DataResult;
 import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.PhaseService;
+import com.qunar.ops.recruit.service.StudentAssessService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.service.WaitService;
@@ -49,9 +53,11 @@ public class InterviewerController {
 	@Autowired
 	WaitService waitService;
 	@Autowired
-	PhaseService ps;
+	PhaseService pService;
 	@Autowired
-	PhaseInterviewService pis;
+	PhaseInterviewService piService;
+	@Autowired
+	StudentAssessService saService;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
@@ -167,8 +173,10 @@ public class InterviewerController {
 	 * @param commonRequest
 	 * @return
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/interview/getNextStudent")
-	public String getNextStudent(HttpServletRequest request, HttpSession session, ModelMap mm) {
+	@ResponseBody
+	public BaseResult getNextStudent(HttpServletRequest request, HttpSession session, ModelMap mm) {
 		System.out.println("******************************");
 		Object obj = request.getSession().getAttribute("user");
 		if(obj != null){
@@ -178,7 +186,7 @@ public class InterviewerController {
 				String year = (String)session.getAttribute("year");
 				String phase = (String)session.getAttribute("phase");
 				String city = (String)session.getAttribute("city");
-				PhaseInterviewer pi = pis.getPhaseInterviewerBy(year, phase, city, inter.getUserName());
+				PhaseInterviewer pi = piService.getPhaseInterviewerBy(year, phase, city, inter.getUserName());
 				StudentWaiter  stuW;
 				int oneOrtwo = 1;
 				if(inter.getTwoView() !=null && !"".equals(inter.getTwoView())){
@@ -198,65 +206,118 @@ public class InterviewerController {
 				if(stuW == null){
 					System.out.println("等待队列为空");
 					mm.addAttribute("message", RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
-					return "first";
+					return BaseResult.getErrorResult(-1, RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
 				}else{
+					session.setAttribute("student", stuW.getStu());
+					List ret = new LinkedList();
 					if(oneOrtwo == 1){
-						mm.addAttribute("message", RecruitConst.SUCCESS);
-						mm.addAttribute("student", stuW.getStu());
-						mm.addAttribute("interviewer", pi);
+//						mm.addAttribute("message", RecruitConst.SUCCESS);
+//						mm.addAttribute("student", stuW.getStu());
+//						mm.addAttribute("phaseInterviewer", pi);
+						ret.add(1);
+						ret.add(stuW.getStu());
 						System.out.println("拿到一面同学");
 					}else{
-						mm.addAttribute("message", RecruitConst.SUCCESS);
-						mm.addAttribute("student", stuW.getStu());
-						mm.addAttribute("interviewer", pi);
+//						mm.addAttribute("message", RecruitConst.SUCCESS);
+//						mm.addAttribute("student", stuW.getStu());
+//						mm.addAttribute("phaseInterviewer", pi);
+						StudentAssess sa = saService.getStudentAssessByStudentId(stuW.getStu().getId());
+						mm.addAttribute("assess", sa);
+						ret.add(1);
+						ret.add(stuW.getStu());
+						ret.add(sa);
 						System.out.println("拿到二面同学");
 					}
-					return "view_index";
+					return BaseResult.getSuccessResult(ret);
 				}
 			}else{
 				//不是interviewer，無權訪問
-				return "redirect:/login";
+				return null;
 			}
 		}else{
-			return "redirect:/login";
+			//无seesion, 重新登录
+			return null;
 		}
 	}
+
+	/**
+	 * 点击开始面试
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping(value = "/interviewer/beginToInterview")
+	@ResponseBody
+	public BaseResult beginToInterview(HttpServletRequest request, HttpSession session) {
+		Student stu = (Student) session.getAttribute("student");
+		Interviewer inter = (Interviewer) session.getAttribute("user");
+		Student newStu = new Student();
+		newStu.setId(stu.getId());
+		newStu.setState(RecruitConst.INTERVIEW_STATE_ING);
+		newStu.setFirstTry(inter.getUserName());
+		
+		Interviewer newInter = new Interviewer();
+//		newInter.setViewCount(inter.ge);
+//		interServe.updateInterviewer(newStu);
+		return null;
+	}
 	
-	//備份
-//	@RequestMapping(value = "/interview/getNextStudent")
-//	public String getNextStudent(HttpServletRequest request) {
-//		Object obj = request.getSession().getAttribute("user");
-//		if(obj != null){
-//			if(obj instanceof Interviewer){
-//				PhaseInterviewer inter = (PhaseInterviewer) obj;
-//				StudentWaiter  stu;
-//				if(!"".equals(inter.getTwoView())){
-//					//如果面试官的二面角色不为空,先从二面队列中拿数据
-//					//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
-//					stu = waitService.getTwoView(inter.getCity(),inter.getTwoView(),inter.getUserName());
-//					if(stu==null && !"".equals(inter.getOneView())){
-//						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
-//						stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
-//					}
-//				}else{
-//					//只有一面角色从一面队列中拿数据`
-//					stu = waitService.removeHighestPriorityFromList(inter.getCity(),inter.getTwoView(),inter.getUserName());
-//				}
-//				if(stu == null){
-//					return BaseResult.getSuccessResult(RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
-//				}else{
-//					
-//					return null;
-//				}
-//			}else{
-//				return BaseResult.getErrorResult(RecruitConst.AUTHORITY_ERROR);
-//			}
-//		}else{
-//			return BaseResult.getErrorResult(RecruitConst.NO_LOGIN);
-//		}
-//		
-//		return "first";
-//	}
+	@RequestMapping(value = "/interviewer/finishInterview")
+	@ResponseBody
+	public BaseResult finishInterview(HttpServletRequest request, HttpSession session, @RequestBody CommonRequest commonRequest) {
+		Student stu = (Student) session.getAttribute("student");
+		Interviewer inter = (Interviewer) session.getAttribute("user");
+		Student newStu = new Student();
+		newStu.setId(stu.getId());
+		newStu.setState(RecruitConst.INTERVIEW_STATE_ING);
+		newStu.setFirstTry(inter.getUserName());
+		
+		Interviewer newInter = new Interviewer();
+//		newInter.setViewCount(inter.ge);
+//		interServe.updateInterviewer(newStu);
+		return BaseResult.getSuccessResult("");
+	}
+	
+	@RequestMapping(value = "/interviewer/noComeFinish")
+	@ResponseBody
+	public BaseResult noComeFinish(HttpServletRequest request, HttpSession session) {
+		Student stu = (Student) session.getAttribute("student");
+		Interviewer inter = (Interviewer) session.getAttribute("user");
+		Student newStu = new Student();
+		newStu.setId(stu.getId());
+		newStu.setState(RecruitConst.INTERVIEW_STATE_ING);
+		newStu.setFirstTry(inter.getUserName());
+		
+		Interviewer newInter = new Interviewer();
+//		newInter.setViewCount(inter.ge);
+//		interServe.updateInterviewer(newStu);
+		return null;
+	}
+	
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/interviewer/getCurrentViewInfo")
+	@ResponseBody
+	public BaseResult getCurrentViewInfo(HttpServletRequest request, HttpSession session) {
+		Student stu = (Student) session.getAttribute("student");
+		Interviewer inter = (Interviewer) session.getAttribute("user");
+		String year = (String)session.getAttribute("year");
+		String phase = (String)session.getAttribute("phase");
+		String city = (String)session.getAttribute("city");
+		PhaseInterviewer pi = piService.getPhaseInterviewerBy(year, phase, city, inter.getUserName());
+		Student newStu = new Student();
+		List ret = new LinkedList();
+		ret.add(inter);
+		ret.add(pi);
+		if(stu == null){
+			return BaseResult.getErrorResult(-1, "failed", ret);
+		}else{
+			ret.add(stu);
+			StudentAssess sa = saService.getStudentAssessByStudentId(stu.getId());
+			ret.add(sa);
+			return BaseResult.getSuccessResult(ret);
+		}
+	}
 	
 	/**
 	 * 一面结束根据一面结果判断候选人是否通过是否需要进行二面
@@ -289,26 +350,13 @@ public class InterviewerController {
 	public Set<String> getAllYears(HttpServletRequest request, HttpSession session) {
 		Set<String> set = new HashSet<String>();
 		Interviewer inter = (Interviewer) session.getAttribute("user");
-		List<PhaseInterviewer> list = pis.getPhaseIntersByName(inter.getUserName());
+		List<PhaseInterviewer> list = piService.getPhaseIntersByName(inter.getUserName());
 		if(list != null){
 			for (PhaseInterviewer phase : list) {
 				set.add(phase.getYear());
 			}
 		}
 		return set;
-	}
-	
-	private void updateYearPhaseAndCity(Phase phase) {
-		// TODO Auto-generated method stub
-		if(phase != null){
-			RecruitConst.year = phase.getYearInfo();
-			RecruitConst.phase = phase.getPhaseName();
-			if(phase.getCityName() != null){
-				String[] aa = phase.getCityName().split("\\|");
-				if(aa.length > 0)
-					RecruitConst.city = aa[0];
-			}
-		}
 	}
 
 	@RequestMapping(value = "/interviewer/getPhasesByYear")
@@ -317,7 +365,7 @@ public class InterviewerController {
 		Set<String> set = new HashSet<String>();
 		Map<String, String> vars = commonRequest.getVars();
 		Interviewer inter = (Interviewer) session.getAttribute("user");
-		List<PhaseInterviewer> list = pis.getPhasesByYearAndName(vars.get("year"), inter.getUserName());
+		List<PhaseInterviewer> list = piService.getPhasesByYearAndName(vars.get("year"), inter.getUserName());
 		if(list != null){
 			for (PhaseInterviewer phase : list) {
 				set.add(phase.getPhase());
@@ -336,7 +384,7 @@ public class InterviewerController {
 		String phase = vars.get("phase");
 		session.setAttribute("year", year);
 		session.setAttribute("phase", phase);
-		List<PhaseInterviewer> list = pis.getCitysByYearPhaseAndName(year, phase, inter.getUserName());
+		List<PhaseInterviewer> list = piService.getCitysByYearPhaseAndName(year, phase, inter.getUserName());
 		if(list != null){
 			boolean b = true;
 			for (PhaseInterviewer pi : list) {
@@ -358,5 +406,36 @@ public class InterviewerController {
 		System.out.println(city);
 		session.setAttribute("city", city);
 		return BaseResult.getSuccessResult("success");
+	}
+	
+	@RequestMapping(value = "/interviewer/login")
+	public String toindex(HttpServletRequest request,
+			HttpServletResponse response, String username, String password, ModelMap model) {
+		Object user = request.getSession().getAttribute("user");
+		if(user == null){
+			if(username != null && password != null){
+				Interviewer inter = interServe.getInterviewerByNameAndPass(username, password);
+				if(inter == null){
+					String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
+					model.addAttribute("message",message);
+					model.addAttribute("flag",-1);
+					return "/inter_login";
+				}else{
+					model.addAttribute("flag",1);
+					request.getSession().setAttribute("user", inter);
+					return "/view_index";
+				}
+			}else{
+				model.addAttribute("flag",-1);
+				return "/inter_login";
+			}
+		}else{//session中存在用户信息
+			if(user instanceof Interviewer){
+				model.addAttribute("flag",1);
+				return "/view_index";
+			}else{
+				return "/inter_login";
+			}
+		}
 	}
 }

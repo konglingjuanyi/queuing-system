@@ -3,6 +3,7 @@ package com.qunar.ops.recruit.controller;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,13 +20,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.qunar.ops.recruit.model.Student;
-import com.qunar.ops.recruit.model.StudentForm;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
 import com.qunar.ops.recruit.service.StudentManageService;
@@ -37,6 +35,13 @@ public class StudentManageController {
 
 	@Autowired
 	StudentManageService stuService;
+	
+	
+	@RequestMapping(value = "/hr/lead2StudentPage")
+	public String lead2StudentPage(HttpServletRequest request,  ModelMap model) throws Exception {
+		return "/student_manage";
+	}
+	
 	/**
 	 * 候选人管理
 	 * @param request
@@ -62,7 +67,35 @@ public class StudentManageController {
 			}
 		}
 		model.addAttribute("list", info);
-		return "/student_manage";
+		return "/student_manage_info";
+	}
+	
+	@RequestMapping(value = "/hr/getStudentInfos")
+	public String getStudentInfos(HttpServletRequest request,  ModelMap model, @RequestBody CommonRequest commonRequest) throws Exception {
+//		System.out.println("into getStudentInfos");
+		List<Student> list=new ArrayList<Student>();
+		Map<String, String> vars = commonRequest.getVars();
+		String name = vars.get("name");
+		String school = vars.get("school");
+		String profession = vars.get("profession");
+		String state = vars.get("state");
+		String city=(String) request.getSession().getAttribute("city");
+		String year=(String) request.getSession().getAttribute("year");
+		String phase=(String) request.getSession().getAttribute("phase");
+//		System.out.println(name+" "+school+" "+profession+" "+state);
+		list=stuService.getStudentInofs(name, school, profession, state, city,year,phase);
+		List<ResultPlusAdditionalInfo> info=new LinkedList<ResultPlusAdditionalInfo>();
+		if(list!=null && list.size()>0){
+			for(Student stu:list){
+				String str=RecruitControllerUtils.dateToStr(stu.getInterviewTime());
+				ResultPlusAdditionalInfo val=new ResultPlusAdditionalInfo();
+				val.setObj(stu);
+				val.addStringInfo(str);
+				info.add(val);
+			}
+		}
+		model.addAttribute("list", info);
+		return "/student_manage_info";
 	}
 	
 	@RequestMapping(value="/hr/importStudentInfos",method=RequestMethod.POST)

@@ -163,4 +163,23 @@ public class StudentManageService {
 		return stuMapper.selectByExample(example);
 	}
 
+	public List<Student> getStudentInofs(String name, String school,
+			String profession, String state, String city, String year,
+			String phase) {
+		StudentExample example = new StudentExample();
+		StudentExample.Criteria criteria = example.createCriteria();
+		criteria.andYearEqualTo(year);
+		criteria.andPhaseNoEqualTo(phase);
+		criteria.andLocationEqualTo(city);
+		if(name != null && !name.equals(""))
+			criteria.andNameEqualTo(name);
+		if(school != null && !school.equals(""))
+			criteria.andSchoolEqualTo(school);
+		if(profession != null && !profession.equals(""))
+			criteria.andProfessionEqualTo(profession);
+		if(state != null && !state.equals(""))
+			criteria.andStateEqualTo(state);
+		return stuMapper.selectByExample(example);
+	}
+
 }
