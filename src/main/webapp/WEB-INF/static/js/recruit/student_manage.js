@@ -1,5 +1,4 @@
 $(document).ready(function () {
-	
 	$("#doimport").click(function(){
 		//$("#selectfile").css("display","");
 		$("#selectfile").modal("show");
@@ -7,6 +6,7 @@ $(document).ready(function () {
 	
 	$("#import").click(function(){
 		//$("#impform").submit();
+		active($('#stupage'));
 		if($('#fileField').val()==""){
              alert("请先选择要导入文件！");
              return false;
@@ -16,8 +16,8 @@ $(document).ready(function () {
                  cache:false,
                  dataType:'html',
                  success: function(data) {
-                	 $("#selectfile").modal("hide");
-                	 $('#content').html(data);
+                	$("#selectfile").modal("hide");
+                	$('#studentInfoInner').html(data);
                  },
                  error:function(){
                      alert("error");
@@ -28,7 +28,6 @@ $(document).ready(function () {
 	
 	$('#addstu').click(function(){
 		active($('#stupage'));
-		getAddStudentYearPhaseAndCity();
 	    $.ajax({
 	      url: "/hr/gotoAddStudentInfo",
 	      type: "POST",
@@ -36,6 +35,7 @@ $(document).ready(function () {
 	      contentType: 'application/json; charset=utf-8',
 	      success: function (returnedData) {
 	    	  $('#content').html(returnedData);
+	    	  getAddStudentYearPhaseAndCity();
 		  },
 	      error: function () {
 	           alert("系统发生了错误请稍后重试");
@@ -44,41 +44,42 @@ $(document).ready(function () {
 	});
 	
 	$('#dosubmitstu').click(function(){
-	    //$("#doaddform").submit();
-		/*var vars=$('#doaddform').serializeArray();
-		active($('#stupage'));
-		alert(vars);
-		var params = {"vars": vars};
-		alert(params);
-		alert(JSON.stringify(params));
-	    $.ajax({
-	      url: "/hr/AddStudentInfo",
-	      type: "POST",
-	      dataType: "html",
-	      data:JSON.stringify(params),
-	      contentType: 'application/json; charset=utf-8',
-	      success: function (returnedData) {
-	    	  $('#content').html(returnedData);
-		  },
-	      error: function () {
-	           alert("系统发生了错误请稍后重试");
-	      }
-	    });*/
 	    $('#doaddform').ajaxSubmit({
             url:"/hr/AddStudentInfo",
             cache:false,
             dataType:'html',
             success: function(data) {
-           	 	$('#content').html(data);
+            	active($('#stupage'))
+        	    $.ajax({
+        	      url: "/hr/lead2StudentPage",
+        	      type: "POST",
+        	      dataType: "html",
+        	      contentType: 'application/json; charset=utf-8',
+        	      success: function (returnedData) {
+        	    	  $('#content').html(returnedData);
+        	    	  $.ajax({
+        	    	      url: "/hr/getAllStudentInfos",
+        	    	      type: "POST",
+        	    	      dataType: "html",
+        	    	      contentType: 'application/json; charset=utf-8',
+        	    	      success: function (returnedData) {
+        	    	    	  $('#studentInfoInner').html(returnedData);
+        	    		  },
+        	    	      error: function () {
+        	    	           alert("系统发生了错误请稍后重试");
+        	    	      }
+        	    	    });
+        		  },
+        	      error: function () {
+        	           alert("系统发生了错误请稍后重试");
+        	      }
+        	    });
             },
             error:function(){
                 alert("error");
             }
       });
 	});
-	
-	
-
 });
 
 function getAddStudentYearPhaseAndCity(){

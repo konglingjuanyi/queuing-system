@@ -168,7 +168,7 @@ public class StudentManageService {
 		criteria.andLocationEqualTo(stu.getLocation());
 		criteria.andPhoneEqualTo(stu.getPhone());
 		criteria.andNameEqualTo(stu.getName());
-		List<Student> list=new ArrayList<Student>();
+		List<Student> list=stuMapper.selectByExample(example);
 		if(list!=null && list.size()>0){
 			return true;
 		}else{
