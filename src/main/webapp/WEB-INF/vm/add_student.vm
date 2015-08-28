@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>添加学生</title>
+	<link rel="stylesheet" href="/static/css/style.min.css" />
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/static/css/module.css" />
+	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/static/My97DatePicker/WdatePicker.js" charset="UTF-8"></script>
+	<script type="text/javascript" src="/static/js/recruit/student_manage.js"></script>
+</head>
+<body>
+	<div class="l-fullsreen">
+		<div class="l-container">
+			<div class="l-content">
+				<!-- 内容start -->
+				<div class="l-inner">
+					<div class="m-addmanage">
+						<form class="form-horizontal" id="doaddform" method="post" action="/hr/AddStudentInfo">
+							<div class="control-group">
+								<label class="control-label">英才简历编号</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="noteNo" id="noteNo">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">年份</label>
+								<div class="controls">
+									<select name="year" id="year_">
+                                    </select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">招聘批次</label>
+								<div class="controls">
+									<select name="phaseNo" id="phase_">
+                                    </select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">城市</label>
+								<div class="controls">
+									<select name="location" id="city_">
+                                    </select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">面试日期</label>
+								<div class="controls">
+								  <input class="input-medium" name="interviewTime" type="text" style="width: 205px" onclick="showTime()" placeholder="应到时间">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">姓名</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="name" id="name">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">性别</label>
+								<div class="controls">
+								  	<label class="line-label" for="male"><input type="radio" name="sex" id="male" value="男"/>男</label>
+								  	<label class="line-label" for="female"><input type="radio" name="sex" id="female" value="女"/>女</label>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">学校</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="school" id="school">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">专业</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="profession" id="profession">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">学历</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="education" id="education">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">手机号</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="phone" id="phone">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">邮箱</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="email" id="email">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">身份证号</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="cardNo" id="cardNo">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">QQ号</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="qqNo" id="qqNo">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">应聘职位</label>
+								<div class="controls">
+									<select name="job" id="job">
+										<option value="">DEV</option>
+										<option value="">QA</option>
+										<option value="">FE</option>
+									</select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">实习开始时间</label>
+								<div class="controls">
+								  <input class="input-medium" name="workStart" type="text" style="width: 205px" onclick="showTime()" placeholder="实习开始时间">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">实习结束时间</label>
+								<div class="controls">
+								  <input class="input-medium" name="workEnd" type="text" style="width: 205px" onclick="showTime()" placeholder="实习结束时间">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">毕业时间</label>
+								<div class="controls">
+								  <input class="input-medium" name="graduateDate" type="text" style="width: 205px" onclick="showTime()" placeholder="毕业时间">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">薪资标准</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="salary" id="salary">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">综合评价</label>
+								<div class="controls">
+								  <select name="assess" id="assess">
+                                    <option value="">合格</option>
+                                    <option value="">优秀</option>
+                                    <option value="">卓越</option>
+                                    <option value="">不合格</option>
+                                  </select>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">初试</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="firstTry" id="firstTry">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">复试</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="secondTry" id="secondTry">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">面试情况备注</label>
+								<div class="controls">
+									<textarea name="viewRemark" id="viewRemark" placeholder="必填" cols="30" rows="4"></textarea>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">offer状态</label>
+								<div class="controls">
+									<label class="line-label" ><input type="radio" name="location" id="access" value="接受"/>接受</label>
+									<label class="line-label" ><input type="radio" name="location" id="refuse" value="拒绝"/>拒绝</label>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">三方交付</label>
+								<div class="controls">
+									<label class="line-label" ><input type="radio" name="threeSide" id="yes" value="是"/>是</label>
+									<label class="line-label" ><input type="radio" name="threeSide" id="no" value="否"/>否</label>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">交付时间</label>
+								<div class="controls">
+								  <input class="input-medium" name="payTime" type="text" style="width: 205px" onclick="showTime()" placeholder="应到时间">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">三方状态</label>
+								<div class="controls">
+									<label class="line-label" ><input type="radio" name="threeState" id="shoudao" value="已收到"/>已收到</label>
+									<label class="line-label" ><input type="radio" name="threeState" id="jichu" value="已寄出"/>已寄出</label>
+									<label class="line-label" ><input type="radio" name="threeState" id="liucun" value="三方回寄并留存"/>三方回寄并留存</label>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">拒签大类</label>
+								<div class="controls">
+									<label class="line-label" ><input type="checkbox" name="xinzi" id="xinzi" value="薪资"/>薪资</label>
+									<label class="line-label" ><input type="checkbox" name="pinpai" id="pinpai" value="品牌"/>品牌</label>
+									<label class="line-label" ><input type="checkbox" name="chengshi" id="chengshi" value="城市"/>城市</label>
+									<label class="line-label" ><input type="checkbox" name="hukou" id="hukou" value="户口"/>户口</label>
+									<label class="line-label" ><input type="checkbox" name="zhiwei" id="zhiwei" value="职位"/>职位</label>
+									<label class="line-label" ><input type="checkbox" name="jiankang" id="jiankang" value="健康"/>健康</label>
+									<label class="line-label" ><input type="checkbox" name="shenzao" id="shenzao" value="深造"/>深造</label>
+									<label class="line-label" ><input type="checkbox" name="jiating" id="jiating" value="家庭"/>家庭</label>
+									<label class="line-label" ><input type="checkbox" name="qita" id="qita" value="其他"/>其他</label>
+								</div>
+								<input type="hidden" id="refuse" name="refuse" value=""/>
+							</div>
+							<div class="control-group">
+								<label class="control-label">拒签具体原因</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="refuseReson" id="refuseReson">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">拒绝时间</label>
+								<div class="controls">
+								  <input class="input-medium" name="refuseDate" type="text" style="width: 205px" onclick="showTime()" placeholder="应到时间">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">违约办理</label>
+								<div class="controls">
+									<label class="line-label" ><input type="radio" name="breaker" id="" value="是"/>是</label>
+									<label class="line-label" ><input type="radio" name="breaker" id="" value="否"/>否</label>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">培训批次</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="train" id="train">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">员工编号</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="staffNo" id="staffNo">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">面试官所在部门</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="interviewDept" id="interviewDept">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">分配部门</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="fenpeiDept" id="fenpeiDept">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">原分配部门</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="yuanDept" id="yuanDept">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">组织关系</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="organize" id="organize">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">leader</label>
+								<div class="controls">
+								  <input type="text" placeholder="必填" name="leader" id="leader">
+								</div>
+							</div>
+
+
+							<div class="control-group m-addmanage-btn">
+								<div class="controls">
+								  <button type="button" class="btn " id="dosubmitstu">保存</button>
+								  <button type="button" class="btn " id="docancel">取消</button>
+								</div>
+							</div>
+						</form>
+						<br />
+					</div>
+				</div>
+				<!-- 内容end -->
+			</div>
+		</div>
+	</div>
+</body>
+</html>

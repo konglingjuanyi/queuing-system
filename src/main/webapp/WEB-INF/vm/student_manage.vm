@@ -33,7 +33,7 @@
 				<div class="l-inner">
 					<div class="m-studentmanage">
 						<div class="m-studentmanage-hd">
-							<button class="btn btn-info" type="button">添加面试官</button>
+							<button class="btn btn-info" type="button" id="addstu">添加学生</button>
 							<button class="btn btn-info" type="button" id="doimport">批量导入</button>
 							<span class="iconbox">
 								<i class="icon success"></i>

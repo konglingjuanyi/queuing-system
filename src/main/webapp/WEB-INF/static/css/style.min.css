@@ -1,7 +1,7 @@
 @charset "utf-8";
 .l-container,.l-fullsreen{overflow:hidden;position:relative}
-.m-firsttry-bd table.table td,.m-firsttry-bd table.table th,.m-pop td,.m-studentmanage-hd .icon,.m-studentmanage-hd .text,.m-title h1,.m-title select{vertical-align:middle}
 .m-addbatch-btn,.m-addbatch-hd,.m-addmanage .table td,.m-addmanage .table th,.m-login,.m-manage-bd td,.m-manage-bd th,.m-studentmanage-bd table td,.m-studentmanage-bd table th,.m-table th,.m-table tr td,.text-center{text-align:center}
+.line-label,.line-label input,.m-firsttry-bd table.table td,.m-firsttry-bd table.table th,.m-pop td,.m-studentmanage-hd .icon,.m-studentmanage-hd .text,.m-title h1,.m-title select{vertical-align:middle}
 body,html{height:100%}
 .l-fullsreen{width:100%;height:100%}
 .l-nav{height:48px;overflow:hidden;background:#1ba9ba}
@@ -60,3 +60,5 @@ body,html{height:100%}
 .m-pop-table2 .title{background:#fff}
 .m-pop-table2 td,.m-pop-table2 th{padding:3px;text-align:center}
 .alert-info{height:150px}
+.line-label{display:inline-block;margin-right:20px}
+.line-label input{margin-right:10px;margin-top:0}

@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-@import url("style.css");
+
 
 .m-title{
 	padding: 10px 20px;
@@ -275,4 +275,15 @@
 }
 .alert-info{
 	height: 150px;
+}
+
+.line-label{
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 20px;
+}
+.line-label input{
+	vertical-align: middle;
+	margin-right: 10px;
+	margin-top: 0;
 }
