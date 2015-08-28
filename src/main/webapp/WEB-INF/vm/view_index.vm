@@ -1,39 +1,648 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-	<title>校招系统</title>
-	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="/static/css/style.css" />
-	<link rel="stylesheet" href="/static/css/module.css" />
-	<script type="text/javascript" src="/static/js/jquery.js"></script>
-	<script src="/static/js/recruit/interviewer_recordphasecity.js"></script>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>面试平台-初试</title>
+    <script src="/static/js/jquery-2.1.4.min.js"></script>
+	<script src="/static/js/data.js"></script>
+	<script src="/static/js/index.js"></script>
+	<script src="/static/js/recruit/student_assess.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/style.min.css" />
 </head>
 <body>
-	<div class="l-fullsreen">
-		<div class="l-nav">
-			<div class="m-title">
-				<h1>校招系统</h1>	
-				<select name="" id="year">
-				</select>
-				<select name="" id="phase">
-				</select>
-				<select name="" id="city">
-				</select>
-			</div>
-			<div class="m-title">
-				
-			</div>
-		</div>
-		<div class="l-container">
-			<div class="l-content">
-				<!-- 内容start -->
-				<div class="m-pop alert">
-					<button class="m-login-btn btn btn-large btn-info" type="button" id="startInterview">开始面试</button>
-				</div>
-				<!-- 内容end -->
-			</div>
-		</div>
-	</div>
+    <div class="l-fullsreen">
+        <div class="l-container">
+            <div class="l-sidebar">
+                <div class="m-firsttry-sidebar">
+                    <div class="m-firsttry-user">
+                        <div class="item">
+                            <span class="label">面试官：</span>
+                            <span class="text" id="interviewer_name"></span>
+                        </div>
+                        <div class="item">
+                            <span class="label">房间：</span>
+                            <span class="text" id="interviewer_room">201</span>
+                        </div>
+                        <div class="item">
+                            <span class="label">已面试：</span>
+                            <span class="text" id="already_inter"></span>
+                        </div>
+                    </div>
+                    <div class="m-firsttry-info">
+                        <div class="item">
+                            <span class="label">当前时间：</span>
+                            <span class="text">08:02:10</span>
+                        </div>
+                    </div>
+                    <div class="m-firsttry-btn">
+                        <button class="btn" id="beginToInterview">开始面试</button>
+                    </div>
+                    <div class="m-firsttry-btn" id="finishInterview">
+                        <button class="btn">结束面试</button>
+                    </div>
+                    <div class="m-firsttry-btn" id="noComeFinish">
+                        <button class="btn">面试者未到，结束面试</button>
+                    </div>
+                </div>
+            </div>
+            <div class="l-content">
+                <div class="row-fluid m-firsttry">
+                    <div class="l-inner">
+                        <div class="m-firsttry-bd">
+                            <div class="interviewee-info">
+                                <div class="item">
+                                    <h3>面试人姓名：<span class="text" id="student_name"></span></h3>
+                                </div>
+                                <div class="item">
+                                    <h3>复试面职位：<span class="text" id="jobTitle"></span></h3>
+                                </div>
+                                <div class="item" id="first_viewer_div">
+                                    <h3>初试面试官：<span class="text" id="first_viewer"></span></h3>
+                                </div>
+                                <div class="item" id="second_viewer_div">
+                                    <h3>复试面试官：<span class="text" id="second_viewer"></span></h3>
+                                </div>
+                                <div class="picture">
+                                    <span class="btn">上传图片</span>
+                                </div>
+                            </div>
+                            <!--  -->
+                            <form id="submitForm" class="form-horizontal" action="/interviewer/finishInterview" method="post">
+                            <table class="table table-striped" id="table1">
+                                <thead>
+                                    <tr>
+                                        <th class="w_1">业务知识与技能</th>
+                                        <th class="w_2"><a href="javascript:;" data-guid="guid">初试打分</a></th>
+                                        <th>具体说明</th>
+                                        <th>复试打分</th>
+                                        <th>具体说明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="javascript:;" data-name="代码能力">代码能力</a></td>
+                                        <td>
+                                            <select name="one_code" id="one_code">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="one_code_detail" id="one_code_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_code">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_code_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="javascript:;" data-name="数据结构和算法">数据结构/算法</a></td>
+                                        <td>
+                                            <select name="" id="one_algorithm">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_algorithm_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_algorithm">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_algorithm_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="javascript:;" data-name="系统知识">操作系统/网络</a></td>
+                                        <td>
+                                            <select name="" id="one_network">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_network_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_network">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_network_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="javascript:;" data-name="项目经验">项目/测试/前端经验</a></td>
+                                        <td>
+                                            <select name="" id="one_experience">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_experience_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_experience">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_experience_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="javascript:;" data-name="其他加分技能">其他加分技能</a></td>
+                                        <td>
+                                            <select name="" id="one_other">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_other_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_other">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_other_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--  -->
+                            <table class="table table-striped" id="table2">
+                                <thead>
+                                    <tr>
+                                        <th class="w_1">素质能力</th>
+                                        <th class="w_2"><a href="javascript:;" data-guid="guid">初试打分</a></th>
+                                        <th>具体说明</th>
+                                        <th>复试打分</th>
+                                        <th>具体说明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="javascript:;" data-num="0">逻辑思维</a></td>
+                                        <td>
+                                            <select name="" id="one_logic">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_logic_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_logic">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_logic_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="javascript:;" data-num="1">创新思考</a></td>
+                                        <td>
+                                            <select name="" id="one_creative">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_creative_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_creative">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_creative_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="javascript:;" data-num="2">团队合作</a></td>
+                                        <td>
+                                            <select name="" id="one_team">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_team_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_team">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_team_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="javascript:;" data-num="3">持续学习</a></td>
+                                        <td>
+                                            <select name="" id="one_continuouslearning">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_continuouslearning_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_continuouslearning">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_continuouslearning_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="javascript:;" data-num="4">追求卓越</a></td>
+                                        <td>
+                                            <select name="" id="one_outstanding">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_outstanding_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_outstanding">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_outstanding_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--  -->
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="w_1">综合评价</th>
+                                        <th class="w_2">建议薪资</th>
+                                        <th>具体说明</th>
+                                        <th>复试结论</th>
+                                        <th>具体说明</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            总得分：100
+                                            <select name="" id="one_conclusion">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="input-mini" id="one_suggest_salary"/>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_suggest_salary_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                            <select name="" id="two_conclusion">
+                                                <option value="">请选择</option>
+                                                <option value="">1</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_conclusion_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>分配意向及其他备注</td>
+                                        <td>
+                                             
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="one_allocation_idea" cols="30" rows="1"></textarea>
+                                        </td>
+                                        <td>
+                                           
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="two_allocation_idea" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!--  -->
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th class="w_1">HR意见</th>
+                                        <th class="w_2">薪资</th>
+                                        <th>具体意见</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="sadfasdf" class="input-mini" placeholder="HR签名" id="hr_name"/>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="sd" class="input-mini" id="hr_suggest_salary"/>
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="hr_detail_idea" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </form>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="m-pop m-pop-table alert" id="pop2" style="display: none">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <div class="m-pop-table-inner">
+        <table class="table table-bordered" style="display: none">
+            <tr>
+              <td rowspan="4" >逻辑思维</td>
+              <td colspan="2" style="width:80px">素质定义</td>
+              <td colspan="2">面对具体问题时，能够把整体分解成部分，理清条理，对问题进行逐步推进式分析，并发现核心点，进行有效的判断。</td>
+            </tr>
+            <tr>
+              <td rowspan="2">正面表现</td>
+              <td>0</td>
+              <td style="width:520px">
+              提取信息：将问题简单地分解成一系列的任务或活动；<br />从纷杂的、零散的事物中提取有用信息，进行简单归类；<br />
+              简单分析：认识简单直接的因果关系、内在联系；认识到任务的轻重缓急，并据此进行工作安排；借助学习到的理论知识和过去的经验，对眼前的问题进行整体分析和处理。
+              </td>
+              <td rowspan="3" width="200px">
+                <b>典型问题</b> <br />                                
+                Q1.请告诉我一个你最近在工作过程中所遇到的最难的案例，当时你是怎么做的？后来发生了什么？<br />
+                Q2.你有没有过给你的同事阐述技术或者你专业上的难点问题？给我一个具体的例子，告诉我你当时是怎么做的。<br />
+                Q3.请描述一下最近一年当中你遇到的最困难的问题，你是如何做出判断的，是自己解决还是通过引入其他人解决的，为什么你会寻找这样的方式，最终的结果如何？
+              </td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>灵活应用：认识到一个事件背后可能存在的多种原因，一个行动可能引起的多种结果，或一个事件中各个部分的多重因果关系，并据此进行下一步的计划安排；将所学到的复杂概念及方法加以修改并灵活运用以适应具体情况。
+              深入浅出：对多种复杂的系统方案进行有效的分析和解释，并对风险、收益等进行判断；通过整理、归类、类比，将复杂的信息组合成有限的类别，并进行清晰有效的解释。
+              </td>
+            </tr>
+            <tr>
+              <td>负面表现</td>
+              <td>-1</td>
+              <td>面对复杂情况时无所适从，不知道该从何下手来解决问题；<br />缺乏基本的分析技巧，思维混乱。</td>
+            </tr>
+        </table>
+        <!--  -->
+        <table class="table table-bordered" style="display: none">
+            <tr>
+              <td rowspan="4" >创新思考</td>
+              <td colspan="2" style="width:80px">素质定义</td>
+              <td colspan="2">关注并思考新事物，不断运用概念的和感性的信息创造新的、与众不同的解决问题的方法。</td>
+            </tr>
+            <tr>
+              <td rowspan="2">正面表现</td>
+              <td>0</td>
+              <td style="width:520px">
+              关注新知：对新理论、新方法等保持开放态度，并将其与自己工作联系起来进行思考；面对类似的问题时，尝试提出不同的解决方案；<br />
+              持续改进：不满足于运用常识和过去的经验思考问题，从多个角度看待问题，寻求解决方案；
+              </td>
+              <td rowspan="3" width="200px">
+                <b>典型问题</b> <br />                                
+                Q1.你经常尝试用创新的思路或方法解决同样的问题吗？请举具体例子说明。（当时是怎么回事？你怎么想的？怎么做的？结果怎么样？）<br />
+                Q2.你最近做过什么比较有突破的项目？你是如何参与的？你为什么认为它是有突破的？<br />
+                Q3.你是如何保持一些新思想新思路的？<br />
+                Q4.你认为什么样的人才是有创新思维的人？可以举个例子。<br />
+                Q5.现场用设计实例来考察 
+              </td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>寻求突破：参考其他领域内的信息和经验，提出解决本领域问题的新思路；运用广泛的知识来思考业务问题，不断寻找新的价值增长点
+              </td>
+            </tr>
+            <tr>
+              <td>负面表现</td>
+              <td>-1</td>
+              <td>环境发生变化时，仍旧沿用以往的方式和方法；<br />闭门造车，拒绝采用他人的新观点，新想法。</td>
+            </tr>
+        </table>
+        <!--  -->
+        <table class="table table-bordered" style="display: none">
+            <tr>
+              <td rowspan="4" >团队合作</td>
+              <td colspan="2" style="width:80px">素质定义</td>
+              <td colspan="2">与别人合作，成为集体的一员并与大家协同工作。</td>
+            </tr>
+            <tr>
+              <td rowspan="2">正面表现</td>
+              <td>0</td>
+              <td style="width:520px">
+                服从团队：支持团队的决定，做好自己的份内事，不说牢骚话；<br />
+                愿意与同事分享自己的工作内容和其他有用信息；<br />
+                尊重他人：对其他团队成员的能力和贡献抱着积极肯定的态度，虚心听取他人意见；与团队成员或者第三方沟通时，用积极的口吻评价团队成员。
+              </td>
+              <td rowspan="3" width="200px">
+                <b>典型问题</b> <br />                                
+                Q1：请讲述一件您亲自参与的、与他人合作完成某项任务的故事。<br />
+                Q2：在你过去的项目中，是否出现过你和团队其他成员意见不一致的情况？具体情况是什么样的？后来是如何解决的？
+              </td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>
+                虚心求教：做决定或制定计划时，认真地向别人征求意见和建议；<br />
+                鼓励支持：花费额外的时间和精力主动为其他团队成员提供支持；<br />
+                公开地赞扬做出成绩的团队成员<br />
+                强化团队：承认自己的错误和不足，同时用合理的方式指出他人的不足，以帮助他人改正和提高；主动化解团队间冲突，鼓励并引导团队成员互助互惠，营造信任友好的工作氛围
+              </td>
+            </tr>
+            <tr>
+              <td>负面表现</td>
+              <td>-1</td>
+              <td>不考虑团队的决定，按照自己的想法行事；<br />自我封闭，拒绝与他人分享有利于团队的信息和资源。</td>
+            </tr>
+        </table>
+        <table class="table table-bordered" style="display: none">
+            <tr>
+              <td rowspan="4" >持续学习</td>
+              <td colspan="2" style="width:80px">素质定义</td>
+              <td colspan="2">不断了解新事物、吸收新知识、掌握新方法，并应用到日常工作中。</td>
+            </tr>
+            <tr>
+              <td rowspan="2">正面表现</td>
+              <td>0</td>
+              <td style="width:520px">
+                主动学习：对新事物表示出好奇心，主动学习和了解本专业内的信息、知识和技术；意识到学习的紧迫性，经常感觉到知识的不足，并通过阅读、请教他人等方式进行充电；<br />
+                积极学习：不耻下问，积极了解和学习他人好的做法，运用多样化的渠道来获取和学习新知识；<br />
+                主动在内外部寻求他人反馈，并在工作中加以改进和提升。
+              </td>
+              <td rowspan="3" width="200px">
+                <b>典型问题</b> <br />                                
+                Q1：请您讲一个学习新知识并在工作中使用的事例。<br />
+                Q2：最近六个月您学到哪些新的知识？采用什么渠道学习的？
+              </td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>
+                灵活运用：深刻理解新知识、新方法和新技术对本职工作所产生的影响，并据目前需要来适当应用；将所学应用于实践，并通过不断反思、总结提升自己<br />
+                引领推动：不断探索、钻研所在领域的前沿问题，寻求解决方案，并用于指导实际工作；将所知与团队员工分享，打造团队学习与分享的气氛
+              </td>
+            </tr>
+            <tr>
+              <td>负面表现</td>
+              <td>-1</td>
+              <td>守着旧知识、旧经验、旧方法不放，遇到新事物、新问题时，不主动行动，仅是“等”、“靠”、“要”；<br />不能掌握培训过的知识与技能，不能根据业务流程的变化掌握新的方法。</td>
+            </tr>
+        </table>
+        <table class="table table-bordered">
+            <tr>
+              <td rowspan="4" >追求卓越</td>
+              <td colspan="2" style="width:80px">素质定义</td>
+              <td colspan="2">一切以工作绩效为着眼点，工作方式上讲究不断地超越和突破，工作结果上追求更快更好。</td>
+            </tr>
+            <tr>
+              <td rowspan="2">正面表现</td>
+              <td>0</td>
+              <td style="width:520px">
+                关注绩效：对低效率或较差的绩效结果表示不满或感到沮丧；<br />
+                不满足于现状，表达出想把工作做得更好的愿望，并付出更多的时间、精力来完成更多的工作；<br />
+                超越标准：为自己的工作制定高于上级规定的目标值，为达到目标用新的或更精确的方法去完成上级下达的任务<br />
+                把自己的工作与别人或者前任的工作进行比较，并采取具体行动去超越。
+              </td>
+              <td rowspan="3" width="200px">
+                <b>典型问题</b> <br />                                
+                Q1：请谈一个您亲身经历的、令您感到很有成就感的故事。<br />
+                Q2：请您分享一个完成较高业务目标的具体事例。
+              </td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>
+                持续提升：在明确自己工作目标的基础上为自己制定更具挑战性的工作目标，比如做从未有人做到过的事，并克服困难、努力实现；不断改进工作流程或优化工作方法，保证工作成绩的持续提升<br />
+                周密决策：为了提高效益，仔细权衡利与弊之后做出某种决策，并推动落实，持续监控风险；为了实现更高的目标，对投入－产出进行周密的计算，即使在成功的可能性不十分确定的情况下，也敢于承担风险
+              </td>
+            </tr>
+            <tr>
+              <td>负面表现</td>
+              <td>-1</td>
+              <td>对是否达到工作目标漠不关心；安于现状，不采取行动改变平庸的绩效。</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="m-pop m-pop-table2 alert" id="pop3" style="display: none">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th class="title">专业技术能力</th>
+          <th class="title">打分区间</th>
+          <th class="title">单项最低标准</th>
+          <th class="title" colspan="3">总分</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>代码能力</td>
+          <td>0～5</td>
+          <td>3</td>
+          <td align="center" rowspan="11">7～10</td>
+          <td rowspan="11">11～13</td>
+          <td rowspan="11">14+</td>
+        </tr>
+        <tr>
+          <td>数据结构/ 算法</td>
+          <td>0～5</td>
+          <td>2</td>
+        </tr>
+        <tr>
+          <td>系统知识</td>
+          <td>0～5</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>项目经验</td>
+          <td>0～5</td>
+          <td>1</td>
+        </tr>
+        <tr>
+          <td>其他专业技能</td>
+          <td>0～3</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td class="title">素质能力</td>
+          <td class="title">打分区间</td>
+          <td class="title">单项最低标准</td>
+        </tr>
+        <tr>
+          <td>逻辑思维</td>
+          <td>-1～1</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>创新思考</td>
+          <td>-1～1</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>团队合作</td>
+          <td>-1～1</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>持续学习</td>
+          <td>-1～1</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td>追求卓越</td>
+          <td>-1～1</td>
+          <td>0</td>
+        </tr>
+        <tr>
+          <td class="title" colspan="3">总分值对应的面试分档</td>
+          <td class="title">合格</td>
+          <td class="title">优秀</td>
+          <td class="title">卓越</td>
+        </tr>
+      </tbody>
+    </table>
+</div>
 </body>
 </html>

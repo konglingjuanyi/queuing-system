@@ -20,6 +20,14 @@ public class BaseResult {
 		return res;
 	}
 	
+	public static BaseResult getErrorResult(int errorCode, String errorMsg, Object obj){
+		BaseResult res = new BaseResult();
+		res.setErrorCode(errorCode);
+		res.setErrorMessage(errorMsg);
+		res.setData(obj);
+		return res;
+	}
+	
 	public static BaseResult getSuccessResult(Object data){
 		BaseResult res = new BaseResult();
 		res.setErrorCode(0);

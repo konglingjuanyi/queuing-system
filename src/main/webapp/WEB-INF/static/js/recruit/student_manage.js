@@ -28,6 +28,7 @@ $(document).ready(function () {
 	
 	$('#addstu').click(function(){
 		active($('#stupage'));
+		getAddStudentYearPhaseAndCity();
 	    $.ajax({
 	      url: "/hr/gotoAddStudentInfo",
 	      type: "POST",
@@ -76,6 +77,11 @@ $(document).ready(function () {
       });
 	});
 	
+	
+
+});
+
+function getAddStudentYearPhaseAndCity(){
 	$.ajax({
 	      url: "/getAllYears",
 	      type: "POST",
@@ -139,7 +145,8 @@ $(document).ready(function () {
 		    });
 		 backToIndex();
 	 });
-});
+}
+
 
 $.fn.serializeObject = function()    
 {    
