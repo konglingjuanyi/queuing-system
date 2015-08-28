@@ -31,13 +31,13 @@ public class JoinService {
 	}
 
 
-	public List<InterviewerInfoToPage> getInterviewerInfoToPages() {
-		return joinMapper.getInterviewersInfoToPages(RecruitConst.year, RecruitConst.phase, RecruitConst.city);
+	public List<InterviewerInfoToPage> getInterviewerInfoToPages(String year, String phase, String city) {
+		return joinMapper.getInterviewersInfoToPages(year, phase, city);
 	}
 
 
-	public InterviewerInfoToPage getInterviewerInfoToPage(int id) {
-		return joinMapper.getInterviewerInfoToPages(RecruitConst.year, RecruitConst.phase, RecruitConst.city, id);
+	public InterviewerInfoToPage getInterviewerInfoToPage(String year, String phase, String city, int id) {
+		return joinMapper.getInterviewerInfoToPages(year, phase, city, id);
 	}
 	
 	public void testqyd(){
