@@ -5,11 +5,9 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.recruit.model.Student;
-import com.qunar.ops.recruit.util.TimedTask;
 
 @Component
 public class WaitService {
@@ -117,7 +115,7 @@ public class WaitService {
 		return stu;
 	}
 	
-	public synchronized boolean contains(StudentWaiter stu) {
+	public boolean contains(StudentWaiter stu) {
 		return list.contains(stu) || twoList.contains(stu);
 	}
 
