@@ -19,10 +19,7 @@ public class WaitService {
 	List<Studenttest> l = new LinkedList<Studenttest>();
 	
 	List<StudentWaiter> twoList = new LinkedList<StudentWaiter>();
-	
-	@Autowired
-	TimedTask tt;
-	
+
 	boolean b = false;
 	
 	public synchronized int numberInFrontOf(StudentWaiter t){
@@ -67,10 +64,6 @@ public class WaitService {
 	
 	public synchronized int add2WaitList(StudentWaiter t){
 		list.add(t);
-		if(!b){
-			new Thread(tt).start();
-			b = true;
-		}
 		return numberInFrontOf(t);
 	}
 	
