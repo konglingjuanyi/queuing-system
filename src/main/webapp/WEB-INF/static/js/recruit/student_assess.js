@@ -1,6 +1,6 @@
 $(document).ready(function () {
 	$.ajax({
-	      url: "interviewer/getCurrentViewInfo",
+	      url: "/interviewer/getCurrentViewInfo",
 	      type: "POST",
 	      dataType: "json",
 	      contentType: 'application/json; charset=utf-8',

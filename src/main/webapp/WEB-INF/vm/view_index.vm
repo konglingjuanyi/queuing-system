@@ -22,7 +22,7 @@
                         </div>
                         <div class="item">
                             <span class="label">房间：</span>
-                            <span class="text" id="interviewer_room">201</span>
+                            <span class="text" id="interviewer_room"></span>
                         </div>
                         <div class="item">
                             <span class="label">已面试：</span>
@@ -36,13 +36,22 @@
                         </div>
                     </div>
                     <div class="m-firsttry-btn">
+                        <button class="btn" id="getOneInterview">请安排一个面试者</button>
+                    </div>
+                    <div class="m-firsttry-btn">
                         <button class="btn" id="beginToInterview">开始面试</button>
                     </div>
                     <div class="m-firsttry-btn" id="finishInterview">
                         <button class="btn">结束面试</button>
                     </div>
-                    <div class="m-firsttry-btn" id="noComeFinish">
-                        <button class="btn">面试者未到，结束面试</button>
+                    <div class="m-firsttry-btn" id="goon">
+                        <input type="checkbox" id="inlineCheckbox1" value="option1"> 无需复试
+                    </div>
+                    <div class="m-firsttry-btn" id="goon">
+                        <button class="btn">结束面试 并继续</button>
+                    </div>
+                    <div class="m-firsttry-btn" id="havarest">
+                        <button class="btn">结束面试 休息一下</button>
                     </div>
                 </div>
             </div>
