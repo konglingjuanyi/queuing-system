@@ -57,6 +57,7 @@ public class RecruitConst {
 	public static final String STUDENT_STATE_GOING2ONEROOM = "等待初试";
 	public static final String STUDENT_STATE_ONE_VIEW = "初试中";
 	public static final String STUDENT_STATE_ONE_NOT_PASS = "初试未通过";
+	public static final String STUDENT_STATE_ONE_PASS = "初试通过";
 	public static final String STUDENT_STATE_GOING2TWOROOM = "等待复试";
 	public static final String STUDENT_STATE_TWO_VIEW = "复试中";
 	public static final String STUDENT_STATE_TWO_NOT_PASS = "复试未通过";

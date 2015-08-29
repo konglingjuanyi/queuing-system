@@ -133,7 +133,7 @@ public class StudentController {
 					}else{
 						//可能hr面或者面试结束 带改
 						
-						model.addAttribute("message",RecruitConst.STUDENT_STATE_ONE_VIEW);
+						model.addAttribute("message",newStudent.getState());
 						model.addAttribute("flag",1);
 					}
 					session.setAttribute("user", new StudentWaiter(newStudent));
