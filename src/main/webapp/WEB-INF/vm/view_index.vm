@@ -92,7 +92,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-name="代码能力">代码能力</a></td>
                                         <td>
-                                            <select name="one_code" id="one_code">
+                                            <select name="one_code" id="one_code" onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -105,7 +105,7 @@
                                             <textarea name="one_code_detail" id="one_code_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_code">
+                                            <select name="" id="two_code"  onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -121,7 +121,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-name="数据结构和算法">数据结构/算法</a></td>
                                         <td>
-                                            <select name="" id="one_algorithm">
+                                            <select name="" id="one_algorithm"  onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -134,7 +134,7 @@
                                             <textarea name="" id="one_algorithm_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_algorithm">
+                                            <select name="" id="two_algorithm" onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -150,7 +150,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-name="系统知识">操作系统/网络</a></td>
                                         <td>
-                                            <select name="" id="one_network">
+                                            <select name="" id="one_network"  onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -163,7 +163,7 @@
                                             <textarea name="" id="one_network_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_network">
+                                            <select name="" id="two_network" onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -179,7 +179,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-name="项目经验">项目/测试/前端经验</a></td>
                                         <td>
-                                            <select name="" id="one_experience">
+                                            <select name="" id="one_experience"  onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -192,7 +192,7 @@
                                             <textarea name="" id="one_experience_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_experience">
+                                            <select name="" id="two_experience" onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -208,7 +208,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-name="其他加分技能">其他加分技能</a></td>
                                         <td>
-                                            <select name="" id="one_other">
+                                            <select name="" id="one_other"  onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -221,7 +221,7 @@
                                             <textarea name="" id="one_other_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_other">
+                                            <select name="" id="two_other" onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -251,7 +251,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-num="0">逻辑思维</a></td>
                                         <td>
-                                            <select name="" id="one_logic">
+                                            <select name="" id="one_logic"  onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -264,7 +264,7 @@
                                             <textarea name="" id="one_logic_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_logic">
+                                            <select name="" id="two_logic" onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -280,7 +280,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-num="1">创新思考</a></td>
                                         <td>
-                                            <select name="" id="one_creative">
+                                            <select name="" id="one_creative"  onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -293,7 +293,7 @@
                                             <textarea name="" id="one_creative_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_creative">
+                                            <select name="" id="two_creative" onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -309,7 +309,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-num="2">团队合作</a></td>
                                         <td>
-                                            <select name="" id="one_team">
+                                            <select name="" id="one_team"  onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -322,7 +322,7 @@
                                             <textarea name="" id="one_team_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_team">
+                                            <select name="" id="two_team" onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -338,7 +338,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-num="3">持续学习</a></td>
                                         <td>
-                                            <select name="" id="one_continuouslearning">
+                                            <select name="" id="one_continuouslearning"  onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -351,7 +351,7 @@
                                             <textarea name="" id="one_continuouslearning_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_continuouslearning">
+                                            <select name="" id="two_continuouslearning" onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -367,7 +367,7 @@
                                     <tr>
                                         <td><a href="javascript:;" data-num="4">追求卓越</a></td>
                                         <td>
-                                            <select name="" id="one_outstanding">
+                                            <select name="" id="one_outstanding"  onclick="sumOneCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -380,7 +380,7 @@
                                             <textarea name="" id="one_outstanding_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_outstanding">
+                                            <select name="" id="two_outstanding" onclick="sumTwoCount()">
                                                 <option value="0">请选择</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
@@ -393,14 +393,29 @@
                                             <textarea name="" id="two_outstanding_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td><a href="javascript:;" data-num="4">总分</a></td>
+                                        <td>
+                                            <input type="text" class="input-mini" id="one_sum" readonly="readonly">
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="" cols="30" rows="1" style="display:none;"></textarea>
+                                        </td>
+                                        <td>
+                                            <input type="text" class="input-mini" id="two_sum" readonly="readonly">
+                                        </td>
+                                        <td>
+                                            <textarea name="" id="" cols="30" rows="1" style="display:none;"></textarea>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                             <!--  -->
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th class="w_1">综合评价</th>
-                                        <th class="w_2">建议薪资</th>
+                                        <th class="w_1">初试结论</th>
+                                        <th class="w_2"></th>
                                         <th>具体说明</th>
                                         <th>复试结论</th>
                                         <th>具体说明</th>
@@ -409,8 +424,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            总得分：100
-                                            <select name="" id="one_conclusion">
+                                            <select name="" id="one_conclusion" onclick="showSuggest(1);">
                                                 <option value="">请选择</option>
                                                 <option value="卓越">卓越</option>
                                                 <option value="优秀">优秀</option>
@@ -420,13 +434,13 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="input-mini" id="one_suggest_salary"/>
+                                            <input type="text" class="input-mini" id="" style="display:none;"/>
                                         </td>
                                         <td>
                                             <textarea name="" id="one_suggest_salary_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_conclusion">
+                                            <select name="" id="two_conclusion" onclick="showSuggest(2);">
                                                 <option value="">请选择</option>
                                                 <option value="卓越">卓越</option>
                                                 <option value="优秀">优秀</option>
@@ -437,6 +451,25 @@
                                         </td>
                                         <td>
                                             <textarea name="" id="two_conclusion_detail" cols="30" rows="1"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                        	<div style="display:none;" id="one_suggest">
+                                           	建议薪资:<input type="text" class="input-mini" id="one_suggest_salary" />
+                                           	</div>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        </td>
+                                        <td>
+                                        	<div style="display:none;" id="two_suggest">
+                                                                                                                                                          建议薪资:<input type="text" class="input-mini" id="two_suggest_salary"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            
                                         </td>
                                     </tr>
                                     <tr>

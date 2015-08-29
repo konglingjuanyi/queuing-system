@@ -38,6 +38,7 @@ $(document).ready(function () {
 		    	  if(message!=1){
 		    		  var access=data.assess;
 		    		  /***渲染评估表****/
+		    		  addValue(access);
 		    	  }
 		    	  $("#student_name").text(stu.name);
 		    	  $("#jobTitle").text(stu.job);
@@ -174,21 +175,103 @@ function getSubmitParam(){
 }
 
 
-$.fn.serializeObject = function()    
-{    
-   var o = {};    
-   var a = this.serializeArray();    
-   $.each(a, function() {   
-       if (o[this.name]) {    
-           if (!o[this.name].push) {    
-               o[this.name] = [o[this.name]];    
-           }    
-           o[this.name].push(this.value || '');    
-       } else {    
-           o[this.name] = this.value || '';    
-       }    
-   });    
-   return o;    
-};  
+function addValue(access){
+	$("#one_code").find("option:selected").text();
+	$("#one_code_detail").val();
+	$("#one_algorithm").find("option:selected").text();
+	$("#one_algorithm_detail").val();
+	$("#one_network").find("option:selected").text();
+	$("#one_network_detail").val();
+	$("#one_experience").find("option:selected").text();
+	$("#one_experience_detail").val();
+	$("#one_other").find("option:selected").text();
+	$("#one_other_detail").val();
+	$("#one_logic").find("option:selected").text();
+	$("#one_logic_detail").val();
+	$("#one_creative").find("option:selected").text();
+	$("#one_creative_detail").val();
+	$("#one_team").find("option:selected").text();
+	$("#one_team_detail").val();
+	$("#one_continuouslearning").find("option:selected").text();
+	$("#one_continuouslearning_detail").val();
+	$("#one_outstanding").find("option:selected").text();
+	$("#one_outstanding_detail").val();
+	$("#two_code").find("option:selected").text();
+	$("#two_code_detail").val();
+	$("#two_algorithm").find("option:selected").text();
+	$("#two_algorithm_detail").val();
+	$("#two_network").find("option:selected").text();
+	$("#two_network_detail").val();
+	$("#two_experience").find("option:selected").text();
+	$("#two_experience_detail").val();
+	$("#two_other").find("option:selected").text();
+	$("#two_other_detail").val();
+	$("#two_logic").find("option:selected").text();
+	$("#two_logic_detail").val();
+	$("#two_creative").find("option:selected").text();
+	$("#two_creative_detail").val();
+	$("#two_team").find("option:selected").text();
+	$("#two_team_detail").val();
+	$("#two_continuouslearning").find("option:selected").text();
+	$("#two_continuouslearning_detail").val();
+	$("#two_outstanding").find("option:selected").text();
+	$("#two_outstanding_detail").val();
+	$("#one_conclusion").find("option:selected").text();
+	$("#one_suggest_salary").find("option:selected").text();
+	$("#one_suggest_salary_detail").val();
+	$("#two_conclusion").find("option:selected").text();
+	$("#two_conclusion_detail").val();
+	$("#one_allocation_idea").val();
+	$("#two_allocation_idea").val();
+	$("#hr_name").val();
+	$("#hr_suggest_salary").val();
+	$("#hr_detail_idea").val();
+}
+
+function sumOneCount(){
+	var one_code=parseInt($("#one_code").val());
+	var one_algorithm=parseInt($("#one_algorithm").val());
+	var one_network=parseInt($("#one_network").val());
+	var one_experience=parseInt($("#one_experience").val());
+	var one_other=parseInt($("#one_other").val());
+	var one_logic=parseInt($("#one_logic").val());
+	var one_creative=parseInt($("#one_creative").val());
+	var one_team=parseInt($("#one_team").val());
+	var one_continuouslearning=parseInt($("#one_continuouslearning").val());
+	var one_outstanding=parseInt($("#one_outstanding").val());
+	var sum=one_code+one_algorithm+one_network+one_experience+one_other+one_logic+one_creative+one_team+one_continuouslearning+one_outstanding;
+	$("#one_sum").val(sum);
+	
+	
+}
+
+function sumTwoCount(){
+	var two_code=parseInt($("#two_code").val());
+	var two_algorithm=parseInt($("#two_algorithm").val());
+	var two_network=parseInt($("#two_network").val());
+	var two_experience=parseInt($("#two_experience").val());
+	var two_other=parseInt($("#two_other").val());
+	var two_logic=parseInt($("#two_logic").val());
+	var two_creative=parseInt($("#two_creative").val());
+	var two_team=parseInt($("#two_team").val());
+	var two_continuouslearning=parseInt($("#two_continuouslearning").val());
+	var two_outstanding=parseInt($("#two_outstanding").val());
+	var sum=two_code+two_algorithm+two_network+two_experience+two_other+two_logic+two_creative+two_team+two_continuouslearning+two_outstanding;
+	$("#two_sum").val(sum);
+}
+
+function showSuggest(flag){
+	if(flag==1){
+		if($("#one_conclusion").val()=='卓越'){
+			$("#one_suggest").css("display","");
+		}
+	}else{
+		if($("#two_conclusion").val()=='卓越'){
+			$("#two_suggest").css("display","");
+		}
+	}
+	
+}
+
 
 
