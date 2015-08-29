@@ -97,7 +97,7 @@ public class StudentAssess {
 
     private String oneSuggestSalaryDetail;
 
-    private Integer twoConclusion;
+    private String twoConclusion;
 
     private String twoConclusionDetail;
 
@@ -501,11 +501,11 @@ public class StudentAssess {
         this.oneSuggestSalaryDetail = oneSuggestSalaryDetail == null ? null : oneSuggestSalaryDetail.trim();
     }
 
-    public Integer getTwoConclusion() {
+    public String getTwoConclusion() {
         return twoConclusion;
     }
 
-    public void setTwoConclusion(Integer twoConclusion) {
+    public void setTwoConclusion(String twoConclusion) {
         this.twoConclusion = twoConclusion;
     }
 

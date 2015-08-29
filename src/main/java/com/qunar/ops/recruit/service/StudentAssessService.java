@@ -78,8 +78,8 @@ public class StudentAssessService {
 		stu.setTwoOutstanding(vars.get("two_outstanding")==""?0:Integer.valueOf(vars.get("two_outstanding")));
 		stu.setTwoOutstandingDetail(vars.get("two_outstanding_detail"));
 		
-		stu.setOneConclusion(vars.get("one_conclusion"));
-		stu.setTwoConclusion(vars.get("two_conclusion")==""?0:Integer.valueOf(vars.get("two_conclusion")));
+		stu.setOneConclusion(vars.get("one_conclusion")=="请选择"?"":vars.get("one_conclusion"));
+		stu.setTwoConclusion(vars.get("two_conclusion")=="请选择"?"":vars.get("two_conclusion"));
 		stu.setOneSuggestSalary(vars.get("one_suggest_salary")==""?0:Integer.valueOf(vars.get("one_suggest_salary")));
 		stu.setOneSuggestSalaryDetail(vars.get("one_suggest_salary_detail"));
 		stu.setOneSum(vars.get("one_sum")==""?0:Integer.valueOf(vars.get("one_sum")));
