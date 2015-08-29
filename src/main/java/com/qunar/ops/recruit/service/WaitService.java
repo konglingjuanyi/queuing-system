@@ -117,7 +117,7 @@ public class WaitService {
 		return stu;
 	}
 	
-	public boolean contains(StudentWaiter stu) {
+	public synchronized boolean contains(StudentWaiter stu) {
 		return list.contains(stu) || twoList.contains(stu);
 	}
 

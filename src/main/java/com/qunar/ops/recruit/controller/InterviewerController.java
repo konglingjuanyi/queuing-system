@@ -173,9 +173,12 @@ public class InterviewerController {
 	 */
 	@RequestMapping(value = "/interviewer/getOneInterview")
 	@ResponseBody
-	public BaseResult getNextStudent(HttpServletRequest request, HttpSession session, ModelMap mm) {
-		System.out.println("******************************");
-		Object obj = request.getSession().getAttribute("user");
+	public BaseResult getOneInterview(HttpServletRequest request, HttpSession session, ModelMap mm) {
+		return getNextStudent(session, mm);
+	}
+	
+	private BaseResult getNextStudent(HttpSession session, ModelMap mm) {
+		Object obj = session.getAttribute("user");
 		if(obj != null){
 			if(obj instanceof Interviewer){
 				Interviewer inter = (Interviewer) obj;
@@ -203,29 +206,31 @@ public class InterviewerController {
 					return BaseResult.getErrorResult(-1, RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
 				}else{
 					Student stu = stuW.getStu();
-					stu.setFirstTry(inter.getUserName());
+					Student newStu = new Student();
 					stu.setState(RecruitConst.STUDENT_STATE_GOING2ROOM);
-					session.setAttribute("student", stu);
+					newStu.setId(stu.getId());
+					newStu.setState(RecruitConst.STUDENT_STATE_GOING2ROOM);
 					PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 					if(oneOrtwo == 1){
+						stu.setFirstTry(inter.getUserName());
+						newStu.setFirstTry(inter.getUserName());
 						mm.addAttribute("message", "1");
 						mm.addAttribute("student", stuW.getStu());
 						mm.addAttribute("phaseInterviewer", pi);
 					}else{
+						stu.setSecondTry(inter.getUserName());
+						newStu.setSecondTry(inter.getUserName());
 						mm.addAttribute("message", "2");
 						mm.addAttribute("student", stuW.getStu());
 						mm.addAttribute("phaseInterviewer", pi);
 						StudentAssess sa = saService.getStudentAssessByStudentId(stuW.getStu().getId());
 						mm.addAttribute("assess", sa);
 					}
+					session.setAttribute("student", stu);
 					//更新面试官状态
 					pi.setStatus(RecruitConst.INTERVIEWER_STATE_WAITING);
 					piService.update(pi);
 					//更新学生状态
-					Student newStu = new Student();
-					newStu.setId(stu.getId());
-					newStu.setFirstTry(inter.getUserName());
-					newStu.setState(RecruitConst.STUDENT_STATE_GOING2ROOM);
 					studentService.updateStudent(newStu);
 					return BaseResult.getSuccessResult(mm);
 				}
@@ -266,13 +271,11 @@ public class InterviewerController {
 		newInter.setId(inter.getId());
 		newPi.setId(pi.getId());
 		if(stu.getFirstTry() != null && stu.getState().equals(RecruitConst.STUDENT_STATE_GOING2ROOM)){
-			newStu.setFirstTry(inter.getUserName());
 			newStu.setState(RecruitConst.STUDENT_STATE_ONE_VIEW);
 			newInter.setViewCount(inter.getViewCount()+1);
 			newPi.setOneCount(pi.getOneCount()+1);
 			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_VIEWING);
 		}else{
-			newStu.setSecondTry(inter.getUserName());
 			newStu.setState(RecruitConst.STUDENT_STATE_TWO_VIEW);
 			newInter.setViewCount(inter.getViewCount()+1);
 			newPi.setTwoCount(pi.getTwoCount()+1);
@@ -284,19 +287,33 @@ public class InterviewerController {
 		return BaseResult.getSuccessResult("");
 	}
 	
-	@RequestMapping(value = "/interviewer/finishInterview")
+	@RequestMapping(value = "/interviewer/finishAndContinue")
 	@ResponseBody
 	public BaseResult finishInterview(HttpServletRequest request, HttpSession session, @RequestBody CommonRequest commonRequest) {
 		Student stu = (Student) session.getAttribute("student");
 		Interviewer inter = (Interviewer) session.getAttribute("user");
+		String[] arrs = getYearPhaseAndCity(session);
+		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 		Student newStu = new Student();
-		newStu.setId(stu.getId());
-		newStu.setState(RecruitConst.STUDENT_STATE_FINISH);
-		newStu.setFirstTry(inter.getUserName());
-		
 		Interviewer newInter = new Interviewer();
-//		newInter.setViewCount(inter.ge);
-//		interServe.updateInterviewer(newStu);
+		PhaseInterviewer newPi = new PhaseInterviewer();
+		newStu.setId(stu.getId());
+		newInter.setId(inter.getId());
+		newPi.setId(pi.getId());
+		if(stu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
+			newStu.setState(RecruitConst.STUDENT_STATE_ONE_VIEW);
+			newInter.setViewCount(inter.getViewCount()+1);
+			newPi.setOneCount(pi.getOneCount()+1);
+			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_VIEWING);
+		}else{
+			newStu.setState(RecruitConst.STUDENT_STATE_TWO_VIEW);
+			newInter.setViewCount(inter.getViewCount()+1);
+			newPi.setTwoCount(pi.getTwoCount()+1);
+			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_VIEWING);
+		}
+		studentService.updateStudent(newStu);
+		interServe.updateInterviewer(newInter);
+		piService.update(pi);
 		return BaseResult.getSuccessResult("");
 	}
 	

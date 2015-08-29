@@ -101,6 +101,7 @@ public class InterviewerService {
 		inter.setOneView(first_value);
 		inter.setTwoView(second_value);
 		inter.setDetermine(finish_value);
+		inter.setViewCount((long) 0);
 //		inter.setOneCount(0);
 //		inter.setTwoCount(0);
 //		inter.setFirstFe(0);
