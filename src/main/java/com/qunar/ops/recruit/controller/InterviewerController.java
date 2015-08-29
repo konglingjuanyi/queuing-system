@@ -273,13 +273,17 @@ public class InterviewerController {
 		newInter.setId(inter.getId());
 		newPi.setId(pi.getId());
 		if(stu.getFirstTry() != null && stu.getState().equals(RecruitConst.STUDENT_STATE_GOING2ONEROOM)){
+			stu.setState(RecruitConst.STUDENT_STATE_ONE_VIEW);
 			newStu.setState(RecruitConst.STUDENT_STATE_ONE_VIEW);
 			newInter.setViewCount(inter.getViewCount()+1);
+			inter.setViewCount(inter.getViewCount()+1);
 			newPi.setOneCount(pi.getOneCount()+1);
 			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_VIEWING);
 		}else{
+			stu.setState(RecruitConst.STUDENT_STATE_TWO_VIEW);
 			newStu.setState(RecruitConst.STUDENT_STATE_TWO_VIEW);
 			newInter.setViewCount(inter.getViewCount()+1);
+			inter.setViewCount(inter.getViewCount()+1);
 			newPi.setTwoCount(pi.getTwoCount()+1);
 			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_VIEWING);
 		}
