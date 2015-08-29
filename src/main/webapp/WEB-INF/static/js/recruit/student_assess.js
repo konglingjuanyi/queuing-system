@@ -1,4 +1,5 @@
 $(document).ready(function () {
+	var flag=-1;
 	$.ajax({
 	      url: "/interviewer/getCurrentViewInfo",
 	      type: "POST",
@@ -31,6 +32,7 @@ $(document).ready(function () {
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
+		    	  flag=message;
 		    	  data=set.data;
 		    	  var message=data.message;
 		    	  var stu=data.student;
@@ -64,10 +66,63 @@ $(document).ready(function () {
 		      }
 		    });
 	});
-	 $("#finishInterview").click(function(){
+	
+	$("#finishInterview").click(function(){
+		 if(flag==1){
+			 if($("#one_conclusion").val()==''){
+				alert("请选择初试结论");
+				return false;
+			 }
+		 }else if(flag==2){
+			 	if($("#two_conclusion").val()==''){
+			 		alert("请选择复试结论");
+					return false;
+			 	}
+		 }else{
+			 alert("不能结束面试");
+			 return false;
+		 }
+		 if(flag==1){
+			 $("#noview").css("display","");
+		 }
+		 $("#goon").css("display","");
+		 $("#havarest").css("display","");
+		 $("#nocome").css("display","");
+	 });
+	
+	 $("#finishAndContinue").click(function(){
 		 param = getSubmitParam();
 		 $.ajax({
 		      url: "/interviewer/finishInterview",
+		      type: "POST",
+		      dataType: "json",
+		      contentType: 'application/json; charset=utf-8',
+		      data: JSON.stringify(param),
+		      success: function (set) {
+		    	  flag=message;
+		    	  data=set.data;
+		    	  var message=data.message;
+		    	  var stu=data.student;
+		    	  var inter=data.phaseInterviewer;
+		    	  if(message!=1){
+		    		  var access=data.assess;
+		    		  /***渲染评估表****/
+		    		  addValue(access);
+		    	  }
+		    	  $("#student_name").text(stu.name);
+		    	  $("#jobTitle").text(stu.job);
+		    	  $("#first_viewer").text(inter.intervierName);
+			  },
+		      error: function () {
+		           alert("系统发生了错误请稍后重试");
+		      }
+		    });
+	 });
+	 
+	 $("#finishAndRest").click(function(){
+		 param = getSubmitParam();
+		 $.ajax({
+		      url: "/interviewer/finishAndRest",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
@@ -80,22 +135,7 @@ $(document).ready(function () {
 		      }
 		    });
 	 });
-	 $("#finishInterview").click(function(){
-		 param = getSubmitParam();
-		 $.ajax({
-		      url: "/interviewer/finishInterview",
-		      type: "POST",
-		      dataType: "json",
-		      contentType: 'application/json; charset=utf-8',
-		      data: JSON.stringify(param),
-		      success: function (set) {
-		    	 
-			  },
-		      error: function () {
-		           alert("系统发生了错误请稍后重试");
-		      }
-		    });
-	 });
+	 
 	 $("#noComeFinish").click(function(){
 		 $.ajax({
 		      url: "/interviewer/noComeFinish",
@@ -161,13 +201,16 @@ function getSubmitParam(){
 	vars['two_outstanding'] = $("#two_outstanding").find("option:selected").text();
 	vars['two_outstanding_detail'] = $("#two_outstanding_detail").val();
 	vars['one_conclusion'] = $("#one_conclusion").find("option:selected").text();
-	vars['one_suggest_salary'] = $("#one_suggest_salary").find("option:selected").text();
+	vars['one_suggest_salary'] = $("#one_suggest_salary").val();
+	vars['two_suggest_salary'] = $("#two_suggest_salary").val();
 	vars['one_suggest_salary_detail'] = $("#one_suggest_salary_detail").val();
 	vars['two_conclusion'] = $("#two_conclusion").find("option:selected").text();
 	vars['two_conclusion_detail'] = $("#two_conclusion_detail").val();
 	vars['one_allocation_idea'] = $("#one_allocation_idea").val();
 	vars['two_allocation_idea'] = $("#two_allocation_idea").val();
 	vars['hr_name'] = $("#hr_name").val();
+	vars['one_sum'] = $("#one_sum").val();
+	vars['two_sum'] = $("#two_sum").val();
 	vars['hr_suggest_salary'] = $("#hr_suggest_salary").val();
 	vars['hr_detail_idea'] = $("#hr_detail_idea").val();
 	var params = {"vars": vars};

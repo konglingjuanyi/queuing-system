@@ -42,16 +42,19 @@
                         <button class="btn" id="beginToInterview">开始面试</button>
                     </div>
                     <div class="m-firsttry-btn">
-                        <button class="btn">结束面试</button>
+                        <button class="btn" id="finishInterview">结束面试</button>
                     </div>
-                    <div class="m-firsttry-btn" id="noview">
-                        <input type="checkbox" id="inlineCheckbox1" value="无需复试" id="donotView"> 无需复试
+                    <div class="m-firsttry-btn" id="noview" style="display:none">
+                        <input type="checkbox"  value="无需复试" id="donotView"> 无需复试
                     </div>
-                    <div class="m-firsttry-btn" id="goon">
+                    <div class="m-firsttry-btn" id="goon" style="display:none">
                         <button class="btn" if="finishAndContinue">结束面试 并继续</button>
                     </div>
-                    <div class="m-firsttry-btn" id="havarest">
+                    <div class="m-firsttry-btn" id="havarest" style="display:none">
                         <button class="btn" if="finishAndRest">结束面试 休息一下</button>
+                    </div>
+                    <div class="m-firsttry-btn" id="nocome" style="display:none">
+                        <button class="btn" if="noComeFinish">候选人未到,继续下一个</button>
                     </div>
                 </div>
             </div>
