@@ -54,6 +54,7 @@ public class RecruitConst {
 	public static final String STUDENT_STATE_REGIST = "签到";
 	public static final String STUDENT_STATE_LATE = "迟到";
 	public static final String STUDENT_STATE_PASS = "过号";
+	public static final String STUDENT_STATE_GOING2ROOM = "等待面试";
 	public static final String STUDENT_STATE_ONE_VIEW = "一面面试中";
 	public static final String STUDENT_STATE_TWO_VIEW = "二面面试中";
 	public static final String STUDENT_STATE_FINISH = "面试结束";

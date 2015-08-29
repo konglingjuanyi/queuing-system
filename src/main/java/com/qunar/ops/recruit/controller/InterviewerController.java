@@ -202,7 +202,10 @@ public class InterviewerController {
 					mm.addAttribute("message", RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
 					return BaseResult.getErrorResult(-1, RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
 				}else{
-					session.setAttribute("student", stuW.getStu());
+					Student stu = stuW.getStu();
+					stu.setFirstTry(inter.getUserName());
+					stu.setState(RecruitConst.STUDENT_STATE_GOING2ROOM);
+					session.setAttribute("student", stu);
 					PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 					if(oneOrtwo == 1){
 						mm.addAttribute("message", "1");
@@ -218,6 +221,12 @@ public class InterviewerController {
 					//更新面试官状态
 					pi.setStatus(RecruitConst.INTERVIEWER_STATE_WAITING);
 					piService.update(pi);
+					//更新学生状态
+					Student newStu = new Student();
+					newStu.setId(stu.getId());
+					newStu.setFirstTry(inter.getUserName());
+					newStu.setState(RecruitConst.STUDENT_STATE_GOING2ROOM);
+					studentService.updateStudent(newStu);
 					return BaseResult.getSuccessResult(mm);
 				}
 			}else{
@@ -256,7 +265,7 @@ public class InterviewerController {
 		newStu.setId(stu.getId());
 		newInter.setId(inter.getId());
 		newPi.setId(pi.getId());
-		if(stu.getFirstTry() == null || stu.getFirstTry().equals("")){
+		if(stu.getFirstTry() != null && stu.getState().equals(RecruitConst.STUDENT_STATE_GOING2ROOM)){
 			newStu.setFirstTry(inter.getUserName());
 			newStu.setState(RecruitConst.STUDENT_STATE_ONE_VIEW);
 			newInter.setViewCount(inter.getViewCount()+1);

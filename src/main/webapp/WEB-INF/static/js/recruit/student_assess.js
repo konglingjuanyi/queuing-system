@@ -15,9 +15,8 @@ $(document).ready(function () {
 		    	  $("#interviewer_name").text(inter.userName);
 		    	  $("#interviewer_room").text(phase_inter.room);
 		    	  $("#already_inter").text(parseInt(phase_inter.oneCount)+parseInt(phase_inter.twoCount));
-		    	  $("#noview").hide();
-		    	  $("#goon").hide();
-		    	  $("#havarest").hide();
+		    	  //$("#first_viewer_div").hide();
+		    	  //$("#second_viewer_div").hide();
 	    	  }
 		  },
 	      error: function () {
@@ -27,7 +26,7 @@ $(document).ready(function () {
 	
 	$("#getOneInterview").click(function(){
 		$.ajax({
-		      url: "/interviewer/getOneInterview",
+		      url: "interviewer/getOneInterview",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
@@ -42,6 +41,7 @@ $(document).ready(function () {
 		    	  }
 		    	  alert(stu.name);
 		    	  alert(stu.job);
+
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -56,7 +56,7 @@ $(document).ready(function () {
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
-		    	  clock();
+		    	 
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -72,7 +72,23 @@ $(document).ready(function () {
 		      contentType: 'application/json; charset=utf-8',
 		      data: JSON.stringify(param),
 		      success: function (set) {
-		    	  clock();
+		    	 
+			  },
+		      error: function () {
+		           alert("系统发生了错误请稍后重试");
+		      }
+		    });
+	 });
+	 $("#finishInterview").click(function(){
+		 param = getSubmitParam();
+		 $.ajax({
+		      url: "/interviewer/finishInterview",
+		      type: "POST",
+		      dataType: "json",
+		      contentType: 'application/json; charset=utf-8',
+		      data: JSON.stringify(param),
+		      success: function (set) {
+		    	 
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -93,23 +109,8 @@ $(document).ready(function () {
 		      }
 		    });
 	 });
-	 
-});
-var timeIndex = 0;
-function setTime(){
-	var hour = parseInt(timeIndex / 3600);    // 计算时 
-	var minutes = parseInt((timeIndex % 3600) / 60);    // 计算分 
-	var seconds = parseInt(timeIndex % 60);    // 计算秒  
-	hour = hour < 10 ? "0" + hour : hour;
-	minutes = minutes < 10 ? "0" + minutes : minutes;
-	seconds = seconds < 10 ? "0" + seconds : seconds;
-	$("#showTime").text(hour + ":" + minutes + ":" + seconds);
-	timeIndex++;
-}
 
-function clock(){
-	setInterval(setTime, 1000);
-}
+});
 
 function getSubmitParam(){
 //	alert($("#one_code").find("option:selected").text());
@@ -189,4 +190,5 @@ $.fn.serializeObject = function()
    });    
    return o;    
 };  
+
 

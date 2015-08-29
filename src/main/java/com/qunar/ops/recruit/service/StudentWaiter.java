@@ -27,13 +27,25 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 	@Override
 	public int compareTo(StudentWaiter u) {
 		if(this.getState().equals(RecruitConst.NORMAL) && u.getState().equals(RecruitConst.NORMAL)){
-			return this.realComeTime > u.realComeTime ? -1:1;
+			if(this.realComeTime > u.realComeTime){
+				return -1;
+			}else if(this.realComeTime < u.realComeTime){
+				return 1;
+			}else{
+				return 0;
+			}
 		}else if(this.getState().equals(RecruitConst.NORMAL)){
-			return -1;
-		}else if(u.getState().equals(RecruitConst.NORMAL)){
 			return 1;
+		}else if(u.getState().equals(RecruitConst.NORMAL)){
+			return -1;
 		}else{
-			return this.realComeTime > u.realComeTime ? 1:-1;
+			if(this.realComeTime > u.realComeTime){
+				return -1;
+			}else if(this.realComeTime < u.realComeTime){
+				return 1;
+			}else{
+				return 0;
+			}
 		}
 	}
 
