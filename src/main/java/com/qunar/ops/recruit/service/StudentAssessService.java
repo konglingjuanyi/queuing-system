@@ -2,17 +2,14 @@ package com.qunar.ops.recruit.service;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.qunar.ops.recruit.dao.JoinMapper;
 import com.qunar.ops.recruit.dao.StudentAssessMapper;
-import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentAssess;
 import com.qunar.ops.recruit.model.StudentAssessExample;
-import com.qunar.ops.recruit.model.connect_table.InterviewerInfoToPage;
-import com.qunar.ops.recruit.util.RecruitConst;
 
 @Component
 public class StudentAssessService {
@@ -32,6 +29,10 @@ public class StudentAssessService {
 		return null;
 	}
 
-
+	public StudentAssess createStudentAssess(Map<String,String> vars){
+		StudentAssess stu=new StudentAssess();
+		
+		return stu;
+	}
 
 }
