@@ -24,7 +24,20 @@ $(document).ready(function () {
 	      }
 	    });
 	
-	
+	$("#getOneInterview").click(function(){
+		$.ajax({
+		      url: "interviewer/getOneInterview",
+		      type: "POST",
+		      dataType: "json",
+		      contentType: 'application/json; charset=utf-8',
+		      success: function (set) {
+		    	 
+			  },
+		      error: function () {
+		           alert("系统发生了错误请稍后重试");
+		      }
+		    });
+	});
 	
 	$("#beginToInterview").click(function(){
 		$.ajax({

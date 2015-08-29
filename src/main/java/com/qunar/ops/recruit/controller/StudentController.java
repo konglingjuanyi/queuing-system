@@ -127,9 +127,9 @@ public class StudentController {
 						model.addAttribute("message",message);
 						model.addAttribute("flag",1);
 					}else{
-						//可能hr面或者面试结束
+						//可能hr面或者面试结束 带改
 						
-						model.addAttribute("message",RecruitConst.INTERVIEW_STATE_ING);
+						model.addAttribute("message",RecruitConst.STUDENT_STATE_ONE_VIEW);
 						model.addAttribute("flag",1);
 					}
 					session.setAttribute("user", new StudentWaiter(newStudent));
@@ -176,9 +176,9 @@ public class StudentController {
 						model.addAttribute("message",message);
 						model.addAttribute("flag",1);
 					}else{
-						//可能hr面或者面试结束
+						//可能hr面或者面试结束  带改
 						
-						model.addAttribute("message",RecruitConst.INTERVIEW_STATE_ING);
+						model.addAttribute("message",RecruitConst.STUDENT_STATE_ONE_VIEW);
 						model.addAttribute("flag",1);
 					}
 					session.setAttribute("user", new StudentWaiter(newStudent));

@@ -13,7 +13,7 @@ public class PhaseInterviewer {
 
     private String room;
 
-    private Integer status;
+    private String status;
 
     private Integer oneCount;
 
@@ -81,12 +81,12 @@ public class PhaseInterviewer {
         this.room = room == null ? null : room.trim();
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setStatus(String status) {
+        this.status = status == null ? null : status.trim();
     }
 
     public Integer getOneCount() {

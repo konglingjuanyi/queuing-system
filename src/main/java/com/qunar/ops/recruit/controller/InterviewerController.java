@@ -173,8 +173,7 @@ public class InterviewerController {
 	 * @param commonRequest
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@RequestMapping(value = "/interview/getNextStudent")
+	@RequestMapping(value = "/interview/getOneInterview")
 	@ResponseBody
 	public BaseResult getNextStudent(HttpServletRequest request, HttpSession session, ModelMap mm) {
 		System.out.println("******************************");
@@ -182,26 +181,23 @@ public class InterviewerController {
 		if(obj != null){
 			if(obj instanceof Interviewer){
 				Interviewer inter = (Interviewer) obj;
-				Interviewer newInter = interServe.getInterviewerByUserName(inter.getUserName());
-				String year = (String)session.getAttribute("year");
-				String phase = (String)session.getAttribute("phase");
-				String city = (String)session.getAttribute("city");
-				PhaseInterviewer pi = piService.getPhaseInterviewerBy(year, phase, city, inter.getUserName());
-				StudentWaiter  stuW;
+//				Interviewer newInter = interServe.getInterviewerByUserName(inter.getUserName());
+				String[] arrs = getYearPhaseAndCity(session);
+				StudentWaiter  stuW = null;
 				int oneOrtwo = 1;
 				if(inter.getTwoView() !=null && !"".equals(inter.getTwoView())){
 					//如果面试官的二面角色不为空,先从二面队列中拿数据
 					//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
 					oneOrtwo = 2;
-					stuW = waitService.removeHighestPriorityFromTwoList(year, phase, city ,inter.getTwoView(), inter.getUserName());
+					stuW = waitService.removeHighestPriorityFromTwoList(arrs[0], arrs[1], arrs[2] ,inter.getTwoView(), inter.getUserName());
 					if(stuW==null && !"".equals(inter.getOneView())){
 						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
-						stuW = waitService.removeHighestPriorityFromList(year, phase, city, inter.getOneView());
+						stuW = waitService.removeHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView());
 						oneOrtwo = 1;
 					}
 				}else{
 					//只有一面角色从一面队列中拿数据
-					stuW = waitService.removeHighestPriorityFromList(year, phase, city, inter.getOneView());
+					stuW = waitService.removeHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView());
 				}
 				if(stuW == null){
 					System.out.println("等待队列为空");
@@ -209,35 +205,38 @@ public class InterviewerController {
 					return BaseResult.getErrorResult(-1, RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
 				}else{
 					session.setAttribute("student", stuW.getStu());
-					List ret = new LinkedList();
+					PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 					if(oneOrtwo == 1){
-//						mm.addAttribute("message", RecruitConst.SUCCESS);
-//						mm.addAttribute("student", stuW.getStu());
+						mm.addAttribute("message", "1");
+						mm.addAttribute("student", stuW.getStu());
 //						mm.addAttribute("phaseInterviewer", pi);
-						ret.add(1);
-						ret.add(stuW.getStu());
-						System.out.println("拿到一面同学");
 					}else{
-//						mm.addAttribute("message", RecruitConst.SUCCESS);
-//						mm.addAttribute("student", stuW.getStu());
-//						mm.addAttribute("phaseInterviewer", pi);
+						mm.addAttribute("message", "2");
+						mm.addAttribute("student", stuW.getStu());
+						mm.addAttribute("phaseInterviewer", pi);
 						StudentAssess sa = saService.getStudentAssessByStudentId(stuW.getStu().getId());
 						mm.addAttribute("assess", sa);
-						ret.add(1);
-						ret.add(stuW.getStu());
-						ret.add(sa);
-						System.out.println("拿到二面同学");
 					}
-					return BaseResult.getSuccessResult(ret);
+					//更新面试官状态
+					pi.setStatus(RecruitConst.INTERVIEWER_STATE_WAITING);
+					piService.update(pi);
+					return BaseResult.getSuccessResult(mm);
 				}
 			}else{
 				//不是interviewer，無權訪問
-				return null;
+				return BaseResult.getSuccessResult(RecruitConst.AUTHORITY_ERROR_MSG);
 			}
 		}else{
 			//无seesion, 重新登录
-			return null;
+			return BaseResult.getSuccessResult(RecruitConst.NO_LOGIN_MSG);
 		}
+	}
+
+	private String[] getYearPhaseAndCity(HttpSession session) {
+		String year = (String)session.getAttribute("year");
+		String phase = (String)session.getAttribute("phase");
+		String city = (String)session.getAttribute("city");
+		return new String[]{year, phase, city};
 	}
 
 	/**
@@ -253,7 +252,7 @@ public class InterviewerController {
 		Interviewer inter = (Interviewer) session.getAttribute("user");
 		Student newStu = new Student();
 		newStu.setId(stu.getId());
-		newStu.setState(RecruitConst.INTERVIEW_STATE_ING);
+		newStu.setState(RecruitConst.STUDENT_STATE_ONE_VIEW);
 		newStu.setFirstTry(inter.getUserName());
 		
 		Interviewer newInter = new Interviewer();
@@ -269,7 +268,7 @@ public class InterviewerController {
 		Interviewer inter = (Interviewer) session.getAttribute("user");
 		Student newStu = new Student();
 		newStu.setId(stu.getId());
-		newStu.setState(RecruitConst.INTERVIEW_STATE_ING);
+		newStu.setState(RecruitConst.STUDENT_STATE_FINISH);
 		newStu.setFirstTry(inter.getUserName());
 		
 		Interviewer newInter = new Interviewer();
@@ -285,7 +284,7 @@ public class InterviewerController {
 		Interviewer inter = (Interviewer) session.getAttribute("user");
 		Student newStu = new Student();
 		newStu.setId(stu.getId());
-		newStu.setState(RecruitConst.INTERVIEW_STATE_ING);
+		newStu.setState(RecruitConst.STUDENT_STATE_FINISH);
 		newStu.setFirstTry(inter.getUserName());
 		
 		Interviewer newInter = new Interviewer();
@@ -415,6 +414,7 @@ public class InterviewerController {
 		String year=(String) request.getSession().getAttribute("year");
 		String city=(String) request.getSession().getAttribute("city");
 		String phase=(String) request.getSession().getAttribute("phase");
+//		System.out.println(year+" "+phase+" "+city+"-=-===-==-");
 		
 		if(user == null){
 			if(username != null && password != null){
