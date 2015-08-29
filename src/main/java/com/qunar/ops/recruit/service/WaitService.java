@@ -35,12 +35,10 @@ public class WaitService {
 	public synchronized int numberInFrontOfOne(StudentWaiter t) {
 		int count = 0;
 		for (StudentWaiter stu : list) {
-			if(t.equals(stu)){
-				break;
-			}
 //			System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
-			if(stu.getStu().getLocation().equals(t.getStu().getLocation()) &&
-					stu.getStu().getJob().equals(t.getStu().getJob())){
+			Student s1 = stu.getStu();
+			Student ss = t.getStu();
+			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob()) && stu.compareTo(t) < 0){
 				count ++;
 			}
 		}
@@ -48,14 +46,24 @@ public class WaitService {
 	}
 	
 	
+	private boolean isSameCity(Student s1, Student s2) {
+		if(s1 == null || s2 == null)
+			return false;
+		if(s1.getYear().equals(s2.getYear()) && s1.getPhaseNo().equals(s2.getPhaseNo())
+				&& s1.getLocation().equals(s2.getLocation())){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
 	public synchronized int numberInFrontOfTwo(StudentWaiter t) {
 		int count = 0;
 		for (StudentWaiter stu : twoList) {
-			if(t.equals(stu)){
-				break;
-			}
-			if(stu.getStu().getLocation().equals(t.getStu().getLocation()) &&
-					stu.getStu().getJob().equals(t.getStu().getJob())){
+//			System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
+			Student s1 = stu.getStu();
+			Student ss = t.getStu();
+			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob()) && stu.compareTo(t) < 0){
 				count ++;
 			}
 		}
