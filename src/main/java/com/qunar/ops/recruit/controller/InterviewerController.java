@@ -294,7 +294,7 @@ public class InterviewerController {
 	public BaseResult finishAndRest(HttpServletRequest request, HttpSession session, ModelMap mm, @RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 		Student stu = (Student) session.getAttribute("student");
-		StudentAssess sa = new StudentAssess();
+		StudentAssess sa = saService.createStudentAssess(vars);
 		Student newStu = new Student();
 		newStu.setId(stu.getId());
 		String[] arrs = getYearPhaseAndCity(session);
