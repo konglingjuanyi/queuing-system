@@ -93,6 +93,8 @@ $(document).ready(function () {
 	 });
 	
 	 $("#finishAndContinue").click(function(){
+		 timeIndex=0;
+		 clock();
 		 param = getSubmitParam();
 		 $.ajax({
 		      url: "/interviewer/finishAndContinue",
@@ -114,6 +116,10 @@ $(document).ready(function () {
 		    	  $("#student_name").text(stu.name);
 		    	  $("#jobTitle").text(stu.job);
 		    	  $("#first_viewer").text(inter.intervierName);
+		    	  $("#noview").css("display","none");
+		    	  $("#goon").css("display","none");
+		    	  $("#havarest").css("display","none");
+		    	  $("#nocome").css("display","none");
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -122,6 +128,8 @@ $(document).ready(function () {
 	 });
 	 
 	 $("#finishAndRest").click(function(){
+		 timeIndex=0;
+		 clock();
 		 param = getSubmitParam();
 		 $.ajax({
 		      url: "/interviewer/finishAndRest",
@@ -130,7 +138,10 @@ $(document).ready(function () {
 		      contentType: 'application/json; charset=utf-8',
 		      data: JSON.stringify(param),
 		      success: function (set) {
-		    	 
+		    	  $("#noview").css("display","none");
+		    	  $("#goon").css("display","none");
+		    	  $("#havarest").css("display","none");
+		    	  $("#nocome").css("display","none");
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -139,6 +150,8 @@ $(document).ready(function () {
 	 });
 	 
 	 $("#noComeFinish").click(function(){
+		 timeIndex=0;
+		 clock();
 		 $.ajax({
 		      url: "/interviewer/noComeFinish",
 		      type: "POST",
@@ -158,6 +171,10 @@ $(document).ready(function () {
 		    	  $("#student_name").text(stu.name);
 		    	  $("#jobTitle").text(stu.job);
 		    	  $("#first_viewer").text(inter.intervierName);
+		    	  $("#noview").css("display","none");
+		    	  $("#goon").css("display","none");
+		    	  $("#havarest").css("display","none");
+		    	  $("#nocome").css("display","none");
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
