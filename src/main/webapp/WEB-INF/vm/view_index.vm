@@ -32,7 +32,7 @@
                     <div class="m-firsttry-info">
                         <div class="item">
                             <span class="label">当前时间：</span>
-                            <span class="text">00:00:00</span>
+                            <span class="text" id="showTime">00:00:00</span>
                         </div>
                     </div>
                     <div class="m-firsttry-btn">
