@@ -23,9 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.qunar.ops.recruit.model.Hr;
 import com.qunar.ops.recruit.model.Interviewer;
-import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentAssess;
@@ -173,7 +171,7 @@ public class InterviewerController {
 	 * @param commonRequest
 	 * @return
 	 */
-	@RequestMapping(value = "/interview/getOneInterview")
+	@RequestMapping(value = "/interviewer/getOneInterview")
 	@ResponseBody
 	public BaseResult getNextStudent(HttpServletRequest request, HttpSession session, ModelMap mm) {
 		System.out.println("******************************");
@@ -181,7 +179,7 @@ public class InterviewerController {
 		if(obj != null){
 			if(obj instanceof Interviewer){
 				Interviewer inter = (Interviewer) obj;
-//				Interviewer newInter = interServe.getInterviewerByUserName(inter.getUserName());
+				//Interviewer newInter = interServe.getInterviewerByUserName(inter.getUserName());
 				String[] arrs = getYearPhaseAndCity(session);
 				StudentWaiter  stuW = null;
 				int oneOrtwo = 1;

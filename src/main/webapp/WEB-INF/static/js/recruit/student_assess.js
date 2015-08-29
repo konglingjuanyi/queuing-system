@@ -15,8 +15,9 @@ $(document).ready(function () {
 		    	  $("#interviewer_name").text(inter.userName);
 		    	  $("#interviewer_room").text(phase_inter.room);
 		    	  $("#already_inter").text(parseInt(phase_inter.oneCount)+parseInt(phase_inter.twoCount));
-		    	  //$("#first_viewer_div").hide();
-		    	  //$("#second_viewer_div").hide();
+		    	  $("#noview").hide();
+		    	  $("#goon").hide();
+		    	  $("#havarest").hide();
 	    	  }
 		  },
 	      error: function () {
@@ -26,12 +27,15 @@ $(document).ready(function () {
 	
 	$("#getOneInterview").click(function(){
 		$.ajax({
-		      url: "interviewer/getOneInterview",
+		      url: "/interviewer/getOneInterview",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
-		    	 
+		    	  data=set.data;
+		    	  alert(data.mesage);
+		    	  alert(data.student);
+		    	  alert(data.student.name);
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");

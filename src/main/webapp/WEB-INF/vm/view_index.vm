@@ -44,14 +44,14 @@
                     <div class="m-firsttry-btn" id="finishInterview">
                         <button class="btn">结束面试</button>
                     </div>
-                    <div class="m-firsttry-btn" id="goon">
-                        <input type="checkbox" id="inlineCheckbox1" value="option1"> 无需复试
+                    <div class="m-firsttry-btn" id="noview">
+                        <input type="checkbox" id="inlineCheckbox1" value="无需复试" id="donotView"> 无需复试
                     </div>
                     <div class="m-firsttry-btn" id="goon">
-                        <button class="btn">结束面试 并继续</button>
+                        <button class="btn" if="finishAndContinue">结束面试 并继续</button>
                     </div>
                     <div class="m-firsttry-btn" id="havarest">
-                        <button class="btn">结束面试 休息一下</button>
+                        <button class="btn" if="finishAndRest">结束面试 休息一下</button>
                     </div>
                 </div>
             </div>
