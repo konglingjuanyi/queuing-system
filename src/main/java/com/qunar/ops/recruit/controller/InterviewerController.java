@@ -203,7 +203,7 @@ public class InterviewerController {
 				if(stuW == null){
 					System.out.println("等待队列为空");
 					mm.addAttribute("message", RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
-					return BaseResult.getErrorResult(-1, RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
+					return BaseResult.getSuccessResult(mm);
 				}else{
 					Student stu = stuW.getStu();
 					Student newStu = new Student();

@@ -36,16 +36,20 @@ $(document).ready(function () {
 		    	  data=set.data;
 		    	  var message=data.message;
 		    	  flag=message;
-		    	  var stu=data.student;
-		    	  var inter=data.phaseInterviewer;
-		    	  if(message!=1){
-		    		  var access=data.assess;
-		    		  /***渲染评估表****/
-		    		  addValue(access);
+		    	  if(message!=1 && message!=2){
+		    		  alert(message);
+		    	  }else{
+		    		  var stu=data.student;
+			    	  var inter=data.phaseInterviewer;
+			    	  if(message!=1){
+			    		  var access=data.assess;
+			    		  /***渲染评估表****/
+			    		  addValue(access);
+			    	  }
+			    	  $("#student_name").text(stu.name);
+			    	  $("#jobTitle").text(stu.job);
+			    	  $("#first_viewer").text(inter.intervierName);
 		    	  }
-		    	  $("#student_name").text(stu.name);
-		    	  $("#jobTitle").text(stu.job);
-		    	  $("#first_viewer").text(inter.intervierName);
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -93,8 +97,9 @@ $(document).ready(function () {
 	 });
 	
 	 $("#finishAndContinue").click(function(){
+		 clearInterval(times);
 		 timeIndex=0;
-		 clock();
+		 setTime();
 		 param = getSubmitParam();
 		 $.ajax({
 		      url: "/interviewer/finishAndContinue",
@@ -106,20 +111,24 @@ $(document).ready(function () {
 		    	  data=set.data;
 		    	  var message=data.message;
 		    	  flag=message;
-		    	  var stu=data.student;
-		    	  var inter=data.phaseInterviewer;
-		    	  if(message!=1){
-		    		  var access=data.assess;
-		    		  /***渲染评估表****/
-		    		  addValue(access);
+		    	  if(message!=1 && message!=2){
+		    		  alert(message);
+		    	  }else{
+		    		  var stu=data.student;
+			    	  var inter=data.phaseInterviewer;
+			    	  if(message!=1){
+			    		  var access=data.assess;
+			    		  /***渲染评估表****/
+			    		  addValue(access);
+			    	  }
+			    	  $("#student_name").text(stu.name);
+			    	  $("#jobTitle").text(stu.job);
+			    	  $("#first_viewer").text(inter.intervierName);
+			    	  $("#noview").css("display","none");
+			    	  $("#goon").css("display","none");
+			    	  $("#havarest").css("display","none");
+			    	  $("#nocome").css("display","none");
 		    	  }
-		    	  $("#student_name").text(stu.name);
-		    	  $("#jobTitle").text(stu.job);
-		    	  $("#first_viewer").text(inter.intervierName);
-		    	  $("#noview").css("display","none");
-		    	  $("#goon").css("display","none");
-		    	  $("#havarest").css("display","none");
-		    	  $("#nocome").css("display","none");
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -128,8 +137,9 @@ $(document).ready(function () {
 	 });
 	 
 	 $("#finishAndRest").click(function(){
+		 clearInterval(times);
 		 timeIndex=0;
-		 clock();
+		 setTime();
 		 param = getSubmitParam();
 		 $.ajax({
 		      url: "/interviewer/finishAndRest",
@@ -150,8 +160,9 @@ $(document).ready(function () {
 	 });
 	 
 	 $("#noComeFinish").click(function(){
+		 clearInterval(times);
 		 timeIndex=0;
-		 clock();
+		 setTime();
 		 $.ajax({
 		      url: "/interviewer/noComeFinish",
 		      type: "POST",
@@ -161,20 +172,24 @@ $(document).ready(function () {
 		    	  data=set.data;
 		    	  var message=data.message;
 		    	  flag=message;
-		    	  var stu=data.student;
-		    	  var inter=data.phaseInterviewer;
-		    	  if(message!=1){
-		    		  var access=data.assess;
-		    		  /***渲染评估表****/
-		    		  addValue(access);
+		    	  if(message!=1 && message!=2){
+		    		  alert(message);
+		    	  }else{
+		    		  var stu=data.student;
+			    	  var inter=data.phaseInterviewer;
+			    	  if(message!=1){
+			    		  var access=data.assess;
+			    		  /***渲染评估表****/
+			    		  addValue(access);
+			    	  }
+			    	  $("#student_name").text(stu.name);
+			    	  $("#jobTitle").text(stu.job);
+			    	  $("#first_viewer").text(inter.intervierName);
+			    	  $("#noview").css("display","none");
+			    	  $("#goon").css("display","none");
+			    	  $("#havarest").css("display","none");
+			    	  $("#nocome").css("display","none");
 		    	  }
-		    	  $("#student_name").text(stu.name);
-		    	  $("#jobTitle").text(stu.job);
-		    	  $("#first_viewer").text(inter.intervierName);
-		    	  $("#noview").css("display","none");
-		    	  $("#goon").css("display","none");
-		    	  $("#havarest").css("display","none");
-		    	  $("#nocome").css("display","none");
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
