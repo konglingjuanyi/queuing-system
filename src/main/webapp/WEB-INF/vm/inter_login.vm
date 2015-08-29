@@ -28,7 +28,7 @@
 
         <div class="page-container">
             <h1>校园招聘系统</h1>
-            <form action="/login" method="post">
+            <form action="/interviewer/login" method="post">
                 <input type="text" name="username" class="username" placeholder="请输入您的用户名！">
                 <input type="password" name="password" class="password" placeholder="请输入您的用户密码！">
                 <select name="" id="year">

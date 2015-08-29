@@ -412,6 +412,10 @@ public class InterviewerController {
 	public String toindex(HttpServletRequest request,
 			HttpServletResponse response, String username, String password, ModelMap model) {
 		Object user = request.getSession().getAttribute("user");
+		String year=(String) request.getSession().getAttribute("year");
+		String city=(String) request.getSession().getAttribute("city");
+		String phase=(String) request.getSession().getAttribute("phase");
+		
 		if(user == null){
 			if(username != null && password != null){
 				Interviewer inter = interServe.getInterviewerByNameAndPass(username, password);
@@ -421,9 +425,17 @@ public class InterviewerController {
 					model.addAttribute("flag",-1);
 					return "/inter_login";
 				}else{
-					model.addAttribute("flag",1);
-					request.getSession().setAttribute("user", inter);
-					return "/view_index";
+					PhaseInterviewer pi=piService.getPhaseInterviewerBy(year, phase, city, username);
+					if(pi == null){
+						String message= RecruitConst.CITY_OR_PHASE_ERROR_MSG;
+						model.addAttribute("message",message);
+						model.addAttribute("flag",-1);
+						return "/inter_login";
+					}else{
+						model.addAttribute("flag",1);
+						request.getSession().setAttribute("user", inter);
+						return "/view_index";
+					}
 				}
 			}else{
 				model.addAttribute("flag",-1);

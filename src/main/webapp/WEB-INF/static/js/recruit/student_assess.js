@@ -15,8 +15,8 @@ $(document).ready(function () {
 		    	  $("#interviewer_name").text(inter.userName);
 		    	  $("#interviewer_room").text(phase_inter.room);
 		    	  $("#already_inter").text(parseInt(phase_inter.oneCount)+parseInt(phase_inter.twoCount));
-		    	  $("#first_viewer_div").hide();
-		    	  $("#second_viewer_div").hide();
+		    	  //$("#first_viewer_div").hide();
+		    	  //$("#second_viewer_div").hide();
 	    	  }
 		  },
 	      error: function () {

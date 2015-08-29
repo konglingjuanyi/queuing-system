@@ -53,22 +53,16 @@ public class LoginController {
 		if(user == null){
 			if(username != null && password != null){
 				Hr hr = hrService.getHrByUserNameAndPass(username,password);
-				Interviewer inter = interservice.getInterviewerByNameAndPass(username, password);
-				System.out.println(hr+"====="+inter);
-				if(hr == null && inter == null){
+				if(hr == null){
 					String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
 					model.addAttribute("message",message);
 					model.addAttribute("flag",-1);
 					return "/login";
-				}else if(hr != null){
+				}else{
 					System.out.println("hr login");
 					model.addAttribute("flag",0);
 					request.getSession().setAttribute("user", hr);
 					return "/hr_index";
-				}else{
-					model.addAttribute("flag",1);
-					request.getSession().setAttribute("user", inter);
-					return "/view_index";
 				}
 			}else{
 				model.addAttribute("flag",-1);
@@ -78,9 +72,6 @@ public class LoginController {
 			if(user instanceof Hr){
 				model.addAttribute("flag",0);
 				return "/hr_index";
-			}else if(user instanceof Interviewer){
-				model.addAttribute("flag",1);
-				return "/view_index";
 			}else{
 				return "/login";
 			}

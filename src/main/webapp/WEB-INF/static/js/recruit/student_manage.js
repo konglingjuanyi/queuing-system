@@ -276,7 +276,7 @@ function dodelete(id){
             data: {'id':id},
             success: function(data) {
            	 $("#selectfile").modal("hide");
-           	 $('#content').html(data);
+           	 $('#studentInfoInner').html(data);
             },
             error:function(){
                 alert("error");

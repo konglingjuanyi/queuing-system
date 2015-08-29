@@ -51,4 +51,5 @@ public class RecruitConst {
 	public static final String ALREADY_EXIST_IMPORT_SUCCESS_MSG = "导入成功";
 	public static final String ALREADY_EXIST_IMPORT_FAILE_MSG = "导入失败";
 	public static final Object SUCCESS = "成功";
+	public static String CITY_OR_PHASE_ERROR_MSG = "年份期次城市错误";
 }
