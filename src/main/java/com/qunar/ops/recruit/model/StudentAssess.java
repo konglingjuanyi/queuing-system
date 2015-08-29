@@ -111,6 +111,12 @@ public class StudentAssess {
 
     private String hrDetailIdea;
 
+    private Integer oneSum;
+
+    private Integer twoSum;
+
+    private Integer twoSuggestSalary;
+
     public Integer getId() {
         return id;
     }
@@ -549,5 +555,29 @@ public class StudentAssess {
 
     public void setHrDetailIdea(String hrDetailIdea) {
         this.hrDetailIdea = hrDetailIdea == null ? null : hrDetailIdea.trim();
+    }
+
+    public Integer getOneSum() {
+        return oneSum;
+    }
+
+    public void setOneSum(Integer oneSum) {
+        this.oneSum = oneSum;
+    }
+
+    public Integer getTwoSum() {
+        return twoSum;
+    }
+
+    public void setTwoSum(Integer twoSum) {
+        this.twoSum = twoSum;
+    }
+
+    public Integer getTwoSuggestSalary() {
+        return twoSuggestSalary;
+    }
+
+    public void setTwoSuggestSalary(Integer twoSuggestSalary) {
+        this.twoSuggestSalary = twoSuggestSalary;
     }
 }

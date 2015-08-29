@@ -3703,6 +3703,186 @@ public class StudentAssessExample {
             addCriterion("hr_detail_idea not between", value1, value2, "hrDetailIdea");
             return (Criteria) this;
         }
+
+        public Criteria andOneSumIsNull() {
+            addCriterion("one_sum is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumIsNotNull() {
+            addCriterion("one_sum is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumEqualTo(Integer value) {
+            addCriterion("one_sum =", value, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumNotEqualTo(Integer value) {
+            addCriterion("one_sum <>", value, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumGreaterThan(Integer value) {
+            addCriterion("one_sum >", value, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("one_sum >=", value, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumLessThan(Integer value) {
+            addCriterion("one_sum <", value, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumLessThanOrEqualTo(Integer value) {
+            addCriterion("one_sum <=", value, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumIn(List<Integer> values) {
+            addCriterion("one_sum in", values, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumNotIn(List<Integer> values) {
+            addCriterion("one_sum not in", values, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumBetween(Integer value1, Integer value2) {
+            addCriterion("one_sum between", value1, value2, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andOneSumNotBetween(Integer value1, Integer value2) {
+            addCriterion("one_sum not between", value1, value2, "oneSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumIsNull() {
+            addCriterion("two_sum is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumIsNotNull() {
+            addCriterion("two_sum is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumEqualTo(Integer value) {
+            addCriterion("two_sum =", value, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumNotEqualTo(Integer value) {
+            addCriterion("two_sum <>", value, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumGreaterThan(Integer value) {
+            addCriterion("two_sum >", value, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumGreaterThanOrEqualTo(Integer value) {
+            addCriterion("two_sum >=", value, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumLessThan(Integer value) {
+            addCriterion("two_sum <", value, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumLessThanOrEqualTo(Integer value) {
+            addCriterion("two_sum <=", value, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumIn(List<Integer> values) {
+            addCriterion("two_sum in", values, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumNotIn(List<Integer> values) {
+            addCriterion("two_sum not in", values, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumBetween(Integer value1, Integer value2) {
+            addCriterion("two_sum between", value1, value2, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSumNotBetween(Integer value1, Integer value2) {
+            addCriterion("two_sum not between", value1, value2, "twoSum");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryIsNull() {
+            addCriterion("two_suggest_salary is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryIsNotNull() {
+            addCriterion("two_suggest_salary is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryEqualTo(Integer value) {
+            addCriterion("two_suggest_salary =", value, "twoSuggestSalary");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryNotEqualTo(Integer value) {
+            addCriterion("two_suggest_salary <>", value, "twoSuggestSalary");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryGreaterThan(Integer value) {
+            addCriterion("two_suggest_salary >", value, "twoSuggestSalary");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryGreaterThanOrEqualTo(Integer value) {
+            addCriterion("two_suggest_salary >=", value, "twoSuggestSalary");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryLessThan(Integer value) {
+            addCriterion("two_suggest_salary <", value, "twoSuggestSalary");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryLessThanOrEqualTo(Integer value) {
+            addCriterion("two_suggest_salary <=", value, "twoSuggestSalary");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryIn(List<Integer> values) {
+            addCriterion("two_suggest_salary in", values, "twoSuggestSalary");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryNotIn(List<Integer> values) {
+            addCriterion("two_suggest_salary not in", values, "twoSuggestSalary");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryBetween(Integer value1, Integer value2) {
+            addCriterion("two_suggest_salary between", value1, value2, "twoSuggestSalary");
+            return (Criteria) this;
+        }
+
+        public Criteria andTwoSuggestSalaryNotBetween(Integer value1, Integer value2) {
+            addCriterion("two_suggest_salary not between", value1, value2, "twoSuggestSalary");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

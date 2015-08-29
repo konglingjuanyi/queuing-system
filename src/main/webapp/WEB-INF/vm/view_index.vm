@@ -41,7 +41,7 @@
                     <div class="m-firsttry-btn">
                         <button class="btn" id="beginToInterview">开始面试</button>
                     </div>
-                    <div class="m-firsttry-btn" id="finishInterview">
+                    <div class="m-firsttry-btn">
                         <button class="btn">结束面试</button>
                     </div>
                     <div class="m-firsttry-btn" id="noview">

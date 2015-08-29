@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.service.JoinService;
+import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.service.Studenttest;
@@ -39,6 +41,8 @@ public class StudentController {
 	StudentService studentService;
 	@Autowired
 	JoinService joinService;
+	@Autowired
+	PhaseInterviewService piService;
 	/**
 	 * 学生登录显示
 	 * 
@@ -157,28 +161,30 @@ public class StudentController {
 				Student student = studentWaiter.getStu();
 				String name = student.getName();
 				if(waitService.contains(studentWaiter)){
+					//排队中
 					int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
 					String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
 					model.addAttribute("message",message);
 					model.addAttribute("flag",1);
 				}else{ 
 					Student newStudent = studentService.getStudentByPhone(student.getPhone());
-					if(student.getFirstTry() == null && newStudent.getFirstTry() != null){
-						//一面到房间面试
-						String numberOfRoom = joinService.getFirstInterviewRoomNumber(student);
-						String message="<span class='name'>"+name+"</span>同学 <br />请您到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
-						model.addAttribute("message",message);
-						model.addAttribute("flag",1);
-					}else if(student.getSecondTry() == null && newStudent.getSecondTry() != null){
-						//二面到房间面试
-						String numberOfRoom = joinService.getSecondInterviewRoomNumber(student);
+					if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2ROOM)){
+						//面试官取学生，通知进房间
+						String interName = null;
+						if(newStudent.getSecondTry() == null || newStudent.getSecondTry().equals("")){
+							interName = newStudent.getFirstTry();
+						}else{
+							interName = newStudent.getSecondTry();
+						}
+						PhaseInterviewer pi = piService.getPhaseInterviewerBy(newStudent.getYear(), 
+								newStudent.getPhaseNo(), newStudent.getLocation(), interName);
+						String numberOfRoom = pi.getRoom();
 						String message="<span class='name'>"+name+"</span>同学 <br />请您到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
 						model.addAttribute("message",message);
 						model.addAttribute("flag",1);
 					}else{
-						//可能hr面或者面试结束  带改
-						
-						model.addAttribute("message",RecruitConst.STUDENT_STATE_ONE_VIEW);
+						//直接返回当前学生的状态
+						model.addAttribute("message",newStudent.getState());
 						model.addAttribute("flag",1);
 					}
 					session.setAttribute("user", new StudentWaiter(newStudent));
