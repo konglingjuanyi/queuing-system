@@ -506,7 +506,7 @@ public class StudentAssess {
     }
 
     public void setTwoConclusion(String twoConclusion) {
-        this.twoConclusion = twoConclusion;
+        this.twoConclusion = twoConclusion == null ? null : twoConclusion.trim();
     }
 
     public String getTwoConclusionDetail() {
