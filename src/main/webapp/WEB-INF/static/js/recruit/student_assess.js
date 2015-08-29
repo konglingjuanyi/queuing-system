@@ -53,13 +53,14 @@ $(document).ready(function () {
 	});
 	
 	$("#beginToInterview").click(function(){
+		clock();
 		$.ajax({
 		      url: "/interviewer/beginToInterview",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
-		    	 
+		    	  
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -165,6 +166,22 @@ $(document).ready(function () {
 
 });
 
+var timeIndex = 0;
+function clock(){
+	setTime();
+	times = setInterval(setTime, 1000);    //每隔1秒执行函数
+}
+function setTime(){
+	var hour = parseInt(timeIndex / 3600);    // 计算时 
+	var minutes = parseInt((timeIndex % 3600) / 60);    // 计算分 
+	var seconds = parseInt(timeIndex % 60);    // 计算秒  
+	hour = hour < 10 ? "0" + hour : hour;
+	minutes = minutes < 10 ? "0" + minutes : minutes;
+	seconds = seconds < 10 ? "0" + seconds : seconds;
+	$("#showTime").text(hour + ":" + minutes + ":" + seconds);
+	timeIndex++;
+}
+
 function getSubmitParam(){
 //	alert($("#one_code").find("option:selected").text());
 //	var vars=$("#submitForm").serializeObject();
@@ -233,7 +250,7 @@ function getSubmitParam(){
 function addValue(access){
 	$("#one_code").attr("value",access.oneCode);
 	$("#one_code_detail").val(access.oneCodeDetail);
-	$("#one_algorithm").attr("value",oneAlgorithm.);
+	$("#one_algorithm").attr("value",access.oneAlgorithm);
 	$("#one_algorithm_detail").val(access.oneAlgorithmDetail);
 	$("#one_network").attr("value",access.oneNetwork);
 	$("#one_network_detail").val(access.oneNetworkDetail);
