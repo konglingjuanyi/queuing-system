@@ -26,7 +26,7 @@ $(document).ready(function () {
 	
 	$("#getOneInterview").click(function(){
 		$.ajax({
-		      url: "interviewer/getOneInterview",
+		      url: "/interviewer/getOneInterview",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
@@ -39,9 +39,9 @@ $(document).ready(function () {
 		    		  var access=data.assess;
 		    		  /***渲染评估表****/
 		    	  }
-		    	  alert(stu.name);
-		    	  alert(stu.job);
-
+		    	  $("#student_name").text(stu.name);
+		    	  $("#jobTitle").text(stu.job);
+		    	  $("#first_viewer").text(inter.intervierName);
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -51,7 +51,7 @@ $(document).ready(function () {
 	
 	$("#beginToInterview").click(function(){
 		$.ajax({
-		      url: "interviewer/beginToInterview",
+		      url: "/interviewer/beginToInterview",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
@@ -97,7 +97,7 @@ $(document).ready(function () {
 	 });
 	 $("#noComeFinish").click(function(){
 		 $.ajax({
-		      url: "interviewer/noComeFinish",
+		      url: "/interviewer/noComeFinish",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',

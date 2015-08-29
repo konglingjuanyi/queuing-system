@@ -61,10 +61,10 @@
                         <div class="m-firsttry-bd">
                             <div class="interviewee-info">
                                 <div class="item">
-                                    <h3>面试人姓名：<span class="text" id="student_name">$!{student.name}</span></h3>
+                                    <h3>面试人姓名：<span class="text" id="student_name"></span></h3>
                                 </div>
                                 <div class="item">
-                                    <h3>复试面职位：<span class="text" id="jobTitle">$!{student.job}</span></h3>
+                                    <h3>复试面职位：<span class="text" id="jobTitle"></span></h3>
                                 </div>
                                 <div class="item" id="first_viewer_div">
                                     <h3>初试面试官：<span class="text" id="first_viewer"></span></h3>
