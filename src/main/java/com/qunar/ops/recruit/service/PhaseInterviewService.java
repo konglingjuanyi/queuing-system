@@ -103,11 +103,13 @@ public class PhaseInterviewService {
 		return list;
 	}
 
-	public List<PhaseInterviewer> getSinglecityBy(String city) {
+	public List<PhaseInterviewer> getSinglecityBy(String city, String year, String phase) {
 		// TODO Auto-generated method stub
 		PhaseInterviewerExample example = new PhaseInterviewerExample();
 		PhaseInterviewerExample.Criteria criteria = example.createCriteria();
 		criteria.andCityEqualTo(city);
+		criteria.andYearEqualTo(year);
+		criteria.andPhaseEqualTo(phase);
 		criteria.andEnableEqualTo("1");
 		List<PhaseInterviewer> list = interMapper.selectByExample(example);
 		return list;

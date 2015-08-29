@@ -83,7 +83,7 @@ public class PhaseController {
 		while(it.hasNext())
 		{
 			String name=it.next();
-			List<PhaseInterviewer> singlecity=piService.getSinglecityBy(name);
+			List<PhaseInterviewer> singlecity=piService.getSinglecityBy(name,vars.get("yearinfo"),vars.get("phasename"));
 			List<Map<String,String>> list2=new ArrayList();
 			for(PhaseInterviewer val:singlecity){
 				Map<String,String> m1=new HashMap();
