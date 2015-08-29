@@ -15,6 +15,7 @@ import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.model.PhaseExample;
 import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.PhaseInterviewerExample;
+import com.qunar.ops.recruit.util.RecruitConst;
 
 @Component
 public class PhaseInterviewService {
@@ -85,7 +86,7 @@ public class PhaseInterviewService {
 		pi.setSecondFe(0);
 		pi.setSecondQa(0);
 		pi.setSecondRd(0);
-		pi.setStatus(0);
+		pi.setStatus(RecruitConst.STUDENT_STATE_NOT_REGIST);
 		pi.setTwoCount(0);
 		pi.setYear(year);
 		pi.setEnable(String.valueOf(1));
@@ -161,6 +162,11 @@ public class PhaseInterviewService {
 			return list.get(0);
 		}
 		return null;
+	}
+
+	public void update(PhaseInterviewer pi) {
+		interMapper.updateByPrimaryKeySelective(pi);
+		
 	}
 
 	

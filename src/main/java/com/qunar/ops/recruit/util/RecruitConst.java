@@ -33,10 +33,6 @@ public class RecruitConst {
 	public static final int PARAMETER_NULL = 109;
 	public static final String PARAMETER_NULL_ERROR_MSG = "参数不能为空";
 	
-	public static final String INTERVIEW_STATE_ING = "面试中";
-	public static final String INTERVIEW_STATE_WAIT = "等待面试";
-	public static final String INTERVIEW_STATE_REJECT = "已回绝";
-	public static final String INTERVIEW_STATE_ACCEPT = "待发Offer";
 	public static final String WAITING_FOR_INTERVIEW_IS_EMPTY = "没有等待面试的学生";
 	public static final int ALREADY_EXIST_USER_ERROR = 110;
 	public static final String ALREADY_EXIST_USER_ERROR_MSG = "用户名已经存在";
@@ -51,5 +47,19 @@ public class RecruitConst {
 	public static final String ALREADY_EXIST_IMPORT_SUCCESS_MSG = "导入成功";
 	public static final String ALREADY_EXIST_IMPORT_FAILE_MSG = "导入失败";
 	public static final Object SUCCESS = "成功";
+
 	public static String CITY_OR_PHASE_ERROR_MSG = "年份期次城市错误";
+	
+	public static final String STUDENT_STATE_NOT_REGIST = "未签到";
+	public static final String STUDENT_STATE_REGIST = "签到";
+	public static final String STUDENT_STATE_LATE = "迟到";
+	public static final String STUDENT_STATE_PASS = "过号";
+	public static final String STUDENT_STATE_ONE_VIEW = "一面面试中";
+	public static final String STUDENT_STATE_TWO_VIEW = "二面面试中";
+	public static final String STUDENT_STATE_FINISH = "面试结束";
+	
+	public static final String INTERVIEWER_STATE_REST = "休息中";
+	public static final String INTERVIEWER_STATE_VIEWING = "面试中";
+	public static final String INTERVIEWER_STATE_WAITING = "等待面试";
+	public static final String INTERVIEWER_STATE_NOTHING = "空闲中";
 }

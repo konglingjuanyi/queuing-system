@@ -8,7 +8,7 @@
     <result column="city" property="city" jdbcType="VARCHAR" />
     <result column="intervier_name" property="intervierName" jdbcType="VARCHAR" />
     <result column="room" property="room" jdbcType="VARCHAR" />
-    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
     <result column="one_count" property="oneCount" jdbcType="INTEGER" />
     <result column="two_count" property="twoCount" jdbcType="INTEGER" />
     <result column="first_rd" property="firstRd" jdbcType="INTEGER" />
@@ -123,7 +123,7 @@
       second_fe, second_qa, enable
       )
     values (#{year,jdbcType=VARCHAR}, #{phase,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
-      #{intervierName,jdbcType=VARCHAR}, #{room,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{intervierName,jdbcType=VARCHAR}, #{room,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
       #{oneCount,jdbcType=INTEGER}, #{twoCount,jdbcType=INTEGER}, #{firstRd,jdbcType=INTEGER}, 
       #{firstFe,jdbcType=INTEGER}, #{firstQa,jdbcType=INTEGER}, #{secondRd,jdbcType=INTEGER}, 
       #{secondFe,jdbcType=INTEGER}, #{secondQa,jdbcType=INTEGER}, #{enable,jdbcType=VARCHAR}
@@ -198,7 +198,7 @@
         #{room,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        #{status,jdbcType=INTEGER},
+        #{status,jdbcType=VARCHAR},
       </if>
       <if test="oneCount != null" >
         #{oneCount,jdbcType=INTEGER},
@@ -257,7 +257,7 @@
         room = #{record.room,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null" >
-        status = #{record.status,jdbcType=INTEGER},
+        status = #{record.status,jdbcType=VARCHAR},
       </if>
       <if test="record.oneCount != null" >
         one_count = #{record.oneCount,jdbcType=INTEGER},
@@ -299,7 +299,7 @@
       city = #{record.city,jdbcType=VARCHAR},
       intervier_name = #{record.intervierName,jdbcType=VARCHAR},
       room = #{record.room,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=INTEGER},
+      status = #{record.status,jdbcType=VARCHAR},
       one_count = #{record.oneCount,jdbcType=INTEGER},
       two_count = #{record.twoCount,jdbcType=INTEGER},
       first_rd = #{record.firstRd,jdbcType=INTEGER},
@@ -332,7 +332,7 @@
         room = #{room,jdbcType=VARCHAR},
       </if>
       <if test="status != null" >
-        status = #{status,jdbcType=INTEGER},
+        status = #{status,jdbcType=VARCHAR},
       </if>
       <if test="oneCount != null" >
         one_count = #{oneCount,jdbcType=INTEGER},
@@ -371,7 +371,7 @@
       city = #{city,jdbcType=VARCHAR},
       intervier_name = #{intervierName,jdbcType=VARCHAR},
       room = #{room,jdbcType=VARCHAR},
-      status = #{status,jdbcType=INTEGER},
+      status = #{status,jdbcType=VARCHAR},
       one_count = #{oneCount,jdbcType=INTEGER},
       two_count = #{twoCount,jdbcType=INTEGER},
       first_rd = #{firstRd,jdbcType=INTEGER},
