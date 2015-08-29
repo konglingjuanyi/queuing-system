@@ -207,7 +207,7 @@ public class InterviewerController {
 					if(oneOrtwo == 1){
 						mm.addAttribute("message", "1");
 						mm.addAttribute("student", stuW.getStu());
-//						mm.addAttribute("phaseInterviewer", pi);
+						mm.addAttribute("phaseInterviewer", pi);
 					}else{
 						mm.addAttribute("message", "2");
 						mm.addAttribute("student", stuW.getStu());

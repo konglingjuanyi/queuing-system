@@ -33,9 +33,15 @@ $(document).ready(function () {
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
 		    	  data=set.data;
-		    	  alert(data.mesage);
-		    	  alert(data.student);
-		    	  alert(data.student.name);
+		    	  var message=data.message;
+		    	  var stu=data.student;
+		    	  var inter=data.phaseInterviewer;
+		    	  if(message!=1){
+		    		  var access=data.assess;
+		    		  /***渲染评估表****/
+		    	  }
+		    	  alert(stu.name);
+		    	  alert(stu.job);
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");

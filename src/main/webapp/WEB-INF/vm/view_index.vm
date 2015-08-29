@@ -61,10 +61,10 @@
                         <div class="m-firsttry-bd">
                             <div class="interviewee-info">
                                 <div class="item">
-                                    <h3>面试人姓名：<span class="text" id="student_name"></span></h3>
+                                    <h3>面试人姓名：<span class="text" id="student_name">$!{student.name}</span></h3>
                                 </div>
                                 <div class="item">
-                                    <h3>复试面职位：<span class="text" id="jobTitle"></span></h3>
+                                    <h3>复试面职位：<span class="text" id="jobTitle">$!{student.job}</span></h3>
                                 </div>
                                 <div class="item" id="first_viewer_div">
                                     <h3>初试面试官：<span class="text" id="first_viewer"></span></h3>
@@ -93,8 +93,12 @@
                                         <td><a href="javascript:;" data-name="代码能力">代码能力</a></td>
                                         <td>
                                             <select name="one_code" id="one_code">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -102,8 +106,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_code">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -114,8 +122,12 @@
                                         <td><a href="javascript:;" data-name="数据结构和算法">数据结构/算法</a></td>
                                         <td>
                                             <select name="" id="one_algorithm">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -123,8 +135,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_algorithm">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -135,8 +151,12 @@
                                         <td><a href="javascript:;" data-name="系统知识">操作系统/网络</a></td>
                                         <td>
                                             <select name="" id="one_network">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -144,8 +164,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_network">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -156,8 +180,12 @@
                                         <td><a href="javascript:;" data-name="项目经验">项目/测试/前端经验</a></td>
                                         <td>
                                             <select name="" id="one_experience">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -165,8 +193,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_experience">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -177,8 +209,12 @@
                                         <td><a href="javascript:;" data-name="其他加分技能">其他加分技能</a></td>
                                         <td>
                                             <select name="" id="one_other">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -186,8 +222,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_other">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -212,8 +252,12 @@
                                         <td><a href="javascript:;" data-num="0">逻辑思维</a></td>
                                         <td>
                                             <select name="" id="one_logic">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -221,8 +265,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_logic">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -233,8 +281,12 @@
                                         <td><a href="javascript:;" data-num="1">创新思考</a></td>
                                         <td>
                                             <select name="" id="one_creative">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -242,8 +294,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_creative">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -254,8 +310,12 @@
                                         <td><a href="javascript:;" data-num="2">团队合作</a></td>
                                         <td>
                                             <select name="" id="one_team">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -263,8 +323,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_team">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -275,8 +339,12 @@
                                         <td><a href="javascript:;" data-num="3">持续学习</a></td>
                                         <td>
                                             <select name="" id="one_continuouslearning">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -284,8 +352,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_continuouslearning">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -296,8 +368,12 @@
                                         <td><a href="javascript:;" data-num="4">追求卓越</a></td>
                                         <td>
                                             <select name="" id="one_outstanding">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -305,8 +381,12 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_outstanding">
-                                                <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="0">请选择</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
@@ -332,7 +412,11 @@
                                             总得分：100
                                             <select name="" id="one_conclusion">
                                                 <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="卓越">卓越</option>
+                                                <option value="优秀">优秀</option>
+                                                <option value="合格">合格</option>
+                                                <option value="待定">待定</option>
+                                                <option value="不通过">不通过</option>
                                             </select>
                                         </td>
                                         <td>
@@ -344,7 +428,11 @@
                                         <td>
                                             <select name="" id="two_conclusion">
                                                 <option value="">请选择</option>
-                                                <option value="">1</option>
+                                                <option value="卓越">卓越</option>
+                                                <option value="优秀">优秀</option>
+                                                <option value="合格">合格</option>
+                                                <option value="待定">待定</option>
+                                                <option value="不通过">不通过</option>
                                             </select>
                                         </td>
                                         <td>
