@@ -46,7 +46,7 @@ $(document).ready(function () {
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
-		    	 
+		    	  clock();
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -62,7 +62,7 @@ $(document).ready(function () {
 		      contentType: 'application/json; charset=utf-8',
 		      data: JSON.stringify(param),
 		      success: function (set) {
-		    	 
+		    	  clock();
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -83,8 +83,23 @@ $(document).ready(function () {
 		      }
 		    });
 	 });
-
+	 
 });
+var timeIndex = 0;
+function setTime(){
+	var hour = parseInt(timeIndex / 3600);    // 计算时 
+	var minutes = parseInt((timeIndex % 3600) / 60);    // 计算分 
+	var seconds = parseInt(timeIndex % 60);    // 计算秒  
+	hour = hour < 10 ? "0" + hour : hour;
+	minutes = minutes < 10 ? "0" + minutes : minutes;
+	seconds = seconds < 10 ? "0" + seconds : seconds;
+	$("#showTime").text(hour + ":" + minutes + ":" + seconds);
+	timeIndex++;
+}
+
+function clock(){
+	setInterval(setTime, 1000);
+}
 
 function getSubmitParam(){
 //	alert($("#one_code").find("option:selected").text());
@@ -164,5 +179,4 @@ $.fn.serializeObject = function()
    });    
    return o;    
 };  
-
 
