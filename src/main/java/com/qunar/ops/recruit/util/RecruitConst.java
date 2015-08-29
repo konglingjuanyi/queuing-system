@@ -53,14 +53,21 @@ public class RecruitConst {
 	public static final String STUDENT_STATE_NOT_REGIST = "未签到";
 	public static final String STUDENT_STATE_REGIST = "签到";
 	public static final String STUDENT_STATE_LATE = "迟到";
-	public static final String STUDENT_STATE_PASS = "过号";
-	public static final String STUDENT_STATE_GOING2ROOM = "等待面试";
-	public static final String STUDENT_STATE_ONE_VIEW = "一面面试中";
-	public static final String STUDENT_STATE_TWO_VIEW = "二面面试中";
+	public static final String STUDENT_STATE_PASS_ME = "过号";
+	public static final String STUDENT_STATE_GOING2ONEROOM = "等待初试";
+	public static final String STUDENT_STATE_ONE_VIEW = "初试中";
+	public static final String STUDENT_STATE_ONE_NOT_PASS = "初试未通过";
+	public static final String STUDENT_STATE_GOING2TWOROOM = "等待复试";
+	public static final String STUDENT_STATE_TWO_VIEW = "复试中";
+	public static final String STUDENT_STATE_TWO_NOT_PASS = "复试未通过";
+	public static final String STUDENT_STATE_TWO_PASS = "复试通过";
 	public static final String STUDENT_STATE_FINISH = "面试结束";
 	
 	public static final String INTERVIEWER_STATE_REST = "休息中";
 	public static final String INTERVIEWER_STATE_VIEWING = "面试中";
 	public static final String INTERVIEWER_STATE_WAITING = "等待面试";
 	public static final String INTERVIEWER_STATE_NOTHING = "空闲中";
+	
+
+	public static final String RESULT_NOT_PASS = "不通过";
 }

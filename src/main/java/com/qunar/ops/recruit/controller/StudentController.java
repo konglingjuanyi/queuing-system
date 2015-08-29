@@ -168,7 +168,8 @@ public class StudentController {
 					model.addAttribute("flag",1);
 				}else{ 
 					Student newStudent = studentService.getStudentByPhone(student.getPhone());
-					if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2ROOM)){
+					if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2ONEROOM)
+							|| newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2TWOROOM)){
 						//面试官取学生，通知进房间
 						String interName = null;
 						if(newStudent.getSecondTry() == null || newStudent.getSecondTry().equals("")){

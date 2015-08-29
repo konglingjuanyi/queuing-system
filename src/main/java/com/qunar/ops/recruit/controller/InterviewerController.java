@@ -207,19 +207,21 @@ public class InterviewerController {
 				}else{
 					Student stu = stuW.getStu();
 					Student newStu = new Student();
-					stu.setState(RecruitConst.STUDENT_STATE_GOING2ROOM);
 					newStu.setId(stu.getId());
-					newStu.setState(RecruitConst.STUDENT_STATE_GOING2ROOM);
 					PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 					if(oneOrtwo == 1){
+						stu.setState(RecruitConst.STUDENT_STATE_GOING2ONEROOM);
 						stu.setFirstTry(inter.getUserName());
 						newStu.setFirstTry(inter.getUserName());
+						newStu.setState(RecruitConst.STUDENT_STATE_GOING2ONEROOM);
 						mm.addAttribute("message", "1");
 						mm.addAttribute("student", stuW.getStu());
 						mm.addAttribute("phaseInterviewer", pi);
 					}else{
 						stu.setSecondTry(inter.getUserName());
+						stu.setState(RecruitConst.STUDENT_STATE_GOING2TWOROOM);
 						newStu.setSecondTry(inter.getUserName());
+						newStu.setState(RecruitConst.STUDENT_STATE_GOING2TWOROOM);
 						mm.addAttribute("message", "2");
 						mm.addAttribute("student", stuW.getStu());
 						mm.addAttribute("phaseInterviewer", pi);
@@ -270,7 +272,7 @@ public class InterviewerController {
 		newStu.setId(stu.getId());
 		newInter.setId(inter.getId());
 		newPi.setId(pi.getId());
-		if(stu.getFirstTry() != null && stu.getState().equals(RecruitConst.STUDENT_STATE_GOING2ROOM)){
+		if(stu.getFirstTry() != null && stu.getState().equals(RecruitConst.STUDENT_STATE_GOING2ONEROOM)){
 			newStu.setState(RecruitConst.STUDENT_STATE_ONE_VIEW);
 			newInter.setViewCount(inter.getViewCount()+1);
 			newPi.setOneCount(pi.getOneCount()+1);
@@ -284,53 +286,82 @@ public class InterviewerController {
 		studentService.updateStudent(newStu);
 		interServe.updateInterviewer(newInter);
 		piService.update(pi);
+		return BaseResult.getSuccessResult("");
+	}
+	
+	@RequestMapping(value = "/interviewer/finishAndRest")
+	@ResponseBody
+	public BaseResult finishAndRest(HttpServletRequest request, HttpSession session, ModelMap mm, @RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
+		Student stu = (Student) session.getAttribute("student");
+		StudentAssess sa = new StudentAssess();
+		Student newStu = new Student();
+		newStu.setId(stu.getId());
+		String[] arrs = getYearPhaseAndCity(session);
+		Interviewer inter = (Interviewer) session.getAttribute("user");
+		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+		PhaseInterviewer newPi = new PhaseInterviewer();
+		newPi.setId(pi.getId());
+		//之前是一面中
+		if(stu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
+			if(sa.getOneConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
+				//一面评估表未通过
+				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
+			}else{
+				newStu.setState(RecruitConst.STUDENT_STATE_GOING2TWOROOM);
+			}
+		}else{
+			if(sa.getTwoConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
+				//二面评估表未通过
+				newStu.setState(RecruitConst.STUDENT_STATE_TWO_NOT_PASS);
+			}else{
+				newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
+			}
+		}
+		pi.setStatus(RecruitConst.INTERVIEWER_STATE_REST);
+		piService.update(pi);
+		studentService.updateStudent(newStu);
+		saService.add(sa);
 		return BaseResult.getSuccessResult("");
 	}
 	
 	@RequestMapping(value = "/interviewer/finishAndContinue")
 	@ResponseBody
-	public BaseResult finishInterview(HttpServletRequest request, HttpSession session, @RequestBody CommonRequest commonRequest) {
+	public BaseResult finishAndContinue(HttpServletRequest request, HttpSession session, ModelMap mm, @RequestBody CommonRequest commonRequest) {
+		Map<String, String> vars = commonRequest.getVars();
 		Student stu = (Student) session.getAttribute("student");
-		Interviewer inter = (Interviewer) session.getAttribute("user");
-		String[] arrs = getYearPhaseAndCity(session);
-		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+		StudentAssess sa = new StudentAssess();
 		Student newStu = new Student();
-		Interviewer newInter = new Interviewer();
-		PhaseInterviewer newPi = new PhaseInterviewer();
 		newStu.setId(stu.getId());
-		newInter.setId(inter.getId());
-		newPi.setId(pi.getId());
+		//之前是一面中
 		if(stu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
-			newStu.setState(RecruitConst.STUDENT_STATE_ONE_VIEW);
-			newInter.setViewCount(inter.getViewCount()+1);
-			newPi.setOneCount(pi.getOneCount()+1);
-			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_VIEWING);
+			if(sa.getOneConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
+				//一面评估表未通过
+				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
+			}else{
+				newStu.setState(RecruitConst.STUDENT_STATE_GOING2TWOROOM);
+			}
 		}else{
-			newStu.setState(RecruitConst.STUDENT_STATE_TWO_VIEW);
-			newInter.setViewCount(inter.getViewCount()+1);
-			newPi.setTwoCount(pi.getTwoCount()+1);
-			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_VIEWING);
+			if(sa.getTwoConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
+				//二面评估表未通过
+				newStu.setState(RecruitConst.STUDENT_STATE_TWO_NOT_PASS);
+			}else{
+				newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
+			}
 		}
 		studentService.updateStudent(newStu);
-		interServe.updateInterviewer(newInter);
-		piService.update(pi);
-		return BaseResult.getSuccessResult("");
+		saService.add(sa);
+		return getNextStudent(session, mm);
 	}
 	
 	@RequestMapping(value = "/interviewer/noComeFinish")
 	@ResponseBody
-	public BaseResult noComeFinish(HttpServletRequest request, HttpSession session) {
+	public BaseResult noComeFinish(HttpServletRequest request, HttpSession session, ModelMap mm) {
 		Student stu = (Student) session.getAttribute("student");
-		Interviewer inter = (Interviewer) session.getAttribute("user");
-		Student newStu = new Student();
-		newStu.setId(stu.getId());
-		newStu.setState(RecruitConst.STUDENT_STATE_FINISH);
-		newStu.setFirstTry(inter.getUserName());
-		
-		Interviewer newInter = new Interviewer();
-//		newInter.setViewCount(inter.ge);
-//		interServe.updateInterviewer(newStu);
-		return null;
+		stu.setState(RecruitConst.STUDENT_STATE_PASS_ME);
+		stu.setTrueTime(null);
+		studentService.updateStudentNotSelective(stu);
+		return getNextStudent(session, mm);
 	}
 	
 	

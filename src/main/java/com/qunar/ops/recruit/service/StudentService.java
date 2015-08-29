@@ -59,6 +59,11 @@ public class StudentService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	public void updateStudentNotSelective(Student stu) {
+		stuMapper.updateByPrimaryKey(stu);
+		
+	}
 	
 
 

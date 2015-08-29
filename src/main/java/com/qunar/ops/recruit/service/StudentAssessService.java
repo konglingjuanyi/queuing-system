@@ -32,6 +32,11 @@ public class StudentAssessService {
 		return null;
 	}
 
+	public void add(StudentAssess sa) {
+		saMapper.insert(sa);
+		
+	}
+
 
 
 }

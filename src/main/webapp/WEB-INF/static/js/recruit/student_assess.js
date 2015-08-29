@@ -1,5 +1,6 @@
+$(document).flag=-1;
 $(document).ready(function () {
-	var flag=-1;
+	
 	$.ajax({
 	      url: "/interviewer/getCurrentViewInfo",
 	      type: "POST",
@@ -32,9 +33,10 @@ $(document).ready(function () {
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
-		    	  flag=message;
 		    	  data=set.data;
 		    	  var message=data.message;
+		    	  $(document).flag=message;
+		    	  alert($(document).flag)
 		    	  var stu=data.student;
 		    	  var inter=data.phaseInterviewer;
 		    	  if(message!=1){
@@ -68,12 +70,12 @@ $(document).ready(function () {
 	});
 	
 	$("#finishInterview").click(function(){
-		 if(flag==1){
+		 if($(document).flag==1){
 			 if($("#one_conclusion").val()==''){
 				alert("请选择初试结论");
 				return false;
 			 }
-		 }else if(flag==2){
+		 }else if($(document).flag==2){
 			 	if($("#two_conclusion").val()==''){
 			 		alert("请选择复试结论");
 					return false;
@@ -82,7 +84,7 @@ $(document).ready(function () {
 			 alert("不能结束面试");
 			 return false;
 		 }
-		 if(flag==1){
+		 if($(document).flag==1){
 			 $("#noview").css("display","");
 		 }
 		 $("#goon").css("display","");
@@ -93,13 +95,13 @@ $(document).ready(function () {
 	 $("#finishAndContinue").click(function(){
 		 param = getSubmitParam();
 		 $.ajax({
-		      url: "/interviewer/finishInterview",
+		      url: "/interviewer/finishAndContinue",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      data: JSON.stringify(param),
 		      success: function (set) {
-		    	  flag=message;
+		    	  $(document).flag=message;
 		    	  data=set.data;
 		    	  var message=data.message;
 		    	  var stu=data.student;
@@ -303,8 +305,8 @@ function sumTwoCount(){
 	$("#two_sum").val(sum);
 }
 
-function showSuggest(flag){
-	if(flag==1){
+function showSuggest(flag1){
+	if(flag1==1){
 		if($("#one_conclusion").val()=='卓越'){
 			$("#one_suggest").css("display","");
 		}
