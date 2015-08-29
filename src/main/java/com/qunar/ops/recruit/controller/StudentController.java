@@ -166,7 +166,7 @@ public class StudentController {
 					String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
 					model.addAttribute("message",message);
 					model.addAttribute("flag",1);
-				}else{ 
+				}else{
 					Student newStudent = studentService.getStudentByPhone(student.getPhone());
 					if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2ONEROOM)
 							|| newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2TWOROOM)){

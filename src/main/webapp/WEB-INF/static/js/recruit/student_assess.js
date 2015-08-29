@@ -55,13 +55,14 @@ $(document).ready(function () {
 	});
 	
 	$("#beginToInterview").click(function(){
+		clock();
 		$.ajax({
 		      url: "/interviewer/beginToInterview",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
-		    	 
+		    	  
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -145,7 +146,19 @@ $(document).ready(function () {
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
-		    	 
+		    	  flag=message;
+		    	  data=set.data;
+		    	  var message=data.message;
+		    	  var stu=data.student;
+		    	  var inter=data.phaseInterviewer;
+		    	  if(message!=1){
+		    		  var access=data.assess;
+		    		  /***渲染评估表****/
+		    		  addValue(access);
+		    	  }
+		    	  $("#student_name").text(stu.name);
+		    	  $("#jobTitle").text(stu.job);
+		    	  $("#first_viewer").text(inter.intervierName);
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -154,6 +167,22 @@ $(document).ready(function () {
 	 });
 
 });
+
+var timeIndex = 0;
+function clock(){
+	setTime();
+	times = setInterval(setTime, 1000);    //每隔1秒执行函数
+}
+function setTime(){
+	var hour = parseInt(timeIndex / 3600);    // 计算时 
+	var minutes = parseInt((timeIndex % 3600) / 60);    // 计算分 
+	var seconds = parseInt(timeIndex % 60);    // 计算秒  
+	hour = hour < 10 ? "0" + hour : hour;
+	minutes = minutes < 10 ? "0" + minutes : minutes;
+	seconds = seconds < 10 ? "0" + seconds : seconds;
+	$("#showTime").text(hour + ":" + minutes + ":" + seconds);
+	timeIndex++;
+}
 
 function getSubmitParam(){
 //	alert($("#one_code").find("option:selected").text());
@@ -221,56 +250,59 @@ function getSubmitParam(){
 
 
 function addValue(access){
-	$("#one_code").find("option:selected").text();
-	$("#one_code_detail").val();
-	$("#one_algorithm").find("option:selected").text();
-	$("#one_algorithm_detail").val();
-	$("#one_network").find("option:selected").text();
-	$("#one_network_detail").val();
-	$("#one_experience").find("option:selected").text();
-	$("#one_experience_detail").val();
-	$("#one_other").find("option:selected").text();
-	$("#one_other_detail").val();
-	$("#one_logic").find("option:selected").text();
-	$("#one_logic_detail").val();
-	$("#one_creative").find("option:selected").text();
-	$("#one_creative_detail").val();
-	$("#one_team").find("option:selected").text();
-	$("#one_team_detail").val();
-	$("#one_continuouslearning").find("option:selected").text();
-	$("#one_continuouslearning_detail").val();
-	$("#one_outstanding").find("option:selected").text();
-	$("#one_outstanding_detail").val();
-	$("#two_code").find("option:selected").text();
-	$("#two_code_detail").val();
-	$("#two_algorithm").find("option:selected").text();
-	$("#two_algorithm_detail").val();
-	$("#two_network").find("option:selected").text();
-	$("#two_network_detail").val();
-	$("#two_experience").find("option:selected").text();
-	$("#two_experience_detail").val();
-	$("#two_other").find("option:selected").text();
-	$("#two_other_detail").val();
-	$("#two_logic").find("option:selected").text();
-	$("#two_logic_detail").val();
-	$("#two_creative").find("option:selected").text();
-	$("#two_creative_detail").val();
-	$("#two_team").find("option:selected").text();
-	$("#two_team_detail").val();
-	$("#two_continuouslearning").find("option:selected").text();
-	$("#two_continuouslearning_detail").val();
-	$("#two_outstanding").find("option:selected").text();
-	$("#two_outstanding_detail").val();
-	$("#one_conclusion").find("option:selected").text();
-	$("#one_suggest_salary").find("option:selected").text();
-	$("#one_suggest_salary_detail").val();
-	$("#two_conclusion").find("option:selected").text();
-	$("#two_conclusion_detail").val();
-	$("#one_allocation_idea").val();
-	$("#two_allocation_idea").val();
-	$("#hr_name").val();
-	$("#hr_suggest_salary").val();
-	$("#hr_detail_idea").val();
+	$("#one_code").attr("value",access.oneCode);
+	$("#one_code_detail").val(access.oneCodeDetail);
+	$("#one_algorithm").attr("value",access.oneAlgorithm);
+	$("#one_algorithm_detail").val(access.oneAlgorithmDetail);
+	$("#one_network").attr("value",access.oneNetwork);
+	$("#one_network_detail").val(access.oneNetworkDetail);
+	$("#one_experience").attr("value",access.oneExperience);
+	$("#one_experience_detail").val(access.oneExperienceDetail);
+	$("#one_other").attr("value",access.oneOther);
+	$("#one_other_detail").val(access.oneOtherDetail);
+	$("#one_logic").attr("value",access.oneLogic);
+	$("#one_logic_detail").val(access.oneLogicDetail);
+	$("#one_creative").attr("value",access.oneCreative);
+	$("#one_creative_detail").val(access.oneCreativeDetail);
+	$("#one_team").attr("value",access.oneTeam);
+	$("#one_team_detail").val(access.oneTeamDetail);
+	$("#one_continuouslearning").attr("value",access.oneContinuouslearning);
+	$("#one_continuouslearning_detail").val(access.oneContinuouslearningDetail);
+	$("#one_outstanding").attr("value",access.oneOutstanding);
+	$("#one_outstanding_detail").val(access.oneOutstandingDetail);
+	$("#two_code").attr("value",access.twoCode);
+	$("#two_code_detail").val(access.twoCodeDetail);
+	$("#two_algorithm").attr("value",access.twoAlgorithm);
+	$("#two_algorithm_detail").val(access.twoAlgorithmDetail);
+	$("#two_network").attr("value",access.twoNetwork);
+	$("#two_network_detail").val(access.twoNetworkDetail);
+	$("#two_experience").attr("value",access.twoExperience);
+	$("#two_experience_detail").val(access.twoExperienceDetail);
+	$("#two_other").attr("value",access.twoOther);
+	$("#two_other_detail").val(access.twoOtherDetail);
+	$("#two_logic").attr("value",access.twoLogic);
+	$("#two_logic_detail").val(access.twoLogicDetail);
+	$("#two_creative").attr("value",access.twoCreative);
+	$("#two_creative_detail").val(access.twoCreativeDetail);
+	$("#two_team").attr("value",access.twoTeam);
+	$("#two_team_detail").val(access.twoTeamDetail);
+	$("#two_continuouslearning").attr("value",access.twoContinuouslearning);
+	$("#two_continuouslearning_detail").val(access.twoContinuouslearningDetail);
+	$("#two_outstanding").attr("value",access.twoOutstanding);
+	$("#two_outstanding_detail").val(access.twoOutstandingDetail);
+	$("#one_conclusion").attr("value",access.oneConclusion);
+	$("#one_suggest_salary").val(access.oneSuggestSalary);
+	$("#two_suggest_salary").val(access.twoSuggestSalary);
+	$("#one_suggest_salary_detail").val(access.oneSuggestSalaryDetail);
+	$("#two_conclusion").attr("value",access.twoConclusion);
+	$("#two_conclusion_detail").val(access.twoConclusionDetail);
+	$("#one_allocation_idea").val(access.oneAllocationIdea);
+	$("#two_allocation_idea").val(access.twoAllocationIdea);
+	$("#hr_name").val(access.hrName);
+	$("#one_sum").val(access.oneSum);
+	$("#two_sum").val(access.twoSum);
+	$("#hr_suggest_salary").val(access.hrSuggestSalary);
+	$("#hr_detail_idea").val(access.hrDetailIdea);
 }
 
 function sumOneCount(){

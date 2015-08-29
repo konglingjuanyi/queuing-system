@@ -96,7 +96,7 @@
                                         <td><a href="javascript:;" data-name="代码能力">代码能力</a></td>
                                         <td>
                                             <select name="one_code" id="one_code" onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -109,7 +109,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_code"  onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -125,7 +125,7 @@
                                         <td><a href="javascript:;" data-name="数据结构和算法">数据结构/算法</a></td>
                                         <td>
                                             <select name="" id="one_algorithm"  onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -138,7 +138,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_algorithm" onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -154,7 +154,7 @@
                                         <td><a href="javascript:;" data-name="系统知识">操作系统/网络</a></td>
                                         <td>
                                             <select name="" id="one_network"  onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -167,7 +167,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_network" onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -183,7 +183,7 @@
                                         <td><a href="javascript:;" data-name="项目经验">项目/测试/前端经验</a></td>
                                         <td>
                                             <select name="" id="one_experience"  onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -196,7 +196,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_experience" onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -212,7 +212,7 @@
                                         <td><a href="javascript:;" data-name="其他加分技能">其他加分技能</a></td>
                                         <td>
                                             <select name="" id="one_other"  onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -225,7 +225,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_other" onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -255,7 +255,7 @@
                                         <td><a href="javascript:;" data-num="0">逻辑思维</a></td>
                                         <td>
                                             <select name="" id="one_logic"  onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -268,7 +268,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_logic" onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -284,7 +284,7 @@
                                         <td><a href="javascript:;" data-num="1">创新思考</a></td>
                                         <td>
                                             <select name="" id="one_creative"  onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -297,7 +297,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_creative" onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -313,7 +313,7 @@
                                         <td><a href="javascript:;" data-num="2">团队合作</a></td>
                                         <td>
                                             <select name="" id="one_team"  onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -326,7 +326,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_team" onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -342,7 +342,7 @@
                                         <td><a href="javascript:;" data-num="3">持续学习</a></td>
                                         <td>
                                             <select name="" id="one_continuouslearning"  onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -355,7 +355,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_continuouslearning" onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -371,7 +371,7 @@
                                         <td><a href="javascript:;" data-num="4">追求卓越</a></td>
                                         <td>
                                             <select name="" id="one_outstanding"  onclick="sumOneCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
@@ -384,7 +384,7 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_outstanding" onclick="sumTwoCount()">
-                                                <option value="0">请选择</option>
+                                                <option value="0">0</option>
                                                 <option value="1">1</option>
                                                 <option value="2">2</option>
                                                 <option value="3">3</option>
