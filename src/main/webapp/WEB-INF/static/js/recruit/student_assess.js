@@ -1,4 +1,4 @@
-$(document).flag=-1;
+var flag=-1;
 $(document).ready(function () {
 	
 	$.ajax({
@@ -35,8 +35,7 @@ $(document).ready(function () {
 		      success: function (set) {
 		    	  data=set.data;
 		    	  var message=data.message;
-		    	  $(document).flag=message;
-		    	  alert($(document).flag)
+		    	  flag=message;
 		    	  var stu=data.student;
 		    	  var inter=data.phaseInterviewer;
 		    	  if(message!=1){
@@ -71,12 +70,12 @@ $(document).ready(function () {
 	});
 	
 	$("#finishInterview").click(function(){
-		 if($(document).flag==1){
+		 if(flag==1){
 			 if($("#one_conclusion").val()==''){
 				alert("请选择初试结论");
 				return false;
 			 }
-		 }else if($(document).flag==2){
+		 }else if(flag==2){
 			 	if($("#two_conclusion").val()==''){
 			 		alert("请选择复试结论");
 					return false;
@@ -85,7 +84,7 @@ $(document).ready(function () {
 			 alert("不能结束面试");
 			 return false;
 		 }
-		 if($(document).flag==1){
+		 if(flag==1){
 			 $("#noview").css("display","");
 		 }
 		 $("#goon").css("display","");
@@ -102,9 +101,9 @@ $(document).ready(function () {
 		      contentType: 'application/json; charset=utf-8',
 		      data: JSON.stringify(param),
 		      success: function (set) {
-		    	  $(document).flag=message;
 		    	  data=set.data;
 		    	  var message=data.message;
+		    	  flag=message;
 		    	  var stu=data.student;
 		    	  var inter=data.phaseInterviewer;
 		    	  if(message!=1){
@@ -146,9 +145,9 @@ $(document).ready(function () {
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      success: function (set) {
-		    	  flag=message;
 		    	  data=set.data;
 		    	  var message=data.message;
+		    	  flag=message;
 		    	  var stu=data.student;
 		    	  var inter=data.phaseInterviewer;
 		    	  if(message!=1){
