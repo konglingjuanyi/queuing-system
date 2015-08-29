@@ -34,11 +34,12 @@ public class WaitService {
 	
 	public synchronized int numberInFrontOfOne(StudentWaiter t) {
 		int count = 0;
+//		System.out.println(list);
 		for (StudentWaiter stu : list) {
 //			System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
 			Student s1 = stu.getStu();
 			Student ss = t.getStu();
-			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob()) && stu.compareTo(t) < 0){
+			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob()) && stu.compareTo(t) > 0){
 				count ++;
 			}
 		}
@@ -63,7 +64,7 @@ public class WaitService {
 //			System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
 			Student s1 = stu.getStu();
 			Student ss = t.getStu();
-			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob()) && stu.compareTo(t) < 0){
+			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob()) && stu.compareTo(t) > 0){
 				count ++;
 			}
 		}
