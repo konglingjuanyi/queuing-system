@@ -312,7 +312,9 @@ public class InterviewerController {
 				//一面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
 			}else{
-				newStu.setState(RecruitConst.STUDENT_STATE_GOING2TWOROOM);
+				newStu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
+				stu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
+				waitService.addTwoList(new StudentWaiter(stu));
 			}
 		}else{
 			if(sa.getTwoConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
@@ -343,7 +345,7 @@ public class InterviewerController {
 				//一面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
 			}else{
-				newStu.setState(RecruitConst.STUDENT_STATE_GOING2TWOROOM);
+				newStu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
 			}
 		}else{
 			if(sa.getTwoConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
