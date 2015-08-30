@@ -201,7 +201,6 @@ public class InterviewerController {
 					stuW = waitService.removeHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView());
 				}
 				if(stuW == null){
-					System.out.println("等待队列为空");
 					mm.addAttribute("message", RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
 					return BaseResult.getSuccessResult(mm);
 				}else{
@@ -238,10 +237,12 @@ public class InterviewerController {
 				}
 			}else{
 				//不是interviewer，無權訪問
-				return BaseResult.getSuccessResult(RecruitConst.AUTHORITY_ERROR_MSG);
+				mm.addAttribute("message", RecruitConst.AUTHORITY_ERROR_MSG);
+				return BaseResult.getSuccessResult(mm);
 			}
 		}else{
 			//无seesion, 重新登录
+			mm.addAttribute("message", RecruitConst.NO_LOGIN_MSG);
 			return BaseResult.getSuccessResult(RecruitConst.NO_LOGIN_MSG);
 		}
 	}
@@ -296,72 +297,57 @@ public class InterviewerController {
 	@RequestMapping(value = "/interviewer/finishAndRest")
 	@ResponseBody
 	public BaseResult finishAndRest(HttpServletRequest request, HttpSession session, ModelMap mm, @RequestBody CommonRequest commonRequest) {
-		Map<String, String> vars = commonRequest.getVars();
-		Student stu = (Student) session.getAttribute("student");
-		StudentAssess sa = saService.createStudentAssess(vars);
-		Student newStu = new Student();
-		newStu.setId(stu.getId());
+		finishUpdateStateAndRecordAsess(session, commonRequest);
 		String[] arrs = getYearPhaseAndCity(session);
 		Interviewer inter = (Interviewer) session.getAttribute("user");
 		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 		PhaseInterviewer newPi = new PhaseInterviewer();
 		newPi.setId(pi.getId());
-		//之前是一面中
-		if(stu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
-			if(sa.getOneConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
-				//一面评估表未通过
-				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
-			}else{
-				newStu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
-				stu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
-				waitService.addTwoList(new StudentWaiter(stu));
-			}
-		}else{
-			if(sa.getTwoConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
-				//二面评估表未通过
-				newStu.setState(RecruitConst.STUDENT_STATE_TWO_NOT_PASS);
-			}else{
-				newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
-			}
-		}
 		pi.setStatus(RecruitConst.INTERVIEWER_STATE_REST);
 		piService.update(pi);
-		studentService.updateStudent(newStu);
-		saService.add(sa);
 		return BaseResult.getSuccessResult("");
 	}
 	
 	@RequestMapping(value = "/interviewer/finishAndContinue")
 	@ResponseBody
 	public BaseResult finishAndContinue(HttpServletRequest request, HttpSession session, ModelMap mm, @RequestBody CommonRequest commonRequest) {
+		finishUpdateStateAndRecordAsess(session, commonRequest);
+		return getNextStudent(session, mm);
+	}
+	
+	private void finishUpdateStateAndRecordAsess(HttpSession session, CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 		Student stu = (Student) session.getAttribute("student");
+		Interviewer inter = (Interviewer) session.getAttribute("user");
 		StudentAssess sa = saService.createStudentAssess(vars);
-		Student newStu = new Student();
-		newStu.setId(stu.getId());
+		sa.setStudenId(stu.getId());
+		sa.setJob(stu.getJob());
+		Student newStu = studentService.getStudentByPhone(stu.getPhone());
 		//之前是一面中
-		if(stu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
+		if(newStu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
+			sa.setOneViewer(inter.getUserName());
 			if(sa.getOneConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
 				//一面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
 			}else{
 				newStu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
-				stu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
 				waitService.addTwoList(new StudentWaiter(stu));
 			}
+			saService.add(sa);
 		}else{
+			sa.setTwoViewer(inter.getUserName());
 			if(sa.getTwoConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
 				//二面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_TWO_NOT_PASS);
 			}else{
 				newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
 			}
+			saService.update(sa);
 		}
 		studentService.updateStudent(newStu);
-		saService.add(sa);
-		return getNextStudent(session, mm);
+		session.setAttribute("student", null);
 	}
-	
+
 	@RequestMapping(value = "/interviewer/noComeFinish")
 	@ResponseBody
 	public BaseResult noComeFinish(HttpServletRequest request, HttpSession session, ModelMap mm) {

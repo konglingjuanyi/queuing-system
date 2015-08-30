@@ -94,4 +94,9 @@ public class StudentAssessService {
 		return stu;
 	}
 
+	public void update(StudentAssess sa) {
+		saMapper.updateByPrimaryKey(sa);
+		
+	}
+
 }
