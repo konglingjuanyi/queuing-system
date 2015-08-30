@@ -26,10 +26,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.model.StudentAssess;
 import com.qunar.ops.recruit.model.StudentForm;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
+import com.qunar.ops.recruit.service.StudentAssessService;
 import com.qunar.ops.recruit.service.StudentManageService;
+import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.util.RecruitConst;
 import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
@@ -38,6 +41,10 @@ public class StudentManageController {
 
 	@Autowired
 	StudentManageService stuService;
+	@Autowired
+	StudentAssessService assService;
+	@Autowired
+	StudentService studentService;
 	
 	@RequestMapping(value="/hr/importStudentInfos",method=RequestMethod.POST)
 	public String importStaffInfo(@RequestParam("fileField") MultipartFile clientFile,
@@ -179,6 +186,31 @@ public class StudentManageController {
 		}
 		model.addAttribute("list", info);
 		return "/student_manage_info";
+	}
+	
+	@RequestMapping(value = "/hr/gotoSelectStudentInfo")
+	public String gotoSelectStudentInfo(HttpServletRequest request, int id,  ModelMap model) throws Exception {
+		System.out.println(id+"======");
+		StudentAssess stuAss=assService.getStudentAssessByStudentId(id);
+		Student stu=studentService.getStudentById(id);
+		model.addAttribute("stuAss", stuAss);
+		model.addAttribute("stu", stu);
+		return "/hr_select_student";
+	}
+	
+	@RequestMapping(value = "/hr/AddHrStudentAssess")
+	public String  AddHrStudentAssess(HttpServletRequest request, int id, String hrName, String salay, String hrdetail){
+		StudentAssess sa=new StudentAssess();
+		sa.setId(id);
+		sa.setHrName(hrName);
+		sa.setHrDetailIdea(hrdetail);
+		if(salay!=null && !"".equals(salay)){
+			sa.setHrSuggestSalary(Integer.valueOf(salay));
+		}else{
+			sa.setHrSuggestSalary(0);
+		}
+		assService.updateBy(sa);
+		return "forward:/hr/getAllStudentInfos";
 	}
 	
 }

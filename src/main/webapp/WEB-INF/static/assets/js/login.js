@@ -5,7 +5,6 @@ $(document).ready(function () {
 		$("#msg").css("display","");
 	}
 });
-
 function checkUp(){
 	var username = $("#username").val();
 	var password = $("#password").val();

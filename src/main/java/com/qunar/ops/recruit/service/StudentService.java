@@ -64,6 +64,11 @@ public class StudentService {
 		stuMapper.updateByPrimaryKey(stu);
 		
 	}
+
+	public Student getStudentById(int id) {
+		// TODO Auto-generated method stub
+		return stuMapper.selectByPrimaryKey(id);
+	}
 	
 
 
