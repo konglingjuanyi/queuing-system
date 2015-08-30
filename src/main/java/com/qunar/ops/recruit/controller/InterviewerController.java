@@ -2,6 +2,7 @@ package com.qunar.ops.recruit.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -20,9 +21,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import qunar.web.spring.annotation.JsonBody;
+
+import com.google.common.collect.Lists;
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
@@ -37,6 +42,7 @@ import com.qunar.ops.recruit.service.StudentAssessService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.service.WaitService;
+import com.qunar.ops.recruit.util.FileUpload;
 import com.qunar.ops.recruit.util.RecruitConst;
 import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
@@ -528,5 +534,26 @@ public class InterviewerController {
 				return "/inter_login";
 			}
 		}
+	}
+	
+	//作品分享文件上传
+    @RequestMapping(value = "/interviewer/upload", method = RequestMethod.POST)
+    public String achiFileUpload(HttpServletRequest request, ModelMap model) {
+    	ArrayList<String> imgTypes = Lists.newArrayList("jpg", "png", "bmp", "jpeg");// 支持的图片格式。
+        String savePath = "/mfsdata/trainsysfile";/** 后期需要根据功能去改路径 */
+        String name=FileUpload.upload(request, imgTypes, savePath);
+        return "/upload";
+    }
+    
+    /**
+	 * login
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/toupload")
+	public ModelAndView welcom(HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView("/upload");
+		return mav;
 	}
 }
