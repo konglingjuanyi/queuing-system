@@ -134,7 +134,9 @@ public class StudentController {
 			model.addAttribute("message",message);
 			model.addAttribute("flag",1);
 		}else{
+			System.out.println(student.getPhone());
 			Student newStudent = studentService.getStudentByPhone(student.getPhone());
+			System.out.println("====="+newStudent+"=======");
 			if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2ONEROOM)
 					|| newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2TWOROOM)){
 				//面试官取学生，通知进房间
