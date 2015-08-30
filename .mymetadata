@@ -3,7 +3,7 @@
   type="WEB"
   name="school_recruit"
   id="myeclipse.1439869975892"
-  context-root="/oaengine"
+  context-root="/recruit"
   j2ee-spec="6.0"
   archive="school_recruit.war">
   <attributes>

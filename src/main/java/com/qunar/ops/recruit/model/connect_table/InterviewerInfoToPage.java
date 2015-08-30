@@ -19,8 +19,12 @@ public class InterviewerInfoToPage {
 
     private String job;
     
-    private PhaseInterviewer pi;
+    private String firstTry;
 
+    private Integer count;
+    
+    private PhaseInterviewer pi;
+    
     
     public Integer getId() {
         return id;
@@ -86,6 +90,22 @@ public class InterviewerInfoToPage {
         this.job = job == null ? null : job.trim();
     }
 
+	public String getFirstTry() {
+		return firstTry;
+	}
+
+	public void setFirstTry(String firstTry) {
+		this.firstTry = firstTry;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
 	public PhaseInterviewer getPi() {
 		return pi;
 	}
@@ -93,4 +113,6 @@ public class InterviewerInfoToPage {
 	public void setPi(PhaseInterviewer pi) {
 		this.pi = pi;
 	}
+
+    
 }

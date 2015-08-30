@@ -2,10 +2,8 @@ package com.qunar.ops.recruit.service;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -13,7 +11,6 @@ import com.qunar.ops.recruit.model.Student;
 
 @Component
 public class WaitService {
-	Set set = new HashSet();
 	List<StudentWaiter> list = new LinkedList<StudentWaiter>();
 	
 	List<Studenttest> l = new LinkedList<Studenttest>();
