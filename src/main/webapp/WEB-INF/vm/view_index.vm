@@ -41,10 +41,10 @@
                     <div class="m-firsttry-btn" id="nocome">
                         <button class="btn" id="noComeFinish">候选人未到,继续下一个</button>
                     </div>
-                    <div class="m-firsttry-btn">
+                    <div class="m-firsttry-btn" id="begin">
                         <button class="btn" id="beginToInterview">开始面试</button>
                     </div>
-                    <div class="m-firsttry-btn">
+                    <div class="m-firsttry-btn" id="finish">
                         <button class="btn" id="finishInterview">结束面试</button>
                     </div>
                     <div class="m-firsttry-btn" id="noview" style="display:none">
@@ -427,7 +427,7 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <select name="" id="one_conclusion" onclick="showSuggest(1);">
+                                            <select name="" id="one_conclusion" onchange="showSuggest(1);">
                                                 <option value="">请选择</option>
                                                 <option value="卓越">卓越</option>
                                                 <option value="优秀">优秀</option>
@@ -443,7 +443,7 @@
                                             <textarea name="" id="one_suggest_salary_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="two_conclusion" onclick="showSuggest(2);">
+                                            <select name="" id="two_conclusion" onchange="showSuggest(2);">
                                                 <option value="">请选择</option>
                                                 <option value="卓越">卓越</option>
                                                 <option value="优秀">优秀</option>

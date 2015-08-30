@@ -375,6 +375,7 @@ public class InterviewerController {
 	public BaseResult getCurrentViewInfo(HttpServletRequest request, HttpSession session) {
 		Student stu = (Student) session.getAttribute("student");
 		Interviewer inter = (Interviewer) session.getAttribute("user");
+		inter =interServe.getInterviewerByUserName(inter.getUserName());
 		String year = (String)session.getAttribute("year");
 		String phase = (String)session.getAttribute("phase");
 		String city = (String)session.getAttribute("city");
