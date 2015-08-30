@@ -44,11 +44,18 @@ $(document).ready(function () {
 			    	  if(message!=1){
 			    		  var access=data.assess;
 			    		  /***渲染评估表****/
-			    		  addValue(access);
+			    		  if(access!=null){
+			    			  addValue(access);
+			    		  }
 			    	  }
 			    	  $("#student_name").text(stu.name);
 			    	  $("#jobTitle").text(stu.job);
-			    	  $("#first_viewer").text(inter.intervierName);
+			    	  if(message!=1){
+			    		  $("#first_viewer").text(stu.firstTry);
+			    		  $("#second_viewer").text(inter.intervierName);
+			    	  }else{
+			    		  $("#first_viewer").text(inter.intervierName);
+			    	  }
 		    	  }
 			  },
 		      error: function () {
@@ -123,7 +130,12 @@ $(document).ready(function () {
 			    	  }
 			    	  $("#student_name").text(stu.name);
 			    	  $("#jobTitle").text(stu.job);
-			    	  $("#first_viewer").text(inter.intervierName);
+			    	  if(message!=1){
+			    		  $("#first_viewer").text(stu.firstTry);
+			    		  $("#second_viewer").text(inter.intervierName);
+			    	  }else{
+			    		  $("#first_viewer").text(inter.intervierName);
+			    	  }
 			    	  $("#noview").css("display","none");
 			    	  $("#goon").css("display","none");
 			    	  $("#havarest").css("display","none");
@@ -184,7 +196,12 @@ $(document).ready(function () {
 			    	  }
 			    	  $("#student_name").text(stu.name);
 			    	  $("#jobTitle").text(stu.job);
-			    	  $("#first_viewer").text(inter.intervierName);
+			    	  if(message!=1){
+			    		  $("#first_viewer").text(stu.firstTry);
+			    		  $("#second_viewer").text(inter.intervierName);
+			    	  }else{
+			    		  $("#first_viewer").text(inter.intervierName);
+			    	  }
 			    	  $("#noview").css("display","none");
 			    	  $("#goon").css("display","none");
 			    	  $("#havarest").css("display","none");
