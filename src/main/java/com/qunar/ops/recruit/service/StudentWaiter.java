@@ -20,7 +20,11 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 	
 	public StudentWaiter(Student stu) {
 		this.stu = stu;
-		this.realComeTime = stu.getTrueTime().getTime();
+		if(stu.getTrueTime()==null || "".equals(stu.getTrueTime())){
+			this.realComeTime =0;
+		}else{
+			this.realComeTime = stu.getTrueTime().getTime();
+		}
 		this.shouldComeTime = stu.getInterviewTime().getTime();
 	}
 
