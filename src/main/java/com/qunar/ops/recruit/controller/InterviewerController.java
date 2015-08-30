@@ -330,8 +330,12 @@ public class InterviewerController {
 				//一面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
 			}else{
-				newStu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
-				waitService.addTwoList(new StudentWaiter(stu));
+				if(vars.get("decheckbox") != null && !vars.get("decheckbox").endsWith("")){
+					newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
+				}else{
+					newStu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
+					waitService.addTwoList(new StudentWaiter(stu));
+				}
 			}
 			saService.add(sa);
 		}else{
@@ -383,31 +387,6 @@ public class InterviewerController {
 		}
 	}
 	
-	/**
-	 * 一面结束根据一面结果判断候选人是否通过是否需要进行二面
-	 * @param request
-	 * @param commonRequest
-	 * @return
-	 */
-	@RequestMapping(value = "/interviewer/finishOneView")
-	@ResponseBody
-	public BaseResult finishOneView(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
-		Map<String, String> vars = commonRequest.getVars();
-		//根据参数保存候选人的基本信息和评估表信息
-		
-		//end
-		//根据评估表的信息判断候选人时候需要参加二面
-		if(!"不通过".equals(vars.get("ID"))){
-			//添加到二面队列中
-			Student stu =studentService.getStudentByPhone(vars.get("phone"));
-			StudentWaiter sw =new StudentWaiter(stu,0);
-			waitService.addTwoList(sw);
-			return BaseResult.getSuccessResult(null);
-		}else{
-			//结束面试
-			return BaseResult.getSuccessResult(null);
-		}
-	}
 	
 	@RequestMapping(value = "/interviewer/getAllYears")
 	@ResponseBody

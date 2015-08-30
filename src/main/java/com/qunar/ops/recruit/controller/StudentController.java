@@ -124,7 +124,10 @@ public class StudentController {
 		StudentWaiter studentWaiter = (StudentWaiter) sw;
 		Student student = studentWaiter.getStu();
 		String name = student.getName();
-		if(waitService.contains(studentWaiter)){
+		if(isFinished(student)){
+			model.addAttribute("message",student.getState());
+			model.addAttribute("flag",1);
+		}else if(waitService.contains(studentWaiter)){
 			//排队中
 			int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
 			String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
@@ -157,6 +160,16 @@ public class StudentController {
 		
 	}
 
+	private boolean isFinished(Student student) {
+		if(student.getState().equals(RecruitConst.STUDENT_STATE_FINISH) ||
+				student.getState().equals(RecruitConst.STUDENT_STATE_PASS_ME)||
+				student.getState().equals(RecruitConst.STUDENT_STATE_ONE_NOT_PASS) ||
+				student.getState().equals(RecruitConst.STUDENT_STATE_TWO_NOT_PASS)){
+			return true;
+		}
+		return false;
+	}
+
 	@RequestMapping(value = "/student/refresh1")
 	@ResponseBody
 	public BaseResult refresh1(HttpSession session,  ModelMap model) {
@@ -174,11 +187,6 @@ public class StudentController {
 			model.addAttribute("flag",0);
 		}
 		return BaseResult.getSuccessResult(model);
-	}
-	
-	private String judgeStudentState(Student stu) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@RequestMapping(value = "/student/test")
