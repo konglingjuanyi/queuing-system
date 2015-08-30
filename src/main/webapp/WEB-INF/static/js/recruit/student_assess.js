@@ -17,8 +17,8 @@ $(document).ready(function () {
 		    	  $("#interviewer_name").text(inter.userName);
 		    	  $("#interviewer_room").text(phase_inter.room);
 		    	  $("#already_inter").text(parseInt(phase_inter.oneCount)+parseInt(phase_inter.twoCount));
-		    	  //$("#first_viewer_div").hide();
-		    	  //$("#second_viewer_div").hide();
+		    	  $("#beginToInterview").hide();
+		    	  $("#finishInterview").hide();
 	    	  }
 		  },
 	      error: function () {
@@ -56,6 +56,10 @@ $(document).ready(function () {
 			    	  }else{
 			    		  $("#first_viewer").text(inter.intervierName);
 			    	  }
+			    	  $("#getOneInterview").attr("disabled", true);
+			    	  $("#beginToInterview").show();
+			    	  $("#finishInterview").show();
+			    	  $("#finishInterview").attr("disabled", true);
 		    	  }
 			  },
 		      error: function () {
@@ -65,6 +69,8 @@ $(document).ready(function () {
 	});
 	
 	$("#beginToInterview").click(function(){
+		$("#beginToInterview").attr("disabled", true);
+		$("#finishInterview").attr("disabled", false);
 		clock();
 		$.ajax({
 		      url: "/interviewer/beginToInterview",
@@ -149,6 +155,8 @@ $(document).ready(function () {
 	 });
 	 
 	 $("#finishAndRest").click(function(){
+		 $("#beginToInterview").show();
+		 $("#beginToInterview").attr("disabled", false);
 		 clearInterval(times);
 		 timeIndex=0;
 		 setTime();

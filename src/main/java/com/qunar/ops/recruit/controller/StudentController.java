@@ -106,38 +106,7 @@ public class StudentController {
 //		System.out.println(sw+"===========");
 		if(sw != null){ 
 			if(sw instanceof StudentWaiter){
-				StudentWaiter studentWaiter = (StudentWaiter) sw;
-				Student student = studentWaiter.getStu();
-				String name = student.getName();
-				if(waitService.contains(studentWaiter)){
-					int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
-					String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
-					model.addAttribute("message",message);
-					model.addAttribute("flag",1);
-				}else{ 
-					Student newStudent = studentService.getStudentByPhone(student.getPhone());
-					System.out.println(student+" "+newStudent);
-					System.out.println(student.getFirstTry() +"\t" + newStudent.getFirstTry());
-					if(student.getFirstTry() == null && newStudent.getFirstTry() != null){
-						//一面到房间面试
-						String numberOfRoom = joinService.getFirstInterviewRoomNumber(student);
-						String message="<span class='name'>"+name+"</span>同学 <br />请您到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
-						model.addAttribute("message",message);
-						model.addAttribute("flag",1);
-					}else if(student.getSecondTry() == null && newStudent.getSecondTry() != null){
-						//二面到房间面试
-						String numberOfRoom = joinService.getSecondInterviewRoomNumber(student);
-						String message="<span class='name'>"+name+"</span>同学 <br />请您到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
-						model.addAttribute("message",message);
-						model.addAttribute("flag",1);
-					}else{
-						//可能hr面或者面试结束 带改
-						
-						model.addAttribute("message",newStudent.getState());
-						model.addAttribute("flag",1);
-					}
-					session.setAttribute("user", new StudentWaiter(newStudent));
-				}
+				setModelMap(model, session, sw);
 			}else{
 				String message= RecruitConst.AUTHORITY_ERROR_MSG;
 				model.addAttribute("message",message);
@@ -150,6 +119,44 @@ public class StudentController {
 		}
 	}
 	
+	private void setModelMap(ModelMap model, HttpSession session, Object sw) {
+
+		StudentWaiter studentWaiter = (StudentWaiter) sw;
+		Student student = studentWaiter.getStu();
+		String name = student.getName();
+		if(waitService.contains(studentWaiter)){
+			//排队中
+			int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
+			String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
+			model.addAttribute("message",message);
+			model.addAttribute("flag",1);
+		}else{
+			Student newStudent = studentService.getStudentByPhone(student.getPhone());
+			if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2ONEROOM)
+					|| newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2TWOROOM)){
+				//面试官取学生，通知进房间
+				String interName = null;
+				if(newStudent.getSecondTry() == null || newStudent.getSecondTry().equals("")){
+					interName = newStudent.getFirstTry();
+				}else{
+					interName = newStudent.getSecondTry();
+				}
+				PhaseInterviewer pi = piService.getPhaseInterviewerBy(newStudent.getYear(), 
+						newStudent.getPhaseNo(), newStudent.getLocation(), interName);
+				String numberOfRoom = pi.getRoom();
+				String message="<span class='name'>"+name+"</span>同学 <br />请您到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
+				model.addAttribute("message",message);
+				model.addAttribute("flag",1);
+			}else{
+				//直接返回当前学生的状态
+				model.addAttribute("message",newStudent.getState());
+				model.addAttribute("flag",1);
+			}
+			session.setAttribute("user", new StudentWaiter(newStudent));
+		}
+		
+	}
+
 	@RequestMapping(value = "/student/refresh1")
 	@ResponseBody
 	public BaseResult refresh1(HttpSession session,  ModelMap model) {
@@ -157,39 +164,7 @@ public class StudentController {
 //		System.out.println(sw+"===========");
 		if(sw != null){ 
 			if(sw instanceof StudentWaiter){
-				StudentWaiter studentWaiter = (StudentWaiter) sw;
-				Student student = studentWaiter.getStu();
-				String name = student.getName();
-				if(waitService.contains(studentWaiter)){
-					//排队中
-					int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
-					String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
-					model.addAttribute("message",message);
-					model.addAttribute("flag",1);
-				}else{
-					Student newStudent = studentService.getStudentByPhone(student.getPhone());
-					if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2ONEROOM)
-							|| newStudent.getState().equals(RecruitConst.STUDENT_STATE_GOING2TWOROOM)){
-						//面试官取学生，通知进房间
-						String interName = null;
-						if(newStudent.getSecondTry() == null || newStudent.getSecondTry().equals("")){
-							interName = newStudent.getFirstTry();
-						}else{
-							interName = newStudent.getSecondTry();
-						}
-						PhaseInterviewer pi = piService.getPhaseInterviewerBy(newStudent.getYear(), 
-								newStudent.getPhaseNo(), newStudent.getLocation(), interName);
-						String numberOfRoom = pi.getRoom();
-						String message="<span class='name'>"+name+"</span>同学 <br />请您到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
-						model.addAttribute("message",message);
-						model.addAttribute("flag",1);
-					}else{
-						//直接返回当前学生的状态
-						model.addAttribute("message",newStudent.getState());
-						model.addAttribute("flag",1);
-					}
-					session.setAttribute("user", new StudentWaiter(newStudent));
-				}
+				setModelMap(model, session, sw);
 			}else{
 				String message= RecruitConst.AUTHORITY_ERROR_MSG;
 				model.addAttribute("message",message);
