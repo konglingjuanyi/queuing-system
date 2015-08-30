@@ -296,7 +296,7 @@ public class InterviewerController {
 		}
 		studentService.updateStudent(newStu);
 		interServe.updateInterviewer(newInter);
-		piService.update(pi);
+		piService.update(newPi);
 		return BaseResult.getSuccessResult("");
 	}
 	
