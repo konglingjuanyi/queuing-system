@@ -32,7 +32,7 @@ public class JoinService {
 
 
 	public List<InterviewerInfoToPage> getInterviewerInfoToPages(String year, String phase, String city) {
-		return joinMapper.getInterviewersInfoToPages(year, phase, city);
+		return joinMapper.getInterviewersInfoToPages(year, phase, city, RecruitConst.STUDENT_STATE_TWO_PASS+" or state = "+RecruitConst.STUDENT_STATE_ONE_PASS);
 	}
 
 

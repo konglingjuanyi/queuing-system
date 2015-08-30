@@ -11,7 +11,6 @@ import com.qunar.ops.recruit.model.Student;
 
 @Component
 public class WaitService {
-
 	List<StudentWaiter> list = new LinkedList<StudentWaiter>();
 	
 	List<Studenttest> l = new LinkedList<Studenttest>();

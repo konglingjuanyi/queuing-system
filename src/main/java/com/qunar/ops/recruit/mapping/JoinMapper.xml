@@ -10,6 +10,8 @@
     <result column="view_count" property="viewCount" jdbcType="BIGINT" />
     <result column="determine" property="determine" jdbcType="VARCHAR" />
     <result column="job" property="job" jdbcType="VARCHAR" />
+    <result column="first_try" property="firstTry" jdbcType="VARCHAR" />
+    <result column="count" property="count" jdbcType="VARCHAR" />
     <association property="pi" javaType="com.qunar.ops.recruit.model.connect_table.InterviewerInfoToPage" resultMap="com.qunar.ops.recruit.dao.PhaseInterviewerMapper.BaseResultMap"/>  
  </resultMap>
   <select id="getFirstInterviewRoomNumber" resultType="java.lang.String" parameterType="com.qunar.ops.recruit.model.Student">
@@ -21,8 +23,13 @@
   	where interviewer.user_name = student_info.second_try and student_info.id = #{id}
   </select>
   <select id="getInterviewersInfoToPages" resultMap="InterviewerInfoToPageMap">
-  	select * from interviewer, phase_interviewer where interviewer.user_name=phase_interviewer.intervier_name 
-  	and phase_interviewer.year=#{year} and phase_interviewer.phase=#{phase} and phase_interviewer.city=#{city} and phase_interviewer.enable = '1'
+  	select * from 
+  	interviewer,
+  	phase_interviewer, 
+  	(select first_try,count(*) from student_info where state = #{state} group by first_try) as tmp 
+  	where interviewer.user_name=phase_interviewer.intervier_name
+  	and phase_interviewer.intervier_name=tmp.first_try
+  	and phase_interviewer.year=#{year} and phase_interviewer.phase=#{phase} and phase_interviewer.city=#{city}
   </select>
   <select id="getInterviewerInfoToPages" resultMap="InterviewerInfoToPageMap">
   	select * from interviewer, phase_interviewer where interviewer.user_name=phase_interviewer.intervier_name 

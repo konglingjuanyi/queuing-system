@@ -56,6 +56,7 @@ $(document).ready(function () {
 			    	  }else{
 			    		  setAllVal();
 			    	  }
+			    	  $("#already_inter").text(parseInt(inter.oneCount)+parseInt(inter.twoCount));
 			    	  $("#student_name").text(stu.name);
 			    	  $("#jobTitle").text(stu.job);
 			    	  if(message!=1){
@@ -164,6 +165,7 @@ $(document).ready(function () {
 			    	  }else{
 			    		  setAllVal();
 			    	  }
+			    	  $("#already_inter").text(parseInt(inter.oneCount)+parseInt(inter.twoCount));
 			    	  $("#student_name").text(stu.name);
 			    	  $("#jobTitle").text(stu.job);
 			    	  if(message!=1){
@@ -213,6 +215,7 @@ $(document).ready(function () {
 		    	  $("#getOneInterview").attr("disabled", false);
 		    	  $("#finishInterview").hide();
 		    	  setAllVal();
+		    	  $("#already_inter").text(parseInt(inter.oneCount)+parseInt(inter.twoCount));
 		    	  $("#student_name").text("");
 		    	  $("#jobTitle").text("");
 		    	  $("#first_viewer").text("");

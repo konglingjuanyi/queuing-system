@@ -103,4 +103,12 @@ public class StudentAssessService {
 		saMapper.updateByPrimaryKeySelective(sa);
 	}
 
+	public void updateByStudentId(StudentAssess sa) {
+		StudentAssessExample example = new StudentAssessExample();
+		StudentAssessExample.Criteria criteria = example.createCriteria();
+		criteria.andStudenIdEqualTo(sa.getStudenId());
+		saMapper.updateByExample(sa, example);
+		
+	}
+
 }

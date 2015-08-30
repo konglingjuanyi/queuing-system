@@ -296,7 +296,7 @@ public class InterviewerController {
 		}
 		studentService.updateStudent(newStu);
 		interServe.updateInterviewer(newInter);
-		piService.update(pi);
+		piService.update(newPi);
 		return BaseResult.getSuccessResult("");
 	}
 	
@@ -326,11 +326,16 @@ public class InterviewerController {
 		Student stu = (Student) session.getAttribute("student");
 		Interviewer inter = (Interviewer) session.getAttribute("user");
 		StudentAssess sa = saService.createStudentAssess(vars);
+		String[] arrs = getYearPhaseAndCity(session);
+		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+		PhaseInterviewer newPi = new PhaseInterviewer();
+		newPi.setId(pi.getId());
 		sa.setStudenId(stu.getId());
 		sa.setJob(stu.getJob());
 		Student newStu = studentService.getStudentByPhone(stu.getPhone());
 		//之前是一面中
 		if(newStu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
+			addPhaseInterviewerResult(newStu, newPi, pi, 1);
 			sa.setOneViewer(inter.getUserName());
 			if(sa.getOneConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
 				//一面评估表未通过
@@ -345,6 +350,7 @@ public class InterviewerController {
 			}
 			saService.add(sa);
 		}else{
+			addPhaseInterviewerResult(newStu, newPi, pi, 2);
 			sa.setTwoViewer(inter.getUserName());
 			if(sa.getTwoConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
 				//二面评估表未通过
@@ -352,10 +358,39 @@ public class InterviewerController {
 			}else{
 				newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
 			}
-			saService.update(sa);
+			saService.updateByStudentId(sa);
 		}
+		piService.update(newPi);
 		studentService.updateStudent(newStu);
 		session.setAttribute("student", null);
+	}
+
+	private void addPhaseInterviewerResult(Student newStu,
+			PhaseInterviewer newPi, PhaseInterviewer pi, int i) {
+		if(i == 1){
+			if(newStu.getJob().equals(RecruitConst.JOB_RD)){
+				newPi.setFirstRd(pi.getFirstRd()+1);
+			}else if(newStu.getJob().equals(RecruitConst.JOB_FE)){
+				newPi.setFirstFe(pi.getFirstFe()+1);
+			}else if(newStu.getJob().equals(RecruitConst.JOB_QA)){
+				newPi.setFirstQa(pi.getFirstQa()+1);
+			}else{
+				
+			}
+		}else{
+			if(newStu.getJob().equals(RecruitConst.JOB_RD)){
+				newPi.setSecondRd(pi.getSecondRd()+1);
+			}else if(newStu.getJob().equals(RecruitConst.JOB_FE)){
+				newPi.setSecondFe(pi.getSecondFe()+1);
+			}else if(newStu.getJob().equals(RecruitConst.JOB_QA)){
+				newPi.setSecondQa(pi.getSecondQa()+1);
+			}else{
+				
+			}
+		}
+
+		
+		
 	}
 
 	@RequestMapping(value = "/interviewer/noComeFinish")
