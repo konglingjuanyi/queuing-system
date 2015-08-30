@@ -6,6 +6,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -230,5 +233,8 @@ public class RecruitControllerUtils {
 		}
     }
     
+    public static String toMd5(String str) {
+        return Hashing.md5().hashString(str, Charsets.UTF_8).toString();
+    }
     
 }
