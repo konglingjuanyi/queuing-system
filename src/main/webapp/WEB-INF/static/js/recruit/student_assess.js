@@ -1,4 +1,5 @@
 var flag=-1;
+var determine="";
 $(document).ready(function () {
 	
 	$.ajax({
@@ -7,18 +8,19 @@ $(document).ready(function () {
 	      dataType: "json",
 	      contentType: 'application/json; charset=utf-8',
 	      success: function (result) {
-//	    	  console.dir(result);
 	    	  if(result.errorCode == 0){
 	    		  
 	    	  }else{
 		    	  data = result.data;
 		    	  inter = data[0];
 		    	  phase_inter = data[1];
+		    	  determine=phase_inter.determine;
 		    	  $("#interviewer_name").text(inter.userName);
 		    	  $("#interviewer_room").text(phase_inter.room);
 		    	  $("#already_inter").text(parseInt(phase_inter.oneCount)+parseInt(phase_inter.twoCount));
 		    	  $("#beginToInterview").hide();
 		    	  $("#finishInterview").hide();
+		    	  $("#nocome").hide();
 	    	  }
 		  },
 	      error: function () {
@@ -38,6 +40,10 @@ $(document).ready(function () {
 		    	  flag=message;
 		    	  if(message!=1 && message!=2){
 		    		  alert(message);
+		    		  setAllVal();
+		    		  $("#beginToInterview").hide();
+			    	  $("#finishInterview").hide();
+			    	  $("#nocome").hide();
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;
@@ -47,6 +53,8 @@ $(document).ready(function () {
 			    		  if(access!=null){
 			    			  addValue(access);
 			    		  }
+			    	  }else{
+			    		  setAllVal();
 			    	  }
 			    	  $("#student_name").text(stu.name);
 			    	  $("#jobTitle").text(stu.job);
@@ -59,6 +67,7 @@ $(document).ready(function () {
 			    	  $("#getOneInterview").attr("disabled", true);
 			    	  $("#beginToInterview").show();
 			    	  $("#finishInterview").show();
+			    	  $("#nocome").show();
 			    	  $("#finishInterview").attr("disabled", true);
 		    	  }
 			  },
@@ -70,6 +79,7 @@ $(document).ready(function () {
 	
 	$("#beginToInterview").click(function(){
 		$("#beginToInterview").attr("disabled", true);
+		$("#getOneInterview").attr("disabled", true);
 		$("#finishInterview").attr("disabled", false);
 		clock();
 		$.ajax({
@@ -87,6 +97,7 @@ $(document).ready(function () {
 	});
 	
 	$("#finishInterview").click(function(){
+		var stujob=$("#jobTitle").text();
 		 if(flag==1){
 			 if($("#one_conclusion").val()==''){
 				alert("请选择初试结论");
@@ -102,18 +113,23 @@ $(document).ready(function () {
 			 return false;
 		 }
 		 if(flag==1){
-			 $("#noview").css("display","");
+			 if(determine.indexOf(stujob)!=-1){
+				 $("#noview").css("display","");
+			 }
 		 }
 		 $("#goon").css("display","");
 		 $("#havarest").css("display","");
-		 $("#nocome").css("display","");
 	 });
 	
 	 $("#finishAndContinue").click(function(){
+		 var decheckbox;
+		 $("input[name='determine']:checked").each(function(){    
+			 decheckbox$(this).val();    
+		 });    
 		 clearInterval(times);
 		 timeIndex=0;
 		 setTime();
-		 param = getSubmitParam();
+		 param = getSubmitParam(decheckbox);
 		 $.ajax({
 		      url: "/interviewer/finishAndContinue",
 		      type: "POST",
@@ -126,13 +142,24 @@ $(document).ready(function () {
 		    	  flag=message;
 		    	  if(message!=1 && message!=2){
 		    		  alert(message);
+		    		  setAllVal();
+		    		  $("#beginToInterview").hide();
+			    	  $("#finishInterview").hide();
+			    	  $("#nocome").hide();
+			    	  $("#goon").hide();
+			    	  $("#havarest").hide();
+			    	  $("#noview").hide();
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;
 			    	  if(message!=1){
 			    		  var access=data.assess;
 			    		  /***渲染评估表****/
-			    		  addValue(access);
+			    		  if(access!=null){
+			    			  addValue(access);
+			    		  }
+			    	  }else{
+			    		  setAllVal();
 			    	  }
 			    	  $("#student_name").text(stu.name);
 			    	  $("#jobTitle").text(stu.job);
@@ -142,10 +169,14 @@ $(document).ready(function () {
 			    	  }else{
 			    		  $("#first_viewer").text(inter.intervierName);
 			    	  }
-			    	  $("#noview").css("display","none");
-			    	  $("#goon").css("display","none");
-			    	  $("#havarest").css("display","none");
-			    	  $("#nocome").css("display","none");
+			    	  $("#getOneInterview").attr("disabled", true);
+			    	  $("#beginToInterview").show();
+			    	  $("#finishInterview").show();
+			    	  $("#nocome").show();
+			    	  $("#finishInterview").attr("disabled", true);
+			    	  $("#goon").hide();
+			    	  $("#havarest").hide();
+			    	  $("#noview").hide();
 		    	  }
 			  },
 		      error: function () {
@@ -155,12 +186,14 @@ $(document).ready(function () {
 	 });
 	 
 	 $("#finishAndRest").click(function(){
-		 $("#beginToInterview").show();
-		 $("#beginToInterview").attr("disabled", false);
+		 var decheckbox;
+		 $("input[name='determine']:checked").each(function(){    
+			 decheckbox$(this).val();    
+		 }); 
 		 clearInterval(times);
 		 timeIndex=0;
 		 setTime();
-		 param = getSubmitParam();
+		 param = getSubmitParam(decheckbox);
 		 $.ajax({
 		      url: "/interviewer/finishAndRest",
 		      type: "POST",
@@ -172,6 +205,7 @@ $(document).ready(function () {
 		    	  $("#goon").css("display","none");
 		    	  $("#havarest").css("display","none");
 		    	  $("#nocome").css("display","none");
+		    	  $("#beginToInterview").hide();
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -194,13 +228,22 @@ $(document).ready(function () {
 		    	  flag=message;
 		    	  if(message!=1 && message!=2){
 		    		  alert(message);
+		    		  setAllVal();
+		    		  $("#beginToInterview").hide();
+			    	  $("#finishInterview").hide();
+			    	  $("#nocome").hide();
+			    	  $("#getOneInterview").attr("disabled", false);
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;
 			    	  if(message!=1){
 			    		  var access=data.assess;
 			    		  /***渲染评估表****/
-			    		  addValue(access);
+			    		  if(access!=null){
+			    			  addValue(access);
+			    		  }
+			    	  }else{
+			    		  setAllVal();
 			    	  }
 			    	  $("#student_name").text(stu.name);
 			    	  $("#jobTitle").text(stu.job);
@@ -210,10 +253,11 @@ $(document).ready(function () {
 			    	  }else{
 			    		  $("#first_viewer").text(inter.intervierName);
 			    	  }
-			    	  $("#noview").css("display","none");
-			    	  $("#goon").css("display","none");
-			    	  $("#havarest").css("display","none");
-			    	  $("#nocome").css("display","none");
+			    	  $("#getOneInterview").attr("disabled", true);
+			    	  $("#beginToInterview").show();
+			    	  $("#finishInterview").show();
+			    	  $("#nocome").show();
+			    	  $("#finishInterview").attr("disabled", true);
 		    	  }
 			  },
 		      error: function () {
@@ -240,7 +284,7 @@ function setTime(){
 	timeIndex++;
 }
 
-function getSubmitParam(){
+function getSubmitParam(decheckbox){
 //	alert($("#one_code").find("option:selected").text());
 //	var vars=$("#submitForm").serializeObject();
 //	alert(JSON.stringify(vars))
@@ -300,6 +344,7 @@ function getSubmitParam(){
 	vars['two_sum'] = $("#two_sum").val();
 	vars['hr_suggest_salary'] = $("#hr_suggest_salary").val();
 	vars['hr_detail_idea'] = $("#hr_detail_idea").val();
+	vars['decheckbox'] = decheckbox;
 	var params = {"vars": vars};
 	return params;
 }
@@ -359,6 +404,64 @@ function addValue(access){
 	$("#two_sum").val(access.twoSum);
 	$("#hr_suggest_salary").val(access.hrSuggestSalary);
 	$("#hr_detail_idea").val(access.hrDetailIdea);
+}
+
+function setAllVal(){
+	$("#one_code").attr("value","0");
+	$("#one_code_detail").val("");
+	$("#one_algorithm").attr("value","0");
+	$("#one_algorithm_detail").val("");
+	$("#one_network").attr("value","0");
+	$("#one_network_detail").val("");
+	$("#one_experience").attr("value","0");
+	$("#one_experience_detail").val("");
+	$("#one_other").attr("value","0");
+	$("#one_other_detail").val("");
+	$("#one_logic").attr("value","0");
+	$("#one_logic_detail").val("");
+	$("#one_creative").attr("value","0");
+	$("#one_creative_detail").val("");
+	$("#one_team").attr("value","0");
+	$("#one_team_detail").val("");
+	$("#one_continuouslearning").attr("value","0");
+	$("#one_continuouslearning_detail").val("");
+	$("#one_outstanding").attr("value","0");
+	$("#one_outstanding_detail").val("");
+	$("#two_code").attr("value","0");
+	$("#two_code_detail").val("");
+	$("#two_algorithm").attr("value","0");
+	$("#two_algorithm_detail").val("");
+	$("#two_network").attr("value","0");
+	$("#two_network_detail").val("");
+	$("#two_experience").attr("value","0");
+	$("#two_experience_detail").val("");
+	$("#two_other").attr("value","0");
+	$("#two_other_detail").val("");
+	$("#two_logic").attr("value","0");
+	$("#two_logic_detail").val("");
+	$("#two_creative").attr("value","0");
+	$("#two_creative_detail").val("");
+	$("#two_team").attr("value","0");
+	$("#two_team_detail").val("");
+	$("#two_continuouslearning").attr("value","0");
+	$("#two_continuouslearning_detail").val("");
+	$("#two_outstanding").attr("value","0");
+	$("#two_outstanding_detail").val("");
+	$("#one_conclusion").attr("value","");
+	$("#one_suggest_salary").val("");
+	$("#two_suggest_salary").val("");
+	$("#one_suggest_salary_detail").val("");
+	$("#two_conclusion").attr("value","");
+	$("#two_conclusion_detail").val("");
+	$("#one_allocation_idea").val("");
+	$("#two_allocation_idea").val("");
+	$("#hr_name").val("");
+	$("#one_sum").val("");
+	$("#two_sum").val("");
+	$("#hr_suggest_salary").val("");
+	$("#hr_detail_idea").val("");
+	$("#one_suggest").css("display","none");
+	$("#two_suggest").css("display","none");
 }
 
 function sumOneCount(){
