@@ -23,7 +23,7 @@
 							<div class="control-group">
 								<label class="control-label">英才简历编号</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="noteNo" id="noteNo">
+								  <input type="text"  name="noteNo" id="noteNo">
 								</div>
 							</div>
 							<div class="control-group">
@@ -56,7 +56,7 @@
 							<div class="control-group">
 								<label class="control-label">姓名</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="name" id="name">
+								  <input type="text"  name="name" id="name">
 								</div>
 							</div>
 							<div class="control-group">
@@ -69,43 +69,43 @@
 							<div class="control-group">
 								<label class="control-label">学校</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="school" id="school">
+								  <input type="text"  name="school" id="school">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">专业</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="profession" id="profession">
+								  <input type="text"  name="profession" id="profession">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">学历</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="education" id="education">
+								  <input type="text"  name="education" id="education">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">手机号</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="phone" id="phone">
+								  <input type="text"  name="phone" id="phone">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">邮箱</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="email" id="email">
+								  <input type="text"  name="email" id="email">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">身份证号</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="cardNo" id="cardNo">
+								  <input type="text"  name="cardNo" id="cardNo">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">QQ号</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="qqNo" id="qqNo">
+								  <input type="text"  name="qqNo" id="qqNo">
 								</div>
 							</div>
 							<div class="control-group">
@@ -139,7 +139,7 @@
 							<div class="control-group">
 								<label class="control-label">薪资标准</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="salary" id="salary">
+								  <input type="text"  name="salary" id="salary">
 								</div>
 							</div>
 							<div class="control-group">
@@ -156,19 +156,19 @@
 							<div class="control-group">
 								<label class="control-label">初试</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="firstTry" id="firstTry">
+								  <input type="text"  name="firstTry" id="firstTry">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">复试</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="secondTry" id="secondTry">
+								  <input type="text"  name="secondTry" id="secondTry">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">面试情况备注</label>
 								<div class="controls">
-									<textarea name="viewRemark" id="viewRemark" placeholder="必填" cols="30" rows="4"></textarea>
+									<textarea name="viewRemark" id="viewRemark"  cols="30" rows="4"></textarea>
 								</div>
 							</div>
 							<div class="control-group">
@@ -217,7 +217,7 @@
 							<div class="control-group">
 								<label class="control-label">拒签具体原因</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="refuseReson" id="refuseReson">
+								  <input type="text"  name="refuseReson" id="refuseReson">
 								</div>
 							</div>
 							<div class="control-group">
@@ -236,43 +236,43 @@
 							<div class="control-group">
 								<label class="control-label">培训批次</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="train" id="train">
+								  <input type="text"  name="train" id="train">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">员工编号</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="staffNo" id="staffNo">
+								  <input type="text"  name="staffNo" id="staffNo">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">面试官所在部门</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="interviewDept" id="interviewDept">
+								  <input type="text"  name="interviewDept" id="interviewDept">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">分配部门</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="fenpeiDept" id="fenpeiDept">
+								  <input type="text"  name="fenpeiDept" id="fenpeiDept">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">原分配部门</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="yuanDept" id="yuanDept">
+								  <input type="text"  name="yuanDept" id="yuanDept">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">组织关系</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="organize" id="organize">
+								  <input type="text"  name="organize" id="organize">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">leader</label>
 								<div class="controls">
-								  <input type="text" placeholder="必填" name="leader" id="leader">
+								  <input type="text"  name="leader" id="leader">
 								</div>
 							</div>
 

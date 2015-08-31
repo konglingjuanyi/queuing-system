@@ -26,12 +26,18 @@
 						<input type="text" class="input-small" placeholder="必填"  id="student_profession">
 						<label class="control-label" for="" >状态</label>
 						<select name="" id="student_state">
-							<option value="">一面</option>
+							<option value="">未签到</option>
+							<option value="">签到</option>
 							<option value="">迟到</option>
-							<option value="">二面</option>
-							<option value="">等待面试</option>
-							<option value="">0</option>
-							<option value="">1</option>
+							<option value="">等待初试</option>
+							<option value="">初试中</option>
+							<option value="">过号</option>
+							<option value="">初试通过</option>
+							<option value="">初试未通过</option>
+							<option value="">等待复试中</option>
+							<option value="">复试中</option>
+							<option value="">复试通过</option>
+							<option value="">复试未通过</option>
 						</select>
 						<button type="button" id="searchStudent" class="btn">搜索</button>
 					</form>
