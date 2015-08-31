@@ -30,6 +30,7 @@ public class InterviewerService {
 
 	public List<Interviewer> getInterviewers() {
 		InterviewerExample ie = new InterviewerExample();
+		ie.setOrderByClause("user_name");
 		return interMapper.selectByExample(ie);
 	}
 

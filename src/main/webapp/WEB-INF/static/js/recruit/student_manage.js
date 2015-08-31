@@ -41,6 +41,7 @@ $(document).ready(function () {
                  data:{'id':id,'name':name},
                  success: function(data) {
                 	 $("#viewDiv").hide();
+                	 $('#studentInfoInner').html(data);
                  },
                  error:function(){
                      alert("error");

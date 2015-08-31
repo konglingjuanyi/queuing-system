@@ -175,7 +175,7 @@ public class HrController {
 	@RequestMapping(value = "/hr/assignInterviewer")
 	public String getInterviewersForManage(HttpServletRequest request, ModelMap model, Integer id, String name) {
 		if(id == null || name == null){
-			return "/student_manage_info";
+			return "forward:/hr/getAllStudentInfos";
 		}else{
 			Student stu = studentService.getStudentById(id);
 			StudentWaiter sw = new StudentWaiter(stu);
@@ -193,7 +193,7 @@ public class HrController {
 			studentService.updateStudent(newStu);
 		}
 		
-		return "/student_manage_info";
+		return "forward:/hr/getAllStudentInfos";
 	}
 	
 	private int[] getNums(List<Student> list) {

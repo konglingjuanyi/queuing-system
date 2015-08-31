@@ -179,6 +179,7 @@ public class StudentManageService {
 	public List<Student> getAllStudentInfos(String city, String year, String phase) {
 		// TODO Auto-generated method stub
 		StudentExample example = new StudentExample();
+		example.setOrderByClause("name");
 		StudentExample.Criteria criteria = example.createCriteria();
 		criteria.andYearEqualTo(year);
 		criteria.andPhaseNoEqualTo(phase);

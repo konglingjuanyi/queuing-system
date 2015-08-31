@@ -22,6 +22,7 @@ public class PhaseService {
 	public List<Phase> getPhaseInfos() {
 		// TODO Auto-generated method stub
 		PhaseExample ie = new PhaseExample();
+		ie.setOrderByClause("phase_name");
 		return phMapper.selectByExample(ie);
 	}
 
