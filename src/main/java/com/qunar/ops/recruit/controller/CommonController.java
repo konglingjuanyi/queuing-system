@@ -172,10 +172,8 @@ public class CommonController {
 	@RequestMapping(value = "/updateOprateCity")
 	@ResponseBody
 	public BaseResult updateOprateCity(HttpServletRequest request,HttpSession session, @RequestBody CommonRequest commonRequest) {
-		System.out.println("=====");
 		Map<String, String> vars = commonRequest.getVars();
 		String city = vars.get("city");
-		System.out.println(city);
 		session.setAttribute("city", city);
 		return BaseResult.getSuccessResult("success");
 	}

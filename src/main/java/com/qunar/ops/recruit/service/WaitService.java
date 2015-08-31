@@ -25,6 +25,7 @@ public class WaitService {
 		}
 		if(twoList.contains(t)){
 			return numberInFrontOfTwo(t)+1;
+
 		}
 		return -1;
 	}

@@ -452,4 +452,9 @@ public class Student {
     public void setYear(String year) {
         this.year = year == null ? null : year.trim();
     }
+    
+    @Override
+    public String toString() {
+    	return id+" "+name;
+    }
 }

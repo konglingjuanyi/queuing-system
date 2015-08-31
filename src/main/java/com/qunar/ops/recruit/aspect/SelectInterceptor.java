@@ -1,5 +1,7 @@
 package com.qunar.ops.recruit.aspect;
 
+import java.util.LinkedList;
+
 import javax.annotation.PostConstruct;
 
 import org.aspectj.lang.annotation.After;
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class SelectInterceptor {
-	
+	LinkedList l = new LinkedList();
 	@PostConstruct
 	public void start(){
 //		System.err.println("8888888888888888888888888888888888888888888888888");
@@ -23,11 +25,8 @@ public class SelectInterceptor {
 
 	 @Before("log()")
 	 public void logInterceptor_before() {
-	  System.out.println("Before LOG:"+" info has loged to file");
 	 }
 	 @After("log() && args(a)")
 	 public void logInterceptor_after(String a) {
-
-	  System.out.println("After LOG:"+a+" info has loged to file");
 	 }
 }
