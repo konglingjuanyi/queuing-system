@@ -107,7 +107,7 @@ public class StudentAssessService {
 		StudentAssessExample example = new StudentAssessExample();
 		StudentAssessExample.Criteria criteria = example.createCriteria();
 		criteria.andStudenIdEqualTo(sa.getStudenId());
-		saMapper.updateByExample(sa, example);
+		saMapper.updateByExampleSelective(sa, example);
 		
 	}
 

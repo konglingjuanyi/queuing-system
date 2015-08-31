@@ -115,9 +115,6 @@ public class WaitService {
 		return stu;
 	}
 	
-	public boolean contains(StudentWaiter stu) {
-		return list.contains(stu) || twoList.contains(stu);
-	}
 
 	public void recovery(List<Student> oneList, List<Student> twoList) {
 		List<StudentWaiter> swList1 = new LinkedList<StudentWaiter>();
@@ -206,8 +203,14 @@ public class WaitService {
 			twoList.remove(ret);
 		return ret;
 	}
+
+	public boolean containsOne(StudentWaiter studentWaiter) {
+		return list.contains(studentWaiter);
+	}
 	
-	
+	public boolean containsTwo(StudentWaiter studentWaiter) {
+		return twoList.contains(studentWaiter);
+	}
 
 	
 }

@@ -89,6 +89,8 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 	public boolean equals(Object obj) {
 		if(obj !=null){
 			StudentWaiter uw = (StudentWaiter) obj;
+//			System.out.println(this.stu);
+//			System.out.println(this.stu.getId().equals(uw.getStu().getId()));
 			if(this.stu != null && uw.getStu() != null)
 				return this.stu.getId().equals(uw.getStu().getId());
 			else

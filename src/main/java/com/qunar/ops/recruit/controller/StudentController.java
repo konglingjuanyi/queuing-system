@@ -132,10 +132,16 @@ public class StudentController {
 		if(isFinished(student)){
 			model.addAttribute("message",student.getState());
 			model.addAttribute("flag",1);
-		}else if(waitService.contains(studentWaiter)){
+		}else if(waitService.containsOne(studentWaiter)){
 			//排队中
 			int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
 			String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
+			model.addAttribute("message",message);
+			model.addAttribute("flag",1);
+		}else if(waitService.containsTwo(studentWaiter)){
+			//排队中
+			int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
+			String message="<span class='name'>"+name+"</span>同学 恭喜通过初试<br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行复试";
 			model.addAttribute("message",message);
 			model.addAttribute("flag",1);
 		}else{
