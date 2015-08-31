@@ -100,7 +100,7 @@ public class StudentManageService {
 		stu.setYuanDept(getStringCellValue(row.getCell(35)));
 		stu.setOrganize(getStringCellValue(row.getCell(36)));
 		stu.setLeader(getStringCellValue(row.getCell(37)));
-		stu.setState("0");
+		stu.setState("未签到");
 		return stu;
 	}
 	
@@ -255,7 +255,7 @@ public class StudentManageService {
 		inter.setTrain(train);
 		inter.setThreeState(threeState);
 		inter.setThreeSide(threeSide);
-		inter.setState("0");
+		inter.setState("未签到");
 		if("".equals(salary) || salary==null){
 			inter.setSalary(Double.valueOf(0));
 		}else{
