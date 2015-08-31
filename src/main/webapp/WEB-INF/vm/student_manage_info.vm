@@ -13,19 +13,6 @@
 						<div class="m-studentmanage-hd">
 							<button class="btn btn-info" type="button" id="addstu">添加学生</button>
 							<button class="btn btn-info" type="button" id="doimport">批量导入</button>
-							<span class="iconbox">
-								<i class="icon success"></i>
-								<span class="text">正在面试</span>
-
-								<i class="icon error"></i>
-								<span class="text">正在面试</span>
-
-								<i class="icon warning"></i>
-								<span class="text">正在面试</span>
-
-								<i class="icon info"></i>
-								<span class="text">正在面试</span>
-							</span>
 						</div>
 						<div class="m-studentmanage-bd">
 							<table class="table table-bordered">

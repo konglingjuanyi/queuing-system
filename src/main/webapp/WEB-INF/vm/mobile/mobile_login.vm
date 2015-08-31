@@ -21,7 +21,7 @@
 					<div class="form">
 						<div class="box">
 							<div class="item">
-								<input id="phone" name="phone" type="number" placeholder="请输入手机号">
+								<input id="phone" name="phone" type="tel" placeholder="请输入手机号">
 							</div>
 							<div class="item">
 								<input id="name" name="name" type="text" placeholder="请输姓名">
@@ -35,5 +35,24 @@
 			</div>
 		</div>
 	</div>
+<script>
+function getWidthOrHeight(clientProp) {
+    var docEl = document.documentElement,
+        body = document.body;
+    return Math.max(
+        body["scroll" + clientProp],
+        docEl["scroll" + clientProp],
+        body["offset" + clientProp],
+        docEl["offset" + clientProp],
+        docEl["client" + clientProp]
+    );
+}
+document.addEventListener('DOMContentLoaded',function(){
+var body = document.getElementsByTagName("body")[0];
+body.style["width"] = getWidthOrHeight('Width')+ "px";
+body.style["height"] = getWidthOrHeight('Height')+ "px";
+},false);
+</script>
+	
 </body>
 </html>

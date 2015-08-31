@@ -155,7 +155,6 @@ $(document).ready(function () {
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;
-			    	  alert(message);
 			    	  if(message!=1){
 			    		  var access=data.assess;
 			    		  /***渲染评估表****/
@@ -244,6 +243,10 @@ $(document).ready(function () {
 			    	  $("#finishInterview").hide();
 			    	  $("#nocome").hide();
 			    	  $("#getOneInterview").attr("disabled", false);
+			    	  $("#student_name").text("");
+			    	  $("#jobTitle").text("");
+			    	  $("#first_viewer").text("");
+		    		  $("#second_viewer").text("");
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;
@@ -524,10 +527,14 @@ function showSuggest(flag1){
 	if(flag1==1){
 		if($("#one_conclusion").val()=='卓越'){
 			$("#one_suggest").css("display","");
+		}else{
+			$("#one_suggest").css("display","none");
 		}
 	}else{
 		if($("#two_conclusion").val()=='卓越'){
 			$("#two_suggest").css("display","");
+		}else{
+			$("#two_suggest").css("display","none");
 		}
 	}
 	
