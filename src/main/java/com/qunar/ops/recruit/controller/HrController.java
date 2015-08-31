@@ -173,10 +173,9 @@ public class HrController {
 	}
 
 	@RequestMapping(value = "/hr/assignInterviewer")
-	@ResponseBody
-	public BaseResult getInterviewersForManage(HttpServletRequest request, ModelMap model, Integer id, String name) {
+	public String getInterviewersForManage(HttpServletRequest request, ModelMap model, Integer id, String name) {
 		if(id == null || name == null){
-			return BaseResult.getSuccessResult("id或者name不能为空");
+			return "/student_manage_info";
 		}else{
 			Student stu = studentService.getStudentById(id);
 			StudentWaiter sw = new StudentWaiter(stu);
@@ -194,7 +193,7 @@ public class HrController {
 			studentService.updateStudent(newStu);
 		}
 		
-		return BaseResult.getSuccessResult("");
+		return "/student_manage_info";
 	}
 	
 	private int[] getNums(List<Student> list) {
