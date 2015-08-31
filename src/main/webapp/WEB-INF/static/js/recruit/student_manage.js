@@ -80,11 +80,54 @@ $(document).ready(function () {
             }
       });
 	});
+	
+	$('#dosubmitHr').click(function(){
+		var id=$("#stuId").val().trim();
+		var hrName=$("#hrName").val().trim();
+		var salay=$("#hrSuggestSalary").val().trim();
+		var hrdetail=$("#hrDetailIdea").val().trim();
+	    $('#hrform').ajaxSubmit({
+            url:"/hr/AddHrStudentAssess",
+            cache:false,
+            dataType:'html',
+            data:{'id':id,'hrName':hrName,'salay':salay,'hrdetail':hrdetail},
+            success: function(data) {
+            	active($('#stupage'))
+        	    $.ajax({
+        	      url: "/hr/lead2StudentPage",
+        	      type: "POST",
+        	      dataType: "html",
+        	      contentType: 'application/json; charset=utf-8',
+        	      success: function (returnedData) {
+        	    	  $('#content').html(returnedData);
+        	    	  $.ajax({
+        	    	      url: "/hr/getAllStudentInfos",
+        	    	      type: "POST",
+        	    	      dataType: "html",
+        	    	      contentType: 'application/json; charset=utf-8',
+        	    	      success: function (returnedData) {
+        	    	    	  $('#studentInfoInner').html(returnedData);
+        	    		  },
+        	    	      error: function () {
+        	    	           alert("系统发生了错误请稍后重试");
+        	    	      }
+        	    	    });
+        		  },
+        	      error: function () {
+        	           alert("系统发生了错误请稍后重试");
+        	      }
+        	    });
+            },
+            error:function(){
+                alert("error");
+            }
+      });
+	});
 });
 
 function getAddStudentYearPhaseAndCity(){
 	$.ajax({
-	      url: "/getAllYears",
+	      url: "/getAllYears1",
 	      type: "POST",
 	      dataType: "json",
 	      contentType: 'application/json; charset=utf-8',
@@ -103,7 +146,6 @@ function getAddStudentYearPhaseAndCity(){
 	$("#year_").change(function(){
 		 var year = $("#year_").find("option:selected").text();
 		 getPhaseAndCity(year);
-		 backToIndex();
 		
 	 });
 	 $("#phase_").change(function(){
@@ -112,7 +154,7 @@ function getAddStudentYearPhaseAndCity(){
 		 vars["phaseName"] = phaseName;
 	     var params = {"vars": vars};
 		 $.ajax({
-		      url: "/getCityByPhase",
+		      url: "/getCityByPhase1",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
@@ -124,7 +166,6 @@ function getAddStudentYearPhaseAndCity(){
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
-		 backToIndex();
 	 });
 	 $("#city_").change(function(){
 		 var city = $("#city_").find("option:selected").text();
@@ -132,7 +173,7 @@ function getAddStudentYearPhaseAndCity(){
 		 vars["city"] = city;
 	     var params = {"vars": vars};
 		 $.ajax({
-		      url: "/updateOprateCity",
+		      url: "/updateOprateCity1",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
@@ -144,7 +185,6 @@ function getAddStudentYearPhaseAndCity(){
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
-		 backToIndex();
 	 });
 }
 
@@ -176,7 +216,7 @@ function getPhaseAndCity(year){
 	 vars["year"] = year;
     var params = {"vars": vars};
 	$.ajax({
-	      url: "/getPhaseAndCityByYear",
+	      url: "/getPhaseAndCityByYear1",
 	      type: "POST",
 	      dataType: "json",
 	      contentType: 'application/json; charset=utf-8',
@@ -223,7 +263,7 @@ function setCityOption(phaseName){
 function setCityOption1(phaseName){
 	
 	$.ajax({
-	      url: "/getCityByPhase",
+	      url: "/getCityByPhase1",
 	      type: "POST",
 	      dataType: "json",
 	      contentType: 'application/json; charset=utf-8',
@@ -283,5 +323,21 @@ function dodelete(id){
             }
 	 });
 	}
+}
+
+function doSelect(id){
+	active($('#stupage'));
+    $.ajax({
+      url: "/hr/gotoSelectStudentInfo",
+      type: "POST",
+      dataType: "html",
+      data: {'id':id},
+      success: function (returnedData) {
+    	  $('#content').html(returnedData);
+	  },
+      error: function () {
+           alert("系统发生了错误请稍后重试");
+      }
+    });
 }
 

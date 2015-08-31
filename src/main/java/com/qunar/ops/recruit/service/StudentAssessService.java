@@ -96,7 +96,11 @@ public class StudentAssessService {
 
 	public void update(StudentAssess sa) {
 		saMapper.updateByPrimaryKey(sa);
-		
+	}
+
+	public void updateBy(StudentAssess sa) {
+		// TODO Auto-generated method stub
+		saMapper.updateByPrimaryKeySelective(sa);
 	}
 
 	public void updateByStudentId(StudentAssess sa) {

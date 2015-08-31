@@ -56,7 +56,7 @@
 				                  <td>$in.obj.job</td>
 				                  <td>$in.obj.state</td>	              
 				                  <td>
-				                  	<a href="#">查看</a>
+				                  	<a href="#" onclick="doSelect('$in.obj.id')">查看</a>
 				                  	<a href="#" onclick="dodelete('$in.obj.id')">删除</a>
 				                  </td>	
 				                </tr>
