@@ -200,12 +200,12 @@ public class InterviewerController {
 					stuW = waitService.removeHighestPriorityFromTwoList(arrs[0], arrs[1], arrs[2] ,inter.getTwoView(), inter.getUserName());
 					if(stuW==null && !"".equals(inter.getOneView())){
 						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
-						stuW = waitService.removeHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView());
+						stuW = waitService.removeHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView(), inter.getUserName());
 						oneOrtwo = 1;
 					}
 				}else{
 					//只有一面角色从一面队列中拿数据
-					stuW = waitService.removeHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView());
+					stuW = waitService.removeHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView(), inter.getUserName());
 				}
 				if(stuW == null){
 					mm.addAttribute("message", RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);

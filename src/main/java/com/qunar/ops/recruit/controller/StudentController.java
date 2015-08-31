@@ -133,13 +133,13 @@ public class StudentController {
 			model.addAttribute("message",student.getState());
 			model.addAttribute("flag",1);
 		}else if(waitService.containsOne(studentWaiter)){
-			//排队中
+			//一面排队中
 			int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
 			String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
 			model.addAttribute("message",message);
 			model.addAttribute("flag",1);
 		}else if(waitService.containsTwo(studentWaiter)){
-			//排队中
+			//二面排队中
 			int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
 			String message="<span class='name'>"+name+"</span>同学 恭喜通过初试<br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行复试";
 			model.addAttribute("message",message);
@@ -225,7 +225,7 @@ public class StudentController {
 			n = calendar2.getTimeInMillis();
 			System.out.println("应到时间:"+s+"===实到时间:"+r+"====当前时间:"+n);
 			Studenttest stu=new Studenttest(n,s,r,name);
-			int frontWaters = waitService.addtest(stu);
+//			int frontWaters = waitService.addtest(stu);
 		} catch (ParseException e) {
 		}
 	}

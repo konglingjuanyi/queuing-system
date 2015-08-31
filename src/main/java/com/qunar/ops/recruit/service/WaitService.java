@@ -1,9 +1,9 @@
 package com.qunar.ops.recruit.service;
 
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -11,13 +11,12 @@ import com.qunar.ops.recruit.model.Student;
 
 @Component
 public class WaitService {
-	List<StudentWaiter> list = new LinkedList<StudentWaiter>();
+	Set<StudentWaiter> list = new HashSet<StudentWaiter>();
 	
-	List<Studenttest> l = new LinkedList<Studenttest>();
+	Set<StudentWaiter> twoList = new HashSet<StudentWaiter>();
 	
-	List<StudentWaiter> twoList = new LinkedList<StudentWaiter>();
+	Set<StudentWaiter> assignList = new HashSet<StudentWaiter>();
 
-	boolean b = false;
 	
 	public synchronized int numberInFrontOf(StudentWaiter t){
 		if(list.contains(t)){
@@ -73,15 +72,7 @@ public class WaitService {
 		list.add(t);
 		return numberInFrontOf(t);
 	}
-	
-	public synchronized int addtest(Studenttest t){
-		l.add(t);
-		Collections.sort(l);
-		for(int i=0;i<l.size();i++){
-			System.out.println(l.get(i).getName()+"++"+l.get(i).getShouldComeTime()+"==="+l.get(i).getRealComeTime()+"***"+l.get(i).getNowtime());
-		}
-		return 0;
-	}	
+		
 
 
 	/**
@@ -92,28 +83,6 @@ public class WaitService {
 		// TODO Auto-generated method stub
 		twoList.add(stu);
 	}
-
-	/**
-	 * 二面面试官获取二面候选人数据
-	 * @param city
-	 * @param twoView
-	 * @param userName
-	 * @return
-	 */
-	public synchronized StudentWaiter getTwoView(String city, String twoView, String userName) {
-		// TODO Auto-generated method stub
-		StudentWaiter stu=null;
-		for(int i=0;i<twoList.size();i++){
-			String ci=twoList.get(i).getStu().getLocation();
-			String view=twoList.get(i).getStu().getJob();
-			String one=twoList.get(i).getStu().getFirstTry();
-			if(city.equals(ci)&&twoView.contains(view)&&!userName.equals(one)){
-				stu=twoList.get(i);
-				break;
-			}
-		}
-		return stu;
-	}
 	
 
 	public void recovery(List<Student> oneList, List<Student> twoList) {
@@ -121,20 +90,12 @@ public class WaitService {
 		for (Student student : oneList) {
 			swList1.add(new StudentWaiter(student,student.getTrueTime().getTime()));
 		}
-		this.list = swList1;
-		Collections.sort(list);
+		this.list.addAll(swList1);
 		List<StudentWaiter> swList2 = new LinkedList<StudentWaiter>();
 		for (Student student : twoList) {
 			swList2.add(new StudentWaiter(student,student.getTrueTime().getTime()));
 		}
-		this.twoList = swList2;
-		Collections.sort(this.twoList, new Comparator<StudentWaiter>() {
-
-			@Override
-			public int compare(StudentWaiter o1, StudentWaiter o2) {
-				return o1.getRealComeTime() > o2.getRealComeTime() ? 1:-1;
-			}
-		});
+		this.twoList.addAll(swList2);
 		
 	}
 
@@ -142,20 +103,21 @@ public class WaitService {
 	public String toString() {
 		return list + "\n" + twoList;
 	}
-
-	public void sort() {
-		Collections.sort(list);
-		Collections.sort(twoList);
-		
-	}
 	
-	public synchronized StudentWaiter removeHighestPriorityFromList(String year, String phase, String city, String oneView){
+	public synchronized StudentWaiter removeHighestPriorityFromList(String year, String phase, String city, String oneView, String name){
 //		System.out.println(year+"====================="+phase+city);
 //		System.out.println(list.get(0).getStu().getLocation());
 //		System.out.println(list.get(0).getStu().getPhaseNo());
 //		System.out.println(list.get(0).getStu().getYear());
 //		System.out.println(list.get(0).getStu().getJob());
 //		System.out.println(oneView);
+		for (StudentWaiter sw : assignList) {
+			Student stu = sw.getStu();
+			if(stu.getYear().equals(year) && stu.getPhaseNo().equals(phase)
+					&& stu.getLocation().equals(city) && name.equals(stu.getFirstTry())){
+				return sw;
+			}
+		}
 		List<StudentWaiter> tmpList = new LinkedList<StudentWaiter>();
 		for (StudentWaiter t : list) {
 			Student stu = t.getStu();
@@ -210,6 +172,15 @@ public class WaitService {
 	
 	public boolean containsTwo(StudentWaiter studentWaiter) {
 		return twoList.contains(studentWaiter);
+	}
+
+	public void remove(StudentWaiter sw) {
+		list.remove(sw);
+		
+	}
+
+	public void add2AssianList(StudentWaiter sw) {
+		assignList.add(sw);
 	}
 
 	

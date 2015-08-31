@@ -44,6 +44,7 @@ $(document).ready(function () {
 		    		  $("#beginToInterview").hide();
 			    	  $("#finishInterview").hide();
 			    	  $("#nocome").hide();
+			    	  $("#getOneInterview").attr("disabled", false);
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;
@@ -218,7 +219,8 @@ $(document).ready(function () {
 		    	  $("#getOneInterview").attr("disabled", false);
 		    	  $("#finishInterview").hide();
 		    	  setAllVal();
-		    	  $("#already_inter").text(parseInt(inter.oneCount)+parseInt(inter.twoCount));
+//		    	  alert(parseInt($("#already_inter").text))
+		    	  $("#already_inter").text(parseInt($("#already_inter").text())+1);
 		    	  $("#student_name").text("");
 		    	  $("#jobTitle").text("");
 		    	  $("#first_viewer").text("");

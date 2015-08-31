@@ -20,7 +20,7 @@ public class TimedTask implements Runnable {
 	@Override
 	public void run() {
 		while(true){
-			ws.sort();
+//			ws.sort();
 			try {
 				Thread.sleep(5000);
 			} catch (InterruptedException e) {
