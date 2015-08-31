@@ -43,6 +43,9 @@
 				                  <td>$in.obj.job</td>
 				                  <td>$in.obj.state</td>	              
 				                  <td>
+				                  	#if($in.obj.state=='未签到' || $in.obj.state=='签到' || $in.obj.state=='迟到 ')
+				                  		<a href="#" onclick="doAssign('$in.obj.id')">指派</a>
+				                  	#end
 				                  	<a href="#" onclick="doSelect('$in.obj.id')">查看</a>
 				                  	<a href="#" onclick="dodelete('$in.obj.id')">删除</a>
 				                  </td>	
@@ -55,133 +58,28 @@
 				<!-- 内容end -->
 
 	<!-- 内容start -->
-				<div class="m-pop alert alert-info" style="display:none">
+				<div id="viewDiv" class="m-pop alert alert-info" style="display:none">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<div class="m-pop-hd">
 						<b>分配面试</b>
 					</div>
 					<div class="m-pop-bd">
 						<div class="row-fluid">
+							#foreach($info in $viewlist)
 							<div class="span3">
 								<label class="checkbox inline">
-								  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
+								  <input type="radio" name="viewnames" id="$info.id" value="$info.intervierName">$info.intervierName
 								</label>
 							</div>
-							<div class="span3">
-								<label class="checkbox inline">
-								  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-								</label>
-							</div>
-							<div class="span3">
-								<label class="checkbox inline">
-								  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-								</label>
-							</div>
-							<div class="span3">
-								<label class="checkbox inline">
-								  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-								</label>
-							</div>
-
+							#end
+							<input type="hidden" id="stuid" value=""/>
 						</div>
-						<div class="row-fluid">
-							<div class="span3">
-								<label class="checkbox inline">
-								  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-								</label>
-							</div>
-							<div class="span3">
-								<label class="checkbox inline">
-								  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-								</label>
-							</div>
-							<div class="span3">
-								<label class="checkbox inline">
-								  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-								</label>
-							</div>
-							<div class="span3">
-								<label class="checkbox inline">
-								  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-								</label>
-							</div>
-							
-						</div>
-                        <div class="row-fluid">
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            
-                        </div>
-                        <div class="row-fluid">
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            
-                        </div>
-                        <div class="row-fluid">
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            <div class="span3">
-                                <label class="checkbox inline">
-                                  <input type="checkbox" id="inlineCheckbox1" value="option1"> 刘玥
-                                </label>
-                            </div>
-                            
-                        </div>
 					</div>
 					<div class="m-pop-ft">
 						<div class="control-group">
 							<div class="controls text-center">
-							  <button type="submit" class="btn">保存</button>
-							  <button type="button" class="btn btn-primary" disabled>取消</button>
+							  <button type="button" class="btn" id="assignView">保存</button>
+							  <button type="button" class="btn btn-primary" onclick="docancel()">取消</button>
 							</div>
 						</div>
 					</div>

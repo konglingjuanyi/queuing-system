@@ -25,11 +25,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
+import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentAssess;
 import com.qunar.ops.recruit.model.StudentForm;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
+import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.StudentAssessService;
 import com.qunar.ops.recruit.service.StudentManageService;
 import com.qunar.ops.recruit.service.StudentService;
@@ -45,6 +47,8 @@ public class StudentManageController {
 	StudentAssessService assService;
 	@Autowired
 	StudentService studentService;
+	@Autowired
+	private PhaseInterviewService interService;
 	
 	@RequestMapping(value="/hr/importStudentInfos",method=RequestMethod.POST)
 	public String importStaffInfo(@RequestParam("fileField") MultipartFile clientFile,
@@ -145,6 +149,7 @@ public class StudentManageController {
 		String city=(String) request.getSession().getAttribute("city");
 		String year=(String) request.getSession().getAttribute("year");
 		String phase=(String) request.getSession().getAttribute("phase");
+		List<PhaseInterviewer> viewlist =  interService.getSinglecityBy(city,year,phase);
 		list=stuService.getAllStudentInfos(city,year,phase);
 		List<ResultPlusAdditionalInfo> info=new LinkedList<ResultPlusAdditionalInfo>();
 		if(list!=null && list.size()>0){
@@ -157,12 +162,12 @@ public class StudentManageController {
 			}
 		}
 		model.addAttribute("list", info);
+		model.addAttribute("viewlist", viewlist);
 		return "/student_manage_info";
 	}
 	
 	@RequestMapping(value = "/hr/getStudentInfos")
 	public String getStudentInfos(HttpServletRequest request,  ModelMap model, @RequestBody CommonRequest commonRequest) throws Exception {
-//		System.out.println("into getStudentInfos");
 		List<Student> list=new ArrayList<Student>();
 		Map<String, String> vars = commonRequest.getVars();
 		String name = vars.get("name");
@@ -172,7 +177,6 @@ public class StudentManageController {
 		String city=(String) request.getSession().getAttribute("city");
 		String year=(String) request.getSession().getAttribute("year");
 		String phase=(String) request.getSession().getAttribute("phase");
-//		System.out.println(name+" "+school+" "+profession+" "+state);
 		list=stuService.getStudentInofs(name, school, profession, state, city,year,phase);
 		List<ResultPlusAdditionalInfo> info=new LinkedList<ResultPlusAdditionalInfo>();
 		if(list!=null && list.size()>0){
@@ -190,7 +194,6 @@ public class StudentManageController {
 	
 	@RequestMapping(value = "/hr/gotoSelectStudentInfo")
 	public String gotoSelectStudentInfo(HttpServletRequest request, int id,  ModelMap model) throws Exception {
-		System.out.println(id+"======");
 		StudentAssess stuAss=assService.getStudentAssessByStudentId(id);
 		Student stu=studentService.getStudentById(id);
 		model.addAttribute("stuAss", stuAss);

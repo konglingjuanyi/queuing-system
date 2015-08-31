@@ -152,6 +152,10 @@ $(document).ready(function () {
 			    	  $("#goon").hide();
 			    	  $("#havarest").hide();
 			    	  $("#noview").hide();
+			    	  $("#student_name").text("");
+			    	  $("#jobTitle").text("");
+			    	  $("#first_viewer").text("");
+			    	  $("#second_viewer").text("");
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;

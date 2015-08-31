@@ -26,6 +26,30 @@ $(document).ready(function () {
       }
 	});
 	
+	$("#assignView").click(function(){
+		active($('#stupage'));
+		var name=$("input[name='viewnames']:checked").val();
+		alert(name);
+		var id=$("#stuid").val().trim();
+		if(name=="" || name=="undefined"){
+             alert("请选择一个指派的面试官");
+             return false;
+        }else{
+           $.ajax({
+                 url:"/hr/assignInterviewer",
+                 cache:false,
+                 dataType:'html',
+                 data:{'id':id,'name':name},
+                 success: function(data) {
+                	$("#viewDiv").modal("hide");
+                 },
+                 error:function(){
+                     alert("error");
+                 }
+           });
+      }
+	});
+	
 	$('#addstu').click(function(){
 		active($('#stupage'));
 	    $.ajax({
@@ -339,5 +363,17 @@ function doSelect(id){
            alert("系统发生了错误请稍后重试");
       }
     });
+}
+
+function doAssign(id){
+	active($('#stupage'));
+	$("#viewDiv").show();
+	$("#stuid").val(id);
+}
+
+function docancel(){
+	active($('#stupage'));
+	$("#viewDiv").hide();
+	$("#stuid").val("");
 }
 
