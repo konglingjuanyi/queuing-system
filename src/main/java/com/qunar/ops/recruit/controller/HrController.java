@@ -29,6 +29,7 @@ import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.JoinService;
 import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.StudentService;
+import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.service.WaitService;
 import com.qunar.ops.recruit.util.RecruitConst;
 
@@ -171,10 +172,25 @@ public class HrController {
 		return BaseResult.getSuccessResult(ret);
 	}
 
+	@RequestMapping(value = "/hr/assignInterviewer")
+	@ResponseBody
+	public BaseResult getInterviewersForManage(HttpServletRequest request, ModelMap model, Integer id, String name) {
+		if(id == null || name == null){
+			return BaseResult.getSuccessResult("id或者name不能为空");
+		}else{
+			Student stu = studentService.getStudentById(id);
+			StudentWaiter sw = new StudentWaiter(stu);
+			if(waitService.containsOne(sw)){
+				waitService.remove(sw);
+				sw.getStu().setFirstTry(name);
+				waitService.add2AssianList(sw);
+			}
+		}
+		
+		return BaseResult.getSuccessResult("");
+	}
+	
 	private int[] getNums(List<Student> list) {
-		int firstRd = 0;
-		int firstFe = 0;
-		int firstQa = 0;
 		int secondRd = 0;
 		int secondFe = 0;
 		int secondQa = 0;

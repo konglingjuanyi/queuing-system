@@ -101,10 +101,10 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 
 	}
 //	
-//	@Override
-//	public int hashCode() {
-//		return this.getStu().getId();
-//	}
+	@Override
+	public int hashCode() {
+		return this.getStu().getId();
+	}
 
 	public void recovery(List<Student> oneList, List<Student> twoList) {
 		// TODO Auto-generated method stub
