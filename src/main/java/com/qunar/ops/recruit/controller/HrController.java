@@ -188,6 +188,10 @@ public class HrController {
 				sw.getStu().setFirstTry(name);
 				waitService.add2AssianList(sw);
 			}
+			Student newStu = new Student();
+			newStu.setId(stu.getId());
+			newStu.setState(RecruitConst.STUDENT_STATE_REGIST);
+			studentService.updateStudent(newStu);
 		}
 		
 		return BaseResult.getSuccessResult("");
