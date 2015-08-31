@@ -87,11 +87,10 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 
 	@Override
 	public boolean equals(Object obj) {
-//		System.out.println(this+" "+obj);
 		if(obj !=null){
 			StudentWaiter uw = (StudentWaiter) obj;
 			if(this.stu != null && uw.getStu() != null)
-				return this.stu.getId() == uw.getStu().getId();
+				return this.stu.getId().equals(uw.getStu().getId());
 			else
 				return false;
 		}else{
@@ -99,13 +98,21 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 		}
 
 	}
+//	
+//	@Override
+//	public int hashCode() {
+//		return this.getStu().getId();
+//	}
 
 	public void recovery(List<Student> oneList, List<Student> twoList) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	
+	@Override
+	public String toString() {
+		return this.getStu().toString();
+	}
 	
 
 	

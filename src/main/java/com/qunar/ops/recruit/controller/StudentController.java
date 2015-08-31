@@ -87,6 +87,11 @@ public class StudentController {
 					StudentWaiter sw = new StudentWaiter(stu);
 					waitService.add2WaitList(sw);
 					request.getSession().setAttribute("user", sw);
+					if(!studentService.isLate(stu)){
+						stu.setState(RecruitConst.STUDENT_STATE_REGIST);
+					}else{
+						stu.setState(RecruitConst.STUDENT_STATE_LATE);
+					}
 					studentService.updateStudent(stu);
 					return "redirect:/student/refresh";
 				}

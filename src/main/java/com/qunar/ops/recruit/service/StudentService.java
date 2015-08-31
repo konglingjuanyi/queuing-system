@@ -11,6 +11,7 @@ import com.qunar.ops.recruit.dao.StudentMapper;
 import com.qunar.ops.recruit.model.HrExample.Criteria;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentExample;
+import com.qunar.ops.recruit.util.RecruitConst;
 
 @Component
 public class StudentService {
@@ -76,6 +77,16 @@ public class StudentService {
 	public Student getStudentById(int id) {
 		// TODO Auto-generated method stub
 		return stuMapper.selectByPrimaryKey(id);
+	}
+
+	public boolean isLate(Student stu) {
+		long true_time = stu.getTrueTime().getTime();
+		long inter_time = stu.getInterviewTime().getTime();
+		if(true_time - inter_time < RecruitConst.LATE_TIME){
+			return false;
+		}else{
+			return true;
+		}
 	}
 	
 
