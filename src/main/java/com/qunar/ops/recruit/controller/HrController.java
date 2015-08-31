@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.qunar.ops.recruit.model.Interviewer;
+import com.qunar.ops.recruit.model.PhaseInterviewer;
+import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.connect_table.InterviewerInfoToPage;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
 import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.JoinService;
+import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.WaitService;
 import com.qunar.ops.recruit.util.RecruitConst;
@@ -41,6 +44,8 @@ public class HrController {
 	WaitService waitService;
 	@Autowired
 	JoinService joinService;
+	@Autowired
+	PhaseInterviewService piService;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
@@ -153,9 +158,39 @@ public class HrController {
 		String year = (String)session.getAttribute("year");
 		String phase = (String)session.getAttribute("phase");
 		String city = (String)session.getAttribute("city");
-		InterviewerInfoToPage inter = joinService.getInterviewerInfoToPage(year, phase, city, id);
-		model.addAttribute("message", inter);
-		return BaseResult.getSuccessResult(inter);
+//		System.out.println(id+"===9009");
+		Interviewer inter = interService.getInterviewersById(id);
+		PhaseInterviewer pi = piService.getPhaseInterviewerBy(year, phase, city, inter.getUserName());
+		List<Student> list = studentService.getStudentsByFirstTry(inter.getUserName());
+		int[] nums = getNums(list);
+		List ret = new LinkedList();
+		ret.add(inter);
+		ret.add(pi);
+		ret.add(nums);
+//		model.addAttribute("message", interFe);
+		return BaseResult.getSuccessResult(ret);
+	}
+
+	private int[] getNums(List<Student> list) {
+		int firstRd = 0;
+		int firstFe = 0;
+		int firstQa = 0;
+		int secondRd = 0;
+		int secondFe = 0;
+		int secondQa = 0;
+		for (Student student : list) {
+			if(student.getState().equals(RecruitConst.STUDENT_STATE_FINISH) || 
+					student.getState().equals(RecruitConst.STUDENT_STATE_TWO_PASS)){
+				if(student.getJob().equals(RecruitConst.JOB_FE)){
+					secondFe ++;
+				}else if(student.getJob().equals(RecruitConst.JOB_QA)){
+					secondQa ++;
+				}else if(student.getJob().equals(RecruitConst.JOB_RD)){
+					secondRd ++;
+				}
+			}
+		}
+		return new int[]{secondRd, secondFe, secondQa};
 	}
 
 }

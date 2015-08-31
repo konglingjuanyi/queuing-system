@@ -71,7 +71,8 @@ public class RecruitConst {
 	
 
 	public static final String RESULT_NOT_PASS = "不通过";
-	public static final Object JOB_RD = "RD";
-	public static final Object JOB_FE = "FE";
-	public static final Object JOB_QA = "QA";
+	public static final String JOB_RD = "RD";
+	public static final String JOB_FE = "FE";
+	public static final String JOB_QA = "QA";
+	public static final long LATE_TIME = 15*60*1000;
 }

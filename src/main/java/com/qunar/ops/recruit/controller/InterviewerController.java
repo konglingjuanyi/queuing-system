@@ -310,7 +310,7 @@ public class InterviewerController {
 		PhaseInterviewer newPi = new PhaseInterviewer();
 		newPi.setId(pi.getId());
 		pi.setStatus(RecruitConst.INTERVIEWER_STATE_REST);
-		piService.update(pi);
+		piService.update(newPi);
 		return BaseResult.getSuccessResult("");
 	}
 	

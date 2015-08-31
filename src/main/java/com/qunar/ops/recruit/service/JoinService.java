@@ -32,12 +32,11 @@ public class JoinService {
 
 
 	public List<InterviewerInfoToPage> getInterviewerInfoToPages(String year, String phase, String city) {
-		return joinMapper.getInterviewersInfoToPages(year, phase, city, RecruitConst.STUDENT_STATE_TWO_PASS+" or state = "+RecruitConst.STUDENT_STATE_ONE_PASS);
+		return joinMapper.getInterviewersInfoToPages(year, phase, city, RecruitConst.STUDENT_STATE_TWO_PASS);
 	}
 
-
-	public InterviewerInfoToPage getInterviewerInfoToPage(String year, String phase, String city, int id) {
-		return joinMapper.getInterviewerInfoToPages(year, phase, city, id);
+	public List<InterviewerInfoToPage> getInterviewerDetailsInfoToPages(String year, String phase, String city, int id) {
+		return joinMapper.getInterviewerDetailsInfoToPages(year, phase, city, id, RecruitConst.STUDENT_STATE_TWO_PASS);
 	}
 	
 	public void testqyd(){

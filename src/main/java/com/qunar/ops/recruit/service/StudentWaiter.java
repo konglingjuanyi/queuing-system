@@ -54,7 +54,7 @@ public class StudentWaiter implements Comparable<StudentWaiter>{
 	}
 
 	public String getState(){
-		if(System.currentTimeMillis() >= shouldComeTime && realComeTime <= shouldComeTime){
+		if(System.currentTimeMillis() >= shouldComeTime && realComeTime <= shouldComeTime + RecruitConst.LATE_TIME){
 			return RecruitConst.NORMAL;
 		}else{
 			return RecruitConst.IN_NORMAL;

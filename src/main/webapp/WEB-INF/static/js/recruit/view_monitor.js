@@ -5,21 +5,22 @@ function doSel(id){
         dataType: "json",
         data: {'id':id},
         success: function (returnedData) {
-        	$("#getuserName").val(returnedData.data.userName);
-        	$("#getjob").val(returnedData.data.job);
-        	$("#getpassword").val(returnedData.data.password);
-        	$("#getpassword").val(returnedData.data.password);
-        	$("#firstrd").text(returnedData.data.pi.firstRd);
-        	$("#firstfe").text(returnedData.data.pi.firstFe);
-        	$("#firstqa").text(returnedData.data.pi.firstQa);
-        	$("#secondrd").text(returnedData.data.pi.secondRd);
-        	$("#secondfe").text(returnedData.data.pi.secondFe);
-        	$("#secondqa").text(returnedData.data.pi.secondQa);
-
         	console.dir(returnedData)
-        	rd = returnedData.data.oneView;
-        	fe = returnedData.data.twoView;
-        	qa = returnedData.data.determine;
+        	inter = returnedData.data[0]
+        	phaseInter = returnedData.data[1]
+        	second = returnedData.data[2]
+        	$("#getuserName").val(inter.userName);
+        	$("#getjob").val(inter.job);
+        	$("#getpassword").val(inter.password);
+        	$("#firstrd").text(phaseInter.firstRd);
+        	$("#firstfe").text(phaseInter.firstFe);
+        	$("#firstqa").text(phaseInter.firstQa);
+        	$("#secondrd").text(second[0]);
+        	$("#secondfe").text(second[1]);
+        	$("#secondqa").text(second[2]);
+        	rd = inter.oneView;
+        	fe = inter.twoView;
+        	qa = inter.determine;
         	if(rd!=''){
         		var rds=rd.split(",");
         		for(var i=0;i<rds.length;i++){

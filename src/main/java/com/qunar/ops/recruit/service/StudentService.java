@@ -64,6 +64,14 @@ public class StudentService {
 		stuMapper.updateByPrimaryKey(stu);
 		
 	}
+
+	public List<Student> getStudentsByFirstTry(String userName) {
+		StudentExample se = new StudentExample();
+		StudentExample.Criteria cr = se.createCriteria();
+		cr.andFirstTryEqualTo(userName);
+		List<Student> ret = stuMapper.selectByExample(se);
+		return ret;
+	}
 	
 
 

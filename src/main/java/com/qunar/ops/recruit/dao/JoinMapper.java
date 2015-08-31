@@ -13,5 +13,6 @@ public interface JoinMapper {
 	String getFirstInterviewRoomNumber(Student s);
 	String getSecondInterviewRoomNumber(Student s);
 	List<InterviewerInfoToPage> getInterviewersInfoToPages(@Param("year")String year, @Param("phase")String phase, @Param("city")String city, @Param("state")String state);
-	InterviewerInfoToPage getInterviewerInfoToPages(@Param("year")String year, @Param("phase")String phase, @Param("city")String city, @Param("interid")int id);
+	List<InterviewerInfoToPage> getInterviewerDetailsInfoToPages(@Param("year")String year, @Param("phase")String phase,
+			@Param("city")String city, @Param("interid")int id, @Param("state")String state);
 }
