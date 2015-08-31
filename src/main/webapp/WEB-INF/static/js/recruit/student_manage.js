@@ -29,7 +29,6 @@ $(document).ready(function () {
 	$("#assignView").click(function(){
 		active($('#stupage'));
 		var name=$("input[name='viewnames']:checked").val();
-		alert(name);
 		var id=$("#stuid").val().trim();
 		if(name=="" || name=="undefined"){
              alert("请选择一个指派的面试官");
@@ -41,7 +40,7 @@ $(document).ready(function () {
                  dataType:'html',
                  data:{'id':id,'name':name},
                  success: function(data) {
-                	$("#viewDiv").modal("hide");
+                	 $("#viewDiv").hide();
                  },
                  error:function(){
                      alert("error");
