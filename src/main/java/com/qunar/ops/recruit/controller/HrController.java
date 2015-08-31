@@ -184,6 +184,9 @@ public class HrController {
 				waitService.remove(sw);
 				sw.getStu().setFirstTry(name);
 				waitService.add2AssianList(sw);
+			}else{
+				sw.getStu().setFirstTry(name);
+				waitService.add2AssianList(sw);
 			}
 		}
 		
