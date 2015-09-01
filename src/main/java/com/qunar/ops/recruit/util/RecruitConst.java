@@ -3,7 +3,7 @@ package com.qunar.ops.recruit.util;
 public class RecruitConst {
 
  
-
+	public static final int PAGE_SIZE = 2;
 
 	public static final String DATE_FORMAT_ERROR_MSG = "转换时间失败，请检查输入是否为yyyy-MM-dd格式!";
     public static final int DATE_FORMAT_ERROR = 102;

@@ -44,7 +44,8 @@
 			            </table>
 					</div>
 				</div>
-				<input type="hidden" id="curr" value="4">
+				<input type="hidden" id="curr" value="${currentPage}">
+				<input type="hidden" id="pagecount" value="${pagecount}">
 				<div class="tcdPageCode"></div>
 			</div>
 		</div>

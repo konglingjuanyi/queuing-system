@@ -67,7 +67,7 @@ $(document).ready(function () {
 	      url: "/hr/getPhaseInfos",
 	      type: "POST",
 	      dataType: "html",
-	      data:{'currentPage':1,'pageSize':2},
+	      data:{'currentPage':1},
 	      success: function (returnedData) {
 	    	  $('#content').html(returnedData);
 		  },

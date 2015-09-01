@@ -35,16 +35,13 @@ function doAddPhase(){
     $.ajax({
           url: "/hr/addPhaseInfo",
           type: "POST",
-          dataType: "json",
+          dataType: "html",
           contentType: 'application/json; charset=utf-8',
           data: JSON.stringify(params),
           success: function (returnedData) {
-        	  if(returnedData.errorCode==0){
-        		  $("#addphaseform").modal("hide");
-            	  $('#content').load('/hr/getPhaseInfos'); 
-        	  }else{
-        		  alert(returnedData.errorMessage);
-        	  }
+        	  $("#addphaseform").modal("hide");
+        	  $('#content').html(returnedData); 
+        	  alert("添加成功");
 		  },
           error: function () {
                alert("系统发生了错误请稍后重试");
@@ -166,41 +163,18 @@ function saveviewsAndcitys(){
 	$.ajax({
 	      url: "/hr/addAllcity",
 	      type: "POST",
-	      dataType: "json",
+	      dataType: "html",
 	      data:JSON.stringify(params),
 	      contentType: 'application/json; charset=utf-8',
 	      success: function (returnedData) {
-	    	  if(returnedData.errorCode==0){
-            	  $('#content').load('/hr/getPhaseInfos'); 
-        	  }else{
-        		  alert(returnedData.errorMessage);
-        	  }
+	    	  $('#content').html(returnedData);
+	    	  alert("添加成功");
 		  },
 	      error: function () {
 	           alert("系统发生了错误请稍后重试");
 	      }
 	});
 }
-/*<tr>
-<td>北京</td>
-<td><a href="javascript:void(0);" onclick="showView('td北京')">添加面试官</a></td>
-<td id="td北京">
-	<label class="control-label" for="inputEmail">
-		刘玥
-		<input class="input-mini" type="text" id="inputEmail" placeholder="房间号">
-	</label>
-	<label class="control-label" for="inputEmail">
-		孙立
-		<input class="input-mini" type="text" id="inputEmail" placeholder="房间号">
-	</label>
-	<label class="control-label" for="inputEmail">
-		三丰
-		<input class="input-mini" type="text" id="inputEmail" placeholder="房间号">
-	</label>
-</td>
-<td><a href="#" onclick="removetr(this)">删除</a></td>
-</tr>
-*/
 function doclose(){
 	$("#allview").css("display","none");
 	$("input[type=checkbox]").each(function(){
@@ -221,6 +195,7 @@ function setOver(year,name){
 		      data:{'year':year,'name':name},
 		      success: function (returnedData) {
 		    	  $('#content').html(returnedData);
+		    	  alert("归档成功");
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -230,8 +205,9 @@ function setOver(year,name){
 }
 
 var curr=parseInt($("#curr").val());
+var pagecount=parseInt($("#pagecount").val());
 $(".tcdPageCode").createPage({
-    pageCount:6,
+    pageCount:pagecount,
     current:curr,
     backFn:function(p){
         console.log(p);
@@ -240,7 +216,7 @@ $(".tcdPageCode").createPage({
 		      url: "/hr/getPhaseInfos",
 		      type: "POST",
 		      dataType: "html",
-		      data:{'currentPage':p,'pageSize':2},
+		      data:{'currentPage':p},
 		      success: function (returnedData) {
 		    	  $('#content').html(returnedData);
 			  },
