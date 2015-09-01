@@ -43,7 +43,7 @@
 				                  <td>$in.obj.job</td>
 				                  <td>$in.obj.state</td>	              
 				                  <td>
-				                  	#if($in.obj.state=='未签到' || $in.obj.state=='签到' || $in.obj.state=='迟到 ')
+				                  	#if($in.obj.state=='未签到' || $in.obj.state=='签到' || $in.obj.state=='迟到' || $in.obj.state=='过号')
 				                  		<a href="#" onclick="doAssign('$in.obj.id')">指派</a>
 				                  	#end
 				                  	<a href="#" onclick="doSelect('$in.obj.id')">查看</a>
