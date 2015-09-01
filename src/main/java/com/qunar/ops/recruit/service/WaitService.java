@@ -115,6 +115,7 @@ public class WaitService {
 			Student stu = sw.getStu();
 			if(stu.getYear().equals(year) && stu.getPhaseNo().equals(phase)
 					&& stu.getLocation().equals(city) && name.equals(stu.getFirstTry())){
+				assignList.remove(sw);
 				return sw;
 			}
 		}

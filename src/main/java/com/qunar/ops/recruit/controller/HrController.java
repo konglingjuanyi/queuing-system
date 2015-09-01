@@ -116,7 +116,10 @@ public class HrController {
 			ResultPlusAdditionalInfo info = new ResultPlusAdditionalInfo();
 			info.setObj(interviewer);
 			info.addStringInfo(interviewer.getPi().getFirstFe()+interviewer.getPi().getFirstQa()+interviewer.getPi().getFirstRd()+"");
-			info.addStringInfo(interviewer.getCount()+"");
+			if(interviewer.getCount() == null)
+				info.addStringInfo(0+"");
+			else
+				info.addStringInfo(interviewer.getCount()+"");
 			rets.add(info);
 		}
 		model.addAttribute("message", rets);

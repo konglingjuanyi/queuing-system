@@ -24,13 +24,15 @@
   </select>
   <select id="getInterviewersInfoToPages" resultMap="InterviewerInfoToPageMap">
   	select * from 
-  	interviewer,
-  	phase_interviewer, 
+  	(interviewer inner join phase_interviewer on 
+  	interviewer.user_name=phase_interviewer.intervier_name
+  	and phase_interviewer.year=#{year} 
+  	and phase_interviewer.phase=#{phase} 
+  	and phase_interviewer.city=#{city}) left join 
   	(select first_try,count(*) from student_info where (state = #{state} or state = '面试结束') and is_deleted != 1 group by first_try) as tmp 
-  	where interviewer.user_name=phase_interviewer.intervier_name
-  	and phase_interviewer.intervier_name=tmp.first_try
-  	and phase_interviewer.year=#{year} and phase_interviewer.phase=#{phase} and phase_interviewer.city=#{city}
-  	order by interviewer.user_name
+  	on phase_interviewer.intervier_name=tmp.first_try order by interviewer.user_name
+
+  	
   </select>
   <select id="getInterviewerDetailsInfoToPages" resultMap="InterviewerInfoToPageMap">
   	select * from 
