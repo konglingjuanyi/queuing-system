@@ -2,6 +2,7 @@ package com.qunar.ops.recruit.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,12 @@ public class StudentService {
 
 	public Student getStudentByPhone(String phone) {
 		StudentExample se = new StudentExample();
-		se.createCriteria().andPhoneEqualTo(phone);
+		StudentExample.Criteria cr = se.createCriteria();
+		cr.andPhoneEqualTo(phone);
+		List<Integer> list = new LinkedList<Integer>();
+		list.add(1);
+		list.add(2);
+		cr.andIsDeletedNotIn(list);
 		List<Student> ret = stuMapper.selectByExample(se);
 		if(ret != null &&ret.size() > 0)
 			return ret.get(0);
@@ -70,6 +76,10 @@ public class StudentService {
 		StudentExample se = new StudentExample();
 		StudentExample.Criteria cr = se.createCriteria();
 		cr.andFirstTryEqualTo(userName);
+		List<Integer> list = new LinkedList<Integer>();
+		list.add(1);
+		list.add(2);
+		cr.andIsDeletedNotIn(list);
 		List<Student> ret = stuMapper.selectByExample(se);
 		return ret;
 	}

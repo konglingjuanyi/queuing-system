@@ -26,7 +26,7 @@
   	select * from 
   	interviewer,
   	phase_interviewer, 
-  	(select first_try,count(*) from student_info where state = #{state} or state = '面试结束' group by first_try) as tmp 
+  	(select first_try,count(*) from student_info where (state = #{state} or state = '面试结束') and is_deleted != 1 group by first_try) as tmp 
   	where interviewer.user_name=phase_interviewer.intervier_name
   	and phase_interviewer.intervier_name=tmp.first_try
   	and phase_interviewer.year=#{year} and phase_interviewer.phase=#{phase} and phase_interviewer.city=#{city}
@@ -36,7 +36,7 @@
   	select * from 
   	interviewer,
   	phase_interviewer,
-  	(select job, first_try,count(*) from student_info where (state = #{state} or state = '面试结束') group by first_try,job) as tmp 
+  	(select job, first_try,count(*) from student_info where (state = #{state} or state = '面试结束') and is_deleted != 1 group by first_try,job) as tmp 
   	where interviewer.user_name=phase_interviewer.intervier_name
   	and phase_interviewer.intervier_name=tmp.first_try
   	and phase_interviewer.year=#{year} and phase_interviewer.phase=#{phase} and phase_interviewer.city=#{city} and interviewer.id = #{interid}
