@@ -160,4 +160,15 @@ public class PhaseInterviewer {
     public void setEnable(String enable) {
         this.enable = enable == null ? null : enable.trim();
     }
+    
+    @Override
+    public int hashCode() {
+    	return this.getId();
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+    	PhaseInterviewer pi = (PhaseInterviewer) obj;
+    	return pi.getId().equals(this.getId());
+    }
 }

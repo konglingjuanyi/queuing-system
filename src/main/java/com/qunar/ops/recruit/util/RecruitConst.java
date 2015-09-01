@@ -64,10 +64,9 @@ public class RecruitConst {
 	public static final String STUDENT_STATE_TWO_PASS = "复试通过";
 	public static final String STUDENT_STATE_FINISH = "面试结束";
 	
-	public static final String INTERVIEWER_STATE_REST = "休息中";
 	public static final String INTERVIEWER_STATE_VIEWING = "面试中";
 	public static final String INTERVIEWER_STATE_WAITING = "等待面试";
-	public static final String INTERVIEWER_STATE_NOTHING = "空闲中";
+	public static final String INTERVIEWER_STATE_REST = "忙碌";
 	
 
 	public static final String RESULT_NOT_PASS = "不通过";

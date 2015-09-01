@@ -179,7 +179,7 @@ public class WaitService {
 		assignList.add(sw);
 	}
 
-	public void getHighestPriorityFromOneList(StudentWaiter stuW) {
+	public void removeHighestPriorityFromOneList(StudentWaiter stuW) {
 		if(assignList.contains(stuW)){
 			assignList.remove(stuW);
 		}else{
@@ -190,7 +190,7 @@ public class WaitService {
 		
 	}
 
-	public void getHighestPriorityFromTwoList(StudentWaiter stuW) {
+	public void removeHighestPriorityFromTwoList(StudentWaiter stuW) {
 		twoList.remove(stuW);
 	}
 	

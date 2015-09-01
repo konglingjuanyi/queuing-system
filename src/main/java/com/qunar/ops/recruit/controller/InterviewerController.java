@@ -34,6 +34,7 @@ import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.DataResult;
 import com.qunar.ops.recruit.service.InterviewerService;
+import com.qunar.ops.recruit.service.PcHrService;
 import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.PhaseService;
 import com.qunar.ops.recruit.service.StudentAssessService;
@@ -235,13 +236,16 @@ public class InterviewerController {
 					//更新面试官状态
 					pi.setStatus(RecruitConst.INTERVIEWER_STATE_WAITING);
 					piService.update(pi);
+					//往全局map中放学生信息
+					PcHrService.put(pi, stu);
+					PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_WAITING);
 					//更新学生状态
 					studentService.updateStudent(newStu);
 					//从队列删除
 					if(oneOrtwo == 1){
-						waitService.getHighestPriorityFromOneList(stuW);
+						waitService.removeHighestPriorityFromOneList(stuW);
 					}else{
-						waitService.getHighestPriorityFromTwoList(stuW);
+						waitService.removeHighestPriorityFromTwoList(stuW);
 					}
 					return BaseResult.getSuccessResult(mm);
 				}
@@ -302,6 +306,7 @@ public class InterviewerController {
 		studentService.updateStudent(newStu);
 		interServe.updateInterviewer(newInter);
 		piService.update(newPi);
+		PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_VIEWING);
 		return BaseResult.getSuccessResult("");
 	}
 	
@@ -316,6 +321,8 @@ public class InterviewerController {
 		newPi.setId(pi.getId());
 		newPi.setStatus(RecruitConst.INTERVIEWER_STATE_REST);
 		piService.update(newPi);
+		PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_REST);
+		PcHrService.put(pi, null);
 		return BaseResult.getSuccessResult("");
 	}
 	
@@ -505,7 +512,7 @@ public class InterviewerController {
 		String year=(String) request.getSession().getAttribute("year");
 		String city=(String) request.getSession().getAttribute("city");
 		String phase=(String) request.getSession().getAttribute("phase");
-		System.out.println(year+" "+phase+" "+city+"-=-===-==-");
+//		System.out.println(year+" "+phase+" "+city+"-=-===-==-");
 		
 		if(user == null){
 			System.out.println("user is null");
@@ -527,6 +534,9 @@ public class InterviewerController {
 					}else{
 						model.addAttribute("flag",1);
 						request.getSession().setAttribute("user", inter);
+						//添加到全局map
+						pi.setStatus(RecruitConst.INTERVIEWER_STATE_WAITING);
+						PcHrService.put(pi, null);
 						return "/view_index";
 					}
 				}
