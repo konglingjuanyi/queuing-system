@@ -32,7 +32,7 @@ public class InterviewerService {
 	public List<Interviewer> getInterviewers() {
 		InterviewerExample ie = new InterviewerExample();
 		ie.setOrderByClause("user_name");
-		PageHelper.startPage(1, 2);
+		//PageHelper.startPage(1, 2);
 		return interMapper.selectByExample(ie);
 	}
 

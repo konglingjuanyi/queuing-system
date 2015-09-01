@@ -135,6 +135,17 @@ function saveviewsAndcitys(){
 		alert("至少添加一个城市");
 		return false;
 	}
+	var viewsuccess=true;
+	$('#bodyid tr').each(function () {                
+        if($(this).children('td').eq(2).html()==''){
+        	viewsuccess=false;
+        	return false;
+        }
+    });
+	if(viewsuccess==false){
+		alert("请选择面试官");
+		return false;
+	}
 	var success=true;
 	$("input[name=rooms]").each(function(){    
 		if($(this).val()==''){
