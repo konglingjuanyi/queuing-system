@@ -5,6 +5,7 @@
 	<title>去哪儿网校园招聘</title>
 	<link rel="stylesheet" href="/static/pc/css/style.min.css" />
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script src="/static/pc/pc.js"></script>
 </head>
 <body>
 	<div class="wrap">

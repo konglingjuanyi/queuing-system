@@ -5,7 +5,6 @@ function doSel(id){
         dataType: "json",
         data: {'id':id},
         success: function (returnedData) {
-        	console.dir(returnedData)
         	inter = returnedData.data[0]
         	phaseInter = returnedData.data[1]
         	second = returnedData.data[2]

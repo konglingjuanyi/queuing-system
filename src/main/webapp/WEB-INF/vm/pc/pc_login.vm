@@ -16,7 +16,6 @@
         <link rel="stylesheet" href="/static/assets/css/style.css">
 		<script type="text/javascript" src="/static/js/jquery.js"></script>
 		<script src="/static/js/recruit/recordphasecity.js"></script>
-		<script src="/static/pc/pc.js"></script>
 		<script src="/static/assets/js/login.js"></script>
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -37,7 +36,7 @@
 				</select>
 				<select name="" id="city" style="width:71px;height:30px;">
 				</select>
-                <button type="button" id="pclogin" class="submit_button">登录</button>
+                <button type="submit" id="pclogin" class="submit_button">登录</button>
             </form>
         </div>
 		
