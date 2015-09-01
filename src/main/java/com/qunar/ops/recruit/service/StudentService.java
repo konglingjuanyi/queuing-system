@@ -98,6 +98,18 @@ public class StudentService {
 			return true;
 		}
 	}
+
+	public void setOverStudentInfoBy(String year, String name) {
+		// TODO Auto-generated method stub
+		Student stu=new Student();
+		stu.setIsDeleted(1);
+		StudentExample se = new StudentExample();
+		StudentExample.Criteria cr = se.createCriteria();
+		cr.andYearEqualTo(year);
+		cr.andPhaseNoEqualTo(name);
+		cr.andIsDeletedNotEqualTo(0);
+		stuMapper.updateByExampleSelective(stu, se);
+	}
 	
 
 

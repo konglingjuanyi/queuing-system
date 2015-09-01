@@ -212,3 +212,20 @@ function removetr(obj){
 	 $(obj).parent().parent().remove(); 
 }
 
+function setOver(year,name){
+	if(confirm("确定要归档吗？")){
+		$.ajax({
+		      url: "/hr/setOverPhaseInfo",
+		      type: "POST",
+		      dataType: "html",
+		      data:{'year':year,'name':name},
+		      success: function (returnedData) {
+		    	  $('#content').html(returnedData);
+			  },
+		      error: function () {
+		           alert("系统发生了错误请稍后重试");
+		      }
+		});
+	}
+}
+

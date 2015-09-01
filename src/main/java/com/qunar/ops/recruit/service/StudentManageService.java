@@ -101,6 +101,7 @@ public class StudentManageService {
 		stu.setOrganize(getStringCellValue(row.getCell(36)));
 		stu.setLeader(getStringCellValue(row.getCell(37)));
 		stu.setState("未签到");
+		stu.setIsDeleted(-1);
 		return stu;
 	}
 	
@@ -184,7 +185,7 @@ public class StudentManageService {
 		criteria.andYearEqualTo(year);
 		criteria.andPhaseNoEqualTo(phase);
 		criteria.andLocationEqualTo(city);
-		criteria.andStateNotEqualTo("9");
+		criteria.andIsDeletedNotEqualTo(0);
 		return stuMapper.selectByExample(example);
 	}
 
@@ -257,6 +258,7 @@ public class StudentManageService {
 		inter.setThreeState(threeState);
 		inter.setThreeSide(threeSide);
 		inter.setState("未签到");
+		inter.setIsDeleted(-1);
 		if("".equals(salary) || salary==null){
 			inter.setSalary(Double.valueOf(0));
 		}else{
@@ -317,7 +319,7 @@ public class StudentManageService {
 	public void deleteStudentInfoBy(int id) {
 		// TODO Auto-generated method stub
 		Student stu=new Student();
-		stu.setState("9");
+		stu.setIsDeleted(0);
 		StudentExample example = new StudentExample();
 		StudentExample.Criteria criteria = example.createCriteria();
 		criteria.andIdEqualTo(id);
@@ -332,6 +334,7 @@ public class StudentManageService {
 		criteria.andYearEqualTo(year);
 		criteria.andPhaseNoEqualTo(phase);
 		criteria.andLocationEqualTo(city);
+		criteria.andIsDeletedNotEqualTo(0);
 		if(name != null && !name.equals(""))
 			criteria.andNameEqualTo(name);
 		if(school != null && !school.equals(""))

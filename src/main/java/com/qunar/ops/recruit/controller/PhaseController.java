@@ -25,6 +25,7 @@ import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.PhaseService;
+import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.util.RecruitConst;
 
 @Controller
@@ -36,6 +37,8 @@ public class PhaseController {
 	private InterviewerService interService;
 	@Autowired
 	private PhaseInterviewService piService;
+	@Autowired
+	StudentService studentService;
 	/**
 	 * 期次管理
 	 * @param request
@@ -119,6 +122,12 @@ public class PhaseController {
 		}else{
 			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_PHASE_INTERVIEW_ERROR_MSG);
 		}
+	}
+	
+	@RequestMapping(value = "/hr/setOverPhaseInfo")
+	public String  deleteStudentInfo(HttpServletRequest request, String year,String name){
+		studentService.setOverStudentInfoBy(year,name);
+		return "forward:/hr/getPhaseInfos";
 	}
 	
 }
