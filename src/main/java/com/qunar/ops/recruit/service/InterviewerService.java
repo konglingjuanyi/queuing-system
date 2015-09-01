@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.github.pagehelper.PageHelper;
 import com.qunar.ops.recruit.dao.InterviewerMapper;
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.InterviewerExample;
@@ -31,6 +32,7 @@ public class InterviewerService {
 	public List<Interviewer> getInterviewers() {
 		InterviewerExample ie = new InterviewerExample();
 		ie.setOrderByClause("user_name");
+		PageHelper.startPage(1, 2);
 		return interMapper.selectByExample(ie);
 	}
 

@@ -87,6 +87,17 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
 		<property name="dataSource" ref="dataSource" /> 
 		<property name="mapperLocations" value="classpath*:com/qunar/ops/recruit/mapping/*.xml" />
+		<property name="plugins">
+		    <array>
+		      <bean class="com.github.pagehelper.PageHelper">
+		        <property name="properties">
+		          <value>
+		            dialect=postgresql
+		          </value>
+		        </property>
+		      </bean>
+		    </array>
+		</property>
 	</bean> 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> 
 		<property name="basePackage" value="com.qunar.ops.recruit.dao" /> 

@@ -80,4 +80,9 @@ public class Interviewer {
     public void setJob(String job) {
         this.job = job == null ? null : job.trim();
     }
+    
+    @Override
+    public String toString() {
+    	return this.getUserName();
+    }
 }

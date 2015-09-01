@@ -46,8 +46,13 @@ public class PhaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/hr/getPhaseInfos")
-	public String getInterviewers(HttpServletRequest request,  ModelMap model) {
-		List<Phase> list = phService.getPhaseInfos();
+	public String getInterviewers(HttpServletRequest request,  ModelMap model, Integer currentPage, Integer pageSize) {
+		List<Phase> list = null;
+		if(currentPage != null && pageSize != null)
+			list = phService.getPhaseInfos(currentPage, pageSize);
+		else{
+			list = phService.getPhaseInfos();
+		}
 		model.addAttribute("list", list);
 		return "/phase_manage";
 	}

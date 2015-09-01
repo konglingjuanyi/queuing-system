@@ -194,15 +194,15 @@ public class InterviewerController {
 					//如果面试官的二面角色不为空,先从二面队列中拿数据
 					//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
 					oneOrtwo = 2;
-					stuW = waitService.removeHighestPriorityFromTwoList(arrs[0], arrs[1], arrs[2] ,inter.getTwoView(), inter.getUserName());
+					stuW = waitService.getHighestPriorityFromTwoList(arrs[0], arrs[1], arrs[2] ,inter.getTwoView(), inter.getUserName());
 					if(stuW==null && !"".equals(inter.getOneView())){
 						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
-						stuW = waitService.removeHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView(), inter.getUserName());
+						stuW = waitService.getHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView(), inter.getUserName());
 						oneOrtwo = 1;
 					}
 				}else{
 					//只有一面角色从一面队列中拿数据
-					stuW = waitService.removeHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView(), inter.getUserName());
+					stuW = waitService.getHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView(), inter.getUserName());
 				}
 				if(stuW == null){
 					mm.addAttribute("message", RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
@@ -237,6 +237,12 @@ public class InterviewerController {
 					piService.update(pi);
 					//更新学生状态
 					studentService.updateStudent(newStu);
+					//从队列删除
+					if(oneOrtwo == 1){
+						waitService.getHighestPriorityFromOneList(stuW);
+					}else{
+						waitService.getHighestPriorityFromTwoList(stuW);
+					}
 					return BaseResult.getSuccessResult(mm);
 				}
 			}else{
@@ -499,11 +505,13 @@ public class InterviewerController {
 		String year=(String) request.getSession().getAttribute("year");
 		String city=(String) request.getSession().getAttribute("city");
 		String phase=(String) request.getSession().getAttribute("phase");
-//		System.out.println(year+" "+phase+" "+city+"-=-===-==-");
+		System.out.println(year+" "+phase+" "+city+"-=-===-==-");
 		
 		if(user == null){
+			System.out.println("user is null");
 			if(username != null && password != null){
 				Interviewer inter = interServe.getInterviewerByNameAndPass(username, password);
+				System.out.println(inter);
 				if(inter == null){
 					String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
 					model.addAttribute("message",message);

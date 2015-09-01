@@ -104,7 +104,7 @@ public class WaitService {
 		return list + "\n" + twoList;
 	}
 	
-	public synchronized StudentWaiter removeHighestPriorityFromList(String year, String phase, String city, String oneView, String name){
+	public synchronized StudentWaiter getHighestPriorityFromList(String year, String phase, String city, String oneView, String name){
 //		System.out.println(year+"====================="+phase+city);
 //		System.out.println(list.get(0).getStu().getLocation());
 //		System.out.println(list.get(0).getStu().getPhaseNo());
@@ -115,7 +115,6 @@ public class WaitService {
 			Student stu = sw.getStu();
 			if(stu.getYear().equals(year) && stu.getPhaseNo().equals(phase)
 					&& stu.getLocation().equals(city) && name.equals(stu.getFirstTry())){
-				assignList.remove(sw);
 				return sw;
 			}
 		}
@@ -136,13 +135,10 @@ public class WaitService {
 				ret = ret.compareTo(t) < 0 ? t:ret;
 			}
 		}
-		System.out.println(ret);
-		if(ret != null)
-			list.remove(ret);
 		return ret;
 	}
 	
-	public synchronized StudentWaiter removeHighestPriorityFromTwoList(String year,
+	public synchronized StudentWaiter getHighestPriorityFromTwoList(String year,
 			String phase, String city, String twoView, String interviewName) {
 		List<StudentWaiter> tmpList = new LinkedList<StudentWaiter>();
 		for (StudentWaiter t : twoList) {
@@ -162,12 +158,11 @@ public class WaitService {
 				ret = ret.compareTo(t) < 0 ? t:ret;
 			}
 		}
-		if(ret != null)
-			twoList.remove(ret);
 		return ret;
 	}
 
 	public boolean containsOne(StudentWaiter studentWaiter) {
+//		System.out.println(list);
 		return list.contains(studentWaiter);
 	}
 	
@@ -183,6 +178,22 @@ public class WaitService {
 	public void add2AssianList(StudentWaiter sw) {
 		assignList.add(sw);
 	}
+
+	public void getHighestPriorityFromOneList(StudentWaiter stuW) {
+		if(assignList.contains(stuW)){
+			assignList.remove(stuW);
+		}else{
+			if(list.contains(stuW)){
+				list.remove(stuW);
+			}
+		}
+		
+	}
+
+	public void getHighestPriorityFromTwoList(StudentWaiter stuW) {
+		twoList.remove(stuW);
+	}
+	
 
 	
 }

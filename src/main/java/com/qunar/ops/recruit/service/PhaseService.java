@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.github.pagehelper.PageHelper;
 import com.qunar.ops.recruit.dao.PhaseMapper;
 import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.model.PhaseExample;
@@ -95,6 +96,13 @@ public class PhaseService {
 		criteria.andYearInfoEqualTo(year);
 		List<Phase> list = phMapper.selectByExample(example);
 		return list;
+	}
+
+	public List<Phase> getPhaseInfos(Integer currentPage, Integer pageSize) {
+		PhaseExample ie = new PhaseExample();
+		ie.setOrderByClause("phase_name");
+		PageHelper.startPage(currentPage, pageSize);
+		return phMapper.selectByExample(ie);
 	}
 
 	
