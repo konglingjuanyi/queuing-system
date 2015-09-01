@@ -47,30 +47,23 @@ public class PhaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/hr/getPhaseInfos")
-	public String getInterviewers(HttpServletRequest request,  ModelMap model, Integer currentPage) {
+	public String getInterviewers(HttpServletRequest request,  ModelMap model) {
 		List<Phase> list = null;
-		if(currentPage != null)
-			list = phService.getPhaseInfos(currentPage, RecruitConst.PAGE_SIZE);
-		else{
-			list = phService.getPhaseInfos();
-		}
-		PageInfo page = new PageInfo(list);
-		int pagecount=(int) ((page.getTotal()+RecruitConst.PAGE_SIZE-1)/RecruitConst.PAGE_SIZE);
-		model.addAttribute("currentPage", currentPage);
-		model.addAttribute("pagecount", pagecount);
+		list = phService.getPhaseInfos();
 		model.addAttribute("list", list);
 		return "/phase_manage";
 	}
 	
 	@RequestMapping(value = "/hr/addPhaseInfo")
-	public String addPhaseInfo(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
+	@ResponseBody
+	public BaseResult addPhaseInfo(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 		Phase inter = phService.createPhaseInfo(vars);
 		if(phService.getPhaseInfoBy(inter.getYearInfo(),inter.getPhaseName()) != null){
-			return "forward:/hr/getPhaseInfos?currentPage="+1;
+			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_YEAR_PHASE_ERROR_MSG);
 		}else{
 			phService.addPhaseInfo(inter);
-			return "forward:/hr/getPhaseInfos?currentPage="+1;
+			return BaseResult.getSuccessResult("success");
 		}
 	}
 	
@@ -119,23 +112,24 @@ public class PhaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/hr/addAllcity")
-	public String addAllcity(HttpServletRequest request, ModelMap model,@RequestBody CommonRequest commonRequest) {
+	@ResponseBody
+	public BaseResult addAllcity(HttpServletRequest request, ModelMap model,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 		String phase=vars.get("phase");
 		String year=vars.get("year");
 		String all_value=vars.get("all_value");
 		if(all_value!=null && !"".equals(all_value)){
 			piService.addPhaseInterviewInfo(all_value,phase,year);
-			return "forward:/hr/getPhaseInfos?currentPage="+1;
+			return BaseResult.getSuccessResult("success");
 		}else{
-			return "forward:/hr/getPhaseInfos?currentPage="+1;
+			return BaseResult.getErrorResult(RecruitConst.ALREADY_EXIST_USER_ERROR, RecruitConst.ALREADY_EXIST_PHASE_INTERVIEW_ERROR_MSG);
 		}
 	}
 	
 	@RequestMapping(value = "/hr/setOverPhaseInfo")
 	public String  deleteStudentInfo(HttpServletRequest request, String year,String name){
 		studentService.setOverStudentInfoBy(year,name);
-		return "forward:/hr/getPhaseInfos?currentPage="+1;
+		return "forward:/hr/getPhaseInfos";
 	}
 	
 }
