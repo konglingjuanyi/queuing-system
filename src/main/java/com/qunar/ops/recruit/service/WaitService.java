@@ -99,7 +99,7 @@ public class WaitService {
 	 */
 	public synchronized void addTwoList(StudentWaiter stu) {
 		// TODO Auto-generated method stub
-		twoList.add(stu);
+		twoList.add(0, stu);
 	}
 	
 
@@ -180,7 +180,7 @@ public class WaitService {
 	}
 
 	public void add2AssianList(StudentWaiter sw) {
-		assignList.add(sw);
+		assignList.add(0, sw);
 	}
 
 	public void removeHighestPriorityFromOneList(StudentWaiter stuW) {
