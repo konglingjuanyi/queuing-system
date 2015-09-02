@@ -66,5 +66,10 @@ public class PcHrService {
 		
 	}
 
+	public static boolean containsKey(PhaseInterviewer pi) {
+		// TODO Auto-generated method stub
+		return map.containsKey(pi);
+	}
+
 	
 }

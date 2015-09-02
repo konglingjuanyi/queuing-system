@@ -517,7 +517,7 @@ public class InterviewerController {
 	}
 	
 	@RequestMapping(value = "/interviewer/login")
-	public String toindex(HttpServletRequest request,
+	public String toindex(HttpServletRequest request, HttpSession session,
 			HttpServletResponse response, String username, String password, ModelMap model) {
 		Object user = request.getSession().getAttribute("user");
 		String year=(String) request.getSession().getAttribute("year");
@@ -547,7 +547,11 @@ public class InterviewerController {
 						request.getSession().setAttribute("user", inter);
 						//添加到全局map
 						pi.setStatus(RecruitConst.INTERVIEWER_STATE_WAITING);
-						PcHrService.put(pi, null);
+						if(PcHrService.containsKey(pi)){
+							session.setAttribute("student", PcHrService.get(pi));
+						}else{
+							PcHrService.put(pi, null);
+						}
 						return "/view_index";
 					}
 				}
