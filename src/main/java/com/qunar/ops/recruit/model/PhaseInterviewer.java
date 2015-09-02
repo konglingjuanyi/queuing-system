@@ -1,6 +1,8 @@
 package com.qunar.ops.recruit.model;
 
-public class PhaseInterviewer {
+import java.io.Serializable;
+
+public class PhaseInterviewer implements Serializable{
     private Integer id;
 
     private String year;
