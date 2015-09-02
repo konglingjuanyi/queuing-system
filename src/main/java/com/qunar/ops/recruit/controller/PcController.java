@@ -1,5 +1,7 @@
 package com.qunar.ops.recruit.controller;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +27,10 @@ public class PcController {
 	}
 	
 	@RequestMapping(value = "/pc/toindex")
-	public String toPcIndex(HttpServletRequest request,ModelMap model) {
+	public String toPcIndex(HttpSession session, HttpServletRequest request,ModelMap model) {
+		Map<PhaseInterviewer, Student> map = PcHrService.getAllInterviewers(getYearPhaseAndCity(session));
+		List<Map<PhaseInterviewer, Student>> list = makeList(map);
+		model.addAttribute("message", list);
 		return "/pc/pc_index";
 	}
 	
@@ -33,7 +38,19 @@ public class PcController {
 	@ResponseBody
 	public BaseResult selectViewAndStudent(HttpSession session, ModelMap model) {
 		Map<PhaseInterviewer, Student> map = PcHrService.getAllInterviewers(getYearPhaseAndCity(session));
-		return BaseResult.getSuccessResult(map);
+		List<Map<PhaseInterviewer, Student>> list = makeList(map);
+		return BaseResult.getSuccessResult(list);
+	}
+
+	private List<Map<PhaseInterviewer, Student>> makeList(
+			Map<PhaseInterviewer, Student> map) {
+		List<Map<PhaseInterviewer, Student>> list = new LinkedList<Map<PhaseInterviewer,Student>>();
+		for (PhaseInterviewer pi : map.keySet()) {
+			Map<PhaseInterviewer, Student> tmp = new HashMap<PhaseInterviewer, Student>();
+			tmp.put(pi, map.get(pi));
+			list.add(tmp);
+		}
+		return list;
 	}
 
 	private String[] getYearPhaseAndCity(HttpSession session) {
