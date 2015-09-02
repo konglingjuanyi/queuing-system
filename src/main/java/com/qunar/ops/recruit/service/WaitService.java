@@ -55,7 +55,7 @@ public class WaitService {
 				count ++;
 			}
 		}
-		return count;
+		return count + 1;
 	}
 	
 	

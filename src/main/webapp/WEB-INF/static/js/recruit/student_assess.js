@@ -157,6 +157,8 @@ $(document).ready(function () {
 			    	  $("#jobTitle").text("");
 			    	  $("#first_viewer").text("");
 			    	  $("#second_viewer").text("");
+			    	  $("#already_inter").text(parseInt($("#already_inter").text())+1);
+			    	  $("#getOneInterview").attr("disabled", false);
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;
