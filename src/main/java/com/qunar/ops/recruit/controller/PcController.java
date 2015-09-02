@@ -17,6 +17,7 @@ import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.service.PcHrService;
+import com.qunar.ops.recruit.util.RecruitConst;
 
 @Controller
 public class PcController {
@@ -30,6 +31,19 @@ public class PcController {
 	public String toPcIndex(HttpSession session, HttpServletRequest request,ModelMap model) {
 		Map<PhaseInterviewer, Student> map = PcHrService.getAllInterviewers(getYearPhaseAndCity(session));
 		List<List> list = makeList(map);
+		for (List list2 : list) {
+			PhaseInterviewer pi = (PhaseInterviewer) list2.get(0);
+			if(pi.getStatus().equals(RecruitConst.INTERVIEWER_STATE_WAITING) && list2.get(2) == null){
+				Student s = (Student) list2.get(2);
+				model.addAttribute("room", pi.getRoom());
+				model.addAttribute("name", s.getName());
+				break;
+			}
+		}
+		if(!model.containsKey("room")){
+			model.addAttribute("room", "");
+			model.addAttribute("name", "");
+		}
 		model.addAttribute("message", list);
 		return "/pc/pc_index";
 	}

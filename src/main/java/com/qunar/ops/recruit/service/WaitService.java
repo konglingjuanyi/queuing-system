@@ -14,25 +14,39 @@ import com.qunar.ops.recruit.model.Student;
 public class WaitService {
 	Set<StudentWaiter> list = new HashSet<StudentWaiter>();
 	
-	Queue<StudentWaiter> twoList = new LinkedList<StudentWaiter>();
+	List<StudentWaiter> twoList = new LinkedList<StudentWaiter>();
 	
-	Set<StudentWaiter> assignList = new HashSet<StudentWaiter>();
-
-	
-	public synchronized int numberInFrontOf(StudentWaiter t){
-		if(list.contains(t)){
-			return numberInFrontOfOne(t)+1;
-		}
-		if(twoList.contains(t)){
-			return numberInFrontOfTwo(t)+1;
-
-		}
-		return -1;
-	}
+	List<StudentWaiter> assignList = new LinkedList<StudentWaiter>();
 	
 	public synchronized int numberInFrontOfOne(StudentWaiter t) {
+		//若在指派队列里，则只计算指派队列里的
+		if(assignList.contains(t)){
+			int count = 0;
+			for (StudentWaiter stu : assignList) {
+//				System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
+				Student s1 = stu.getStu();
+				Student ss = t.getStu();
+				if(s1.equals(ss)){
+					break;
+				}
+				if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob())){
+					count ++;
+				}
+			}
+			return count + 1;
+		}
+		//不在指派队列里
+		
+		//先把指派队列里同城市职位的人数计算数量
 		int count = 0;
-//		System.out.println(list);
+		for (StudentWaiter stu : assignList) {
+			Student s1 = stu.getStu();
+			Student ss = t.getStu();
+			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob())){
+				count ++;
+			}
+		}
+		//再看list里面优先级比他大的
 		for (StudentWaiter stu : list) {
 //			System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
 			Student s1 = stu.getStu();
@@ -57,21 +71,24 @@ public class WaitService {
 	}
 
 	public synchronized int numberInFrontOfTwo(StudentWaiter t) {
+		
 		int count = 0;
 		for (StudentWaiter stu : twoList) {
 //			System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
 			Student s1 = stu.getStu();
 			Student ss = t.getStu();
-			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob()) && stu.compareTo(t) > 0){
+			if(s1.equals(ss)){
+				break;
+			}
+			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob())){
 				count ++;
 			}
 		}
-		return count;
+		return count + 1;
 	}
 	
-	public synchronized int add2WaitList(StudentWaiter t){
+	public synchronized void add2WaitList(StudentWaiter t){
 		list.add(t);
-		return numberInFrontOf(t);
 	}
 		
 
@@ -141,39 +158,25 @@ public class WaitService {
 	
 	public synchronized StudentWaiter getHighestPriorityFromTwoList(String year,
 			String phase, String city, String twoView, String interviewName) {
-		List<StudentWaiter> tmpList = new LinkedList<StudentWaiter>();
 		for (StudentWaiter t : twoList) {
 			Student stu = t.getStu();
 			if(stu.getYear().equals(year) && stu.getPhaseNo().equals(phase)
 					&& stu.getLocation().equals(city)
 					&& !stu.getFirstTry().equals(interviewName)
 					&& twoView.contains(stu.getJob())){
-				tmpList.add(t);
+				return t;
 			}
 		}
-		StudentWaiter ret = null;
-		for (StudentWaiter t : tmpList) {
-			if(ret == null){
-				ret = t;
-			}else{
-				ret = ret.compareTo(t) < 0 ? t:ret;
-			}
-		}
-		return ret;
+		return null;
 	}
 
 	public boolean containsOne(StudentWaiter studentWaiter) {
 //		System.out.println(list);
-		return list.contains(studentWaiter);
+		return list.contains(studentWaiter) || assignList.contains(studentWaiter);
 	}
 	
 	public boolean containsTwo(StudentWaiter studentWaiter) {
 		return twoList.contains(studentWaiter);
-	}
-
-	public void remove(StudentWaiter sw) {
-		list.remove(sw);
-		
 	}
 
 	public void add2AssianList(StudentWaiter sw) {

@@ -134,13 +134,13 @@ public class StudentController {
 			model.addAttribute("flag",1);
 		}else if(waitService.containsOne(studentWaiter)){
 			//一面排队中
-			int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
+			int numberInfontOfMe = waitService.numberInFrontOfOne(studentWaiter);
 			String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
 			model.addAttribute("message",message);
 			model.addAttribute("flag",1);
 		}else if(waitService.containsTwo(studentWaiter)){
 			//二面排队中
-			int numberInfontOfMe = waitService.numberInFrontOf(studentWaiter);
+			int numberInfontOfMe = waitService.numberInFrontOfTwo(studentWaiter);
 			String message="<span class='name'>"+name+"</span>同学 恭喜通过初试<br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行复试";
 			model.addAttribute("message",message);
 			model.addAttribute("flag",1);

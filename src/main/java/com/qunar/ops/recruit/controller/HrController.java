@@ -183,7 +183,7 @@ public class HrController {
 			Student stu = studentService.getStudentById(id);
 			StudentWaiter sw = new StudentWaiter(stu);
 			if(waitService.containsOne(sw)){
-				waitService.remove(sw);
+				waitService.removeHighestPriorityFromOneList(sw);
 				sw.getStu().setFirstTry(name);
 				waitService.add2AssianList(sw);
 			}else{
