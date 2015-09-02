@@ -50,5 +50,9 @@ public class PcHrService {
 		return ret;
 	}
 
+	public static Student get(PhaseInterviewer pi) {
+		return map.get(pi);
+	}
+
 	
 }

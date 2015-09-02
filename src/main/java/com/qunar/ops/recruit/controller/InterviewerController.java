@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -95,6 +96,7 @@ public class InterviewerController {
 	
 	@RequestMapping(value = "/interview/addInterviewers")
 	@ResponseBody
+	@Transactional
 	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 //		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
@@ -105,6 +107,7 @@ public class InterviewerController {
 	
 	@RequestMapping(value = "/interview/updateInterviewers")
 	@ResponseBody
+	@Transactional
 	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 //		System.out.println("=======");
 		Map<String, String> vars = commonRequest.getVars();
@@ -178,6 +181,7 @@ public class InterviewerController {
 	 */
 	@RequestMapping(value = "/interviewer/getOneInterview")
 	@ResponseBody
+	@Transactional
 	public BaseResult getOneInterview(HttpServletRequest request, HttpSession session, ModelMap mm) {
 		return getNextStudent(session, mm);
 	}
@@ -276,7 +280,7 @@ public class InterviewerController {
 	 */
 	@RequestMapping(value = "/interviewer/beginToInterview")
 	@ResponseBody
-//	@Transactional
+	@Transactional
 	public BaseResult beginToInterview(HttpServletRequest request, HttpSession session) {
 		Student stu = (Student) session.getAttribute("student");
 		Interviewer inter = (Interviewer) session.getAttribute("user");
@@ -312,6 +316,7 @@ public class InterviewerController {
 	
 	@RequestMapping(value = "/interviewer/finishAndRest")
 	@ResponseBody
+	@Transactional
 	public BaseResult finishAndRest(HttpServletRequest request, HttpSession session, ModelMap mm, @RequestBody CommonRequest commonRequest) {
 		finishUpdateStateAndRecordAsess(session, commonRequest);
 		String[] arrs = getYearPhaseAndCity(session);
@@ -328,6 +333,7 @@ public class InterviewerController {
 	
 	@RequestMapping(value = "/interviewer/finishAndContinue")
 	@ResponseBody
+	@Transactional
 	public BaseResult finishAndContinue(HttpServletRequest request, HttpSession session, ModelMap mm, @RequestBody CommonRequest commonRequest) {
 		finishUpdateStateAndRecordAsess(session, commonRequest);
 		return getNextStudent(session, mm);
@@ -407,6 +413,7 @@ public class InterviewerController {
 
 	@RequestMapping(value = "/interviewer/noComeFinish")
 	@ResponseBody
+	@Transactional
 	public BaseResult noComeFinish(HttpServletRequest request, HttpSession session, ModelMap mm) {
 		Student stu = (Student) session.getAttribute("student");
 		stu.setState(RecruitConst.STUDENT_STATE_PASS_ME);
@@ -420,17 +427,16 @@ public class InterviewerController {
 	@RequestMapping(value = "/interviewer/getCurrentViewInfo")
 	@ResponseBody
 	public BaseResult getCurrentViewInfo(HttpServletRequest request, HttpSession session) {
-		Student stu = (Student) session.getAttribute("student");
 		Interviewer inter = (Interviewer) session.getAttribute("user");
 		inter =interServe.getInterviewerByUserName(inter.getUserName());
 		String year = (String)session.getAttribute("year");
 		String phase = (String)session.getAttribute("phase");
 		String city = (String)session.getAttribute("city");
 		PhaseInterviewer pi = piService.getPhaseInterviewerBy(year, phase, city, inter.getUserName());
-		Student newStu = new Student();
 		List ret = new LinkedList();
 		ret.add(inter);
 		ret.add(pi);
+		Student stu = PcHrService.get(pi);
 		if(stu == null){
 			return BaseResult.getErrorResult(-1, "failed", ret);
 		}else{
@@ -500,7 +506,7 @@ public class InterviewerController {
 	public BaseResult updateOprateCity(HttpServletRequest request,HttpSession session, @RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 		String city = vars.get("city");
-		System.out.println(city);
+//		System.out.println(city);
 		session.setAttribute("city", city);
 		return BaseResult.getSuccessResult("success");
 	}

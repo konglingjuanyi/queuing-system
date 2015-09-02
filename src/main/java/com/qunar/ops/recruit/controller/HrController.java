@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,6 +65,7 @@ public class HrController {
 	
 	@RequestMapping(value = "/hr/addInterviewers")
 	@ResponseBody
+	@Transactional
 	public BaseResult addInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 //		System.out.println(vars);
@@ -78,6 +80,7 @@ public class HrController {
 	
 	@RequestMapping(value = "/hr/deleteInterviewer")
 	@ResponseBody
+	@Transactional
 	public BaseResult deleteInterviewers(HttpServletRequest request, int id) {
 		interService.deleteInterviewer(id);
 		return BaseResult.getSuccessResult("success");
@@ -85,6 +88,7 @@ public class HrController {
 	
 	@RequestMapping(value = "/hr/updateInterviewer")
 	@ResponseBody
+	@Transactional
 	public BaseResult updateInterviewer(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 //		System.out.println(vars);
@@ -177,6 +181,7 @@ public class HrController {
 	}
 
 	@RequestMapping(value = "/hr/assignInterviewer")
+	@Transactional
 	public String getInterviewersForManage(HttpServletRequest request, ModelMap model, Integer id, String name) {
 		if(id == null || name == null){
 			return "forward:/hr/getAllStudentInfos";

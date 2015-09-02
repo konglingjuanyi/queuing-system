@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -51,6 +52,7 @@ public class StudentManageController {
 	private PhaseInterviewService interService;
 	
 	@RequestMapping(value="/hr/importStudentInfos",method=RequestMethod.POST)
+	@Transactional
 	public String importStaffInfo(@RequestParam("fileField") MultipartFile clientFile,
 			HttpServletResponse response, HttpServletRequest request,  RedirectAttributesModelMap  model) {
 		// message记录导入相关的信息
@@ -119,6 +121,7 @@ public class StudentManageController {
 	}
 	
 	@RequestMapping(value = "/hr/AddStudentInfo")
+	@Transactional
 	public String  AddStudentInfo(HttpServletRequest request,@ModelAttribute("doaddform") StudentForm stu,BindingResult results){
 		Student result=stuService.makeStudentBy(stu);
 		int flag=stuService.insertOneStudentInfo(result);
@@ -126,6 +129,7 @@ public class StudentManageController {
 	}
 	
 	@RequestMapping(value = "/hr/deleteStudentInfo")
+	@Transactional
 	public String  deleteStudentInfo(HttpServletRequest request, int id){
 		stuService.deleteStudentInfoBy(id);
 		return "forward:/hr/getAllStudentInfos";
@@ -202,6 +206,7 @@ public class StudentManageController {
 	}
 	
 	@RequestMapping(value = "/hr/AddHrStudentAssess")
+	@Transactional
 	public String  AddHrStudentAssess(HttpServletRequest request, int id, String hrName, String salay, String hrdetail){
 		StudentAssess sa=new StudentAssess();
 		sa.setId(id);

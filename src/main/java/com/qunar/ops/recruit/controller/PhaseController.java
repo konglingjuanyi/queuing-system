@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,6 +57,7 @@ public class PhaseController {
 	
 	@RequestMapping(value = "/hr/addPhaseInfo")
 	@ResponseBody
+	@Transactional
 	public BaseResult addPhaseInfo(HttpServletRequest request,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 		Phase inter = phService.createPhaseInfo(vars);
@@ -74,6 +76,7 @@ public class PhaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "/hr/gotoaddPhaseInfos")
+	@Transactional
 	public String gotoaddPhaseInfos(HttpServletRequest request, ModelMap model,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 		Phase ph = (Phase) phService.getPhaseInfoBy(vars.get("yearinfo"),vars.get("phasename"));
@@ -113,6 +116,7 @@ public class PhaseController {
 	 */
 	@RequestMapping(value = "/hr/addAllcity")
 	@ResponseBody
+	@Transactional
 	public BaseResult addAllcity(HttpServletRequest request, ModelMap model,@RequestBody CommonRequest commonRequest) {
 		Map<String, String> vars = commonRequest.getVars();
 		String phase=vars.get("phase");
@@ -127,6 +131,7 @@ public class PhaseController {
 	}
 	
 	@RequestMapping(value = "/hr/setOverPhaseInfo")
+	@Transactional
 	public String  deleteStudentInfo(HttpServletRequest request, String year,String name){
 		studentService.setOverStudentInfoBy(year,name);
 		return "forward:/hr/getPhaseInfos";
