@@ -1,6 +1,7 @@
 package com.qunar.ops.recruit.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -193,6 +194,8 @@ public class HrController {
 			Student newStu = new Student();
 			newStu.setId(stu.getId());
 			newStu.setState(RecruitConst.STUDENT_STATE_REGIST);
+			if(stu.getTrueTime() == null)
+				newStu.setTrueTime(new Date());
 			studentService.updateStudent(newStu);
 		}
 		

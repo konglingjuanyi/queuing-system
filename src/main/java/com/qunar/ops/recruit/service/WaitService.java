@@ -26,7 +26,7 @@ public class WaitService {
 //				System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
 				Student s1 = stu.getStu();
 				Student ss = t.getStu();
-				if(s1.equals(ss)){
+				if(stu.equals(t)){
 					break;
 				}
 				if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob())){
@@ -77,7 +77,7 @@ public class WaitService {
 //			System.out.println("=======>"+stu.getStu().getLocation()+"\t"+t.getStu().getLocation());
 			Student s1 = stu.getStu();
 			Student ss = t.getStu();
-			if(s1.equals(ss)){
+			if(stu.equals(t)){
 				break;
 			}
 			if(isSameCity(s1, ss) && s1.getJob().equals(ss.getJob())){

@@ -173,7 +173,6 @@ public class StudentController {
 
 	private boolean isFinished(Student student) {
 		if(student.getState().equals(RecruitConst.STUDENT_STATE_FINISH) ||
-				student.getState().equals(RecruitConst.STUDENT_STATE_PASS_ME)||
 				student.getState().equals(RecruitConst.STUDENT_STATE_ONE_NOT_PASS) ||
 				student.getState().equals(RecruitConst.STUDENT_STATE_TWO_NOT_PASS)){
 			return true;
