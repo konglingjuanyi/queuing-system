@@ -209,14 +209,17 @@ public class InterviewerController {
 					//只有一面角色从一面队列中拿数据
 					stuW = waitService.getHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView(), inter.getUserName());
 				}
+				PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 				if(stuW == null){
 					mm.addAttribute("message", RecruitConst.WAITING_FOR_INTERVIEW_IS_EMPTY);
+					//往全局map中放学生信息
+					PcHrService.change(pi, null);
+					PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_WAITING);
 					return BaseResult.getSuccessResult(mm);
 				}else{
 					Student stu = stuW.getStu();
 					Student newStu = new Student();
 					newStu.setId(stu.getId());
-					PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 					if(oneOrtwo == 1){
 						stu.setState(RecruitConst.STUDENT_STATE_GOING2ONEROOM);
 						stu.setFirstTry(inter.getUserName());
@@ -241,7 +244,7 @@ public class InterviewerController {
 					pi.setStatus(RecruitConst.INTERVIEWER_STATE_WAITING);
 					piService.update(pi);
 					//往全局map中放学生信息
-					PcHrService.put(pi, stu);
+					PcHrService.change(pi, stu);
 					PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_WAITING);
 					//更新学生状态
 					studentService.updateStudent(newStu);
@@ -329,7 +332,7 @@ public class InterviewerController {
 		newPi.setStatus(RecruitConst.INTERVIEWER_STATE_REST);
 		piService.update(newPi);
 		PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_REST);
-		PcHrService.put(pi, null);
+		PcHrService.change(pi, null);
 		return BaseResult.getSuccessResult("");
 	}
 	

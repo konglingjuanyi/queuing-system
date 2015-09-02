@@ -23,7 +23,8 @@ public class PcHrService {
 	}
 
 	public static void put(PhaseInterviewer inter, Student s) {
-		map.put(inter, s);
+		if(!map.containsKey(inter))
+			map.put(inter, s);
 	}
 
 	public static void changeState(PhaseInterviewer inter,
@@ -57,6 +58,11 @@ public class PcHrService {
 	public static void changeStateOfStudent(PhaseInterviewer pi,
 			String state) {
 		map.get(pi).setState(state);
+		
+	}
+
+	public static void change(PhaseInterviewer pi, Student s) {
+		map.put(pi, s);
 		
 	}
 
