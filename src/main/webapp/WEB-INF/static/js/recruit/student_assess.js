@@ -54,8 +54,10 @@ $(document).ready(function () {
 			    		  if(access!=null){
 			    			  addValue(access);
 			    		  }
+			    		  disabledOne();
 			    	  }else{
 			    		  setAllVal();
+			    		  disabledTwo();
 			    	  }
 			    	  $("#already_inter").text(parseInt(inter.oneCount)+parseInt(inter.twoCount));
 			    	  $("#student_name").text(stu.name);
@@ -168,8 +170,10 @@ $(document).ready(function () {
 			    		  if(access!=null){
 			    			  addValue(access);
 			    		  }
+			    		  disabledOne();
 			    	  }else{
 			    		  setAllVal();
+			    		  disabledTwo();
 			    	  }
 			    	  $("#already_inter").text(parseInt(inter.oneCount)+parseInt(inter.twoCount));
 			    	  $("#student_name").text(stu.name);
@@ -264,8 +268,10 @@ $(document).ready(function () {
 			    		  if(access!=null){
 			    			  addValue(access);
 			    		  }
+			    		  disabledOne();
 			    	  }else{
 			    		  setAllVal();
+			    		  disabledTwo();
 			    	  }
 			    	  $("#student_name").text(stu.name);
 			    	  $("#jobTitle").text(stu.job);
@@ -546,6 +552,124 @@ function showSuggest(flag1){
 		}
 	}
 	
+}
+
+function disabledTwo(){
+	$("#one_code").attr("disabled",false);
+	$("#one_code_detail").attr("disabled",false);
+	$("#one_algorithm").attr("disabled",false);
+	$("#one_algorithm_detail").attr("disabled",false);
+	$("#one_network").attr("disabled",false);
+	$("#one_network_detail").attr("disabled",false);
+	$("#one_experience").attr("disabled",false);
+	$("#one_experience_detail").attr("disabled",false);
+	$("#one_other").attr("disabled",false);
+	$("#one_other_detail").attr("disabled",false);
+	$("#one_logic").attr("disabled",false);
+	$("#one_logic_detail").attr("disabled",false);
+	$("#one_creative").attr("disabled",false);
+	$("#one_creative_detail").attr("disabled",false);
+	$("#one_team").attr("disabled",false);
+	$("#one_team_detail").attr("disabled",false);
+	$("#one_continuouslearning").attr("disabled",false);
+	$("#one_continuouslearning_detail").attr("disabled",false);
+	$("#one_outstanding").attr("disabled",false);
+	$("#one_outstanding_detail").attr("disabled",false);
+	$("#one_conclusion").attr("disabled",false);
+	$("#one_suggest_salary").attr("disabled",false);
+	$("#one_suggest_salary_detail").attr("disabled",false);
+	$("#one_allocation_idea").attr("disabled",false);
+	$("#one_sum").attr("disabled",false);
+	$("#one_suggest").attr("disabled",false);
+	$("#two_suggest").attr("disabled",true);
+	
+	$("#two_code").attr("disabled",true);
+	$("#two_code_detail").attr("disabled",true);
+	$("#two_algorithm").attr("disabled",true);
+	$("#two_algorithm_detail").attr("disabled",true);
+	$("#two_network").attr("disabled",true);
+	$("#two_network_detail").attr("disabled",true);
+	$("#two_experience").attr("disabled",true);
+	$("#two_experience_detail").attr("disabled",true);
+	$("#two_other").attr("disabled",true);
+	$("#two_other_detail").attr("disabled",true);
+	$("#two_logic").attr("disabled",true);
+	$("#two_logic_detail").attr("disabled",true);
+	$("#two_creative").attr("disabled",true);
+	$("#two_creative_detail").attr("disabled",true);
+	$("#two_team").attr("disabled",true);
+	$("#two_team_detail").attr("disabled",true);
+	$("#two_continuouslearning").attr("disabled",true);
+	$("#two_continuouslearning_detail").attr("disabled",true);
+	$("#two_outstanding").attr("disabled",true);
+	$("#two_outstanding_detail").attr("disabled",true);
+	$("#two_suggest_salary").attr("disabled",true);
+	$("#two_conclusion").attr("disabled",true);
+	$("#two_conclusion_detail").attr("disabled",true);
+	$("#two_allocation_idea").attr("disabled",true);
+	$("#hr_name").attr("disabled",true);
+	$("#two_sum").attr("disabled",true);
+	$("#hr_suggest_salary").attr("disabled",true);
+	$("#hr_detail_idea").attr("disabled",true);
+}
+
+function disabledOne(){
+	$("#one_code").attr("disabled",true);
+	$("#one_code_detail").attr("disabled",true);
+	$("#one_algorithm").attr("disabled",true);
+	$("#one_algorithm_detail").attr("disabled",true);
+	$("#one_network").attr("disabled",true);
+	$("#one_network_detail").attr("disabled",true);
+	$("#one_experience").attr("disabled",true);
+	$("#one_experience_detail").attr("disabled",true);
+	$("#one_other").attr("disabled",true);
+	$("#one_other_detail").attr("disabled",true);
+	$("#one_logic").attr("disabled",true);
+	$("#one_logic_detail").attr("disabled",true);
+	$("#one_creative").attr("disabled",true);
+	$("#one_creative_detail").attr("disabled",true);
+	$("#one_team").attr("disabled",true);
+	$("#one_team_detail").attr("disabled",true);
+	$("#one_continuouslearning").attr("disabled",true);
+	$("#one_continuouslearning_detail").attr("disabled",true);
+	$("#one_outstanding").attr("disabled",true);
+	$("#one_outstanding_detail").attr("disabled",true);
+	$("#one_conclusion").attr("disabled",true);
+	$("#one_suggest_salary").attr("disabled",true);
+	$("#one_suggest_salary_detail").attr("disabled",true);
+	$("#one_allocation_idea").attr("disabled",true);
+	$("#one_sum").attr("disabled",true);
+	$("#one_suggest").attr("disabled",true);
+	
+	$("#two_code").attr("disabled",false);
+	$("#two_code_detail").attr("disabled",false);
+	$("#two_algorithm").attr("disabled",false);
+	$("#two_algorithm_detail").attr("disabled",false);
+	$("#two_network").attr("disabled",false);
+	$("#two_network_detail").attr("disabled",false);
+	$("#two_experience").attr("disabled",false);
+	$("#two_experience_detail").attr("disabled",false);
+	$("#two_other").attr("disabled",false);
+	$("#two_other_detail").attr("disabled",false);
+	$("#two_logic").attr("disabled",false);
+	$("#two_logic_detail").attr("disabled",false);
+	$("#two_creative").attr("disabled",false);
+	$("#two_creative_detail").attr("disabled",false);
+	$("#two_team").attr("disabled",false);
+	$("#two_team_detail").attr("disabled",false);
+	$("#two_continuouslearning").attr("disabled",false);
+	$("#two_continuouslearning_detail").attr("disabled",false);
+	$("#two_outstanding").attr("disabled",false);
+	$("#two_outstanding_detail").attr("disabled",false);
+	$("#two_suggest_salary").attr("disabled",false);
+	$("#two_conclusion").attr("disabled",false);
+	$("#two_conclusion_detail").attr("disabled",false);
+	$("#two_allocation_idea").attr("disabled",false);
+	$("#hr_name").attr("disabled",true);
+	$("#two_sum").attr("disabled",false);
+	$("#hr_suggest_salary").attr("disabled",true);
+	$("#hr_detail_idea").attr("disabled",true);
+	$("#two_suggest").attr("disabled",false);
 }
 
 
