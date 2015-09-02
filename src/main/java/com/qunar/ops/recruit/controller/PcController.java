@@ -29,7 +29,7 @@ public class PcController {
 	@RequestMapping(value = "/pc/toindex")
 	public String toPcIndex(HttpSession session, HttpServletRequest request,ModelMap model) {
 		Map<PhaseInterviewer, Student> map = PcHrService.getAllInterviewers(getYearPhaseAndCity(session));
-		List<Map<PhaseInterviewer, Student>> list = makeList(map);
+		List<List> list = makeList(map);
 		model.addAttribute("message", list);
 		return "/pc/pc_index";
 	}
@@ -38,16 +38,17 @@ public class PcController {
 	@ResponseBody
 	public BaseResult selectViewAndStudent(HttpSession session, ModelMap model) {
 		Map<PhaseInterviewer, Student> map = PcHrService.getAllInterviewers(getYearPhaseAndCity(session));
-		List<Map<PhaseInterviewer, Student>> list = makeList(map);
+		List<List> list = makeList(map);
 		return BaseResult.getSuccessResult(list);
 	}
 
-	private List<Map<PhaseInterviewer, Student>> makeList(
+	private List<List> makeList(
 			Map<PhaseInterviewer, Student> map) {
-		List<Map<PhaseInterviewer, Student>> list = new LinkedList<Map<PhaseInterviewer,Student>>();
+		List<List> list = new LinkedList<List>();
 		for (PhaseInterviewer pi : map.keySet()) {
-			Map<PhaseInterviewer, Student> tmp = new HashMap<PhaseInterviewer, Student>();
-			tmp.put(pi, map.get(pi));
+			List tmp = new LinkedList();
+			tmp.add(pi);
+			tmp.add(map.get(pi));
 			list.add(tmp);
 		}
 		return list;

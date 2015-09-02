@@ -169,6 +169,7 @@ public class StudentManageService {
 		criteria.andLocationEqualTo(stu.getLocation());
 		criteria.andPhoneEqualTo(stu.getPhone());
 		criteria.andNameEqualTo(stu.getName());
+		criteria.andIsDeletedEqualTo(-1);
 		List<Student> list=stuMapper.selectByExample(example);
 		if(list!=null && list.size()>0){
 			return true;
