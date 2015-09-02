@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	setInterval("refreshPage()",60000);
+	setInterval("refreshPage()",50000);
 });
 
 function refreshPage(){
@@ -25,7 +25,7 @@ function refreshPage(){
 	    	  }
 	    	  if(stuAndRoom.length>0){
 	    		  for(var m=0;m<stuAndRoom.length;m++){
-	    			  var showstrs=stuAndRoom[m];
+	    			  var showstrs=stuAndRoom[m].split("_");
 	    			  $("#name").text(showstrs[1]);
 	    			  $("#room").text(showstrs[0]);
 	    			  $("#showView").html("");
@@ -47,6 +47,8 @@ function refreshPage(){
 	    		  }
 	    	  }else{
 	    		  $("#showView").html("");
+	    		  $("#name").text("");
+    			  $("#room").text("");
 	    		  for(var i=0;i<list.length;i++){
 	    			  var stuname="";
 		    		  var stujob="";

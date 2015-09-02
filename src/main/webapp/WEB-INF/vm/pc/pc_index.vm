@@ -12,8 +12,8 @@
 		<div class="bg">
 			<div class="bg_1">
 				<div class="wrap-1000">
-					<div class="title-name" id="name">$name</div>
-					<div class="title-root" id="room">$room</div>
+					<div class="title-name" id="name">$!name</div>
+					<div class="title-root" id="room">$!room</div>
 				</div>
 			</div>
 			<div class="bg_2"></div>
