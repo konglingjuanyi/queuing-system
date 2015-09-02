@@ -54,5 +54,11 @@ public class PcHrService {
 		return map.get(pi);
 	}
 
+	public static void changeStateOfStudent(PhaseInterviewer pi,
+			String state) {
+		map.get(pi).setState(state);
+		
+	}
+
 	
 }

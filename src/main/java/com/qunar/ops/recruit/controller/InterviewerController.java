@@ -299,6 +299,7 @@ public class InterviewerController {
 			inter.setViewCount(inter.getViewCount()+1);
 			newPi.setOneCount(pi.getOneCount()+1);
 			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_VIEWING);
+			PcHrService.changeStateOfStudent(pi, RecruitConst.STUDENT_STATE_ONE_VIEW);
 		}else{
 			stu.setState(RecruitConst.STUDENT_STATE_TWO_VIEW);
 			newStu.setState(RecruitConst.STUDENT_STATE_TWO_VIEW);
@@ -306,6 +307,7 @@ public class InterviewerController {
 			inter.setViewCount(inter.getViewCount()+1);
 			newPi.setTwoCount(pi.getTwoCount()+1);
 			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_VIEWING);
+			PcHrService.changeStateOfStudent(pi, RecruitConst.STUDENT_STATE_TWO_VIEW);
 		}
 		studentService.updateStudent(newStu);
 		interServe.updateInterviewer(newInter);
