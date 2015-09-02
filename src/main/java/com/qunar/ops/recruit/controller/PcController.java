@@ -33,8 +33,8 @@ public class PcController {
 		List<List> list = makeList(map);
 		for (List list2 : list) {
 			PhaseInterviewer pi = (PhaseInterviewer) list2.get(0);
-			if(pi.getStatus().equals(RecruitConst.INTERVIEWER_STATE_WAITING) && list2.get(2) == null){
-				Student s = (Student) list2.get(2);
+			if(pi.getStatus().equals(RecruitConst.INTERVIEWER_STATE_WAITING) && list2.get(1) != null){
+				Student s = (Student) list2.get(1);
 				model.addAttribute("room", pi.getRoom());
 				model.addAttribute("name", s.getName());
 				break;

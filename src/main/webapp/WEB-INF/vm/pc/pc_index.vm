@@ -12,8 +12,8 @@
 		<div class="bg">
 			<div class="bg_1">
 				<div class="wrap-1000">
-					<div class="title-name">马宝存</div>
-					<div class="title-root">203房间</div>
+					<div class="title-name" id="name">$!name</div>
+					<div class="title-root" id="room">$!room</div>
 				</div>
 			</div>
 			<div class="bg_2"></div>
@@ -23,13 +23,15 @@
 			<div class="bg_6"></div>			
 		</div>
 		<div class="banner">
-			<ul class="nav">
+			<ul class="nav" id="showView">
+				#foreach($info in $message)
 				<li class="item item-wait">
-					<div class="room">201</div>
-					<div class="state">-等待中-</div>
-					<div class="name">马宝存</div>
-					<div class="job">Dev</div>
+					<div class="room">$info.get(0).room</div>
+					<div class="state">-${info.get(0).status}-</div>
+					<div class="name">$!info.get(1).name</div>
+					<div class="job">$!info.get(1).job</div>
 				</li>
+				#end
 			</ul>
 		</div>
 	</div>
