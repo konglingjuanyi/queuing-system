@@ -39,7 +39,7 @@ public class StudentService {
 	public List<Student> getOneList() {
 		StudentExample se = new StudentExample();
 		StudentExample.Criteria cr = se.createCriteria();
-		cr.andFirstTryIsNull();
+		cr.andFirstTryEqualTo("");
 		cr.andTrueTimeIsNotNull();
 		List<Student> ret = stuMapper.selectByExample(se);
 		return ret;

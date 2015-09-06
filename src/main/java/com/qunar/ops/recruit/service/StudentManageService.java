@@ -192,8 +192,10 @@ public class StudentManageService {
 
 	public Student makeStudentBy(StudentForm stu) {
 		Student inter = new Student();
-		int id = stu.getId();
 		String noteNo = stu.getNoteNo();
+		String phaseNo = stu.getPhaseNo();
+		String year = stu.getYear();
+		String location =stu.getLocation();
 		String interviewTime = stu.getInterviewTime();
 		String name = stu.getName();
 		String sex = stu.getSex();
@@ -229,7 +231,9 @@ public class StudentManageService {
 		String organize = stu.getOrganize();
 		String leader = stu.getLeader();
 		
-		inter.setId(id);
+		inter.setPhaseNo(phaseNo);
+		inter.setYear(year);
+		inter.setLocation(location);
 		inter.setRefuse(refuse);
 		inter.setOfferState(offerState);
 		inter.setPhone(phone);
@@ -264,7 +268,6 @@ public class StudentManageService {
 		inter.setSchool(school);
 		inter.setSecondTry(secondTry);
 		inter.setStaffNo(staffNo);
-		inter.setRefuse(refuseDate);
 		inter.setRefuseReson(refuseReson);
 		if("".equals(interviewTime) || interviewTime==null){
 			inter.setInterviewTime(null);
