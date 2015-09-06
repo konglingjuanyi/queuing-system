@@ -240,26 +240,4 @@ function setOver(year,name){
 	}
 }
 
-var curr=parseInt($("#curr").val());
-$(".tcdPageCode").createPage({
-    pageCount:6,
-    current:curr,
-    backFn:function(p){
-        console.log(p);
-        active($('#phasepage'))
-	    $.ajax({
-		      url: "/hr/getPhaseInfos",
-		      type: "POST",
-		      dataType: "html",
-		      data:{'currentPage':p,'pageSize':2},
-		      success: function (returnedData) {
-		    	  $('#content').html(returnedData);
-			  },
-		      error: function () {
-		           alert("系统发生了错误请稍后重试");
-		      }
-		    });
-        
-    }
-});
 

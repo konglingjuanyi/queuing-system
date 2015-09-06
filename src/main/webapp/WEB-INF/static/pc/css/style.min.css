@@ -10,9 +10,9 @@ table{border-collapse:collapse;border-spacing:0}
 h1,h2,h3,h4,h5,h6,td,th{margin:0;padding:0;font-size:100%;font-weight:400;text-align:left}
 ol,ul{margin:0;padding:0;list-style:none}
 em{font-style:normal}
-.wrap-1000 .title-name,.wrap-1000 .title-root{font-style:italic;color:#fff;position:absolute}
 a{outline:0;color:#0069ca}
 a:hover{color:#f60}
+.wrap-1000 .title-name,.wrap-1000 .title-root{font-size:80px;color:#fff;font-style:italic;text-align:center}
 .clr{overflow:hidden}
 .clrfix{zoom:1}
 .clrfix:after{display:block;visibility:hidden;content:"."}
@@ -27,8 +27,8 @@ body,html{background:#041630}
 .bg_5{background:url(../images/xz_05.jpg) center top no-repeat}
 .bg_6{background:url(../images/xz_06.jpg) center top no-repeat}
 .wrap-1000{width:1000px;margin:0 auto;position:relative}
-.wrap-1000 .title-name{top:146px;left:274px;font-size:103px;width:430px;text-align:center}
-.wrap-1000 .title-root{top:256px;left:354px;font-size:103px;width:490px;text-align:center}
+.wrap-1000 .title-name{position:absolute;top:154px;left:257px;width:350px;text-align:center}
+.wrap-1000 .title-root{position:absolute;top:278px;left:354px;width:400px;text-align:center}
 .banner{position:absolute;top:565px;left:0;right:0;width:100%}
 .nav{width:1400px;margin:0 auto}
 .nav .item{width:210px;float:left;margin-left:20px;background:url(../images/nav2.png) no-repeat}

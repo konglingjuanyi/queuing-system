@@ -105,6 +105,44 @@ $(document).ready(function () {
       });
 	});
 	
+	$('#doupdstu').click(function(){
+	    $('#doupdform').ajaxSubmit({
+            url:"/hr/updStudentInfo",
+            cache:false,
+            dataType:'html',
+            success: function(data) {
+            	active($('#stupage'))
+        	    $.ajax({
+        	      url: "/hr/lead2StudentPage",
+        	      type: "POST",
+        	      dataType: "html",
+        	      contentType: 'application/json; charset=utf-8',
+        	      success: function (returnedData) {
+        	    	  $('#content').html(returnedData);
+        	    	  $.ajax({
+        	    	      url: "/hr/getAllStudentInfos",
+        	    	      type: "POST",
+        	    	      dataType: "html",
+        	    	      contentType: 'application/json; charset=utf-8',
+        	    	      success: function (returnedData) {
+        	    	    	  $('#studentInfoInner').html(returnedData);
+        	    		  },
+        	    	      error: function () {
+        	    	           alert("系统发生了错误请稍后重试");
+        	    	      }
+        	    	    });
+        		  },
+        	      error: function () {
+        	           alert("系统发生了错误请稍后重试");
+        	      }
+        	    });
+            },
+            error:function(){
+                alert("error");
+            }
+      });
+	});
+	
 	$('#dosubmitHr').click(function(){
 		var id=$("#stuId").val().trim();
 		var hrName=$("#hrName").val().trim();
@@ -375,5 +413,22 @@ function docancel(){
 	active($('#stupage'));
 	$("#viewDiv").hide();
 	$("#stuid").val("");
+}
+
+function doUpdById(id){
+	active($('#stupage'));
+	$.ajax({
+	      url: "/hr/gotoUpdStudentInfo",
+	      type: "POST",
+	      dataType: "html",
+	      data: {'id':id},
+	      success: function (returnedData) {
+	    	  $('#content').html(returnedData);
+	    	  getAddStudentYearPhaseAndCity();
+		  },
+	      error: function () {
+	           alert("系统发生了错误请稍后重试");
+	      }
+	    });
 }
 

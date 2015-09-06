@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
     <script type="text/javascript" src="/static/My97DatePicker/WdatePicker.js" charset="UTF-8"></script>
 	<script type="text/javascript" src="/static/js/recruit/student_manage.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/student_update.js"></script>
 </head>
 <body>
 	<div class="l-fullsreen">
@@ -18,184 +19,236 @@
 				<!-- 内容start -->
 				<div class="l-inner">
 					<div class="m-addmanage">
-						<form class="form-horizontal" id="doaddform" method="post" action="/hr/AddStudentInfo">
+						<form class="form-horizontal" id="doupdform" method="post" action="/hr/UpdStudentInfo">
 							<div class="control-group">
 								<label class="control-label">英才简历编号</label>
 								<div class="controls">
-								  <input type="text"  name="noteNo" id="noteNo">
+								  <input type="text"  name="noteNo" id="noteNo" value="$!{stu.noteNo}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">年份</label>
 								<div class="controls">
-									<select name="year" id="year_">
+									<select name="year" id="year_" disabled>
                                     </select>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">招聘批次</label>
 								<div class="controls">
-									<select name="phaseNo" id="phase_">
+									<select name="phaseNo" id="phase_" disabled>
                                     </select>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">城市</label>
 								<div class="controls">
-									<select name="location" id="city_">
+									<select name="location" id="city_" disabled>
                                     </select>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">面试日期</label>
 								<div class="controls">
-								  <input class="input-medium" name="interviewTime" type="text" style="width: 205px" onclick="showTime()" placeholder="应到时间">
+								  <input class="input-medium" name="interviewTime" type="text" style="width: 205px" onclick="showTime()" value="$!{interviewTime}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">姓名</label>
 								<div class="controls">
-								  <input type="text"  name="name" id="name">
+								  <input type="text"  name="name" id="name" value="$!{stu.name}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">性别</label>
 								<div class="controls">
+									#if($stu.sex == '男')
 								  	<label class="line-label" for="male"><input type="radio" name="sex" id="male" value="男" checked/>男</label>
 								  	<label class="line-label" for="female"><input type="radio" name="sex" id="female" value="女"/>女</label>
+								  	#else
+								  	<label class="line-label" for="male"><input type="radio" name="sex" id="male" value="男" />男</label>
+								  	<label class="line-label" for="female"><input type="radio" name="sex" id="female" value="女" checked/>女</label>
+								  	#end
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">学校</label>
 								<div class="controls">
-								  <input type="text"  name="school" id="school">
+								  <input type="text"  name="school" id="school" value="$!{stu.school}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">专业</label>
 								<div class="controls">
-								  <input type="text"  name="profession" id="profession">
+								  <input type="text"  name="profession" id="profession" value="$!{stu.profession}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">学历</label>
 								<div class="controls">
-								  <input type="text"  name="education" id="education">
+								  <input type="text"  name="education" id="education" value="$!{stu.education}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">手机号</label>
 								<div class="controls">
-								  <input type="text"  name="phone" id="phone">
+								  <input type="text"  name="phone" id="phone" value="$!{stu.phone}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">邮箱</label>
 								<div class="controls">
-								  <input type="text"  name="email" id="email">
+								  <input type="text"  name="email" id="email" value="$!{stu.email}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">身份证号</label>
 								<div class="controls">
-								  <input type="text"  name="cardNo" id="cardNo">
+								  <input type="text"  name="cardNo" id="cardNo" value="$!{stu.cardNo}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">QQ号</label>
 								<div class="controls">
-								  <input type="text"  name="qqNo" id="qqNo">
+								  <input type="text"  name="qqNo" id="qqNo" value="$!{stu.qqNo}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">应聘职位</label>
 								<div class="controls">
 									<select name="job" id="job">
-										<option value="RD">RD</option>
+										#if($stu.job == 'RD')
+										<option value="RD" selected="selected">RD</option>
 										<option value="QA">QA</option>
 										<option value="FE">FE</option>
+										#elseif($stu.job == 'QA')
+										<option value="RD">RD</option>
+										<option value="QA" selected="selected">QA</option>
+										<option value="FE">FE</option>
+										#else
+										<option value="RD">RD</option>
+										<option value="QA">QA</option>
+										<option value="FE" selected="selected">FE</option>
+										#end
 									</select>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">实习开始时间</label>
 								<div class="controls">
-								  <input class="input-medium" name="workStart" type="text" style="width: 205px" onclick="showTime()" placeholder="实习开始时间">
+								  <input class="input-medium" name="workStart" type="text" style="width: 205px" onclick="showTime()" placeholder="实习开始时间" value="$!{workStart}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">实习结束时间</label>
 								<div class="controls">
-								  <input class="input-medium" name="workEnd" type="text" style="width: 205px" onclick="showTime()" placeholder="实习结束时间">
+								  <input class="input-medium" name="workEnd" type="text" style="width: 205px" onclick="showTime()" placeholder="实习结束时间" value="$!{workEnd}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">毕业时间</label>
 								<div class="controls">
-								  <input class="input-medium" name="graduateDate" type="text" style="width: 205px" onclick="showTime()" placeholder="毕业时间">
+								  <input class="input-medium" name="graduateDate" type="text" style="width: 205px" onclick="showTime()" placeholder="毕业时间" value="$!{graduateDate}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">薪资标准</label>
 								<div class="controls">
-								  <input type="text"  name="salary" id="salary">
+								  <input type="text"  name="salary" id="salary" value="$!{stu.salary}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">综合评价</label>
 								<div class="controls">
 								  <select name="assess" id="assess">
-                                    <option value="合格">合格</option>
+								  	#if($stu.assess == '合格')
+                                    <option value="合格" selected="selected">合格</option>
                                     <option value="优秀">优秀</option>
                                     <option value="卓越">卓越</option>
                                     <option value="不合格">不合格</option>
+                                    #elseif($stu.assess == '优秀')
+                                    <option value="合格">合格</option>
+                                    <option value="优秀" selected="selected">优秀</option>
+                                    <option value="卓越">卓越</option>
+                                    <option value="不合格">不合格</option>
+                                    #elseif($stu.assess == '卓越')
+                                    <option value="合格">合格</option>
+                                    <option value="优秀">优秀</option>
+                                    <option value="卓越" selected="selected">卓越</option>
+                                    <option value="不合格">不合格</option>
+                                    #else
+                                    <option value="合格">合格</option>
+                                    <option value="优秀">优秀</option>
+                                    <option value="卓越">卓越</option>
+                                    <option value="不合格" selected="selected">不合格</option>
+                                    #end
                                   </select>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">初试</label>
 								<div class="controls">
-								  <input type="text"  name="firstTry" id="firstTry">
+								  <input type="text"  name="firstTry" id="firstTry" value="$!{stu.firstTry}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">复试</label>
 								<div class="controls">
-								  <input type="text"  name="secondTry" id="secondTry">
+								  <input type="text"  name="secondTry" id="secondTry" value="$!{stu.secondTry}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">面试情况备注</label>
 								<div class="controls">
-									<textarea name="viewRemark" id="viewRemark"  cols="30" rows="4"></textarea>
+									<textarea name="viewRemark" id="viewRemark"  cols="30" rows="4" >$!{stu.viewRemark}</textarea>
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">offer状态</label>
 								<div class="controls">
+									#if($stu.offerState == '接受')
 									<label class="line-label" ><input type="radio" name="offerState" id="access" value="接受" checked/>接受</label>
 									<label class="line-label" ><input type="radio" name="offerState" id="dorefuse" value="拒绝"/>拒绝</label>
+									#else
+									<label class="line-label" ><input type="radio" name="offerState" id="access" value="接受" />接受</label>
+									<label class="line-label" ><input type="radio" name="offerState" id="dorefuse" value="拒绝" checked/>拒绝</label>
+									#end
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">三方交付</label>
 								<div class="controls">
+									#if($stu.threeSide == '否')
 									<label class="line-label" ><input type="radio" name="threeSide" id="yes" value="是"/>是</label>
 									<label class="line-label" ><input type="radio" name="threeSide" id="no" value="否" checked/>否</label>
+									#else
+									<label class="line-label" ><input type="radio" name="threeSide" id="yes" value="是" checked/>是</label>
+									<label class="line-label" ><input type="radio" name="threeSide" id="no" value="否"/>否</label>
+									#end
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">交付时间</label>
 								<div class="controls">
-								  <input class="input-medium" name="payTime" type="text" style="width: 205px" onclick="showTime()" placeholder="应到时间">
+								  <input class="input-medium" name="payTime" type="text" style="width: 205px" onclick="showTime()" placeholder="应到时间" value="$!{payTime}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">三方状态</label>
 								<div class="controls">
+									#if($stu.threeState == '已收到')
 									<label class="line-label" ><input type="radio" name="threeState" id="shoudao" value="已收到" checked/>已收到</label>
 									<label class="line-label" ><input type="radio" name="threeState" id="jichu" value="已寄出"/>已寄出</label>
 									<label class="line-label" ><input type="radio" name="threeState" id="liucun" value="三方回寄并留存"/>三方回寄并留存</label>
+									#elseif($stu.threeState == '已寄出')
+									<label class="line-label" ><input type="radio" name="threeState" id="shoudao" value="已收到"/>已收到</label>
+									<label class="line-label" ><input type="radio" name="threeState" id="jichu" value="已寄出" checked/>已寄出</label>
+									<label class="line-label" ><input type="radio" name="threeState" id="liucun" value="三方回寄并留存"/>三方回寄并留存</label>
+									#else
+									<label class="line-label" ><input type="radio" name="threeState" id="shoudao" value="已收到"/>已收到</label>
+									<label class="line-label" ><input type="radio" name="threeState" id="jichu" value="已寄出"/>已寄出</label>
+									<label class="line-label" ><input type="radio" name="threeState" id="liucun" value="三方回寄并留存" checked/>三方回寄并留存</label>
+									#end
 								</div>
 							</div>
 							<div class="control-group">
@@ -211,74 +264,79 @@
 									<label class="line-label" ><input type="checkbox" name="refusetype" id="jiating" value="家庭" onclick="doSel()"/>家庭</label>
 									<label class="line-label" ><input type="checkbox" name="refusetype" id="qita" value="其他" onclick="doSel()"/>其他</label>
 								</div>
-								<input type="hidden" id="refuse" name="refuse" value=""/>
+								<input type="hidden" id="refuse" name="refuse" value="$!{stu.refuse}"/>
 							</div>
 							<div class="control-group">
 								<label class="control-label">拒签具体原因</label>
 								<div class="controls">
-								  <input type="text"  name="refuseReson" id="refuseReson">
+								  <input type="text"  name="refuseReson" id="refuseReson" value="$!{stu.refuseReson}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">拒绝时间</label>
 								<div class="controls">
-								  <input class="input-medium" name="refuseDate" type="text" style="width: 205px" onclick="showTime()" placeholder="拒绝时间">
+								  <input class="input-medium" name="refuseDate" type="text" style="width: 205px" onclick="showTime()" placeholder="拒绝时间" value="$!{refuseDate}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">违约办理</label>
 								<div class="controls">
+									#if($stu.breaker == '否')
 									<label class="line-label" ><input type="radio" name="breaker" id="" value="是"/>是</label>
 									<label class="line-label" ><input type="radio" name="breaker" id="" value="否" checked/>否</label>
+									#else
+									<label class="line-label" ><input type="radio" name="breaker" id="" value="是" checked/>是</label>
+									<label class="line-label" ><input type="radio" name="breaker" id="" value="否" />否</label>
+									#end
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">培训批次</label>
 								<div class="controls">
-								  <input type="text"  name="train" id="train">
+								  <input type="text"  name="train" id="train" value="$!{stu.train}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">员工编号</label>
 								<div class="controls">
-								  <input type="text"  name="staffNo" id="staffNo">
+								  <input type="text"  name="staffNo" id="staffNo" value="$!{stu.staffNo}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">面试官所在部门</label>
 								<div class="controls">
-								  <input type="text"  name="interviewDept" id="interviewDept">
+								  <input type="text"  name="interviewDept" id="interviewDept" value="$!{stu.interviewDept}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">分配部门</label>
 								<div class="controls">
-								  <input type="text"  name="fenpeiDept" id="fenpeiDept">
+								  <input type="text"  name="fenpeiDept" id="fenpeiDept" value="$!{stu.fenpeiDept}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">原分配部门</label>
 								<div class="controls">
-								  <input type="text"  name="yuanDept" id="yuanDept">
+								  <input type="text"  name="yuanDept" id="yuanDept" value="$!{stu.yuanDept}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">组织关系</label>
 								<div class="controls">
-								  <input type="text"  name="organize" id="organize">
+								  <input type="text"  name="organize" id="organize" value="$!{stu.organize}">
 								</div>
 							</div>
 							<div class="control-group">
 								<label class="control-label">leader</label>
 								<div class="controls">
-								  <input type="text"  name="leader" id="leader">
+								  <input type="text"  name="leader" id="leader" value="$!{stu.leader}">
 								</div>
 							</div>
 
-
+							<input type="hidden" id="id" name="id" value="$!{stu.id}"/>
 							<div class="control-group m-addmanage-btn">
 								<div class="controls">
-								  <button type="button" class="btn " id="dosubmitstu">保存</button>
+								  <button type="button" class="btn " id="doupdstu">保存</button>
 								  <button type="button" class="btn " id="docancel">取消</button>
 								</div>
 							</div>

@@ -3,9 +3,8 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 	<title>面试学生管理</title>
-	<link rel="stylesheet" href="/static/css/style.min.css" />
 	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="/static/css/module.css" />
+	<link rel="stylesheet" href="/static/css/style.min.css" />
 	<script type="text/javascript" src="/static/js/recruit/student_manage.js"></script>
 </head>
 	<body>
@@ -47,6 +46,7 @@
 				                  		<a href="#" onclick="doAssign('$in.obj.id')">指派</a>
 				                  	#end
 				                  	<a href="#" onclick="doSelect('$in.obj.id')">查看</a>
+				                  	<a href="#" onclick="doUpdById('$in.obj.id')">修改</a>
 				                  	<a href="#" onclick="dodelete('$in.obj.id')">删除</a>
 				                  </td>	
 				                </tr>

@@ -120,11 +120,32 @@ public class StudentManageController {
 		return "/add_student";
 	}
 	
+	@RequestMapping(value = "/hr/gotoUpdStudentInfo")
+	public String gotoUpdStudentInfo(HttpServletRequest request,  ModelMap model, int id) throws Exception {
+		Student stu=studentService.getStudentById(id);
+		model.addAttribute("stu", stu);
+		model.addAttribute("interviewTime", stu.getInterviewTime()==null?"":RecruitControllerUtils.dateToStr(stu.getInterviewTime()));
+		model.addAttribute("workStart", stu.getWorkStart()==null?"":RecruitControllerUtils.dateToStr(stu.getWorkStart()));
+		model.addAttribute("workEnd", stu.getWorkEnd()==null?"":RecruitControllerUtils.dateToStr(stu.getWorkEnd()));
+		model.addAttribute("graduateDate", stu.getGraduateDate()==null?"":RecruitControllerUtils.dateToStr(stu.getGraduateDate()));
+		model.addAttribute("payTime", stu.getPayTime()==null?"":RecruitControllerUtils.dateToStr(stu.getPayTime()));
+		model.addAttribute("refuseDate", stu.getRefuseDate()==null?"":RecruitControllerUtils.dateToStr(stu.getRefuseDate()));
+		return "/upd_student";
+	}
+	
 	@RequestMapping(value = "/hr/AddStudentInfo")
 	@Transactional
 	public String  AddStudentInfo(HttpServletRequest request,@ModelAttribute("doaddform") StudentForm stu,BindingResult results){
 		Student result=stuService.makeStudentBy(stu);
 		int flag=stuService.insertOneStudentInfo(result);
+		return "forward:/hr/getAllStudentInfos";
+	}
+	
+	@RequestMapping(value = "/hr/updStudentInfo")
+	@Transactional
+	public String  updStudentInfo(HttpServletRequest request,@ModelAttribute("doupdform") StudentForm stu,BindingResult results){
+		Student result=stuService.makeUpdStudentBy(stu);
+		int flag=stuService.updateOneStudentInfo(result);
 		return "forward:/hr/getAllStudentInfos";
 	}
 	

@@ -62,3 +62,4 @@ body,html{height:100%}
 .alert-info{height:150px}
 .line-label{display:inline-block;margin-right:20px}
 .line-label input{margin-right:10px;margin-top:0}
+.row-fluid .span4{margin-left:0}

@@ -192,8 +192,8 @@ public class StudentManageService {
 
 	public Student makeStudentBy(StudentForm stu) {
 		Student inter = new Student();
+		int id = stu.getId();
 		String noteNo = stu.getNoteNo();
-		String phaseNo = stu.getPhaseNo();
 		String interviewTime = stu.getInterviewTime();
 		String name = stu.getName();
 		String sex = stu.getSex();
@@ -213,7 +213,6 @@ public class StudentManageService {
 		String firstTry = stu.getFirstTry();
 		String secondTry = stu.getSecondTry();
 		String viewRemark = stu.getViewRemark();
-		String location = stu.getLocation();
 		String offerState = stu.getOfferState();
 		String threeSide = stu.getThreeSide();
 		String payTime = stu.getPayTime();
@@ -229,8 +228,8 @@ public class StudentManageService {
 		String yuanDept = stu.getYuanDept();
 		String organize = stu.getOrganize();
 		String leader = stu.getLeader();
-		String year = stu.getYear();
 		
+		inter.setId(id);
 		inter.setRefuse(refuse);
 		inter.setOfferState(offerState);
 		inter.setPhone(phone);
@@ -240,7 +239,6 @@ public class StudentManageService {
 		inter.setAssess(assess);
 		inter.setOrganize(organize);
 		inter.setNoteNo(noteNo);
-		inter.setPhaseNo(phaseNo);
 		inter.setBreaker(breaker);
 		inter.setCardNo(cardNo);
 		inter.setEducation(education);
@@ -250,10 +248,8 @@ public class StudentManageService {
 		inter.setInterviewDept(interviewDept);
 		inter.setJob(job);
 		inter.setLeader(leader);
-		inter.setLocation(location);
 		inter.setName(name);
 		inter.setYuanDept(yuanDept);
-		inter.setYear(year);
 		inter.setViewRemark(viewRemark);
 		inter.setTrain(train);
 		inter.setThreeState(threeState);
@@ -345,6 +341,118 @@ public class StudentManageService {
 		if(state != null && !state.equals(""))
 			criteria.andStateEqualTo(state);
 		return stuMapper.selectByExample(example);
+	}
+
+	public int updateOneStudentInfo(Student result) {
+		stuMapper.updateByPrimaryKeySelective(result);
+		return 0;
+	}
+
+	public Student makeUpdStudentBy(StudentForm stu) {
+		Student inter = new Student();
+		int id = stu.getId();
+		String noteNo = stu.getNoteNo();
+		String interviewTime = stu.getInterviewTime();
+		String name = stu.getName();
+		String sex = stu.getSex();
+		String school = stu.getSchool();
+		String profession = stu.getProfession();
+		String education = stu.getEducation();
+		String phone = stu.getPhone();
+		String email = stu.getEmail();
+		String cardNo = stu.getCardNo();
+		String qqNo = stu.getQqNo();
+		String job = stu.getJob();
+		String workStart = stu.getWorkStart();
+		String workEnd = stu.getWorkEnd();
+		String graduateDate = stu.getGraduateDate();
+		String salary = stu.getSalary();
+		String assess = stu.getAssess();
+		String firstTry = stu.getFirstTry();
+		String secondTry = stu.getSecondTry();
+		String viewRemark = stu.getViewRemark();
+		String offerState = stu.getOfferState();
+		String threeSide = stu.getThreeSide();
+		String payTime = stu.getPayTime();
+		String threeState = stu.getThreeState();
+		String refuse = stu.getRefuse();
+		String refuseReson = stu.getRefuseReson();
+		String refuseDate = stu.getRefuseDate();
+		String breaker = stu.getBreaker();
+		String train = stu.getTrain();
+		String staffNo = stu.getStaffNo();
+		String interviewDept = stu.getInterviewDept();
+		String fenpeiDept = stu.getFenpeiDept();
+		String yuanDept = stu.getYuanDept();
+		String organize = stu.getOrganize();
+		String leader = stu.getLeader();
+		
+		inter.setId(id);
+		inter.setRefuse(refuse);
+		inter.setOfferState(offerState);
+		inter.setPhone(phone);
+		inter.setQqNo(qqNo);
+		inter.setProfession(profession);
+		inter.setSex(sex);
+		inter.setAssess(assess);
+		inter.setOrganize(organize);
+		inter.setNoteNo(noteNo);
+		inter.setBreaker(breaker);
+		inter.setCardNo(cardNo);
+		inter.setEducation(education);
+		inter.setEmail(email);
+		inter.setFenpeiDept(fenpeiDept);
+		inter.setFirstTry(firstTry);
+		inter.setInterviewDept(interviewDept);
+		inter.setJob(job);
+		inter.setLeader(leader);
+		inter.setName(name);
+		inter.setYuanDept(yuanDept);
+		inter.setViewRemark(viewRemark);
+		inter.setTrain(train);
+		inter.setThreeState(threeState);
+		inter.setThreeSide(threeSide);
+		inter.setIsDeleted(-1);
+		if("".equals(salary) || salary==null){
+			inter.setSalary(Double.valueOf(0));
+		}else{
+			inter.setSalary(Double.valueOf(salary));
+		}
+		inter.setSchool(school);
+		inter.setSecondTry(secondTry);
+		inter.setStaffNo(staffNo);
+		inter.setRefuseReson(refuseReson);
+		if("".equals(interviewTime) || interviewTime==null){
+			inter.setInterviewTime(null);
+		}else{
+			inter.setInterviewTime(RecruitControllerUtils.strToDateII(interviewTime));
+		}
+		if("".equals(workStart) || workStart==null){
+			inter.setWorkStart(null);
+		}else{
+			inter.setWorkStart(RecruitControllerUtils.strToDateII(workStart));
+		}
+		if("".equals(workEnd) || workEnd==null){
+			inter.setWorkEnd(null);
+		}else{
+			inter.setWorkEnd(RecruitControllerUtils.strToDateII(workEnd));
+		}
+		if("".equals(graduateDate) || graduateDate==null){
+			inter.setGraduateDate(null);
+		}else{
+			inter.setGraduateDate(RecruitControllerUtils.strToDateII(graduateDate));
+		}
+		if("".equals(payTime) || payTime==null){
+			inter.setPayTime(null);
+		}else{
+			inter.setPayTime(RecruitControllerUtils.strToDateII(payTime));
+		}
+		if("".equals(refuseDate) || refuseDate==null){
+			inter.setRefuseDate(null);
+		}else{
+			inter.setRefuseDate(RecruitControllerUtils.strToDateII(refuseDate));
+		}
+		return inter;
 	}
 
 }
