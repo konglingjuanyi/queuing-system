@@ -21,11 +21,12 @@ import com.qunar.ops.recruit.model.Phase;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
+import com.qunar.ops.recruit.service.PcHrService;
+import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.PhaseService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.WaitService;
 import com.qunar.ops.recruit.util.QUtils;
-import com.qunar.ops.recruit.util.RecruitConst;
 
 @Controller
 public class CommonController {
@@ -36,6 +37,8 @@ public class CommonController {
 	StudentService ss;
 	@Autowired
 	PhaseService ps;
+	@Autowired
+	PhaseInterviewService pis;
 	
 	/**
 	 * login
@@ -73,7 +76,10 @@ public class CommonController {
 	public String restart(HttpServletRequest request,HttpServletResponse response) {
 		List<Student> l1 = ss.getOneList();
 		List<Student> l2 = ss.getTwoList();
+		System.out.println(l2);
 		ws.recovery(l1, l2);
+		List<Student> l3 = ss.getInterviewingStudent();
+		PcHrService.recorveryMap(pis, l3);
 		return "success";
 	}
 	

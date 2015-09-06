@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.util.RecruitConst;
 
 @Component
 public class PcHrService {
@@ -69,6 +70,23 @@ public class PcHrService {
 	public static boolean containsKey(PhaseInterviewer pi) {
 		// TODO Auto-generated method stub
 		return map.containsKey(pi);
+	}
+
+	public static void recorveryMap(PhaseInterviewService ps, List<Student> l3) {
+		for (Student student : l3) {
+			String state = student.getState();
+			if(state.equals(RecruitConst.STUDENT_STATE_GOING2ONEROOM) || 
+					state.equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
+				PhaseInterviewer phaseInter = ps.getPhaseInterviewerBy(student.getYear(), 
+						student.getPhaseNo(), student.getLocation(), student.getFirstTry());
+				map.put(phaseInter, student);
+			}else{
+				PhaseInterviewer phaseInter = ps.getPhaseInterviewerBy(student.getYear(), 
+						student.getPhaseNo(), student.getLocation(), student.getSecondTry());
+				map.put(phaseInter, student);
+			}
+		}
+		
 	}
 
 	

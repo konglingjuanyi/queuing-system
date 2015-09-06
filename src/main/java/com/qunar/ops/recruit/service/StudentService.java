@@ -49,7 +49,8 @@ public class StudentService {
 		StudentExample se = new StudentExample();
 		StudentExample.Criteria cr = se.createCriteria();
 		cr.andFirstTryIsNotNull();
-		cr.andSecondTryIsNull();
+		cr.andTrueTimeIsNotNull();
+		cr.andSecondTryEqualTo("");
 		List<Student> ret = stuMapper.selectByExample(se);
 		return ret;
 	}
@@ -109,6 +110,19 @@ public class StudentService {
 		cr.andPhaseNoEqualTo(name);
 		cr.andIsDeletedNotEqualTo(0);
 		stuMapper.updateByExampleSelective(stu, se);
+	}
+
+	public List<Student> getInterviewingStudent() {
+		StudentExample se = new StudentExample();
+		StudentExample.Criteria cr = se.createCriteria();
+		List<String> values = new LinkedList<String>();
+		values.add(RecruitConst.STUDENT_STATE_GOING2ONEROOM);
+		values.add(RecruitConst.STUDENT_STATE_GOING2TWOROOM);
+		values.add(RecruitConst.STUDENT_STATE_ONE_VIEW);
+		values.add(RecruitConst.STUDENT_STATE_TWO_VIEW);
+		cr.andStateIn(values);
+		List<Student> ret = stuMapper.selectByExample(se);
+		return ret;
 	}
 	
 
