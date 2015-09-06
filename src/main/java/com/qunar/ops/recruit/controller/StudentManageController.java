@@ -153,20 +153,22 @@ public class StudentManageController {
 		String city=(String) request.getSession().getAttribute("city");
 		String year=(String) request.getSession().getAttribute("year");
 		String phase=(String) request.getSession().getAttribute("phase");
-		List<PhaseInterviewer> viewlist =  interService.getSinglecityBy(city,year,phase);
-		list=stuService.getAllStudentInfos(city,year,phase);
-		List<ResultPlusAdditionalInfo> info=new LinkedList<ResultPlusAdditionalInfo>();
-		if(list!=null && list.size()>0){
-			for(Student stu:list){
-				String str=RecruitControllerUtils.dateToStr(stu.getInterviewTime());
-				ResultPlusAdditionalInfo val=new ResultPlusAdditionalInfo();
-				val.setObj(stu);
-				val.addStringInfo(str);
-				info.add(val);
+		if(city!=null && year!=null && phase!=null){
+			List<PhaseInterviewer> viewlist =  interService.getSinglecityBy(city,year,phase);
+			list=stuService.getAllStudentInfos(city,year,phase);
+			List<ResultPlusAdditionalInfo> info=new LinkedList<ResultPlusAdditionalInfo>();
+			if(list!=null && list.size()>0){
+				for(Student stu:list){
+					String str=RecruitControllerUtils.dateToStr(stu.getInterviewTime());
+					ResultPlusAdditionalInfo val=new ResultPlusAdditionalInfo();
+					val.setObj(stu);
+					val.addStringInfo(str);
+					info.add(val);
+				}
 			}
+			model.addAttribute("list", info);
+			model.addAttribute("viewlist", viewlist);
 		}
-		model.addAttribute("list", info);
-		model.addAttribute("viewlist", viewlist);
 		return "/student_manage_info";
 	}
 	
