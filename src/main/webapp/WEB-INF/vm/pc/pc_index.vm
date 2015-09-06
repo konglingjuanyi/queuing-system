@@ -25,7 +25,7 @@
 		<div class="banner">
 			<ul class="nav" id="showView">
 				#foreach($info in $message)
-				<li class="item item-wait">
+				<li class="item item-wait" style="height:335px;line-height:335px">
 					<div class="room">$info.get(0).room</div>
 					<div class="state">-${info.get(0).status}-</div>
 					<div class="name">$!info.get(1).name</div>

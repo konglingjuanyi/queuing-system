@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	setInterval("refreshPage()",50000);
+	setInterval("refreshPage()",8000);
 });
 
 function refreshPage(){
@@ -43,7 +43,7 @@ function refreshPage(){
 			    		        	+"<div class='job'>"+stujob+"</div>"
 			    		        	+"</li>");
 			    	  }
-	    			  sleep(6000);
+	    			  sleep(2000);
 	    		  }
 	    	  }else{
 	    		  $("#showView").html("");

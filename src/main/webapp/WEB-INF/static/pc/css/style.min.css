@@ -27,8 +27,8 @@ body,html{background:#041630}
 .bg_5{background:url(../images/xz_05.jpg) center top no-repeat}
 .bg_6{background:url(../images/xz_06.jpg) center top no-repeat}
 .wrap-1000{width:1000px;margin:0 auto;position:relative}
-.wrap-1000 .title-name{top:146px;left:274px;font-size:103px;width:430px}
-.wrap-1000 .title-root{top:256px;left:354px;font-size:103px;width:490px}
+.wrap-1000 .title-name{top:146px;left:250px;font-size:103px;width:360px;text-align:center}
+.wrap-1000 .title-root{top:256px;left:354px;font-size:103px;width:400px;text-align:center}
 .banner{position:absolute;top:565px;left:0;right:0;width:100%}
 .nav{width:1400px;margin:0 auto}
 .nav .item{width:210px;float:left;margin-left:20px;background:url(../images/nav2.png) no-repeat}

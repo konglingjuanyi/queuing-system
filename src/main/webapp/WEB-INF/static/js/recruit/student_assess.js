@@ -9,7 +9,102 @@ $(document).ready(function () {
 	      contentType: 'application/json; charset=utf-8',
 	      success: function (result) {
 	    	  if(result.errorCode == 0){
-	    		  
+	    		  data = result.data;
+	    		  console.dir(data);
+		    	  inter = data[0];
+		    	  stu=data[2];
+		    	  phase_inter = data[1];
+		    	  var access=data[3];
+		    	  if(phase_inter.status=='等待面试'){
+			    	  if(stu.state=='初试中' || stu.state=='等待初试'){
+			    		  message=1;
+			    	  }else{
+			    		  message=2;
+			    	  }
+			    	  flag=message;
+			    	  if(message!=1 && message!=2){
+			    		  alert(message);
+			    		  setAllVal();
+			    		  $("#beginToInterview").hide();
+				    	  $("#finishInterview").hide();
+				    	  $("#nocome").hide();
+				    	  $("#getOneInterview").attr("disabled", false);
+			    	  }else{
+				    	  if(message!=1){
+				    		  var access=data[3];
+				    		  /***渲染评估表****/
+				    		  if(access!=null){
+				    			  addValue(access);
+				    		  }
+				    		  disabledOne();
+				    	  }else{
+				    		  setAllVal();
+				    		  disabledTwo();
+				    	  }
+				    	  $("#already_inter").text(parseInt(phase_inter.oneCount)+parseInt(phase_inter.twoCount));
+				    	  $("#student_name").text(stu.name);
+				    	  $("#jobTitle").text(stu.job);
+				    	  if(message!=1){
+				    		  $("#first_viewer").text(stu.firstTry);
+				    		  $("#second_viewer").text(phase_inter.intervierName);
+				    	  }else{
+				    		  $("#first_viewer").text(phase_inter.intervierName);
+				    	  }
+				    	  $("#interviewer_name").text(inter.userName);
+				    	  $("#interviewer_room").text(phase_inter.room);
+				    	  $("#getOneInterview").attr("disabled", true);
+				    	  $("#beginToInterview").attr("disabled", false);
+				    	  $("#beginToInterview").show();
+				    	  $("#finishInterview").show();
+				    	  $("#nocome").show();
+				    	  $("#finishInterview").attr("disabled", true);
+			    	  }
+		    	  }else{
+		    		  if(stu.state=='初试中' || stu.state=='等待初试'){
+			    		  message=1;
+			    	  }else{
+			    		  message=2;
+			    	  }
+		    		  flag=message;
+			    	  if(message!=1 && message!=2){
+			    		  alert(message);
+			    		  setAllVal();
+			    		  $("#beginToInterview").hide();
+				    	  $("#finishInterview").hide();
+				    	  $("#nocome").hide();
+				    	  $("#getOneInterview").attr("disabled", false);
+			    	  }else{
+				    	  if(message!=1){
+				    		  var access=data[3];
+				    		  /***渲染评估表****/
+				    		  if(access!=null){
+				    			  addValue(access);
+				    		  }
+				    		  disabledOne();
+				    	  }else{
+				    		  setAllVal();
+				    		  disabledTwo();
+				    	  }
+				    	  $("#already_inter").text(parseInt(phase_inter.oneCount)+parseInt(phase_inter.twoCount));
+				    	  $("#student_name").text(stu.name);
+				    	  $("#jobTitle").text(stu.job);
+				    	  if(message!=1){
+				    		  $("#first_viewer").text(stu.firstTry);
+				    		  $("#second_viewer").text(phase_inter.intervierName);
+				    	  }else{
+				    		  $("#first_viewer").text(phase_inter.intervierName);
+				    	  }
+				    	  $("#interviewer_name").text(inter.userName);
+				    	  $("#interviewer_room").text(phase_inter.room);
+				    	  $("#beginToInterview").show();
+				    	  $("#finishInterview").show();
+				    	  $("#nocome").show();
+			    	  }
+			    	  $("#beginToInterview").attr("disabled", true);
+		    		  $("#getOneInterview").attr("disabled", true);
+		    		  $("#finishInterview").attr("disabled", false);
+		    		  clock();
+		    	  }
 	    	  }else{
 		    	  data = result.data;
 		    	  inter = data[0];
