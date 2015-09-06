@@ -176,6 +176,7 @@ public class WaitService {
 	}
 	
 	public boolean containsTwo(StudentWaiter studentWaiter) {
+//		System.out.println(twoList);
 		return twoList.contains(studentWaiter);
 	}
 
