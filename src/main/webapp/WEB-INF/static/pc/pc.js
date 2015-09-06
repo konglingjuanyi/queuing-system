@@ -39,8 +39,8 @@ function refreshPage(){
 			    		  $("#showView").append("<li class='item item-wait'>"
 			    		        	+"<div class='room'>"+list[i][0].room+"</div>"
 			    		        	+"<div class='state'>-"+list[i][0].status+"-</div>"
-			    		        	+"<div class='name'>"+stuname+"</div>"
-			    		        	+"<div class='job'>"+stujob+"</div>"
+			    		        	+"<div class='name'>-"+stuname+"-</div>"
+			    		        	+"<div class='job'>-"+stujob+"-</div>"
 			    		        	+"</li>");
 			    	  }
 	    			  sleep(2000);
@@ -59,8 +59,8 @@ function refreshPage(){
 		    		  $("#showView").append("<li class='item item-wait'>"
 		    		        	+"<div class='room'>"+list[i][0].room+"</div>"
 		    		        	+"<div class='state'>-"+list[i][0].status+"-</div>"
-		    		        	+"<div class='name'>"+stuname+"</div>"
-		    		        	+"<div class='job'>"+stujob+"</div>"
+		    		        	+"<div class='name'>-"+stuname+"-</div>"
+		    		        	+"<div class='job'>-"+stujob+"-</div>"
 		    		        	+"</li>");
 		    	  }
 	    	  }

@@ -28,8 +28,8 @@
 				<li class="item item-wait" style="height:335px;line-height:335px">
 					<div class="room">$info.get(0).room</div>
 					<div class="state">-${info.get(0).status}-</div>
-					<div class="name">$!info.get(1).name</div>
-					<div class="job">$!info.get(1).job</div>
+					<div class="name">-$!info.get(1).name-</div>
+					<div class="job">-$!info.get(1).job-</div>
 				</li>
 				#end
 			</ul>
