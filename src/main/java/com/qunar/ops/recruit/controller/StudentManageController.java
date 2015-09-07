@@ -230,17 +230,22 @@ public class StudentManageController {
 	
 	@RequestMapping(value = "/hr/AddHrStudentAssess")
 	@Transactional
-	public String  AddHrStudentAssess(HttpServletRequest request, int id, String hrName, String salay, String hrdetail){
+	public String  AddHrStudentAssess(HttpServletRequest request, int id, String hrName, String salay, String hrdetail, String hrConclusion, int sid){
+		Student stu=new Student();
+		stu.setId(sid);
+		stu.setState(hrConclusion);
 		StudentAssess sa=new StudentAssess();
 		sa.setId(id);
 		sa.setHrName(hrName);
 		sa.setHrDetailIdea(hrdetail);
+		sa.setHrConclusion(hrConclusion);
 		if(salay!=null && !"".equals(salay)){
 			sa.setHrSuggestSalary(Integer.valueOf(salay));
 		}else{
 			sa.setHrSuggestSalary(0);
 		}
 		assService.updateBy(sa);
+		studentService.updateStudent(stu);
 		return "forward:/hr/getAllStudentInfos";
 	}
 	

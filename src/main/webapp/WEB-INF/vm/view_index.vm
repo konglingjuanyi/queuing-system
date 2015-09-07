@@ -75,9 +75,11 @@
                                 <div class="item" id="second_viewer_div">
                                     <h3>复试面试官：<span class="text" id="second_viewer"></span></h3>
                                 </div>
+                                <!--
                                 <div class="picture">
                                     <span class="btn">上传图片</span>
                                 </div>
+                                -->
                             </div>
                             <!--  -->
                             <form id="submitForm" class="form-horizontal" action="/interviewer/finishInterview" method="post">
@@ -255,12 +257,9 @@
                                         <td><a href="javascript:;" data-num="0">逻辑思维</a></td>
                                         <td>
                                             <select name="" id="one_logic"  onclick="sumOneCount()">
-                                                <option value="0">0</option>
                                                 <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -268,12 +267,9 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_logic" onclick="sumTwoCount()">
+                                                 <option value="1">1</option>
                                                 <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -284,12 +280,9 @@
                                         <td><a href="javascript:;" data-num="1">创新思考</a></td>
                                         <td>
                                             <select name="" id="one_creative"  onclick="sumOneCount()">
+                                                 <option value="1">1</option>
                                                 <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -297,12 +290,9 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_creative" onclick="sumTwoCount()">
+                                                 <option value="1">1</option>
                                                 <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -313,12 +303,9 @@
                                         <td><a href="javascript:;" data-num="2">团队合作</a></td>
                                         <td>
                                             <select name="" id="one_team"  onclick="sumOneCount()">
+                                                 <option value="1">1</option>
                                                 <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -326,12 +313,9 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_team" onclick="sumTwoCount()">
+                                                 <option value="1">1</option>
                                                 <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -342,12 +326,9 @@
                                         <td><a href="javascript:;" data-num="3">持续学习</a></td>
                                         <td>
                                             <select name="" id="one_continuouslearning"  onclick="sumOneCount()">
+                                                 <option value="1">1</option>
                                                 <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -355,12 +336,9 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_continuouslearning" onclick="sumTwoCount()">
-                                                <option value="0">0</option>
                                                 <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -371,12 +349,9 @@
                                         <td><a href="javascript:;" data-num="4">追求卓越</a></td>
                                         <td>
                                             <select name="" id="one_outstanding"  onclick="sumOneCount()">
+                                                 <option value="1">1</option>
                                                 <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -384,12 +359,9 @@
                                         </td>
                                         <td>
                                             <select name="" id="two_outstanding" onclick="sumTwoCount()">
+                                                 <option value="1">1</option>
                                                 <option value="0">0</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
@@ -432,7 +404,6 @@
                                                 <option value="卓越">卓越</option>
                                                 <option value="优秀">优秀</option>
                                                 <option value="合格">合格</option>
-                                                <option value="待定">待定</option>
                                                 <option value="不通过">不通过</option>
                                             </select>
                                         </td>
@@ -448,7 +419,6 @@
                                                 <option value="卓越">卓越</option>
                                                 <option value="优秀">优秀</option>
                                                 <option value="合格">合格</option>
-                                                <option value="待定">待定</option>
                                                 <option value="不通过">不通过</option>
                                             </select>
                                         </td>

@@ -347,6 +347,7 @@
                                     <tr>
                                         <th class="w_1">HR意见</th>
                                         <th class="w_2">薪资</th>
+                                        <th>HR结论</th>
                                         <th>具体意见</th>
                                     </tr>
                                 </thead>
@@ -359,7 +360,25 @@
                                         <td>
                                             <input type="text" class="input-mini" name="hrSuggestSalary" id="hrSuggestSalary" value="$!{stuAss.hrSuggestSalary}"/>
                                         </td>
+                                         <td>
+                                            <select name="hr_conclusion" id="hr_conclusion">
+                                            	#if($stu.state=='' || $stu.state=='已发Offer' || $stu.state=='复试通过')
+                                                <option value="已发Offer" selected="selected">已发Offer</option>
+                                                <option value="待定Offer">待定Offer</option>
+                                                <option value="不发Offer">不发Offer</option>
+                                                #elseif($stu.state=='待定Offer')
+                                                <option value="已发Offer">已发Offer</option>
+                                                <option value="待定Offer" selected="selected">待定Offer</option>
+                                                <option value="不发Offer">不发Offer</option>
+                                                #else
+                                                <option value="已发Offer">已发Offer</option>
+                                                <option value="待定Offer">待定Offer</option>
+                                                <option value="不发Offer" selected="selected">不发Offer</option>
+                                                #end
+                                            </select>
+                                        </td>
                                         <input type="hidden" name="stuId" id="stuId" value="$!{stuAss.id}"/>
+                                        <input type="hidden" name="sId" id="sId" value="$!{stu.id}"/>
                                         <td>
                                             <textarea name="hrDetailIdea" id="hrDetailIdea" cols="30" rows="1">$!{stuAss.hrDetailIdea}</textarea>
                                             <button type="button" class="btn " id="dosubmitHr">保存</button>

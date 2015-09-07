@@ -180,13 +180,13 @@
 											<tr>
 												<td>RD</td>
 												<td>
-													<input id="updfirstid" name="updfirstname" type="checkbox"  value="RD">
+													<input id="updfirstid" name="updfirstname" type="checkbox"  value="DEV">
 												</td>
 												<td>
-													<input id="updsecondid" name="updsecondname" type="checkbox"  value="RD">
+													<input id="updsecondid" name="updsecondname" type="checkbox"  value="DEV">
 												</td>
 												<td>
-													<input id="updfinishid" name="updfinishname" type="checkbox"  value="RD">
+													<input id="updfinishid" name="updfinishname" type="checkbox"  value="DEV">
 												</td>
 											</tr>
 											<tr>
