@@ -60,6 +60,7 @@
     <result column="one_sum" property="oneSum" jdbcType="INTEGER" />
     <result column="two_sum" property="twoSum" jdbcType="INTEGER" />
     <result column="two_suggest_salary" property="twoSuggestSalary" jdbcType="INTEGER" />
+    <result column="hr_conclusion" property="hrConclusion" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Example_Where_Clause" >
     <where >
@@ -130,7 +131,8 @@
     two_team, two_team_detail, two_continuouslearning, two_continuouslearning_detail, 
     two_outstanding, two_outstanding_detail, one_conclusion, one_suggest_salary, one_suggest_salary_detail, 
     two_conclusion, two_conclusion_detail, one_allocation_idea, two_allocation_idea, 
-    hr_name, hr_suggest_salary, hr_detail_idea, one_sum, two_sum, two_suggest_salary
+    hr_name, hr_suggest_salary, hr_detail_idea, one_sum, two_sum, two_suggest_salary, 
+    hr_conclusion
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" >
     select
@@ -187,7 +189,7 @@
       two_conclusion_detail, one_allocation_idea, 
       two_allocation_idea, hr_name, hr_suggest_salary, 
       hr_detail_idea, one_sum, two_sum, 
-      two_suggest_salary)
+      two_suggest_salary, hr_conclusion)
     values (#{studenId,jdbcType=INTEGER}, #{oneViewer,jdbcType=VARCHAR}, #{twoViewer,jdbcType=VARCHAR}, 
       #{job,jdbcType=VARCHAR}, #{oneCode,jdbcType=INTEGER}, #{oneCodeDetail,jdbcType=VARCHAR}, 
       #{oneAlgorithm,jdbcType=INTEGER}, #{oneAlgorithmDetail,jdbcType=VARCHAR}, #{oneNetwork,jdbcType=INTEGER}, 
@@ -208,7 +210,7 @@
       #{twoConclusionDetail,jdbcType=VARCHAR}, #{oneAllocationIdea,jdbcType=VARCHAR}, 
       #{twoAllocationIdea,jdbcType=VARCHAR}, #{hrName,jdbcType=VARCHAR}, #{hrSuggestSalary,jdbcType=INTEGER}, 
       #{hrDetailIdea,jdbcType=VARCHAR}, #{oneSum,jdbcType=INTEGER}, #{twoSum,jdbcType=INTEGER}, 
-      #{twoSuggestSalary,jdbcType=INTEGER})
+      #{twoSuggestSalary,jdbcType=INTEGER}, #{hrConclusion,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.StudentAssess" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -387,6 +389,9 @@
       <if test="twoSuggestSalary != null" >
         two_suggest_salary,
       </if>
+      <if test="hrConclusion != null" >
+        hr_conclusion,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="studenId != null" >
@@ -559,6 +564,9 @@
       </if>
       <if test="twoSuggestSalary != null" >
         #{twoSuggestSalary,jdbcType=INTEGER},
+      </if>
+      <if test="hrConclusion != null" >
+        #{hrConclusion,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -745,6 +753,9 @@
       <if test="record.twoSuggestSalary != null" >
         two_suggest_salary = #{record.twoSuggestSalary,jdbcType=INTEGER},
       </if>
+      <if test="record.hrConclusion != null" >
+        hr_conclusion = #{record.hrConclusion,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
@@ -809,7 +820,8 @@
       hr_detail_idea = #{record.hrDetailIdea,jdbcType=VARCHAR},
       one_sum = #{record.oneSum,jdbcType=INTEGER},
       two_sum = #{record.twoSum,jdbcType=INTEGER},
-      two_suggest_salary = #{record.twoSuggestSalary,jdbcType=INTEGER}
+      two_suggest_salary = #{record.twoSuggestSalary,jdbcType=INTEGER},
+      hr_conclusion = #{record.hrConclusion,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -988,6 +1000,9 @@
       <if test="twoSuggestSalary != null" >
         two_suggest_salary = #{twoSuggestSalary,jdbcType=INTEGER},
       </if>
+      <if test="hrConclusion != null" >
+        hr_conclusion = #{hrConclusion,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -1049,7 +1064,8 @@
       hr_detail_idea = #{hrDetailIdea,jdbcType=VARCHAR},
       one_sum = #{oneSum,jdbcType=INTEGER},
       two_sum = #{twoSum,jdbcType=INTEGER},
-      two_suggest_salary = #{twoSuggestSalary,jdbcType=INTEGER}
+      two_suggest_salary = #{twoSuggestSalary,jdbcType=INTEGER},
+      hr_conclusion = #{hrConclusion,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

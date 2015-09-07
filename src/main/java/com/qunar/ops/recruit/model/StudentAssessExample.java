@@ -3893,6 +3893,76 @@ public class StudentAssessExample {
             addCriterion("two_suggest_salary not between", value1, value2, "twoSuggestSalary");
             return (Criteria) this;
         }
+
+        public Criteria andHrConclusionIsNull() {
+            addCriterion("hr_conclusion is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionIsNotNull() {
+            addCriterion("hr_conclusion is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionEqualTo(String value) {
+            addCriterion("hr_conclusion =", value, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionNotEqualTo(String value) {
+            addCriterion("hr_conclusion <>", value, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionGreaterThan(String value) {
+            addCriterion("hr_conclusion >", value, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionGreaterThanOrEqualTo(String value) {
+            addCriterion("hr_conclusion >=", value, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionLessThan(String value) {
+            addCriterion("hr_conclusion <", value, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionLessThanOrEqualTo(String value) {
+            addCriterion("hr_conclusion <=", value, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionLike(String value) {
+            addCriterion("hr_conclusion like", value, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionNotLike(String value) {
+            addCriterion("hr_conclusion not like", value, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionIn(List<String> values) {
+            addCriterion("hr_conclusion in", values, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionNotIn(List<String> values) {
+            addCriterion("hr_conclusion not in", values, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionBetween(String value1, String value2) {
+            addCriterion("hr_conclusion between", value1, value2, "hrConclusion");
+            return (Criteria) this;
+        }
+
+        public Criteria andHrConclusionNotBetween(String value1, String value2) {
+            addCriterion("hr_conclusion not between", value1, value2, "hrConclusion");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

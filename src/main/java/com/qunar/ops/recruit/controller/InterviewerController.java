@@ -191,7 +191,9 @@ public class InterviewerController {
 		if(obj != null){
 			if(obj instanceof Interviewer){
 				Interviewer inter = (Interviewer) obj;
-				//Interviewer newInter = interServe.getInterviewerByUserName(inter.getUserName());
+				Interviewer newInter = interServe.getInterviewerByUserId(inter.getId());
+				inter = newInter;
+				session.setAttribute("user", newInter);
 				String[] arrs = getYearPhaseAndCity(session);
 				StudentWaiter  stuW = null;
 				int oneOrtwo = 1;

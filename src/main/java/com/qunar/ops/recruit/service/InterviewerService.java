@@ -175,4 +175,15 @@ public class InterviewerService {
 		return null;
 	}
 
+	public Interviewer getInterviewerByUserId(int id) {
+		InterviewerExample example = new InterviewerExample();
+		InterviewerExample.Criteria criteria = example.createCriteria();
+		criteria.andIdEqualTo(id);
+		List<Interviewer> inter = interMapper.selectByExample(example);
+		if(inter != null && inter.size() > 0){
+			return inter.get(0);
+		}
+		return null;
+	}
+
 }

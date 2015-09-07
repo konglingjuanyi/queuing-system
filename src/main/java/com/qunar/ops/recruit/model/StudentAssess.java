@@ -117,6 +117,8 @@ public class StudentAssess {
 
     private Integer twoSuggestSalary;
 
+    private String hrConclusion;
+
     public Integer getId() {
         return id;
     }
@@ -579,5 +581,13 @@ public class StudentAssess {
 
     public void setTwoSuggestSalary(Integer twoSuggestSalary) {
         this.twoSuggestSalary = twoSuggestSalary;
+    }
+
+    public String getHrConclusion() {
+        return hrConclusion;
+    }
+
+    public void setHrConclusion(String hrConclusion) {
+        this.hrConclusion = hrConclusion == null ? null : hrConclusion.trim();
     }
 }
