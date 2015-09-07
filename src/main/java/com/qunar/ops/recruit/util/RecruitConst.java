@@ -62,6 +62,9 @@ public class RecruitConst {
 	public static final String STUDENT_STATE_TWO_VIEW = "复试中";
 	public static final String STUDENT_STATE_TWO_NOT_PASS = "复试未通过";
 	public static final String STUDENT_STATE_TWO_PASS = "复试通过";
+	public static final String STUDENT_STATE_GET_OFFER = "已发Offer";
+	public static final String STUDENT_STATE_NO_OFFER = "不发Offer";
+	public static final String STUDENT_STATE_UNCERTAIN_OFFER = "待定Offer";
 	public static final String STUDENT_STATE_FINISH = "面试结束";
 	
 	public static final String INTERVIEWER_STATE_VIEWING = "面试中";
@@ -74,4 +77,10 @@ public class RecruitConst {
 	public static final String JOB_FE = "FE";
 	public static final String JOB_QA = "QA";
 	public static final long LATE_TIME = 15*60*1000;
+
+	public static final String PROMPT_NOT_PASS = "今天面试结束，感谢关注去哪儿网校园招聘！";
+
+	public static final String PROMPT_PASS_ME = "你好，你已过号，请联系驻场HR";
+
+	public static final String PROMPT_TWO_PASS = "恭喜你复试通过，请联系驻场HR";
 }

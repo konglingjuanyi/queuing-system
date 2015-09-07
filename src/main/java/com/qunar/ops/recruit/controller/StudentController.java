@@ -130,18 +130,18 @@ public class StudentController {
 		Student student = studentWaiter.getStu();
 		String name = student.getName();
 		if(isFinished(student)){
-			model.addAttribute("message",student.getState());
+			model.addAttribute("message", RecruitConst.PROMPT_NOT_PASS);
 			model.addAttribute("flag",1);
 		}else if(waitService.containsOne(studentWaiter)){
 			//一面排队中
 			int numberInfontOfMe = waitService.numberInFrontOfOne(studentWaiter);
-			String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行面试";
+			String message="<span class='name'>"+name+"</span>同学 <br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />等待面试";
 			model.addAttribute("message",message);
 			model.addAttribute("flag",1);
 		}else if(waitService.containsTwo(studentWaiter)){
 			//二面排队中
 			int numberInfontOfMe = waitService.numberInFrontOfTwo(studentWaiter);
-			String message="<span class='name'>"+name+"</span>同学 恭喜通过初试<br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />正在进行复试";
+			String message="<span class='name'>"+name+"</span>同学 恭喜通过初试<br />在你前面还有 <span class='num'>"+numberInfontOfMe+"</span> 位同学<br />等待复试";
 			model.addAttribute("message",message);
 			model.addAttribute("flag",1);
 		}else{
@@ -158,12 +158,18 @@ public class StudentController {
 				PhaseInterviewer pi = piService.getPhaseInterviewerBy(newStudent.getYear(), 
 						newStudent.getPhaseNo(), newStudent.getLocation(), interName);
 				String numberOfRoom = pi.getRoom();
-				String message="<span class='name'>"+name+"</span>同学 <br />请您到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
+				String message="<span class='name'>"+name+"</span>同学 <br />请你到 <span class='num'>"+numberOfRoom+"</span> 房间<br />进行面试";
 				model.addAttribute("message",message);
 				model.addAttribute("flag",1);
 			}else{
 				//直接返回当前学生的状态
-				model.addAttribute("message",newStudent.getState());
+				if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_PASS_ME)){
+					model.addAttribute("message", RecruitConst.PROMPT_PASS_ME);
+				}else if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_TWO_PASS)){
+					model.addAttribute("message", RecruitConst.PROMPT_TWO_PASS);
+				}else{
+					model.addAttribute("message",newStudent.getState());
+				}
 				model.addAttribute("flag",1);
 			}
 			session.setAttribute("user", new StudentWaiter(newStudent));
