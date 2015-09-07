@@ -212,7 +212,7 @@ function saveviewsAndcitys(){
 <td><a href="#" onclick="removetr(this)">删除</a></td>
 </tr>
 */
-function doclose(){
+function docancle(){
 	$("#allview").css("display","none");
 	$("input[type=checkbox]").each(function(){
 		$(this).attr("checked",false);
