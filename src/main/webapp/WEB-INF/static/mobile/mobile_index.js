@@ -1,6 +1,6 @@
 $(document).ready(function () {
 	if($("#flag").val()==1){
-		setInterval("refreshPage()",3000);
+		setInterval("refreshPage()",30000);
 	}else{
 		window.location.href='/student/register';
 	}
