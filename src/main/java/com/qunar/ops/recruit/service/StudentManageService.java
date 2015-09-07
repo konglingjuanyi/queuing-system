@@ -389,6 +389,8 @@ public class StudentManageService {
 		String yuanDept = stu.getYuanDept();
 		String organize = stu.getOrganize();
 		String leader = stu.getLeader();
+		String city = stu.getLocation();
+		
 		
 		inter.setId(id);
 		inter.setRefuse(refuse);
@@ -416,6 +418,7 @@ public class StudentManageService {
 		inter.setThreeState(threeState);
 		inter.setThreeSide(threeSide);
 		inter.setIsDeleted(-1);
+		inter.setLocation(city);
 		if("".equals(salary) || salary==null){
 			inter.setSalary(Double.valueOf(0));
 		}else{

@@ -9,7 +9,7 @@
 	<script type="text/javascript" src="/static/js/jquery-form.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
     <script type="text/javascript" src="/static/My97DatePicker/WdatePicker.js" charset="UTF-8"></script>
-	<script type="text/javascript" src="/static/js/recruit/student_manage.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/student_manage_modify.js"></script>
 	<script type="text/javascript" src="/static/js/recruit/student_update.js"></script>
 </head>
 <body>
@@ -43,7 +43,7 @@
 							<div class="control-group">
 								<label class="control-label">城市</label>
 								<div class="controls">
-									<select name="location" id="city_" disabled>
+									<select name="location" id="city_">
                                     </select>
 								</div>
 							</div>

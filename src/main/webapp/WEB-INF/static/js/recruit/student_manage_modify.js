@@ -188,41 +188,27 @@ $(document).ready(function () {
 });
 
 function getAddStudentYearPhaseAndCity(){
-	$.ajax({
-	      url: "/getAllYears1",
-	      type: "POST",
-	      dataType: "json",
-	      contentType: 'application/json; charset=utf-8',
-	      success: function (set) {
-	    	  $.each(set, function(i, year){
-	    		  if(i == 0){
-	    			  getPhaseAndCity1(year);
-	    		  }
-	    		  $("#year_").append("<option value='"+year+"'>"+year+"</option>");
-	    	  });
-		  },
-	      error: function () {
-	           alert("系统发生了错误请稍后重试");
-	      }
-	    });
-	$("#year_").change(function(){
-		 var year = $("#year_").find("option:selected").text();
-		 getPhaseAndCity1(year);
-		
-	 });
-	 $("#phase_").change(function(){
-		 var phaseName = $("#phase_").find("option:selected").text();
+	var year = $("#year").find("option:selected").text();
+	$("#year_").append("<option value='"+year+"'>"+year+"</option>");
+	var phase = $("#phase").find("option:selected").text();
+	$("#phase_").append("<option value='"+phase+"'>"+phase+"</option>");
+	var city = $("#city").find("option:selected").text();
+	$("#city_").append("<option value='"+city+"'>"+city+"</option>");
+	 $("#city_").click(function(){
 		 var vars = {};
-		 vars["phaseName"] = phaseName;
+		 vars["year"] = year;
+		 vars["phase"] = phase;
 	     var params = {"vars": vars};
 		 $.ajax({
-		      url: "/getCityByPhase1",
+		      url: "/getCitysByYearAndPhase",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
 		      data: JSON.stringify(params),
-		      success: function (phase) {
-		    	  setCityOption(phase.cityName)
+		      success: function (result) {
+		    	  phase_info = result[0];
+		    	  city_info = phase_info.cityName;
+		    	  setCityOption(city_info);
 		      },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -250,6 +236,21 @@ function getAddStudentYearPhaseAndCity(){
 	 });
 }
 
+function setCityOption(phaseName){
+//	
+	var city = $("#city_").find("option:selected").text();
+	$("#city_").empty();
+	$("#city_").append("<option value='"+city+"'>"+city+"</option>");
+	if(!phaseName)
+		return;
+	array = phaseName.split("|");
+	$.each(array, function(i, cityName){
+		if(cityName != city){
+			 $("#city_").append("<option value='"+cityName+"'>"+cityName+"</option>");
+		}
+	});
+}
+
 
 $.fn.serializeObject = function()    
 {    
@@ -273,7 +274,7 @@ function doclose(){
 	$("#selectfile").modal("hide");
 }
 
-function getPhaseAndCity1(year){
+function getPhaseAndCity(year){
 	 var vars = {};
 	 vars["year"] = year;
     var params = {"vars": vars};
@@ -309,17 +310,6 @@ function isExistOption(select,value) {
 		}
 	}
 	return isExist;
-}
-
-
-function setCityOption(phaseName){
-	$("#city_").empty();
-	if(!phaseName)
-		return;
-	array = phaseName.split("|");
-	$.each(array, function(i, cityName){
-		  $("#city_").append("<option value='"+cityName+"'>"+cityName+"</option>");
-	});
 }
 
 function setCityOption1(phaseName){
