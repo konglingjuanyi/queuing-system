@@ -382,6 +382,7 @@
                                         <td>
                                             <textarea name="hrDetailIdea" id="hrDetailIdea" cols="30" rows="1">$!{stuAss.hrDetailIdea}</textarea>
                                             <button type="button" class="btn " id="dosubmitHr">保存</button>
+                                            <button type="button" class="btn " id="docancel">取消</button>
                                         </td>
                                     </tr>
                                     </form>

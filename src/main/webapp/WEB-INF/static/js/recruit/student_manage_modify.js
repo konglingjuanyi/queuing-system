@@ -185,6 +185,34 @@ $(document).ready(function () {
             }
       });
 	});
+	
+	$('#docancel').click(function(){
+		active($('#stupage'))
+	    $.ajax({
+	      url: "/hr/lead2StudentPage",
+	      type: "POST",
+	      dataType: "html",
+	      contentType: 'application/json; charset=utf-8',
+	      success: function (returnedData) {
+	    	  $('#content').html(returnedData);
+	    	  $.ajax({
+	    	      url: "/hr/getAllStudentInfos",
+	    	      type: "POST",
+	    	      dataType: "html",
+	    	      contentType: 'application/json; charset=utf-8',
+	    	      success: function (returnedData) {
+	    	    	  $('#studentInfoInner').html(returnedData);
+	    		  },
+	    	      error: function () {
+	    	           alert("系统发生了错误请稍后重试");
+	    	      }
+	    	    });
+		  },
+	      error: function () {
+	           alert("系统发生了错误请稍后重试");
+	      }
+	    });
+	});
 });
 
 function getAddStudentYearPhaseAndCity(){
