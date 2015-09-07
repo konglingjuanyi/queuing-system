@@ -366,7 +366,7 @@ public class InterviewerController {
 				//一面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
 			}else{
-				if(vars.get("decheckbox") != null && !vars.get("decheckbox").endsWith("")){
+				if(vars.get("decheckbox") != null && !vars.get("decheckbox").equals("")){
 					newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
 				}else{
 					newStu.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
