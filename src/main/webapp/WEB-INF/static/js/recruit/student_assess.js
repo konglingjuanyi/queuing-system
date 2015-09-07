@@ -200,7 +200,6 @@ $(document).ready(function () {
 	$("#finishInterview").click(function(){
 		var stujob=$("#jobTitle").text();
 		var oneCon=$("#one_conclusion").val();
-		alert(oneCon);
 		 if(flag==1){
 			 if($("#one_conclusion").val()==''){
 				alert("请选择初试结论");
