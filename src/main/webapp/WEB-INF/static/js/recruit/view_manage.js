@@ -84,7 +84,7 @@ function doUpd(id,password){
 		for(var i=0;i<rds.length;i++){
 			$('input[name="updfirstname"]').each(function(){
 				if($(this).val()==rds[i]){
-					$(this).prop("checked",'true');
+					$(this).prop("checked",true);
 				}   
 			});
 		}
@@ -94,7 +94,7 @@ function doUpd(id,password){
 		for(var i=0;i<rds.length;i++){
 			$('input[name="updsecondname"]').each(function(){    
 				if($(this).val()==rds[i]){
-					$(this).prop("checked",'true');
+					$(this).prop("checked",true);
 				}   
 			});
 		}
@@ -104,7 +104,7 @@ function doUpd(id,password){
 		for(var i=0;i<rds.length;i++){
 			$('input[name="updfinishname"]').each(function(){    
 				if($(this).val()==rds[i]){
-					$(this).prop("checked",'true');
+					$(this).prop("checked",true);
 				}   
 			});
 		}
