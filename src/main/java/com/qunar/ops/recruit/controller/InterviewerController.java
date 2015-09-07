@@ -358,6 +358,7 @@ public class InterviewerController {
 		sa.setStudenId(stu.getId());
 		sa.setJob(stu.getJob());
 		Student newStu = studentService.getStudentByPhone(stu.getPhone());
+		boolean b = false;
 		//之前是一面中
 		if(newStu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
 			sa.setOneViewer(inter.getUserName());
@@ -365,6 +366,7 @@ public class InterviewerController {
 				//一面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
 			}else{
+				b = true;
 				addPhaseInterviewerResult(newStu, newPi, pi, 1);
 				if(vars.get("decheckbox") != null && !vars.get("decheckbox").equals("")){
 					newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
@@ -380,12 +382,15 @@ public class InterviewerController {
 				//二面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_TWO_NOT_PASS);
 			}else{
+				b = true;
 				addPhaseInterviewerResult(newStu, newPi, pi, 2);
 				newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
 			}
 			saService.updateByStudentId(sa);
 		}
-		piService.update(newPi);
+		if(b){
+			piService.update(newPi);
+		}
 		studentService.updateStudent(newStu);
 		session.setAttribute("student", null);
 	}
