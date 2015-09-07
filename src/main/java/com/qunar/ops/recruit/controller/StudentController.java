@@ -167,6 +167,10 @@ public class StudentController {
 					model.addAttribute("message", RecruitConst.PROMPT_PASS_ME);
 				}else if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_TWO_PASS)){
 					model.addAttribute("message", RecruitConst.PROMPT_TWO_PASS);
+				}else if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_ONE_NOT_PASS)){
+					model.addAttribute("message", RecruitConst.PROMPT_NOT_PASS);
+				}else if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_TWO_NOT_PASS)){
+					model.addAttribute("message", RecruitConst.PROMPT_NOT_PASS);
 				}else{
 					model.addAttribute("message",newStudent.getState());
 				}
