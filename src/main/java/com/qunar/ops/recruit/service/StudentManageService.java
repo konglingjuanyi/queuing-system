@@ -341,7 +341,7 @@ public class StudentManageService {
 			criteria.andSchoolEqualTo(school);
 		if(profession != null && !profession.equals(""))
 			criteria.andProfessionEqualTo(profession);
-		if(state != null && !state.equals(""))
+		if(state != null && !state.equals("") && !state.equals("请选择"))
 			criteria.andStateEqualTo(state);
 		return stuMapper.selectByExample(example);
 	}

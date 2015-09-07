@@ -38,8 +38,12 @@
 							<option value="">复试中</option>
 							<option value="">复试通过</option>
 							<option value="">复试未通过</option>
+							<option value="">已发Offer</option>
+							<option value="">待定Offer</option>
+							<option value="">不发Offer</option>
 						</select>
 						<button type="button" id="searchStudent" class="btn">搜索</button>
+						<!--<button type="button" id="exportStudent" class="btn">导出</button>-->
 					</form>
 				</div>
 				<div class="l-inner" id="studentInfoInner">

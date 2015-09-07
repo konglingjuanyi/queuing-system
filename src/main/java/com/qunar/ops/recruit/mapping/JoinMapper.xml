@@ -29,7 +29,7 @@
   	and phase_interviewer.year=#{year} 
   	and phase_interviewer.phase=#{phase} 
   	and phase_interviewer.city=#{city}) left join 
-  	(select first_try,count(*) from student_info where (state = #{state} or state = '面试结束') and is_deleted != 1 group by first_try) as tmp 
+  	(select first_try,count(*) from student_info where (state = #{state} or state = '已发Offer' or state = '待定Offer' or state = '不发Offer') and is_deleted != 1 group by first_try) as tmp 
   	on phase_interviewer.intervier_name=tmp.first_try order by interviewer.user_name
 
   	

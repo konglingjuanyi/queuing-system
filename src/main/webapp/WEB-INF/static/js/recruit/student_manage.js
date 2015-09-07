@@ -145,14 +145,16 @@ $(document).ready(function () {
 	
 	$('#dosubmitHr').click(function(){
 		var id=$("#stuId").val().trim();
+		var sid=$("#sId").val().trim();
 		var hrName=$("#hrName").val().trim();
 		var salay=$("#hrSuggestSalary").val().trim();
 		var hrdetail=$("#hrDetailIdea").val().trim();
+		var hrConclusion=$("#hr_conclusion").val().trim();
 	    $('#hrform').ajaxSubmit({
             url:"/hr/AddHrStudentAssess",
             cache:false,
             dataType:'html',
-            data:{'id':id,'hrName':hrName,'salay':salay,'hrdetail':hrdetail},
+            data:{'id':id,'hrName':hrName,'salay':salay,'hrdetail':hrdetail,'hrConclusion':hrConclusion,'sid':sid},
             success: function(data) {
             	active($('#stupage'))
         	    $.ajax({
