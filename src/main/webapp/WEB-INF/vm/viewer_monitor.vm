@@ -26,6 +26,7 @@
 				                  <th>复试</th>
 				                  <th>一次决定权</th>
 				                  <th>初试人数</th>
+				                  <th>初试通过人数</th>
 				                  <th>复试人数</th>
 				                  <th>操作</th>
 				                </tr>
@@ -38,7 +39,8 @@
 				                  <td>$info.obj.oneView</td>
 				                  <td>$info.obj.twoView</td>
 				                  <td>$info.obj.determine</td>
-				                  <td>$info.additionalInfos.get(0)</td>
+				                  <td>$!{info.obj.pi.oneCount}</td>
+				                  <td>$!{info.additionalInfos.get(0)}</td>
 				                  <td>$!{info.additionalInfos.get(1)}</td>
 				                  <td>
 				                  	<a href="#" id="sel" onclick="doSel($info.obj.id)">查看</a>
