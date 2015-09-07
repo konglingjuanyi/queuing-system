@@ -199,6 +199,8 @@ $(document).ready(function () {
 	
 	$("#finishInterview").click(function(){
 		var stujob=$("#jobTitle").text();
+		var oneCon=$("#one_conclusion").val();
+		alert(oneCon);
 		 if(flag==1){
 			 if($("#one_conclusion").val()==''){
 				alert("请选择初试结论");
@@ -214,7 +216,7 @@ $(document).ready(function () {
 			 return false;
 		 }
 		 if(flag==1){
-			 if(determine!="undifined" && determine!=null && determine!="" && determine.indexOf(stujob)!=-1){
+			 if(determine!="undifined" && determine!=null && determine!="" && determine.indexOf(stujob)!=-1 && oneCon!='不通过'){
 				 $("#noview").css("display","");
 			 }
 		 }
@@ -639,6 +641,11 @@ function showSuggest(flag1){
 			$("#one_suggest").css("display","");
 		}else{
 			$("#one_suggest").css("display","none");
+		}
+		if($("#one_conclusion").val()=='不通过'){
+			$("#noview").css("display","none");
+		}else{
+			$("#noview").css("display","");
 		}
 	}else{
 		if($("#two_conclusion").val()=='卓越'){

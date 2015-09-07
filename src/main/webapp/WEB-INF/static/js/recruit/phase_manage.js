@@ -123,7 +123,7 @@ function doaddview(){
 				+"</label>"
 		);
 	}
-	doclose();
+	docancle();
 }
 
 function saveviewsAndcitys(){
