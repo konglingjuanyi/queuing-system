@@ -360,12 +360,12 @@ public class InterviewerController {
 		Student newStu = studentService.getStudentByPhone(stu.getPhone());
 		//之前是一面中
 		if(newStu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
-			addPhaseInterviewerResult(newStu, newPi, pi, 1);
 			sa.setOneViewer(inter.getUserName());
 			if(sa.getOneConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
 				//一面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_ONE_NOT_PASS);
 			}else{
+				addPhaseInterviewerResult(newStu, newPi, pi, 1);
 				if(vars.get("decheckbox") != null && !vars.get("decheckbox").equals("")){
 					newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
 				}else{
@@ -375,12 +375,12 @@ public class InterviewerController {
 			}
 			saService.add(sa);
 		}else{
-			addPhaseInterviewerResult(newStu, newPi, pi, 2);
 			sa.setTwoViewer(inter.getUserName());
 			if(sa.getTwoConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
 				//二面评估表未通过
 				newStu.setState(RecruitConst.STUDENT_STATE_TWO_NOT_PASS);
 			}else{
+				addPhaseInterviewerResult(newStu, newPi, pi, 2);
 				newStu.setState(RecruitConst.STUDENT_STATE_TWO_PASS);
 			}
 			saService.updateByStudentId(sa);
