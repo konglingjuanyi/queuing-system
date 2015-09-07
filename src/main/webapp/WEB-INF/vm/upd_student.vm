@@ -117,16 +117,16 @@
 								<label class="control-label">应聘职位</label>
 								<div class="controls">
 									<select name="job" id="job">
-										#if($stu.job == 'RD')
-										<option value="RD" selected="selected">RD</option>
+										#if($stu.job == 'DEV')
+										<option value="DEV" selected="selected">DEV</option>
 										<option value="QA">QA</option>
 										<option value="FE">FE</option>
 										#elseif($stu.job == 'QA')
-										<option value="RD">RD</option>
+										<option value="DEV">DEV</option>
 										<option value="QA" selected="selected">QA</option>
 										<option value="FE">FE</option>
 										#else
-										<option value="RD">RD</option>
+										<option value="DEV">DEV</option>
 										<option value="QA">QA</option>
 										<option value="FE" selected="selected">FE</option>
 										#end
