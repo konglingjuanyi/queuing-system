@@ -530,13 +530,13 @@ public class InterviewerController {
 		String year=(String) request.getSession().getAttribute("year");
 		String city=(String) request.getSession().getAttribute("city");
 		String phase=(String) request.getSession().getAttribute("phase");
-//		System.out.println(year+" "+phase+" "+city+"-=-===-==-");
+		System.out.println(year+" "+phase+" "+city+"-=-===-==-");
 		
 		if(user == null){
-//			System.out.println("user is null");
+			System.out.println("user is null");
 			if(username != null && password != null && year != null){
 				Interviewer inter = interServe.getInterviewerByNameAndPass(username, password);
-//				System.out.println(inter);
+				System.out.println(inter);
 				if(inter == null){
 					String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
 					model.addAttribute("message",message);
