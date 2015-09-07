@@ -220,6 +220,7 @@ $(document).ready(function () {
 		 }
 		 $("#goon").css("display","");
 		 $("#havarest").css("display","");
+		 $("#donotView").prop("checked",false);
 	 });
 	
 	 $("#finishAndContinue").click(function(){
