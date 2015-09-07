@@ -641,11 +641,13 @@ function showSuggest(flag1){
 		}else{
 			$("#one_suggest").css("display","none");
 		}
-		if($("#one_conclusion").val()=='不通过'){
-			$("#noview").css("display","none");
-		}else{
-			$("#noview").css("display","");
-		}
+		if(determine!="undifined" && determine!=null && determine!="" && determine.indexOf(stujob)!=-1){
+			if($("#one_conclusion").val()=='不通过'){
+				$("#noview").css("display","none");
+			}else{
+				$("#noview").css("display","");
+			}
+		 }
 	}else{
 		if($("#two_conclusion").val()=='卓越'){
 			$("#two_suggest").css("display","");
