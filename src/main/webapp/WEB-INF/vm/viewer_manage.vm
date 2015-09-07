@@ -90,15 +90,15 @@
 						              </thead>
 						              <tbody>
 											<tr>
-												<td>RD</td>
+												<td>DEV</td>
 												<td>
-													<input id="firstid" name="firstname" type="checkbox"  value="RD">
+													<input id="firstid" name="firstname" type="checkbox"  value="DEV">
 												</td>
 												<td>
-													<input id="secondid" name="secondname" type="checkbox"  value="RD">
+													<input id="secondid" name="secondname" type="checkbox"  value="DEV">
 												</td>
 												<td>
-													<input id="finishid" name="finishname" type="checkbox"  value="RD">
+													<input id="finishid" name="finishname" type="checkbox"  value="DEV">
 												</td>
 											</tr>
 											<tr>
@@ -178,7 +178,7 @@
 						              </thead>
 						              <tbody>
 											<tr>
-												<td>RD</td>
+												<td>DEV</td>
 												<td>
 													<input id="updfirstid" name="updfirstname" type="checkbox"  value="DEV">
 												</td>
@@ -266,15 +266,15 @@
 						              </thead>
 						              <tbody>
 											<tr>
-												<td>RD</td>
+												<td>DEV</td>
 												<td>
-													<input id="getfirstid" name="getfirstname" type="checkbox"  value="RD" DISABLED>
+													<input id="getfirstid" name="getfirstname" type="checkbox"  value="DEV" DISABLED>
 												</td>
 												<td>
-													<input id="getsecondid" name="getsecondname" type="checkbox"  value="RD" DISABLED>
+													<input id="getsecondid" name="getsecondname" type="checkbox"  value="DEV" DISABLED>
 												</td>
 												<td>
-													<input id="getfinishid" name="getfinishname" type="checkbox"  value="RD" DISABLED>
+													<input id="getfinishid" name="getfinishname" type="checkbox"  value="DEV" DISABLED>
 												</td>
 											</tr>
 											<tr>

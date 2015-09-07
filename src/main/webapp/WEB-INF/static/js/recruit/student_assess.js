@@ -225,7 +225,7 @@ $(document).ready(function () {
 	 $("#finishAndContinue").click(function(){
 		 var decheckbox;
 		 $("input[name='determine']:checked").each(function(){    
-			 decheckbox$(this).val();    
+			 decheckbox=$(this).val();    
 		 });    
 		 clearInterval(times);
 		 timeIndex=0;
@@ -299,7 +299,7 @@ $(document).ready(function () {
 	 $("#finishAndRest").click(function(){
 		 var decheckbox;
 		 $("input[name='determine']:checked").each(function(){    
-			 decheckbox$(this).val();    
+			 decheckbox=$(this).val();    
 		 }); 
 		 clearInterval(times);
 		 timeIndex=0;

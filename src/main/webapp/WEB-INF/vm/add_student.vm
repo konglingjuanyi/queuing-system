@@ -111,7 +111,7 @@
 								<label class="control-label">应聘职位</label>
 								<div class="controls">
 									<select name="job" id="job">
-										<option value="RD">RD</option>
+										<option value="DEV">DEV</option>
 										<option value="QA">QA</option>
 										<option value="FE">FE</option>
 									</select>
