@@ -78,9 +78,10 @@ public class RecruitConst {
 	public static final String JOB_QA = "QA";
 	public static final long LATE_TIME = 15*60*1000;
 
-	public static final String PROMPT_NOT_PASS = "今天面试结束，感谢关注去哪儿网校园招聘！";
+	public static final String PROMPT_NOT_PASS = "今天面试结束<br/>感谢关注去哪儿网校园招聘！";
 
-	public static final String PROMPT_PASS_ME = "你好，你已过号，请联系驻场HR";
+	public static final String PROMPT_PASS_ME = "你好，你已过号<br/>请联系驻场HR";
 
-	public static final String PROMPT_TWO_PASS = "恭喜你复试通过，请联系驻场HR";
+	public static final String PROMPT_TWO_PASS = "恭喜你复试通过<br/>请联系驻场HR";
+	
 }
