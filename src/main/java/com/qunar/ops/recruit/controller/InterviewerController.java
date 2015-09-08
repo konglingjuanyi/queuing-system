@@ -357,10 +357,12 @@ public class InterviewerController {
 		StudentAssess sa = saService.createStudentAssess(vars);
 		String[] arrs = getYearPhaseAndCity(session);
 		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+//		System.out.println(stu);
 		if(stu == null){
 			stu = PcHrService.get(pi);
 			session.setAttribute("student", stu);
 		}
+//		System.out.println(stu.getName() + stu.getPhone());
 		PhaseInterviewer newPi = new PhaseInterviewer();
 		newPi.setId(pi.getId());
 		sa.setStudenId(stu.getId());
@@ -368,8 +370,9 @@ public class InterviewerController {
 		Student newStu = studentService.getStudentByPhone(stu.getPhone());
 		boolean b = false;
 		//之前是一面中
+//		System.out.println("finishUpdateStateAndRecordAsess"+newStu.getState());
 		if(newStu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
-			System.out.println("1111111111111111");
+//			System.out.println("1111111111111111");
 			sa.setOneViewer(inter.getUserName());
 			if(sa.getOneConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
 				//一面评估表未通过
