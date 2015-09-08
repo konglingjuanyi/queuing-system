@@ -1,14 +1,18 @@
 package com.qunar.ops.recruit.service;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Component;
 
 import com.qunar.ops.recruit.model.Student;
+import com.qunar.ops.recruit.util.RecruitConst;
 
 @Component
 public class WaitService {
@@ -198,8 +202,48 @@ public class WaitService {
 	public void removeHighestPriorityFromTwoList(StudentWaiter stuW) {
 		twoList.remove(stuW);
 	}
-	
 
+
+	public List<StudentWaiter> getAssignList() {
+		// TODO Auto-generated method stub
+		return assignList;
+	}
+
+
+	public List<StudentWaiter> getOneList() {
+		// TODO Auto-generated method stub
+		return new LinkedList<StudentWaiter>(list);
+	}
+
+
+	public List<StudentWaiter> getTwoList() {
+		// TODO Auto-generated method stub
+		return twoList;
+	}
+	
+	public synchronized int[] getStudentNumbersInQueue(List<StudentWaiter> list, HttpSession session) {
+		String year = (String) session.getAttribute("year");
+		String phase = (String) session.getAttribute("phase");
+		String city = (String) session.getAttribute("city");
+		int qa = 0;
+		int fe = 0;
+		int dev = 0;
+		for (StudentWaiter sw : list) {
+			Student s = sw.getStu();
+			if(s.getYear().equals(year) && s.getPhaseNo().equals(phase) && s.getLocation().equals(city)){
+				if(s.getJob().equals(RecruitConst.JOB_FE)){
+					fe ++;
+				}else if(s.getJob().equals(RecruitConst.JOB_QA)){
+					qa ++;
+				}else if(s.getJob().equals(RecruitConst.JOB_RD)){
+					dev ++;
+				}else{
+					
+				}
+			}
+		}
+		return new int[]{dev, fe, qa};
+	}
 	
 }
 

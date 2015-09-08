@@ -291,6 +291,10 @@ public class InterviewerController {
 		Interviewer inter = (Interviewer) session.getAttribute("user");
 		String[] arrs = getYearPhaseAndCity(session);
 		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+		if(stu == null){
+			stu = PcHrService.get(pi);
+			session.setAttribute("student", stu);
+		}
 		Student newStu = new Student();
 		Interviewer newInter = new Interviewer();
 		PhaseInterviewer newPi = new PhaseInterviewer();
@@ -353,6 +357,10 @@ public class InterviewerController {
 		StudentAssess sa = saService.createStudentAssess(vars);
 		String[] arrs = getYearPhaseAndCity(session);
 		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+		if(stu == null){
+			stu = PcHrService.get(pi);
+			session.setAttribute("student", stu);
+		}
 		PhaseInterviewer newPi = new PhaseInterviewer();
 		newPi.setId(pi.getId());
 		sa.setStudenId(stu.getId());
@@ -361,6 +369,7 @@ public class InterviewerController {
 		boolean b = false;
 		//之前是一面中
 		if(newStu.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW)){
+			System.out.println("1111111111111111");
 			sa.setOneViewer(inter.getUserName());
 			if(sa.getOneConclusion().equals(RecruitConst.RESULT_NOT_PASS)){
 				//一面评估表未通过
@@ -596,4 +605,23 @@ public class InterviewerController {
 		ModelAndView mav = new ModelAndView("/upload");
 		return mav;
 	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/interviewer/getOneAndTwoStu")
+	@ResponseBody
+	public BaseResult getOneAndTwoStu(HttpServletRequest request,HttpSession session) {
+		List<StudentWaiter> assignList = waitService.getAssignList();
+		List<StudentWaiter> oneList = waitService.getOneList();
+		List<StudentWaiter> twoList = waitService.getTwoList();
+		int[] assign = waitService.getStudentNumbersInQueue(assignList, session);
+		int[] one = waitService.getStudentNumbersInQueue(oneList, session);
+		//dev fe qa的顺序存放
+		int[] two_result = waitService.getStudentNumbersInQueue(twoList, session);
+		int[] one_result = new int[]{assign[0]+one[0], assign[1]+one[1], assign[2]+one[2]};
+		List ret = new LinkedList();
+		ret.add(one_result);
+		ret.add(two_result);
+		return BaseResult.getSuccessResult(ret);
+	}
+
+
 }
