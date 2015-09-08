@@ -440,6 +440,13 @@ public class InterviewerController {
 	@Transactional
 	public BaseResult noComeFinish(HttpServletRequest request, HttpSession session, ModelMap mm) {
 		Student stu = (Student) session.getAttribute("student");
+		if(stu == null){
+			Interviewer inter = (Interviewer) session.getAttribute("user");
+			String[] arrs = getYearPhaseAndCity(session);
+			PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+			stu = PcHrService.get(pi);
+			session.setAttribute("student", stu);
+		}
 		stu.setState(RecruitConst.STUDENT_STATE_PASS_ME);
 		stu.setTrueTime(null);
 		studentService.updateStudentNotSelective(stu);

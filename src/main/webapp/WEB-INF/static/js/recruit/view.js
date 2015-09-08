@@ -1,20 +1,7 @@
 $(document).ready(function () {
 	$('#view_list').click(function(){
 //		window.location.href = '/hr/getInterviewers';
-  	    active($('#viewpage'))
-	    $.ajax({
-	      url: "/hr/getInterviewersForMonitor",
-	      type: "POST",
-	      dataType: "html",
-	      contentType: 'application/json; charset=utf-8',
-	      success: function (returnedData) {
-	    	  $('#content').html(returnedData);
-		  },
-	      error: function () {
-	           alert("系统发生了错误请稍后重试");
-	      }
-	    });
-		
+		showViewerMonitor();
 	});
 	$('#manage_list').click(function(){
   	  	active($('#managepage'))
@@ -99,12 +86,29 @@ $(document).ready(function () {
 	      }
 	    });
 	}
+	
+	showViewerMonitor();
 
 });
 
+function showViewerMonitor(){
+	    active($('#viewpage'))
+	    $.ajax({
+	      url: "/hr/getInterviewersForMonitor",
+	      type: "POST",
+	      dataType: "html",
+	      contentType: 'application/json; charset=utf-8',
+	      success: function (returnedData) {
+	    	  $('#content').html(returnedData);
+		  },
+	      error: function () {
+	           alert("系统发生了错误请稍后重试");
+	      }
+	    });
+}
+
 function backToIndex(){
-	active($('#firstpage'));
-	 $('#content').html("");
+	showViewerMonitor();
 }
 
 function active(obj){

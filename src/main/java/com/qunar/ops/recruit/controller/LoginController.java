@@ -59,7 +59,7 @@ public class LoginController {
 					model.addAttribute("flag",-1);
 					return "/login";
 				}else{
-					System.out.println("hr login");
+//					System.out.println("hr login");
 					model.addAttribute("flag",0);
 					request.getSession().setAttribute("user", hr);
 					return "/hr_index";

@@ -22,9 +22,11 @@
 			</div>
 			<div class="m-nav" style="width:600px">
 				<ul class="nav nav-tabs">
+					<!--
 					<li id="firstpage" class="active">
 						<a href="#" id="index_list">首页</a>
 					</li>
+					-->
 					<li id="viewpage"><a href="javascript:void(0);" id="view_list">面试官监控</a></li>
 					<li id="managepage"><a href="javascript:void(0);" id="manage_list">面试官管理</a></li>
 					<li id="stupage"><a href="javascript:void(0);" id="student_list">候选人管理</a></li>
