@@ -16,6 +16,7 @@ import com.qunar.ops.recruit.dao.StudentMapper;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentExample;
 import com.qunar.ops.recruit.model.StudentForm;
+import com.qunar.ops.recruit.util.RecruitConst;
 import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
 @Component
@@ -104,7 +105,7 @@ public class StudentManageService {
 			stu.setOrganize(getStringCellValue(row.getCell(36)));
 			stu.setLeader(getStringCellValue(row.getCell(37)));
 			stu.setState("未签到");
-			stu.setIsDeleted(-1);
+			stu.setIsDeleted(RecruitConst.STUDENT_INIT);
 			return stu;
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -162,7 +163,15 @@ public class StudentManageService {
 		if(student.size()>0){
 			for(Student stu:student){
 				if(isHave(stu)){
-					stuMapper.updateByPrimaryKeySelective(stu);
+					StudentExample example = new StudentExample();
+					StudentExample.Criteria criteria = example.createCriteria();
+					criteria.andYearEqualTo(stu.getYear());
+					criteria.andPhaseNoEqualTo(stu.getPhaseNo());
+					criteria.andLocationEqualTo(stu.getLocation());
+					criteria.andPhoneEqualTo(stu.getPhone());
+					criteria.andNameEqualTo(stu.getName());
+					criteria.andIsDeletedEqualTo(RecruitConst.STUDENT_INIT);
+					stuMapper.updateByExampleSelective(stu, example);
 				}else{
 					stuMapper.insertSelective(stu);
 				}
@@ -181,7 +190,7 @@ public class StudentManageService {
 		criteria.andLocationEqualTo(stu.getLocation());
 		criteria.andPhoneEqualTo(stu.getPhone());
 		criteria.andNameEqualTo(stu.getName());
-		criteria.andIsDeletedEqualTo(-1);
+		criteria.andIsDeletedEqualTo(RecruitConst.STUDENT_INIT);
 		List<Student> list=stuMapper.selectByExample(example);
 		if(list!=null && list.size()>0){
 			return true;
@@ -198,7 +207,7 @@ public class StudentManageService {
 		criteria.andYearEqualTo(year);
 		criteria.andPhaseNoEqualTo(phase);
 		criteria.andLocationEqualTo(city);
-		criteria.andIsDeletedNotEqualTo(0);
+		criteria.andIsDeletedNotEqualTo(RecruitConst.STUDENT_DELETE);
 		return stuMapper.selectByExample(example);
 	}
 
@@ -271,7 +280,7 @@ public class StudentManageService {
 		inter.setThreeState(threeState);
 		inter.setThreeSide(threeSide);
 		inter.setState("未签到");
-		inter.setIsDeleted(-1);
+		inter.setIsDeleted(RecruitConst.STUDENT_INIT);
 		if("".equals(salary) || salary==null){
 			inter.setSalary(Double.valueOf(0));
 		}else{
@@ -318,7 +327,15 @@ public class StudentManageService {
 		// TODO Auto-generated method stub
 		if(result!=null){
 			if(isHave(result)){
-				stuMapper.updateByPrimaryKeySelective(result);
+				StudentExample example = new StudentExample();
+				StudentExample.Criteria criteria = example.createCriteria();
+				criteria.andYearEqualTo(result.getYear());
+				criteria.andPhaseNoEqualTo(result.getPhaseNo());
+				criteria.andLocationEqualTo(result.getLocation());
+				criteria.andPhoneEqualTo(result.getPhone());
+				criteria.andNameEqualTo(result.getName());
+				criteria.andIsDeletedEqualTo(RecruitConst.STUDENT_INIT);
+				stuMapper.updateByExampleSelective(result, example);
 			}else{
 				stuMapper.insertSelective(result);
 			}
@@ -331,7 +348,7 @@ public class StudentManageService {
 	public void deleteStudentInfoBy(int id) {
 		// TODO Auto-generated method stub
 		Student stu=new Student();
-		stu.setIsDeleted(0);
+		stu.setIsDeleted(RecruitConst.STUDENT_DELETE);
 		StudentExample example = new StudentExample();
 		StudentExample.Criteria criteria = example.createCriteria();
 		criteria.andIdEqualTo(id);
@@ -346,7 +363,7 @@ public class StudentManageService {
 		criteria.andYearEqualTo(year);
 		criteria.andPhaseNoEqualTo(phase);
 		criteria.andLocationEqualTo(city);
-		criteria.andIsDeletedNotEqualTo(0);
+		criteria.andIsDeletedNotEqualTo(RecruitConst.STUDENT_DELETE);
 		if(name != null && !name.equals(""))
 			criteria.andNameEqualTo(name);
 		if(school != null && !school.equals(""))
@@ -429,7 +446,7 @@ public class StudentManageService {
 		inter.setTrain(train);
 		inter.setThreeState(threeState);
 		inter.setThreeSide(threeSide);
-		inter.setIsDeleted(-1);
+		inter.setIsDeleted(RecruitConst.STUDENT_INIT);
 		inter.setLocation(city);
 		if("".equals(salary) || salary==null){
 			inter.setSalary(Double.valueOf(0));

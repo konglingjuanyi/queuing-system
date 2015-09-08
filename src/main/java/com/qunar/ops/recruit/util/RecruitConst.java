@@ -86,4 +86,8 @@ public class RecruitConst {
 	
 	public static final String PROMPT_FINISH = "今天面试结束<br/>感谢关注去哪儿网校园招聘！";
 	
+	public static final Integer STUDENT_INIT = -1;
+	public static final Integer STUDENT_DELETE = 0;
+	public static final Integer STUDENT_SETOVER = 1;
+	
 }

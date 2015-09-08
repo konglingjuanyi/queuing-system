@@ -16,9 +16,8 @@ $(document).ready(function () {
 	      data:JSON.stringify(params),
 	      contentType: 'application/json; charset=utf-8',
 	      success: function (returnedData) {
-//	    	  console.dir(returnedData);
-	    	  $('#studentInfoInner').html("");
-//	    	$('#studentInfoInner').html(returnedData);
+	    	  //$('#studentInfoInner').html("");
+	    	  $('#studentInfoInner').html(returnedData);
 		  },
 	      error: function () {
 	           alert("系统发生了错误请稍后重试");

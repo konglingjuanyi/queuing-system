@@ -26,8 +26,8 @@ public class StudentService {
 		StudentExample.Criteria cr = se.createCriteria();
 		cr.andPhoneEqualTo(phone);
 		List<Integer> list = new LinkedList<Integer>();
-		list.add(1);
-		list.add(2);
+		list.add(RecruitConst.STUDENT_DELETE);
+		list.add(RecruitConst.STUDENT_SETOVER);
 		cr.andIsDeletedNotIn(list);
 		List<Student> ret = stuMapper.selectByExample(se);
 		if(ret != null &&ret.size() > 0)
@@ -78,8 +78,8 @@ public class StudentService {
 		StudentExample.Criteria cr = se.createCriteria();
 		cr.andFirstTryEqualTo(userName);
 		List<Integer> list = new LinkedList<Integer>();
-		list.add(1);
-		list.add(2);
+		list.add(RecruitConst.STUDENT_DELETE);
+		list.add(RecruitConst.STUDENT_SETOVER);
 		cr.andIsDeletedNotIn(list);
 		List<Student> ret = stuMapper.selectByExample(se);
 		return ret;
@@ -103,12 +103,12 @@ public class StudentService {
 	public void setOverStudentInfoBy(String year, String name) {
 		// TODO Auto-generated method stub
 		Student stu=new Student();
-		stu.setIsDeleted(1);
+		stu.setIsDeleted(RecruitConst.STUDENT_SETOVER);
 		StudentExample se = new StudentExample();
 		StudentExample.Criteria cr = se.createCriteria();
 		cr.andYearEqualTo(year);
 		cr.andPhaseNoEqualTo(name);
-		cr.andIsDeletedNotEqualTo(0);
+		cr.andIsDeletedNotEqualTo(RecruitConst.STUDENT_DELETE);
 		stuMapper.updateByExampleSelective(stu, se);
 	}
 
