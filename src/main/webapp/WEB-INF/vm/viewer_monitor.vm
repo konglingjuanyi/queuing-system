@@ -92,15 +92,15 @@
 						              </thead>
 						              <tbody>
 											<tr>
-												<td>RD</td>
+												<td>DEV</td>
 												<td>
-													<input id="getfirstid" name="getfirstname" type="checkbox"  value="RD" DISABLED>
+													<input id="getfirstid" name="getfirstname" type="checkbox"  value="DEV" DISABLED>
 												</td>
 												<td>
-													<input id="getsecondid" name="getsecondname" type="checkbox"  value="RD" DISABLED>
+													<input id="getsecondid" name="getsecondname" type="checkbox"  value="DEV" DISABLED>
 												</td>
 												<td>
-													<input id="getfinishid" name="getfinishname" type="checkbox"  value="RD" DISABLED>
+													<input id="getfinishid" name="getfinishname" type="checkbox"  value="DEV" DISABLED>
 												</td>
 											</tr>
 											<tr>
@@ -144,7 +144,7 @@
 						              </thead>
 						              <tbody>
 											<tr>
-												<td>RD</td>
+												<td>DEV</td>
 												<td id="firstrd">4</td>
 												<td id="secondrd">2</td>
 											</tr>
