@@ -35,8 +35,7 @@ $(document).ready(function () {
 		      contentType: 'application/json; charset=utf-8',
 		      data: JSON.stringify(params),
 		      success: function (phase) {
-		    	  setCityOption(phase.cityName)
-		 		  backToIndex();
+		    	  setCityOption(phase.cityName);
 		      },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
