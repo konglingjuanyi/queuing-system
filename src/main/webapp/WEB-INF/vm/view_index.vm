@@ -63,25 +63,26 @@
                         </tbody>
                     </table>
                     </div>
-                    <div class="m-firsttry-btn">
+                    <div class="m-firsttry-btn" style="text-align:center">
                         <button class="btn" id="getOneInterview">请安排一个面试者</button>
                     </div>
-                    <div class="m-firsttry-btn" id="nocome">
+                    <div class="m-firsttry-btn" id="nocome" style="text-align:center">
                         <button class="btn" id="noComeFinish">候选人未到,继续下一个</button>
                     </div>
-                    <div class="m-firsttry-btn" id="begin">
+                    <div class="m-firsttry-btn" id="begin" style="text-align:center">
                         <button class="btn" id="beginToInterview">开始面试</button>
                     </div>
-                    <div class="m-firsttry-btn" id="finish">
+                    <div class="m-firsttry-btn" id="finish" style="text-align:center">
                         <button class="btn" id="finishInterview">结束面试</button>
+                        <button class="btn" id="doquit" onclick="doQuit()">退出</button>
                     </div>
-                    <div class="m-firsttry-btn" id="noview" style="display:none">
+                    <div class="m-firsttry-btn" id="noview" style="display:none;text-align:center">
                         <input type="checkbox"  name="determine" value="无需复试" id="donotView"> 无需复试
                     </div>
-                    <div class="m-firsttry-btn" id="goon" style="display:none">
+                    <div class="m-firsttry-btn" id="goon" style="display:none;text-align:center">
                         <button class="btn" id="finishAndContinue">结束面试 并继续</button>
                     </div>
-                    <div class="m-firsttry-btn" id="havarest" style="display:none">
+                    <div class="m-firsttry-btn" id="havarest" style="display:none;text-align:center">
                         <button class="btn" id="finishAndRest">结束面试 休息一下</button>
                     </div>
                 </div>

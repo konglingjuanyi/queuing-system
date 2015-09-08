@@ -803,5 +803,11 @@ function disabledOne(){
 	$("#two_suggest").attr("disabled",false);
 }
 
+function doQuit(){
+	if(confirm("请确保面试完毕再退出系统")){
+		window.location.href="/interviewer/quit";
+	}
+}
+
 
 
