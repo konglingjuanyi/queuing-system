@@ -1,4 +1,14 @@
 $(document).ready(function () {
+	$(document).bind("contextmenu",function(e) { 
+		return false; 
+	}); 
+	$(document).bind("keydown",function(e){ 
+		e=window.event||e; 
+		if(e.keyCode==116){ 
+		e.keyCode = 0; 
+		return false; 
+		} 
+	}); 
 	$('#view_list').click(function(){
 //		window.location.href = '/hr/getInterviewers';
 		showViewerMonitor();
