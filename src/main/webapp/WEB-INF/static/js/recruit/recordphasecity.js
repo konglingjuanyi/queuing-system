@@ -25,10 +25,11 @@ $(document).ready(function () {
 	 $("#phase").change(function(){
 		 var phaseName = $("#phase").find("option:selected").text();
 		 var vars = {};
+		 vars["year"] = $("#year").find("option:selected").text();
 		 vars["phaseName"] = phaseName;
 	     var params = {"vars": vars};
 		 $.ajax({
-		      url: "/getCityByPhase",
+		      url: "/getCityByYearAndPhase",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',

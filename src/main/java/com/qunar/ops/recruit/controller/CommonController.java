@@ -175,6 +175,25 @@ public class CommonController {
 		return phase;
 	}
 	
+	@RequestMapping(value = "/getCityByYearAndPhase")
+	@ResponseBody
+	public Phase getCityByYearAndPhase(HttpServletRequest request,HttpSession session, @RequestBody CommonRequest commonRequest) {
+		
+		Map<String, String> vars = commonRequest.getVars();
+		Phase phase = ps.getCityByYearAndFhase(vars.get("year"), vars.get("phaseName"));
+		updateYearPhaseAndCity(phase, session);
+		return phase;
+	}
+	
+	@RequestMapping(value = "/getCityByYearAndPhase1")
+	@ResponseBody
+	public Phase getCityByYearAndPhase1(HttpServletRequest request,HttpSession session, @RequestBody CommonRequest commonRequest) {
+		
+		Map<String, String> vars = commonRequest.getVars();
+		Phase phase = ps.getCityByYearAndFhase(vars.get("year"), vars.get("phaseName"));
+		return phase;
+	}
+	
 	@RequestMapping(value = "/getCitysByYearAndPhase")
 	@ResponseBody
 	public List<Phase> getCitysByYearAndPhase(HttpServletRequest request,HttpSession session, @RequestBody CommonRequest commonRequest) {

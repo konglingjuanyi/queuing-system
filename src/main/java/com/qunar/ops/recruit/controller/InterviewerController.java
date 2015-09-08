@@ -202,6 +202,7 @@ public class InterviewerController {
 					//根据面试官的城市、面试职位去二面队列里面拿一面不是自己的二面候选人
 					oneOrtwo = 2;
 					stuW = waitService.getHighestPriorityFromTwoList(arrs[0], arrs[1], arrs[2] ,inter.getTwoView(), inter.getUserName());
+					System.out.println(stuW);
 					if(stuW==null && !"".equals(inter.getOneView())){
 						//如果二面候选人为空并且是一面面试官，查询一面队列候选人
 						stuW = waitService.getHighestPriorityFromList(arrs[0], arrs[1], arrs[2], inter.getOneView(), inter.getUserName());

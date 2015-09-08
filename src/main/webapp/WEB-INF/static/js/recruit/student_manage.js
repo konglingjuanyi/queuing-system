@@ -243,10 +243,11 @@ function getAddStudentYearPhaseAndCity(){
 	 $("#phase_").change(function(){
 		 var phaseName = $("#phase_").find("option:selected").text();
 		 var vars = {};
+		 vars["year"] = $("#year_").find("option:selected").text();
 		 vars["phaseName"] = phaseName;
 	     var params = {"vars": vars};
 		 $.ajax({
-		      url: "/getCityByPhase1",
+		      url: "/getCityByYearAndPhase1",
 		      type: "POST",
 		      dataType: "json",
 		      contentType: 'application/json; charset=utf-8',
