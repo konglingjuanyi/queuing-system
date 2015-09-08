@@ -41,7 +41,7 @@
 											#foreach($room in $city.value)
 											#foreach($val in $room.entrySet())
 											<label class="control-label" for="inputEmail">$val.key
-											<input class="input-mini" type="text" id="inputEmail" placeholder="房间号" value="$val.value">
+											<input class="input-mini" type="text" id="inputEmail" placeholder="房间号" value="$val.value"><a style="color:red;font-size:25px;" href="javascript:void(0);" onclick="removeThisLabel(this)">×</a>
 											</label>
 											#end
 											#end

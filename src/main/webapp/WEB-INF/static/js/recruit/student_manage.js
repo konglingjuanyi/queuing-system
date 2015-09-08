@@ -16,8 +16,9 @@ $(document).ready(function () {
                  cache:false,
                  dataType:'html',
                  success: function(data) {
-                	$("#selectfile").modal("hide");
-                	$('#studentInfoInner').html(data);
+                	 alert("导入成功");
+                	 $("#selectfile").modal("hide");
+                	 $('#studentInfoInner').html(data);
                  },
                  error:function(){
                      alert("error");
@@ -40,6 +41,7 @@ $(document).ready(function () {
                  dataType:'html',
                  data:{'id':id,'name':name},
                  success: function(data) {
+                	 alert("指派成功");
                 	 $("#viewDiv").hide();
                 	 $('#studentInfoInner').html(data);
                  },
