@@ -120,6 +120,7 @@ function doaddview(){
 	for(var i=0;i<view_name.length;i++){
 		$("#"+viewid).append("<label class='control-label' for='inputEmail'>"
 				+view_name[i]+"<input class='input-mini' type='text' name='rooms' id='in"+view_name[i]+"' placeholder='房间号'>"
+				+"<a style='color:red;font-size:25px;' href='javascript:void(0);' onclick='removeThisLabel(this)'>×</a>"
 				+"</label>"
 		);
 	}
@@ -165,7 +166,7 @@ function saveviewsAndcitys(){
 		for(var j=0;j<la;j++){
 			var view=$("#bodyid tr:eq("+i+")").children("td").eq(2).children("label").eq(j).text().trim();
 			var room=$("#bodyid tr:eq("+i+")").children("td").eq(2).children("label").eq(j).children("input").val().trim();
-			view_value=view_value+city+"_"+view+"_"+room+",";
+			view_value=view_value+city+"_"+view.substr(0,view.length-1).trim()+"_"+room+",";
 		}
 		var view_value_tmp=view_value.substr(0,view_value.length-1);
 		all_value=all_value+view_value_tmp+"|";
@@ -221,6 +222,10 @@ function docancle(){
 
 function removetr(obj){
 	 $(obj).parent().parent().remove(); 
+}
+
+function removeThisLabel(obj){
+	 $(obj).parent().remove(); 
 }
 
 function setOver(year,name){

@@ -46,14 +46,14 @@ public class PhaseInterviewService {
 				sval.add(city_room[0]);
 				PhaseInterviewerExample example1 = new PhaseInterviewerExample();
 				PhaseInterviewerExample.Criteria criteria1 = example1.createCriteria();
-				criteria1.andYearEqualTo(year);
-				criteria1.andPhaseEqualTo(phase);
-				criteria1.andCityEqualTo(city_room[0]);
-				criteria1.andIntervierNameEqualTo(city_room[1]);
+				criteria1.andYearEqualTo(year.trim());
+				criteria1.andPhaseEqualTo(phase.trim());
+				criteria1.andCityEqualTo(city_room[0].trim());
+				criteria1.andIntervierNameEqualTo(city_room[1].trim());
 				List<PhaseInterviewer> ishave=interMapper.selectByExample(example1);
 				if(ishave.size()>0){
 					PhaseInterviewer updpi=new PhaseInterviewer();
-					updpi.setRoom(city_room[2]);
+					updpi.setRoom(city_room[2].trim());
 					updpi.setEnable(String.valueOf(1));
 					interMapper.updateByExampleSelective(updpi, example1);
 				}else{
