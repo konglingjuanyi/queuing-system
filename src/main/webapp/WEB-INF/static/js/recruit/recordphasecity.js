@@ -20,7 +20,6 @@ $(document).ready(function () {
 	$("#year").change(function(){
 		 var year = $("#year").find("option:selected").text();
 		 getPhaseAndCity(year);
-		 backToIndex();
 		
 	 });
 	 $("#phase").change(function(){
@@ -36,12 +35,12 @@ $(document).ready(function () {
 		      data: JSON.stringify(params),
 		      success: function (phase) {
 		    	  setCityOption(phase.cityName)
+		 		  backToIndex();
 		      },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
-		 backToIndex();
 	 });
 	 $("#city").change(function(){
 		 var city = $("#city").find("option:selected").text();
@@ -55,13 +54,13 @@ $(document).ready(function () {
 		      contentType: 'application/json; charset=utf-8',
 		      data: JSON.stringify(params),
 		      success: function (phase) {
-		    	  
+		 		   backToIndex();
 		      },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
-		 backToIndex();
+
 	 });
 });
 
@@ -83,6 +82,7 @@ function getPhaseAndCity(year){
 	    			  setCityOption(phase.cityName);
 	    		  }
 	    	  });
+	 		 backToIndex();
 	      },
 	      error: function () {
 	           alert("系统发生了错误请稍后重试");
