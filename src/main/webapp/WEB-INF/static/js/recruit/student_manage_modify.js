@@ -236,7 +236,7 @@ function getAddStudentYearPhaseAndCity(){
 		      success: function (result) {
 		    	  phase_info = result[0];
 		    	  city_info = phase_info.cityName;
-		    	  setCityOption(city_info);
+		    	  setCityOption3(city_info);
 		      },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -264,7 +264,7 @@ function getAddStudentYearPhaseAndCity(){
 	 });
 }
 
-function setCityOption(phaseName){
+function setCityOption3(phaseName){
 //	
 	var city = $("#city_").find("option:selected").text();
 	$("#city_").empty();
@@ -300,75 +300,6 @@ $.fn.serializeObject = function()
 function doclose(){
 	$('input[type="file"]').val("");
 	$("#selectfile").modal("hide");
-}
-
-function getPhaseAndCity(year){
-	 var vars = {};
-	 vars["year"] = year;
-    var params = {"vars": vars};
-	$.ajax({
-	      url: "/getPhaseAndCityByYear1",
-	      type: "POST",
-	      dataType: "json",
-	      contentType: 'application/json; charset=utf-8',
-	      data: JSON.stringify(params),
-	      success: function (list) {
-	    	  $("#phase_").empty();
-	    	  $.each(list, function(i, phase){
-   			  $("#phase_").append("<option value='"+phase.phaseName+"'>"+phase.phaseName+"</option>");
-	    		  if(i == 0){
-	    			  setCityOption(phase.cityName);
-	    		  }
-	    	  });
-	      },
-	      error: function () {
-	           alert("系统发生了错误请稍后重试");
-	      }
-	    });
-}
-
-
-function isExistOption(select,value) {
-	var isExist = false;
-	var count = select.find('option').length;
-	for(var i=0;i<count;i++){
-		if(select.get(0).options[i].value == value){
-			isExist = true;
-			break;
-		}
-	}
-	return isExist;
-}
-
-function setCityOption1(phaseName){
-	
-	$.ajax({
-	      url: "/getCityByPhase1",
-	      type: "POST",
-	      dataType: "json",
-	      contentType: 'application/json; charset=utf-8',
-	      data: JSON.stringify(params),
-	      success: function (list) {
-//	    	  alert(returnedData.phaseName);
-	    	 // $("#select_id").prepend("<option value='0'>请选择</option>");
-//	    	  console.dir(returnedData);
-//	    	  $("#phase_").append("<option value=''>"+returnedData.phaseName+"</option>"); //为Select追加一个Option(下拉项) 
-//	    	  $("#phase_").val(returnedData.phaseName);
-	    	  $.each(list, function(i, phase){
-	    		  $("#phase_").append("<option value=''>"+phase.phaseName+"</option>");
-	    		  if(i == 0){
-	    			  setCityOption(phase.phaseName);
-	    		  }
-//	    		  console.dir(phase);
-	    	  });
-		  },
-	      error: function () {
-	           alert("系统发生了错误请稍后重试");
-	      }
-	    });
-	 $("#phase_").click(function(){
-		 
-	 });
 }
 
 function showTime() {

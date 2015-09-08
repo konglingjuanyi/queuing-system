@@ -82,6 +82,8 @@ public class RecruitConst {
 
 	public static final String PROMPT_PASS_ME = "你好，你已过号<br/>请联系驻场HR";
 
-	public static final String PROMPT_TWO_PASS = "恭喜你复试通过<br/>请联系驻场HR";
+	public static final String PROMPT_TWO_PASS = "请联系HR进行最后一轮面试";
+	
+	public static final String PROMPT_FINISH = "今天面试结束<br/>感谢关注去哪儿网校园招聘！";
 	
 }
