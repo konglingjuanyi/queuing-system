@@ -130,7 +130,7 @@ public class StudentController {
 		Student student = studentWaiter.getStu();
 		String name = student.getName();
 		if(isFinished(student)){
-			model.addAttribute("message", RecruitConst.PROMPT_NOT_PASS);
+			setMessage(model, student);
 			model.addAttribute("flag",1);
 		}else if(waitService.containsOne(studentWaiter)){
 			//一面排队中
@@ -167,10 +167,8 @@ public class StudentController {
 					model.addAttribute("message", RecruitConst.PROMPT_PASS_ME);
 				}else if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_TWO_PASS)){
 					model.addAttribute("message", RecruitConst.PROMPT_TWO_PASS);
-				}else if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_ONE_NOT_PASS)){
-					model.addAttribute("message", RecruitConst.PROMPT_NOT_PASS);
-				}else if(newStudent.getState().equals(RecruitConst.STUDENT_STATE_TWO_NOT_PASS)){
-					model.addAttribute("message", RecruitConst.PROMPT_NOT_PASS);
+				}else if(isFinished(newStudent)){
+					setMessage(model, newStudent);
 				}else{
 					model.addAttribute("message",newStudent.getState());
 				}
@@ -181,10 +179,24 @@ public class StudentController {
 		
 	}
 
-	private boolean isFinished(Student student) {
+	private void setMessage(ModelMap model, Student student) {
 		if(student.getState().equals(RecruitConst.STUDENT_STATE_FINISH) ||
 				student.getState().equals(RecruitConst.STUDENT_STATE_ONE_NOT_PASS) ||
 				student.getState().equals(RecruitConst.STUDENT_STATE_TWO_NOT_PASS)){
+			model.addAttribute("message", RecruitConst.PROMPT_NOT_PASS);
+		}else{
+			model.addAttribute("message", RecruitConst.PROMPT_FINISH);
+		}
+		
+	}
+
+	private boolean isFinished(Student student) {
+		if(student.getState().equals(RecruitConst.STUDENT_STATE_FINISH) ||
+				student.getState().equals(RecruitConst.STUDENT_STATE_ONE_NOT_PASS) ||
+				student.getState().equals(RecruitConst.STUDENT_STATE_TWO_NOT_PASS) ||
+				student.getState().equals(RecruitConst.STUDENT_STATE_GET_OFFER) ||
+				student.getState().equals(RecruitConst.STUDENT_STATE_NO_OFFER) ||
+				student.getState().equals(RecruitConst.STUDENT_STATE_UNCERTAIN_OFFER)){
 			return true;
 		}
 		return false;

@@ -104,6 +104,7 @@ function isExistOption(select,value) {
 
 
 function setCityOption(phaseName){
+//	alert('setCityOption in recordphasecity.js');
 	$("#city").empty();
 	if(!phaseName)
 		return;

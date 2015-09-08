@@ -252,7 +252,7 @@ function getAddStudentYearPhaseAndCity(){
 		      contentType: 'application/json; charset=utf-8',
 		      data: JSON.stringify(params),
 		      success: function (phase) {
-		    	  setCityOption(phase.cityName)
+		    	  setCityOption2(phase.cityName)
 		      },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
@@ -318,7 +318,7 @@ function getPhaseAndCity1(year){
 	    	  $.each(list, function(i, phase){
    			  $("#phase_").append("<option value='"+phase.phaseName+"'>"+phase.phaseName+"</option>");
 	    		  if(i == 0){
-	    			  setCityOption(phase.cityName);
+	    			  setCityOption2(phase.cityName);
 	    		  }
 	    	  });
 	      },
@@ -342,7 +342,7 @@ function isExistOption(select,value) {
 }
 
 
-function setCityOption(phaseName){
+function setCityOption2(phaseName){
 	$("#city_").empty();
 	if(!phaseName)
 		return;
@@ -369,7 +369,7 @@ function setCityOption1(phaseName){
 	    	  $.each(list, function(i, phase){
 	    		  $("#phase_").append("<option value=''>"+phase.phaseName+"</option>");
 	    		  if(i == 0){
-	    			  setCityOption(phase.phaseName);
+	    			  setCityOption2(phase.phaseName);
 	    		  }
 //	    		  console.dir(phase);
 	    	  });
