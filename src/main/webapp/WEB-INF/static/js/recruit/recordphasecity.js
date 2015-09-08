@@ -11,6 +11,7 @@ $(document).ready(function () {
 	    		  }
 	    		  $("#year").append("<option value=''>"+year+"</option>");
 	    	  });
+	    	showViewerMonitor();
 		  },
 	      error: function () {
 	           alert("系统发生了错误请稍后重试");
