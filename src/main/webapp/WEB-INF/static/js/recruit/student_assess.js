@@ -10,11 +10,11 @@ $(document).ready(function () {
 	      success: function (result) {
 	    	  if(result.errorCode == 0){
 	    		  data = result.data;
-	    		  console.dir(data);
 		    	  inter = data[0];
 		    	  stu=data[2];
 		    	  phase_inter = data[1];
 		    	  var access=data[3];
+		    	  determine=inter.determine;
 		    	  if(phase_inter.status=='等待面试'){
 			    	  if(stu.state=='初试中' || stu.state=='等待初试'){
 			    		  message=1;
@@ -390,8 +390,34 @@ $(document).ready(function () {
 		      }
 		    });
 	 });
-
+	 
+	 setInterval(showOneAndTwoStu, 5000);
+	 
 });
+
+
+function showOneAndTwoStu(){
+	$.ajax({
+	      url: "/interviewer/getOneAndTwoStu",
+	      type: "POST",
+	      dataType: "json",
+	      contentType: 'application/json; charset=utf-8',
+	      success: function (set) {
+	    	  var data=set.data;
+	    	  var one=data[0];
+	    	  var two=data[1];
+	    	  $("#oneDev").text(one[0]);
+	    	  $("#twoDev").text(two[0]);
+	    	  $("#oneQa").text(one[2]);
+	    	  $("#twoQa").text(two[2]);
+	    	  $("#oneFe").text(one[1]);
+	    	  $("#twoFe").text(two[1]);
+		  },
+	      error: function () {
+	           alert("系统发生了错误请稍后重试");
+	      }
+	    });
+}
 
 var timeIndex = 0;
 function clock(){
@@ -635,6 +661,7 @@ function sumTwoCount(){
 }
 
 function showSuggest(flag1){
+	var stujob=$("#jobTitle").text().trim();
 	if(flag1==1){
 		if($("#one_conclusion").val()=='卓越'){
 			$("#one_suggest").css("display","");

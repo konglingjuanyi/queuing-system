@@ -35,6 +35,34 @@
                             <span class="text" id="showTime">00:00:00</span>
                         </div>
                     </div>
+                    <div class="m-firsttry-user">
+                    	<table class="table table-bordered" style="margin-top:20px">
+                        <thead>
+                            <tr>
+                                <th style="text-align:center">监控</th>
+                                <th style="text-align:center">一面</th>
+                                <th style="text-align:center">二面</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align:center"> DEV </td>
+                                <td style="text-align:center" id="oneDev"> 0 </td>
+                                <td style="text-align:center" id="twoDev"> 0 </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center"> QA </td>
+                                <td style="text-align:center" id="oneQa"> 0 </td>
+                                <td style="text-align:center" id="twoQa"> 0 </td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:center"> FE </td>
+                                <td style="text-align:center" id="oneFe"> 0 </td>
+                                <td style="text-align:center" id="twoFe"> 0 </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
                     <div class="m-firsttry-btn">
                         <button class="btn" id="getOneInterview">请安排一个面试者</button>
                     </div>
