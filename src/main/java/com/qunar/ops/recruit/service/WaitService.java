@@ -108,17 +108,18 @@ public class WaitService {
 	
 
 	public void recovery(List<Student> oneList, List<Student> twoList) {
-		List<StudentWaiter> swList1 = new LinkedList<StudentWaiter>();
-		for (Student student : oneList) {
-			swList1.add(new StudentWaiter(student,student.getTrueTime().getTime()));
+		if(this.list.size() == 0){
+			List<StudentWaiter> swList1 = new LinkedList<StudentWaiter>();
+			for (Student student : oneList) {
+				swList1.add(new StudentWaiter(student,student.getTrueTime().getTime()));
+			}
+			this.list.addAll(swList1);
+			List<StudentWaiter> swList2 = new LinkedList<StudentWaiter>();
+			for (Student student : twoList) {
+				swList2.add(new StudentWaiter(student,student.getTrueTime().getTime()));
+			}
+			this.twoList.addAll(swList2);
 		}
-		this.list.addAll(swList1);
-		List<StudentWaiter> swList2 = new LinkedList<StudentWaiter>();
-		for (Student student : twoList) {
-			swList2.add(new StudentWaiter(student,student.getTrueTime().getTime()));
-		}
-		this.twoList.addAll(swList2);
-		
 	}
 
 	@Override
