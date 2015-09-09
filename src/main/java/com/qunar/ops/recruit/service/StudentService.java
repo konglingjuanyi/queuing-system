@@ -39,8 +39,10 @@ public class StudentService {
 	public List<Student> getOneList() {
 		StudentExample se = new StudentExample();
 		StudentExample.Criteria cr = se.createCriteria();
-		cr.andFirstTryEqualTo("");
-		cr.andTrueTimeIsNotNull();
+		List<String> values = new LinkedList<String>();
+		values.add(RecruitConst.STUDENT_STATE_REGIST);
+		values.add(RecruitConst.STUDENT_STATE_LATE);
+		cr.andStateIn(values);
 		List<Student> ret = stuMapper.selectByExample(se);
 		return ret;
 	}
@@ -48,12 +50,6 @@ public class StudentService {
 	public List<Student> getTwoList() {
 		StudentExample se = new StudentExample();
 		StudentExample.Criteria cr = se.createCriteria();
-		cr.andFirstTryIsNotNull();
-		cr.andTrueTimeIsNotNull();
-		cr.andSecondTryIsNotNull();
-		cr.andSecondTryNotEqualTo("");
-//		List<String> values = new LinkedList<String>();
-//		values.add(RecruitConst.stu);
 		cr.andStateEqualTo(RecruitConst.STUDENT_STATE_ONE_PASS);
 		List<Student> ret = stuMapper.selectByExample(se);
 		return ret;
