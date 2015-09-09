@@ -402,6 +402,7 @@ public class InterviewerController {
 			saService.updateByStudentId(sa);
 		}
 		if(b){
+			System.out.println(newPi.getId()+"==="+newPi.getFirstRd());
 			piService.update(newPi);
 		}
 		studentService.updateStudent(newStu);

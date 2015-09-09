@@ -50,7 +50,11 @@ public class StudentService {
 		StudentExample.Criteria cr = se.createCriteria();
 		cr.andFirstTryIsNotNull();
 		cr.andTrueTimeIsNotNull();
-		cr.andSecondTryEqualTo("");
+		cr.andSecondTryIsNotNull();
+		cr.andSecondTryNotEqualTo("");
+//		List<String> values = new LinkedList<String>();
+//		values.add(RecruitConst.stu);
+		cr.andStateEqualTo(RecruitConst.STUDENT_STATE_ONE_PASS);
 		List<Student> ret = stuMapper.selectByExample(se);
 		return ret;
 	}
