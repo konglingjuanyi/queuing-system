@@ -631,6 +631,12 @@ public class InterviewerController {
 		ret.add(two_result);
 		return BaseResult.getSuccessResult(ret);
 	}
+	
+	@RequestMapping(value = "/interviewer/quit")
+	public String quit(HttpServletRequest request) {
+		request.getSession().invalidate();
+		return "forward:/interviewer/login";
+	}
 
 
 }
