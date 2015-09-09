@@ -414,7 +414,6 @@ function showOneAndTwoStu(){
 	    	  $("#twoFe").text(two[1]);
 		  },
 	      error: function () {
-	           alert("系统发生了错误请稍后重试");
 	      }
 	    });
 }
