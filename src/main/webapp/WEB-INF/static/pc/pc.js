@@ -1,5 +1,5 @@
 $(document).ready(function () {
-	setInterval("refreshPage()",8000);
+	setInterval("refreshPage()",15000);
 });
 
 function refreshPage(){
@@ -36,12 +36,21 @@ function refreshPage(){
 			    			  stuname=list[i][1].name;
 			    			  stujob=list[i][1].job; 
 			    		  }
-			    		  $("#showView").append("<li class='item item-wait'>"
-			    		        	+"<div class='room'>"+list[i][0].room+"</div>"
-			    		        	+"<div class='state'>-"+list[i][0].status+"-</div>"
-			    		        	+"<div class='name'>-"+stuname+"-</div>"
-			    		        	+"<div class='job'>-"+stujob+"-</div>"
-			    		        	+"</li>");
+			    		  if(i==7){
+			    			  $("#showView").append("<li class='item item-last'>"
+				    		        	+"<div class='room'>"+list[i][0].room+"</div>"
+				    		        	+"<div class='state'>-"+list[i][0].status+"-</div>"
+				    		        	+"<div class='name'>-"+stuname+"-</div>"
+				    		        	+"<div class='job'>-"+stujob+"-</div>"
+				    		        	+"</li>");
+			    		  }else{
+			    			  $("#showView").append("<li class='item item-last-bottom'>"
+				    		        	+"<div class='room'>"+list[i][0].room+"</div>"
+				    		        	+"<div class='state'>-"+list[i][0].status+"-</div>"
+				    		        	+"<div class='name'>-"+stuname+"-</div>"
+				    		        	+"<div class='job'>-"+stujob+"-</div>"
+				    		        	+"</li>"); 
+			    		  }
 			    	  }
 	    			  sleep(2000);
 	    		  }
@@ -56,12 +65,21 @@ function refreshPage(){
 		    			  stuname=list[i][1].name;
 		    			  stujob=list[i][1].job; 
 		    		  }
-		    		  $("#showView").append("<li class='item item-wait'>"
-		    		        	+"<div class='room'>"+list[i][0].room+"</div>"
-		    		        	+"<div class='state'>-"+list[i][0].status+"-</div>"
-		    		        	+"<div class='name'>-"+stuname+"-</div>"
-		    		        	+"<div class='job'>-"+stujob+"-</div>"
-		    		        	+"</li>");
+		    		  if(i==7){
+		    			  $("#showView").append("<li class='item item-last'>"
+			    		        	+"<div class='room'>"+list[i][0].room+"</div>"
+			    		        	+"<div class='state'>-"+list[i][0].status+"-</div>"
+			    		        	+"<div class='name'>-"+stuname+"-</div>"
+			    		        	+"<div class='job'>-"+stujob+"-</div>"
+			    		        	+"</li>");
+		    		  }else{
+		    			  $("#showView").append("<li class='item item-last-bottom'>"
+			    		        	+"<div class='room'>"+list[i][0].room+"</div>"
+			    		        	+"<div class='state'>-"+list[i][0].status+"-</div>"
+			    		        	+"<div class='name'>-"+stuname+"-</div>"
+			    		        	+"<div class='job'>-"+stujob+"-</div>"
+			    		        	+"</li>");
+		    		  }
 		    	  }
 	    	  }
 	    	  
