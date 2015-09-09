@@ -210,7 +210,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly"><$!{stuAss.twoTeamDetail}/textarea>
+                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly"><$!{stuAss.twoTeamDetail}</textarea>
                                         </td>
                                     </tr>
                                     <tr>
