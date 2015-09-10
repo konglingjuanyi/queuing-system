@@ -18,6 +18,15 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return true;
 		}
 		
+		if(endsWith(request, "index") ||endsWith(request, "login")||
+				endsWith(request, "getAllYears")||endsWith(request, "getPhaseAndCityByYear")||
+				endsWith(request, "updateOprateCity")||endsWith(request, "getCityByYearAndPhase")||
+				endsWith(request, "getAllYears1")||endsWith(request, "getPhaseAndCityByYear1")||
+				endsWith(request, "updateOprateCity1")||endsWith(request, "getCityByYearAndPhase1")){
+			return true;
+		}
+		
+		
 		Object userId = request.getSession().getAttribute("user");//(String)request.getSession().getAttribute("USER_ID");
 		if(userId != null) 
 			return true;
@@ -26,6 +35,10 @@ public class AuthInterceptor implements HandlerInterceptor {
 			return false;
 		}
 			
+	}
+
+	private boolean endsWith(HttpServletRequest request, String string) {
+		return request.getRequestURI().endsWith(string);
 	}
 
 	@Override
