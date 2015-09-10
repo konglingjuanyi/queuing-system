@@ -56,11 +56,15 @@
 		</mvc:interceptor>
 		<mvc:interceptor>
 			<mvc:mapping path="/interviewer/*" />
-			<bean class="com.qunar.ops.recruit.interceptor.OaAuthInterceptor" />
+			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
-			<mvc:mapping path="/pc/selectViewAndStudent" />
-			<bean class="com.qunar.ops.recruit.interceptor.OaAuthInterceptor" />
+			<mvc:mapping path="/interview/*" />
+			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/pc/*" />
+			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>
