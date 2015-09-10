@@ -22,7 +22,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		if(userId != null) 
 			return true;
 		else{
-			response.sendRedirect(request.getContextPath()+"/login");
+			response.sendError(404);
 			return false;
 		}
 			

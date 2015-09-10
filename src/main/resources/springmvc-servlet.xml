@@ -45,7 +45,9 @@
 	<mvc:resources location="/WEB-INF/static/" mapping="/static/**" />
 	<mvc:resources location="/WEB-INF/static/" mapping="/recruit/static/**" />
 	<mvc:resources location="/" mapping="/**" />
+	<!-- 
 	<mvc:interceptors>
+	
 		<mvc:interceptor>
 			<mvc:mapping path="/*" />
 			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" /> 
@@ -62,5 +64,7 @@
 			<mvc:mapping path="/pc/*" />
 			<bean class="com.qunar.ops.recruit.interceptor.OaAuthInterceptor" />
 		</mvc:interceptor>
+		
 	</mvc:interceptors>
+	 -->
 </beans>
