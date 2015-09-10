@@ -39,7 +39,7 @@
                 <input name="j_code" type="text" id="kaptcha" maxlength="4" placeholder="请输入验证码！"/>
 			   <br/> 
 			   <img src="/code/captcha-image" id="kaptchaImage"  style="margin-bottom: -3px"/>       
-			   <a id="changeKaptcha" href="#">看不清?换一张</a>  
+			   <a id="changeKaptcha" href="#" style="color:black">看不清?换一张</a>  
                 <br>
                 <div class="msg" id="msg">${message}</div>
                 <button type="submit" onclick="checkUp();" class="submit_button">登录</button>

@@ -13,7 +13,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
-		System.out.println("preHandle============================"+request.getRequestURI());
+		//System.out.println("preHandle============================"+request.getRequestURI());
 		Object userId = request.getSession().getAttribute("user");//(String)request.getSession().getAttribute("USER_ID");
 		if(userId!=null){
 			if(userId instanceof StudentWaiter){
