@@ -14,12 +14,32 @@ public class AuthInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
 		//System.out.println("preHandle============================"+request.getRequestURI());
-		if(request.getRequestURI().endsWith("index") || request.getRequestURI().endsWith("login")) {
-			if(!request.getRequestURI().endsWith("toindex")){
-				return true;
+		Object userId = request.getSession().getAttribute("user");//(String)request.getSession().getAttribute("USER_ID");
+		if(userId!=null){
+			if(userId instanceof StudentWaiter){
+				if(request.getRequestURI().endsWith("/student/login")||request.getRequestURI().endsWith("/student/register")||request.getRequestURI().endsWith("/student/refresh")) {
+					return true;
+				}else{
+					return false;
+				}
 			}else{
-				response.sendRedirect("/error_400.html");
-				return false;
+				if(request.getRequestURI().endsWith("index") || request.getRequestURI().endsWith("login")) {
+					if(!request.getRequestURI().endsWith("toindex")){
+						return true;
+					}else{
+						response.sendRedirect("/error_400.html");
+						return false;
+					}
+				}
+			}
+		}else{
+			if(request.getRequestURI().endsWith("index") || request.getRequestURI().endsWith("login")) {
+				if(!request.getRequestURI().endsWith("toindex")){
+					return true;
+				}else{
+					response.sendRedirect("/error_400.html");
+					return false;
+				}
 			}
 		}
 		
@@ -31,7 +51,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 		}
 		
 		
-		Object userId = request.getSession().getAttribute("user");//(String)request.getSession().getAttribute("USER_ID");
 		if(userId != null && !(userId instanceof StudentWaiter))
 			return true;
 		else{
