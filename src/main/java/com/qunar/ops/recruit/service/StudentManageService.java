@@ -202,7 +202,7 @@ public class StudentManageService {
 	public List<Student> getAllStudentInfos(String city, String year, String phase) {
 		// TODO Auto-generated method stub
 		StudentExample example = new StudentExample();
-		example.setOrderByClause("name");
+		example.setOrderByClause("interview_time");
 		StudentExample.Criteria criteria = example.createCriteria();
 		criteria.andYearEqualTo(year);
 		criteria.andPhaseNoEqualTo(phase);
@@ -359,6 +359,7 @@ public class StudentManageService {
 			String profession, String state, String city, String year,
 			String phase) {
 		StudentExample example = new StudentExample();
+		example.setOrderByClause("interview_time");
 		StudentExample.Criteria criteria = example.createCriteria();
 		criteria.andYearEqualTo(year);
 		criteria.andPhaseNoEqualTo(phase);
