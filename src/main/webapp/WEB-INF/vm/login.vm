@@ -1,7 +1,24 @@
 ﻿<html>
 <!DOCTYPE html>
 <html lang="en" class="no-js">
-
+<script type="text/javascript"> 
+	$(function(){  //生成验证码         
+	    $('#kaptchaImage').click(function () {  
+	    $(this).hide().attr('src', '/code/captcha-image?' + Math.floor(Math.random()*100) ).fadeIn(); });      
+	});   
+	 
+	window.onbeforeunload = function(){  
+	    //关闭窗口时自动退出  
+	    if(event.clientX>360&&event.clientY<0||event.altKey){     
+	        alert(parent.document.location);  
+	    }  
+	};  
+	             
+	function changeCode() {  //刷新
+	    $('#kaptchaImage').hide().attr('src', '/code/captcha-image?' + Math.floor(Math.random()*100) ).fadeIn();  
+	    event.cancelBubble=true;  
+	}  
+</script>
     <head>
 
         <meta charset="utf-8">
@@ -35,6 +52,10 @@
             <form action="/login" method="post">
                 <input type="text" name="username" class="username" placeholder="请输入您的用户名！">
                 <input type="password" name="password" class="password" placeholder="请输入您的用户密码！">
+                <input name="j_code" type="text" id="kaptcha" maxlength="4" placeholder="请输入验证码！"/>
+			   <br/> 
+			   <img src="/code/captcha-image" id="kaptchaImage"  style="margin-bottom: -3px"/>       
+			   <a href="#" onclick="changeCode()">看不清?换一张</a>  
                 <br>
                 <div class="msg" id="msg">${message}</div>
                 <button type="submit" onclick="checkUp();" class="submit_button">登录</button>

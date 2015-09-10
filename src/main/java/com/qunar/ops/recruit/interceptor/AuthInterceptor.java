@@ -13,7 +13,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
-//		System.out.println("preHandle============================");
+		System.out.println("preHandle============================"+request.getRequestURI());
 		if(request.getRequestURI().endsWith("index") || request.getRequestURI().endsWith("login")) {
 			return true;
 		}
