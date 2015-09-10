@@ -34,7 +34,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 			if(request.getRequestURI().endsWith("index") || request.getRequestURI().endsWith("login")) {
 				return true;
 			}
-			if(endsWith(request, "getOneAndTwoStu")||endsWith(request, "getAllYears")||endsWith(request, "getPhaseAndCityByYear")||
+			if(endsWith(request, "selectViewAndStudent")||endsWith(request, "getOneAndTwoStu")||endsWith(request, "getAllYears")||endsWith(request, "getPhaseAndCityByYear")||
 					endsWith(request, "updateOprateCity")||endsWith(request, "getCityByYearAndPhase")||
 					endsWith(request, "getAllYears1")||endsWith(request, "getPhaseAndCityByYear1")||
 					endsWith(request, "updateOprateCity1")||endsWith(request, "getCityByYearAndPhase1")||endsWith(request, "error_400.html")){
