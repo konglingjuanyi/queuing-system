@@ -32,7 +32,7 @@ public class PcController {
 	public String toPcIndex(HttpSession session, HttpServletRequest request, String j_code, ModelMap model) {
 		String kaptcha = (String)request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
 		System.out.println(j_code);
-		if(kaptcha != null && kaptcha.equals(j_code)){
+		if(request.getSession().getAttribute("success") != null){
 			Map<PhaseInterviewer, Student> map = PcHrService.getAllInterviewers(getYearPhaseAndCity(session));
 			List<List> list = makeList(map);
 			for (List list2 : list) {
@@ -49,10 +49,33 @@ public class PcController {
 				model.addAttribute("name", "");
 			}
 			model.addAttribute("message", list);
+			request.getSession().setAttribute("success", "success");
 			return "/pc/pc_index";
 		}else{
-			return "/pc/pc_login";
+			if(kaptcha != null && kaptcha.equals(j_code)){
+				Map<PhaseInterviewer, Student> map = PcHrService.getAllInterviewers(getYearPhaseAndCity(session));
+				List<List> list = makeList(map);
+				for (List list2 : list) {
+					PhaseInterviewer pi = (PhaseInterviewer) list2.get(0);
+					if(pi.getStatus().equals(RecruitConst.INTERVIEWER_STATE_WAITING) && list2.get(1) != null){
+						Student s = (Student) list2.get(1);
+						model.addAttribute("room", pi.getRoom());
+						model.addAttribute("name", s.getName());
+						break;
+					}
+				}
+				if(!model.containsKey("room")){
+					model.addAttribute("room", "");
+					model.addAttribute("name", "");
+				}
+				model.addAttribute("message", list);
+				request.getSession().setAttribute("success", "success");
+				return "/pc/pc_index";
+			}else{
+				return "/pc/pc_login";
+			}
 		}
+		
 		
 	}
 	
