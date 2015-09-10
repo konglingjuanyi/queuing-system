@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.code.kaptcha.Constants;
 import com.google.common.collect.Lists;
 import com.qunar.ops.recruit.model.Interviewer;
 import com.qunar.ops.recruit.model.PhaseInterviewer;
@@ -565,44 +566,51 @@ public class InterviewerController {
 	
 	@RequestMapping(value = "/interviewer/login")
 	public String toindex(HttpServletRequest request, HttpSession session,
-			HttpServletResponse response, String username, String password, ModelMap model) {
+			HttpServletResponse response, String username, String password, String j_code, ModelMap model) {
 		Object user = request.getSession().getAttribute("user");
 		String year=(String) request.getSession().getAttribute("year");
 		String city=(String) request.getSession().getAttribute("city");
 		String phase=(String) request.getSession().getAttribute("phase");
-		
+		String kaptcha = (String)request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
 		if(user == null){
-			if(username != null && password != null && year != null){
-				Interviewer inter = interServe.getInterviewerByNameAndPass(username, password);
-				if(inter == null){
-					String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
-					model.addAttribute("message",message);
-					model.addAttribute("flag",-1);
-					return "/inter_login";
-				}else{
-					PhaseInterviewer pi=piService.getPhaseInterviewerBy(year, phase, city, username);
-					if(pi == null){
-						String message= RecruitConst.CITY_OR_PHASE_ERROR_MSG;
+			if(kaptcha != null && kaptcha.equals(j_code)){
+				if(username != null && password != null && year != null){
+					Interviewer inter = interServe.getInterviewerByNameAndPass(username, password);
+					if(inter == null){
+						String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
 						model.addAttribute("message",message);
 						model.addAttribute("flag",-1);
 						return "/inter_login";
 					}else{
-						model.addAttribute("flag",1);
-						request.getSession().setAttribute("user", inter);
-						//添加到全局map
-						pi.setStatus(RecruitConst.INTERVIEWER_STATE_WAITING);
-						if(PcHrService.containsKey(pi)){
-							session.setAttribute("student", PcHrService.get(pi));
+						PhaseInterviewer pi=piService.getPhaseInterviewerBy(year, phase, city, username);
+						if(pi == null){
+							String message= RecruitConst.CITY_OR_PHASE_ERROR_MSG;
+							model.addAttribute("message",message);
+							model.addAttribute("flag",-1);
+							return "/inter_login";
 						}else{
-							PcHrService.put(pi, null);
+							model.addAttribute("flag",1);
+							request.getSession().setAttribute("user", inter);
+							//添加到全局map
+							pi.setStatus(RecruitConst.INTERVIEWER_STATE_WAITING);
+							if(PcHrService.containsKey(pi)){
+								session.setAttribute("student", PcHrService.get(pi));
+							}else{
+								PcHrService.put(pi, null);
+							}
+							return "/view_index";
 						}
-						return "/view_index";
 					}
+				}else{
+					model.addAttribute("flag",-1);
+					return "/inter_login";
 				}
 			}else{
+				//验证码不正确
 				model.addAttribute("flag",-1);
 				return "/inter_login";
 			}
+			
 		}else{//session中存在用户信息
 			if(user instanceof Interviewer){
 				model.addAttribute("flag",1);

@@ -13,6 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.code.kaptcha.Constants;
 import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.result.BaseResult;
@@ -28,24 +29,31 @@ public class PcController {
 	}
 	
 	@RequestMapping(value = "/pc/toindex")
-	public String toPcIndex(HttpSession session, HttpServletRequest request,ModelMap model) {
-		Map<PhaseInterviewer, Student> map = PcHrService.getAllInterviewers(getYearPhaseAndCity(session));
-		List<List> list = makeList(map);
-		for (List list2 : list) {
-			PhaseInterviewer pi = (PhaseInterviewer) list2.get(0);
-			if(pi.getStatus().equals(RecruitConst.INTERVIEWER_STATE_WAITING) && list2.get(1) != null){
-				Student s = (Student) list2.get(1);
-				model.addAttribute("room", pi.getRoom());
-				model.addAttribute("name", s.getName());
-				break;
+	public String toPcIndex(HttpSession session, HttpServletRequest request, String j_code, ModelMap model) {
+		String kaptcha = (String)request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+		System.out.println(j_code);
+		if(kaptcha != null && kaptcha.equals(j_code)){
+			Map<PhaseInterviewer, Student> map = PcHrService.getAllInterviewers(getYearPhaseAndCity(session));
+			List<List> list = makeList(map);
+			for (List list2 : list) {
+				PhaseInterviewer pi = (PhaseInterviewer) list2.get(0);
+				if(pi.getStatus().equals(RecruitConst.INTERVIEWER_STATE_WAITING) && list2.get(1) != null){
+					Student s = (Student) list2.get(1);
+					model.addAttribute("room", pi.getRoom());
+					model.addAttribute("name", s.getName());
+					break;
+				}
 			}
+			if(!model.containsKey("room")){
+				model.addAttribute("room", "");
+				model.addAttribute("name", "");
+			}
+			model.addAttribute("message", list);
+			return "/pc/pc_index";
+		}else{
+			return "/pc/pc_login";
 		}
-		if(!model.containsKey("room")){
-			model.addAttribute("room", "");
-			model.addAttribute("name", "");
-		}
-		model.addAttribute("message", list);
-		return "/pc/pc_index";
+		
 	}
 	
 	@RequestMapping(value = "/pc/selectViewAndStudent")
