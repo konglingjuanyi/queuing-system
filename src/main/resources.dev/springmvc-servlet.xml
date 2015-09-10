@@ -44,18 +44,27 @@
 	<mvc:resources location="/WEB-INF/images/" mapping="/images/**" />
 	<mvc:resources location="/WEB-INF/static/" mapping="/static/**" />
 	<mvc:resources location="/WEB-INF/static/" mapping="/recruit/static/**" />
+	<mvc:resources location="/" mapping="/**" />
 	<mvc:interceptors>
-		<!--<mvc:interceptor>
+		<mvc:interceptor>
 			<mvc:mapping path="/*" />
 			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" /> 
-		</mvc:interceptor> -->
-		<mvc:interceptor>
-			<mvc:mapping path="/recruit/*" />
-			<bean class="com.qunar.ops.recruit.interceptor.OaAuthInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
-			<mvc:mapping path="/recruit/setting/*" />
-			<bean class="com.qunar.ops.recruit.interceptor.OaAuthInterceptor" />
+			<mvc:mapping path="/hr/*" />
+			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/interviewer/*" />
+			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/interview/*" />
+			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/pc/*" />
+			<bean class="com.qunar.ops.recruit.interceptor.AuthInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
 </beans>
