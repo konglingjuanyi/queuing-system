@@ -20,7 +20,7 @@ import com.google.code.kaptcha.Producer;
 public class CaptchaController {  
        
     @Autowired  
-    private Producer captchaProducer = null;  
+    private Producer producer; 
    
     @RequestMapping(value = "captcha-image")  
     public ModelAndView getKaptchaImage(HttpServletRequest request, HttpServletResponse response) throws Exception {  
@@ -34,9 +34,9 @@ public class CaptchaController {
         response.setHeader("Pragma", "no-cache");  
         response.setContentType("image/jpeg");  
          
-        String capText = captchaProducer.createText();  
+        String capText = producer.createText();  
         session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);  
-        BufferedImage bi = captchaProducer.createImage(capText);  
+        BufferedImage bi = producer.createImage(capText);  
         ServletOutputStream out = response.getOutputStream();  
         ImageIO.write(bi, "jpg", out);  
         try {  
