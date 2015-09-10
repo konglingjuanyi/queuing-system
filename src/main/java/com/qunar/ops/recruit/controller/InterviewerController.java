@@ -38,6 +38,7 @@ import com.qunar.ops.recruit.service.InterviewerService;
 import com.qunar.ops.recruit.service.PcHrService;
 import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.service.PhaseService;
+import com.qunar.ops.recruit.service.StudentAssessImgService;
 import com.qunar.ops.recruit.service.StudentAssessService;
 import com.qunar.ops.recruit.service.StudentService;
 import com.qunar.ops.recruit.service.StudentWaiter;
@@ -62,6 +63,8 @@ public class InterviewerController {
 	PhaseInterviewService piService;
 	@Autowired
 	StudentAssessService saService;
+	@Autowired
+	StudentAssessImgService saimgService;
 	
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	/**
@@ -330,17 +333,33 @@ public class InterviewerController {
 	@ResponseBody
 	@Transactional
 	public BaseResult finishAndRest(HttpServletRequest request, HttpSession session, ModelMap mm, @RequestBody CommonRequest commonRequest) {
-		finishUpdateStateAndRecordAsess(session, commonRequest);
-		String[] arrs = getYearPhaseAndCity(session);
-		Interviewer inter = (Interviewer) session.getAttribute("user");
-		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
-		PhaseInterviewer newPi = new PhaseInterviewer();
-		newPi.setId(pi.getId());
-		newPi.setStatus(RecruitConst.INTERVIEWER_STATE_REST);
-		piService.update(newPi);
-		PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_REST);
-		PcHrService.change(pi, null);
-		return BaseResult.getSuccessResult("");
+		try {
+			finishUpdateStateAndRecordAsess(session, commonRequest);
+			String[] arrs = getYearPhaseAndCity(session);
+			Interviewer inter = (Interviewer) session.getAttribute("user");
+			PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+			PhaseInterviewer newPi = new PhaseInterviewer();
+			newPi.setId(pi.getId());
+			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_REST);
+			piService.update(newPi);
+			PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_REST);
+			PcHrService.change(pi, null);
+			return BaseResult.getSuccessResult("");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			finishUpdateStateAndRecordAsess(session, commonRequest);
+			String[] arrs = getYearPhaseAndCity(session);
+			Interviewer inter = (Interviewer) session.getAttribute("user");
+			PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+			PhaseInterviewer newPi = new PhaseInterviewer();
+			newPi.setId(pi.getId());
+			newPi.setStatus(RecruitConst.INTERVIEWER_STATE_REST);
+			piService.update(newPi);
+			PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_REST);
+			PcHrService.change(pi, null);
+			return BaseResult.getSuccessResult("");
+		}
 	}
 	
 	@RequestMapping(value = "/interviewer/finishAndContinue")
@@ -603,17 +622,12 @@ public class InterviewerController {
         return "/upload";
     }
     
-    /**
-	 * login
-	 * 
-	 * @param request
-	 * @return
-	 */
 	@RequestMapping(value = "/toupload")
 	public ModelAndView welcom(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("/upload");
 		return mav;
 	}
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/interviewer/getOneAndTwoStu")
 	@ResponseBody
@@ -637,6 +651,32 @@ public class InterviewerController {
 		request.getSession().invalidate();
 		return "forward:/interviewer/login";
 	}
-
+	
+	 @RequestMapping(value = "/interviewer/tempimg")
+	 @ResponseBody
+	 public BaseResult addCategory(HttpServletRequest request) {
+		 Student stu = (Student) request.getSession().getAttribute("student");
+		 if(stu == null){
+				Interviewer inter = (Interviewer) request.getSession().getAttribute("user");
+				String[] arrs = getYearPhaseAndCity(request.getSession());
+				PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+				stu = PcHrService.get(pi);
+				request.getSession().setAttribute("student", stu);
+		 }
+		 ArrayList<String> fileTypes = new ArrayList<String>();
+	     fileTypes.add("jpg");
+	     fileTypes.add("jpeg");
+	     fileTypes.add("bmp");
+	     fileTypes.add("gif");
+	     String uploadfile = "/mfsdata/trainsysfile";
+	     String name=FileUpload.upload(request, fileTypes, uploadfile);
+	     if(!"".equals(name) && name!=null){
+	    	 int res=saimgService.insertImg(stu,name);
+	    	 if(res>0){
+	    		 return BaseResult.getSuccessResult("success");
+	    	 }
+	     }
+	     return BaseResult.getErrorResult(-1);
+	 }
 
 }

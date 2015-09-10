@@ -2,7 +2,7 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!-- 数据库驱动包位置 -->
-    <classPathEntry location="C:\Users\yadong.qin\.m2\repository\postgresql\postgresql\9.1-901-1.jdbc4\postgresql-9.1-901-1.jdbc4.jar" /> 
+    <classPathEntry location="C:\Users\xianhui.zhang\.m2\repository\postgresql\postgresql\9.1-901-1.jdbc4\postgresql-9.1-901-1.jdbc4.jar" /> 
     <!-- <classPathEntry location="C:\Users\yongnian.jiang.QUNARSERVERS\.m2\repository\postgresql\postgresql\9.2-1002.jdbc4\postgresql-9.2-1002.jdbc4.jar" />-->
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <!-- <plugin type="com.qunar.ops.recruit.plugin.PaginationPlugin"></plugin> -->
@@ -17,19 +17,23 @@
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
         <!-- 生成模型的包名和位置 -->
-        <javaModelGenerator targetPackage="com.qunar.ops.recruit.model" targetProject="school_recruit">
+        <javaModelGenerator targetPackage="com.qunar.ops.recruit.model" targetProject="recruit">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
         <!-- 生成的映射文件包名和位置 -->
-        <sqlMapGenerator targetPackage="com.qunar.ops.recruit.mapping" targetProject="school_recruit">
+        <sqlMapGenerator targetPackage="com.qunar.ops.recruit.mapping" targetProject="recruit">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.qunar.ops.recruit.dao" targetProject="school_recruit">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.qunar.ops.recruit.dao" targetProject="recruit">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         <!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
+        <table tableName="student_assess_img" domainObjectName="StudentAssessImg" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('student_assess_img_id_seq')"/>
+        </table>
+        <!-- 
         <table tableName="interviewer" domainObjectName="Interviewer" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('interviewer_id_seq')"/>
         </table>
@@ -48,7 +52,7 @@
         <table tableName="phase_interviewer" domainObjectName="PhaseInterviewer" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('phase_interviewer_id_seq')"/>
         </table>
-        <!-- 
+        
         <table tableName="form_approve_log" domainObjectName="FormApproveLog" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('form_approve_log_id_seq')"/>
         </table>

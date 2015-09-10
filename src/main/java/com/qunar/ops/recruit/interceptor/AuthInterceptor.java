@@ -17,6 +17,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 		if(request.getRequestURI().endsWith("index") || request.getRequestURI().endsWith("login")) {
 			return true;
 		}
+		
 		Object userId = request.getSession().getAttribute("user");//(String)request.getSession().getAttribute("USER_ID");
 		if(userId != null) 
 			return true;

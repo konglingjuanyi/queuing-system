@@ -48,10 +48,10 @@ public class FileUpload {
                             (multipartFile.getOriginalFilename().lastIndexOf(".")); 
             String logImageName = RecruitControllerUtils.toMd5(UUID.randomUUID().toString());  
             /**拼成完整的文件保存路径加文件**/    
-            fileName = logoRealPathDir + File.separator   + logImageName + "." + suffix;
+            fileName = logoRealPathDir + File.separator   + logImageName + "" + suffix;
             File file = new File(fileName);
             multipartFile.transferTo(file);
-            return logImageName + "." + suffix;
+            return logImageName + "" + suffix;
         }catch (Exception e) {     
             e.printStackTrace();     
         } 

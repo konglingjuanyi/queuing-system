@@ -393,7 +393,43 @@ $(document).ready(function () {
 	 
 	 setInterval(showOneAndTwoStu, 5000);
 	 
+	 /*$("#uploadImg").click(function() {
+		  if ($("#file1").val().length > 0) {
+			  if($("#student_name").text().length==0){
+				 alert("没有候选人不能上传图片");
+			  }else{
+				 ajaxFileUpload(); 
+			  }
+		  } else {
+		       alert("请选择图片");
+		  }
+	 });*/
+
+	 
 });
+
+/*function ajaxFileUpload() {
+	 $.ajaxFileUpload({
+	       url : '/interviewer/tempimg', //用于文件上传的服务器端请求地址
+	       secureuri : false, //一般设置为false
+	       fileElementId : 'file1', //文件上传空间的id属性  <input type="file" id="file" name="file" />
+	       type : 'post',
+	       dataType : 'json', //返回值类型 一般设置为json
+	       contentType: 'application/json; charset=utf-8',
+	       success : function(data){
+	    	   if(data.errorCode==0){
+	    		   alert("上传成功"); 
+	    	   }else{
+	    		   alert("上传失败"); 
+	    	   }
+	       },
+	       error : function(e){
+	           alert("上传失败");
+	       }
+	  });
+	  return false;
+}*/
+
 
 
 function showOneAndTwoStu(){
