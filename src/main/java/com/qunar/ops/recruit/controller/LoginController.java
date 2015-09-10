@@ -46,9 +46,9 @@ public class LoginController {
 	public String toindex(HttpServletRequest request,
 			HttpServletResponse response, String username, String password, String j_code, ModelMap model) {
 		String kaptcha = (String)request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
-		if(kaptcha.equals(j_code)){
-			Object user = request.getSession().getAttribute("user");
-			if(user == null){
+		Object user = request.getSession().getAttribute("user");
+		if(user == null){
+			if(kaptcha != null && kaptcha.equals(j_code)){
 				if(username != null && password != null){
 					Hr hr = hrService.getHrByUserNameAndPass(username,password);
 					if(hr == null){
@@ -57,7 +57,7 @@ public class LoginController {
 						model.addAttribute("flag",-1);
 						return "/login";
 					}else{
-//						System.out.println("hr login");
+//							System.out.println("hr login");
 						model.addAttribute("flag",0);
 						request.getSession().setAttribute("user", hr);
 						return "/hr_index";
@@ -66,19 +66,19 @@ public class LoginController {
 					model.addAttribute("flag",-1);
 					return "/login";
 				}
-			}else{//session中存在用户信息
-				if(user instanceof Hr){
-					model.addAttribute("flag",0);
-					return "/hr_index";
-				}else{
-					return "/login";
-				}
+			}else{
+				//验证码错误
+				return "/login";
 			}
-		}else{
-			//验证码错误
-			return "/login";
+		}else{//session中存在用户信息
+			if(user instanceof Hr){
+				model.addAttribute("flag",0);
+				return "/hr_index";
+			}else{
+				return "/login";
+			}
 		}
-		
+	
 	}
 	
 }
