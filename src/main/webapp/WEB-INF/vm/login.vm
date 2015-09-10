@@ -1,24 +1,7 @@
 ﻿<html>
 <!DOCTYPE html>
 <html lang="en" class="no-js">
-<script type="text/javascript"> 
-	$(function(){  //生成验证码         
-	    $('#kaptchaImage').click(function () {  
-	    $(this).hide().attr('src', '/code/captcha-image?' + Math.floor(Math.random()*100) ).fadeIn(); });      
-	});   
-	 
-	window.onbeforeunload = function(){  
-	    //关闭窗口时自动退出  
-	    if(event.clientX>360&&event.clientY<0||event.altKey){     
-	        alert(parent.document.location);  
-	    }  
-	};  
-	             
-	function changeCode() {  //刷新
-	    $('#kaptchaImage').hide().attr('src', '/code/captcha-image?' + Math.floor(Math.random()*100) ).fadeIn();  
-	    event.cancelBubble=true;  
-	}  
-</script>
+
     <head>
 
         <meta charset="utf-8">
@@ -37,6 +20,7 @@
         <script src="/static/assets/js/supersized-init.js" ></script>
         <script src="/static/js/jquery.js"></script>
         <script src="/static/assets/js/scripts.js" ></script>
+        <script src="/static/js/recruit/kaptcha.js" ></script>
         <script src="/static/assets/js/login.js"></script>
         <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
         <!--[if lt IE 9]>
@@ -55,7 +39,7 @@
                 <input name="j_code" type="text" id="kaptcha" maxlength="4" placeholder="请输入验证码！"/>
 			   <br/> 
 			   <img src="/code/captcha-image" id="kaptchaImage"  style="margin-bottom: -3px"/>       
-			   <a href="#" onclick="changeCode()">看不清?换一张</a>  
+			   <a id="changeKaptcha" href="#">看不清?换一张</a>  
                 <br>
                 <div class="msg" id="msg">${message}</div>
                 <button type="submit" onclick="checkUp();" class="submit_button">登录</button>
