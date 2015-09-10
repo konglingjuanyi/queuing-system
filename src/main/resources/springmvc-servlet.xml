@@ -59,7 +59,7 @@
 			<bean class="com.qunar.ops.recruit.interceptor.OaAuthInterceptor" />
 		</mvc:interceptor>
 		<mvc:interceptor>
-			<mvc:mapping path="/pc/*" />
+			<mvc:mapping path="/pc/selectViewAndStudent" />
 			<bean class="com.qunar.ops.recruit.interceptor.OaAuthInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
