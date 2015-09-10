@@ -1,7 +1,5 @@
 package com.qunar.ops.recruit.controller;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,12 +11,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.code.kaptcha.Constants;
 import com.qunar.ops.recruit.model.Hr;
-import com.qunar.ops.recruit.model.Interviewer;
-import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.service.HrService;
 import com.qunar.ops.recruit.service.InterviewerService;
-import com.qunar.ops.recruit.service.StudentWaiter;
 import com.qunar.ops.recruit.util.RecruitConst;
 
 @Controller
@@ -48,34 +44,41 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/login")
 	public String toindex(HttpServletRequest request,
-			HttpServletResponse response, String username, String password, ModelMap model) {
-		Object user = request.getSession().getAttribute("user");
-		if(user == null){
-			if(username != null && password != null){
-				Hr hr = hrService.getHrByUserNameAndPass(username,password);
-				if(hr == null){
-					String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
-					model.addAttribute("message",message);
+			HttpServletResponse response, String username, String password, String j_code, ModelMap model) {
+		String kaptcha = (String)request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+		if(kaptcha.equals(j_code)){
+			Object user = request.getSession().getAttribute("user");
+			if(user == null){
+				if(username != null && password != null){
+					Hr hr = hrService.getHrByUserNameAndPass(username,password);
+					if(hr == null){
+						String message= RecruitConst.USERNAM_OR_PASSWORD_ERROR_MSG;
+						model.addAttribute("message",message);
+						model.addAttribute("flag",-1);
+						return "/login";
+					}else{
+//						System.out.println("hr login");
+						model.addAttribute("flag",0);
+						request.getSession().setAttribute("user", hr);
+						return "/hr_index";
+					}
+				}else{
 					model.addAttribute("flag",-1);
 					return "/login";
-				}else{
-//					System.out.println("hr login");
-					model.addAttribute("flag",0);
-					request.getSession().setAttribute("user", hr);
-					return "/hr_index";
 				}
-			}else{
-				model.addAttribute("flag",-1);
-				return "/login";
+			}else{//session中存在用户信息
+				if(user instanceof Hr){
+					model.addAttribute("flag",0);
+					return "/hr_index";
+				}else{
+					return "/login";
+				}
 			}
-		}else{//session中存在用户信息
-			if(user instanceof Hr){
-				model.addAttribute("flag",0);
-				return "/hr_index";
-			}else{
-				return "/login";
-			}
+		}else{
+			//验证码错误
+			return "/login";
 		}
+		
 	}
 	
 }
