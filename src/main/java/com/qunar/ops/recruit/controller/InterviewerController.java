@@ -485,7 +485,7 @@ public class InterviewerController {
 		}else{
 			stu.setState(RecruitConst.STUDENT_STATE_PASS_ME);
 			stu.setTrueTime(null);
-			newPi.setOneCount(newPi.getOneCount()-1);
+			newPi.setOneCount(pi.getOneCount()-1);
 			studentService.updateStudentNotSelective(stu);
 		}
 		piService.update(newPi);
