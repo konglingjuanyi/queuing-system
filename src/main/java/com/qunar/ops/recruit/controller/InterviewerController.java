@@ -463,26 +463,33 @@ public class InterviewerController {
 	@Transactional
 	public BaseResult noComeFinish(HttpServletRequest request, HttpSession session, ModelMap mm) {
 		Student stu = (Student) session.getAttribute("student");
+		Interviewer inter = (Interviewer) session.getAttribute("user");
+		String[] arrs = getYearPhaseAndCity(session);
+		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 		if(stu == null){
-			Interviewer inter = (Interviewer) session.getAttribute("user");
-			String[] arrs = getYearPhaseAndCity(session);
-			PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
 			stu = PcHrService.get(pi);
 			session.setAttribute("student", stu);
 		}
-		
+		Interviewer newInter = new Interviewer();
+		newInter.setId(stu.getId());
+		newInter.setViewCount(inter.getViewCount()-1);
+		PhaseInterviewer newPi = new PhaseInterviewer();
+		newPi.setId(pi.getId());
 		if(stu.getState().equals(RecruitConst.STUDENT_STATE_GOING2TWOROOM)){
 			Student newStudent = studentService.getStudentById(stu.getId());
 			newStudent.setSecondTry(null);
 			newStudent.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
+			newPi.setTwoCount(pi.getTwoCount()-1);
 			studentService.updateStudentNotSelective(newStudent);
 			waitService.addTwoList(new StudentWaiter(newStudent));
 		}else{
 			stu.setState(RecruitConst.STUDENT_STATE_PASS_ME);
 			stu.setTrueTime(null);
+			newPi.setOneCount(newPi.getOneCount()-1);
 			studentService.updateStudentNotSelective(stu);
 		}
-		
+		piService.update(newPi);
+		interServe.updateInterviewer(newInter);
 		return getNextStudent(session, mm);
 	}
 	
