@@ -90,5 +90,10 @@ public class PcHrService {
 		
 	}
 
+	public static void remove(PhaseInterviewer pi) {
+		map.remove(pi);
+		
+	}
+
 	
 }

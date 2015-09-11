@@ -326,6 +326,7 @@ public class InterviewerController {
 		studentService.updateStudent(newStu);
 		interServe.updateInterviewer(newInter);
 		piService.update(newPi);
+		PcHrService.change(pi, stu);
 		PcHrService.changeState(pi, RecruitConst.INTERVIEWER_STATE_VIEWING);
 		return BaseResult.getSuccessResult("");
 	}
@@ -598,6 +599,7 @@ public class InterviewerController {
 							}else{
 								PcHrService.put(pi, null);
 							}
+							piService.update(pi);
 							return "/view_index";
 						}
 					}
@@ -656,6 +658,10 @@ public class InterviewerController {
 	
 	@RequestMapping(value = "/interviewer/quit")
 	public String quit(HttpServletRequest request) {
+		Interviewer inter = (Interviewer) request.getSession().getAttribute("user");
+		String[] arrs = getYearPhaseAndCity(request.getSession());
+		PhaseInterviewer pi = piService.getPhaseInterviewerBy(arrs[0], arrs[1], arrs[2], inter.getUserName());
+		PcHrService.remove(pi);
 		request.getSession().invalidate();
 		return "forward:/interviewer/login";
 	}

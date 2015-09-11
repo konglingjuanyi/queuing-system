@@ -121,21 +121,54 @@ public class PcController {
 			@Override
 			public int compare(Entry<PhaseInterviewer, Student> o1,
 					Entry<PhaseInterviewer, Student> o2) {
-				try {
-					Integer i1 = Integer.parseInt(o1.getKey().getRoom());
-					Integer i2 = Integer.parseInt(o2.getKey().getRoom());
-					if(i1 < i2){
+				PhaseInterviewer p1 = o1.getKey();
+				PhaseInterviewer p2 = o2.getKey();
+				Student s1 = o1.getValue();
+				Student s2 = o2.getValue();
+				if(s1 == null || s2 == null){
+					if(s1 != null){
 						return -1;
-					}else if(i1 > i2){
+					}else if(s2 != null){
 						return 1;
 					}else{
-						return 0;
+						return p1.getRoom().compareTo(p2.getRoom());
 					}
-				} catch (Exception e) {
-					return 0;
 				}
+				if(isOneView(s1) && isTwoView(s2)){
+					return -1;
+				}else if(isOneView(s2) && isTwoView(s1)){
+					return 1;
+				}else{
+					if(s1.getJob().equals(s2.getJob())){
+						return p1.getRoom().compareTo(p2.getRoom());
+					}else{
+						if(s1.getJob().equals(RecruitConst.JOB_RD)){
+							return -1;
+						}else if(s1.getJob().equals(RecruitConst.JOB_QA)){
+							return 1;
+						}else if(s2.getJob().equals(RecruitConst.JOB_RD)){
+							return 1;
+						}else{
+							return -1;
+						}
+					}
+				}
+				
+			}
+
+			private boolean isTwoView(Student s) {
+				return s.getState().equals(RecruitConst.STUDENT_STATE_GOING2TWOROOM) ||
+						s.getState().equals(RecruitConst.STUDENT_STATE_TWO_VIEW);
+			}
+
+			private boolean isOneView(Student s) {
+				return s.getState().equals(RecruitConst.STUDENT_STATE_GOING2ONEROOM) ||
+						s.getState().equals(RecruitConst.STUDENT_STATE_ONE_VIEW);
 			}
 		});
+//		for (Entry<PhaseInterviewer, Student> entry : entries) {
+//			System.out.println(entry.getKey()+" "+entry.getValue());
+//		}
 		for (Entry<PhaseInterviewer, Student> entry : entries) {
 			PhaseInterviewer pi = entry.getKey();
 			Student stu = entry.getValue();
