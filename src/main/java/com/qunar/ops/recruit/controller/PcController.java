@@ -1,9 +1,11 @@
 package com.qunar.ops.recruit.controller;
 
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -92,7 +94,7 @@ public class PcController {
 		return BaseResult.getSuccessResult(list);
 	}
 
-	private List<List> makeList(
+	private List<List> makeList1(
 			Map<PhaseInterviewer, Student> map) {
 		List<List> list = new LinkedList<List>();
 		for (PhaseInterviewer pi : map.keySet()) {
@@ -100,6 +102,48 @@ public class PcController {
 			List tmp = new LinkedList();
 			tmp.add(newPi);
 			tmp.add(map.get(pi));
+			list.add(tmp);
+		}
+		return list;
+	}
+	
+	private List<List> makeList(
+			Map<PhaseInterviewer, Student> map) {
+		List<List> list = new LinkedList<List>();
+		Entry<PhaseInterviewer, Student>[] entries = new Entry[map.size()];
+		int i = 0;
+		for (Entry<PhaseInterviewer, Student> entry : map.entrySet()) {
+			entries[i] = entry;
+			i++;
+		}
+		Arrays.sort(entries, new Comparator<Entry<PhaseInterviewer, Student>>() {
+
+			@Override
+			public int compare(Entry<PhaseInterviewer, Student> o1,
+					Entry<PhaseInterviewer, Student> o2) {
+				try {
+					Integer i1 = Integer.parseInt(o1.getKey().getRoom());
+					Integer i2 = Integer.parseInt(o2.getKey().getRoom());
+					if(i1 < i2){
+						return -1;
+					}else if(i1 > i2){
+						return 1;
+					}else{
+						return 0;
+					}
+				} catch (Exception e) {
+					return 0;
+				}
+			}
+		});
+		for (Entry<PhaseInterviewer, Student> entry : entries) {
+			PhaseInterviewer pi = entry.getKey();
+			Student stu = entry.getValue();
+			PhaseInterviewer newPi=piService.getPhaseInterviewerBy(pi.getYear(), pi.getPhase(), pi.getCity(), pi.getIntervierName());
+			pi.setRoom(newPi.getRoom());
+			List tmp = new LinkedList();
+			tmp.add(newPi);
+			tmp.add(stu);
 			list.add(tmp);
 		}
 		return list;
