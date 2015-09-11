@@ -68,11 +68,8 @@
                     <div class="m-firsttry-btn" style="text-align:center">
                         <button class="btn" id="getOneInterview">请安排一个面试者</button>
                     </div>
-                    <div class="m-firsttry-btn" id="nocome" style="text-align:center">
-                        <button class="btn" id="noComeFinish">候选人未到,继续下一个</button>
-                    </div>
                     <div class="m-firsttry-btn" id="begin" style="text-align:center">
-                        <button class="btn" id="beginToInterview">开始面试</button>
+                        <button class="btn" id="beginToInterview" style="background:blue;width:200px;height:50px;font-size:30px;color:red">开始面试</button>
                     </div>
                     <div class="m-firsttry-btn" id="finish" style="text-align:center">
                         <button class="btn" id="finishInterview">结束面试</button>
@@ -87,6 +84,9 @@
                     <div class="m-firsttry-btn" id="havarest" style="display:none;text-align:center">
                         <button class="btn" id="finishAndRest">结束面试 休息一下</button>
                     </div>
+                    <div class="m-firsttry-btn" id="nocome" style="text-align:center">
+                        <button class="btn" id="noComeFinish">候选人未到,继续下一个</button>
+                    </div>
                 </div>
             </div>
             <div class="l-content">
@@ -94,17 +94,33 @@
                     <div class="l-inner">
                         <div class="m-firsttry-bd">
                             <div class="interviewee-info">
-                                <div class="item">
-                                    <h3>面试人姓名：<span class="text" id="student_name"></span></h3>
+                            	<div class="interviewee-info-left">
+                                	<div class="item">
+                                    	<h3>面试人姓名：<span class="text" id="student_name"></span></h3>
+                                	</div>
+                                	<div class="item">
+                                    	<h3>复试面职位：<span class="text" id="jobTitle"></span></h3>
+                                	</div>
+                                	<div class="item" id="first_viewer_div">
+                                    	<h3>初试面试官：<span class="text" id="first_viewer"></span></h3>
+                                	</div>
+                                	<div class="item" id="second_viewer_div">
+                                    	<h3>复试面试官：<span class="text" id="second_viewer"></span></h3>
+                                	</div>
                                 </div>
-                                <div class="item">
-                                    <h3>复试面职位：<span class="text" id="jobTitle"></span></h3>
-                                </div>
-                                <div class="item" id="first_viewer_div">
-                                    <h3>初试面试官：<span class="text" id="first_viewer"></span></h3>
-                                </div>
-                                <div class="item" id="second_viewer_div">
-                                    <h3>复试面试官：<span class="text" id="second_viewer"></span></h3>
+                                <div class="interviewee-info-right">
+                                    <div class="item">
+                                        <h3>学校：<span class="text" id="student_school"></span></h3>
+                                    </div>
+                                    <div class="item">
+                                        <h3>专业：<span class="text" id="student_profession"></span></h3>
+                                    </div>
+                                    <div class="item">
+                                        <h3>学历：<span class="text" id="student_edu"></span></h3>
+                                    </div>
+                                    <div class="item">
+                                        <h3>电话：<span class="text" id="student_phone"></span></h3>
+                                    </div>
                                 </div>
                                 <!--
                                 <div class="picture" style="text-align:center;width:100px;height:60px;">

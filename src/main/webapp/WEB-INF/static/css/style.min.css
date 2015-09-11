@@ -43,11 +43,13 @@ body,html{height:100%}
 .interviewee-info .item,.m-firsttry-sidebar .item{margin-bottom:5px}
 .m-firsttry-sidebar{padding:20px;background:#eee}
 .m-firsttry-btn,.m-firsttry-info{padding-top:20px}
-.interviewee-info{position:relative;height:150px}
+.interviewee-info{position:relative;height:170px}
 .interviewee-info h3{font-size:18px;line-height:24px;color:#aaa}
 .interviewee-info h3 .text{margin-left:20px;border-bottom:1px solid #333;width:200px;display:inline-block;color:#333}
 .interviewee-info .picture{position:absolute;top:0;right:0;width:100px;height:150px;background:#eee;border:1px solid #ccc}
 .interviewee-info .picture .btn{position:absolute;left:50%;top:50%;margin-left:-41px;margin-top:-15px}
+.interviewee-info-left{float:left;width:420px}
+.interviewee-info-right{float:right;width:420px;margin-right:20px}
 .row-fluid .span10{position:relative;overflow-y:auto}
 .m-firsttry-bd table{margin-bottom:30px}
 .m-firsttry-bd table select{width:auto}

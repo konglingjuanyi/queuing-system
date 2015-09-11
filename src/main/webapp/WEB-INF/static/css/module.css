@@ -185,7 +185,7 @@
 
 .interviewee-info{
 	position: relative;
-	height: 150px;
+	height: 170px;
 }
 .interviewee-info h3{
 	font-size: 18px;
@@ -221,6 +221,17 @@
 	margin-left: -41px;
 	margin-top: -15px;
 }
+.interviewee-info-left{
+	float: left;
+	width: 420px;
+}
+.interviewee-info-right{
+	float: right;
+	width: 420px;
+	margin-right: 20px;
+	_display: inline;
+}
+
 .row-fluid .span10{
 	position: relative;
 	overflow-y: auto;
@@ -239,6 +250,7 @@
 .m-firsttry-bd table input{
 	margin-bottom: 0;
 }
+
 .table{
 	margin-bottom: 0;
 }
@@ -286,4 +298,7 @@
 	vertical-align: middle;
 	margin-right: 10px;
 	margin-top: 0;
+}
+.row-fluid .span4{
+	margin-left: 0;
 }

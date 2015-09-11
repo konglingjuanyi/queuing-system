@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
@@ -30,6 +31,7 @@ import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentAssess;
 import com.qunar.ops.recruit.model.StudentForm;
+import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.result.CommonRequest;
 import com.qunar.ops.recruit.result.ResultPlusAdditionalInfo;
 import com.qunar.ops.recruit.service.PhaseInterviewService;
@@ -227,31 +229,45 @@ public class StudentManageController {
 	
 	@RequestMapping(value = "/hr/gotoSelectStudentInfo")
 	public String gotoSelectStudentInfo(HttpServletRequest request, int id,  ModelMap model) throws Exception {
-		StudentAssess stuAss=assService.getStudentAssessByStudentId(id);
-		Student stu=studentService.getStudentById(id);
-		model.addAttribute("stuAss", stuAss);
-		model.addAttribute("stu", stu);
+		//StudentAssess stuAss=assService.getStudentAssessByStudentId(id);
+		//Student stu=studentService.getStudentById(id);
+		//model.addAttribute("stuAss", stuAss);
+		//model.addAttribute("stu", stu);
+		model.addAttribute("id", id);
 		return "/hr_select_student";
+	}
+	
+	@RequestMapping(value = "/hr/SelectStudentAssessInfo")
+	@ResponseBody
+	public BaseResult SelectStudentAssessInfo(HttpServletRequest request,@RequestBody CommonRequest commonRequest,  ModelMap model) throws Exception {
+		Map<String, String> vars = commonRequest.getVars();
+		if(vars!=null && vars.get("stuid")!=null){
+			Integer stuid = Integer.valueOf(vars.get("stuid"));
+			StudentAssess stuAss=assService.getStudentAssessByStudentId(stuid);
+			Student stu=studentService.getStudentById(stuid);
+			model.addAttribute("assess", stuAss);
+			model.addAttribute("student", stu);
+			return BaseResult.getSuccessResult(model);
+		}else{
+			return BaseResult.getErrorResult(-1);
+		}
 	}
 	
 	@RequestMapping(value = "/hr/AddHrStudentAssess")
 	@Transactional
-	public String  AddHrStudentAssess(HttpServletRequest request, int id, String hrName, String salay, String hrdetail, String hrConclusion, int sid){
-		Student stu=new Student();
-		stu.setId(sid);
-		stu.setState(hrConclusion);
-		StudentAssess sa=new StudentAssess();
-		sa.setId(id);
-		sa.setHrName(hrName);
-		sa.setHrDetailIdea(hrdetail);
-		sa.setHrConclusion(hrConclusion);
-		if(salay!=null && !"".equals(salay)){
-			sa.setHrSuggestSalary(Integer.valueOf(salay));
-		}else{
-			sa.setHrSuggestSalary(0);
+	public String  AddHrStudentAssess(HttpServletRequest request,@RequestBody CommonRequest commonRequest){
+		Map<String, String> vars = commonRequest.getVars();
+		StudentAssess sa = assService.createStudentAssess(vars);
+		if(vars.get("studentid")!=null){
+			sa.setStudenId(Integer.valueOf(vars.get("studentid")));
+			sa.setHrConclusion(vars.get("hr_conclusion"));
+			StudentAssess newsa=assService.getStudentAssessByStudentId(Integer.valueOf(vars.get("studentid")));
+			if(newsa!=null){
+				assService.updateByStudentId(sa);
+			}else{
+				assService.add(sa);
+			}
 		}
-		assService.updateBy(sa);
-		studentService.updateStudent(stu);
 		return "forward:/hr/getAllStudentInfos";
 	}
 	
