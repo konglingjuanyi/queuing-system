@@ -134,6 +134,7 @@ $(document).ready(function () {
 	    });
 	
 	$("#getOneInterview").click(function(){
+		if(confirm("确定继续下一个吗？")){
 		$.ajax({
 		      url: "/interviewer/getOneInterview",
 		      type: "POST",
@@ -190,9 +191,11 @@ $(document).ready(function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
+		}
 	});
 	
 	$("#beginToInterview").click(function(){
+		if(confirm("确定开始吗？")){
 		$("#beginToInterview").attr("disabled", true);
 		$("#getOneInterview").attr("disabled", true);
 		$("#finishInterview").attr("disabled", false);
@@ -210,6 +213,7 @@ $(document).ready(function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
+		}
 	});
 	
 	$("#finishInterview").click(function(){
