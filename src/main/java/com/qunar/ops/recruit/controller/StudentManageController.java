@@ -201,12 +201,14 @@ public class StudentManageController {
 		String school = vars.get("school");
 		String profession = vars.get("profession");
 		String state = vars.get("state");
+		String date = vars.get("date");
+//		System.out.println("======"+date);
 		String city=(String) request.getSession().getAttribute("city");
 		String year=(String) request.getSession().getAttribute("year");
 		String phase=(String) request.getSession().getAttribute("phase");
 		if(city!=null && year!=null && phase!=null){
 			List<PhaseInterviewer> viewlist =  interService.getSinglecityBy(city,year,phase);
-			list=stuService.getStudentInofs(name, school, profession, state, city,year,phase);
+			list=stuService.getStudentInofs(date,name, school, profession, state, city,year,phase);
 			List<ResultPlusAdditionalInfo> info=new LinkedList<ResultPlusAdditionalInfo>();
 			if(list!=null && list.size()>0){
 				for(Student stu:list){

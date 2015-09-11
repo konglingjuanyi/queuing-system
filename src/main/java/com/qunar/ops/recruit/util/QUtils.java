@@ -212,7 +212,8 @@ public class QUtils {
 		Date _startTime = null;
 		if (startTime != null) {
 			try {
-				_startTime = sdf.parse(startTime);
+				SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				_startTime = sdf1.parse(startTime);
 			} catch (ParseException e) {
 				logger.warn(e.getMessage());
 				e.printStackTrace();

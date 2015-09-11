@@ -3,7 +3,7 @@ package com.qunar.ops.recruit.service;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -16,6 +16,7 @@ import com.qunar.ops.recruit.dao.StudentMapper;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.model.StudentExample;
 import com.qunar.ops.recruit.model.StudentForm;
+import com.qunar.ops.recruit.util.QUtils;
 import com.qunar.ops.recruit.util.RecruitConst;
 import com.qunar.ops.recruit.util.RecruitControllerUtils;
 
@@ -489,6 +490,35 @@ public class StudentManageService {
 			inter.setRefuseDate(RecruitControllerUtils.strToDateII(refuseDate));
 		}
 		return inter;
+	}
+
+	public List<Student> getStudentInofs(String date, String name,
+			String school, String profession, String state, String city,
+			String year, String phase) {
+		StudentExample example = new StudentExample();
+		example.setOrderByClause("interview_time");
+		StudentExample.Criteria criteria = example.createCriteria();
+		criteria.andYearEqualTo(year);
+		criteria.andPhaseNoEqualTo(phase);
+		criteria.andLocationEqualTo(city);
+		criteria.andIsDeletedNotEqualTo(RecruitConst.STUDENT_DELETE);
+		if(date != null && !date.equals("")){
+			String date1 = date+" 00:00:00";
+			String date2 = date+" 23:59:59";
+//			System.out.println(date1+" "+date2);
+			Date d1 = QUtils.formatDate(date1);
+			Date d2 = QUtils.formatDate(date2);
+			criteria.andInterviewTimeBetween(d1, d2);
+		}
+		if(name != null && !name.equals(""))
+			criteria.andNameEqualTo(name);
+		if(school != null && !school.equals(""))
+			criteria.andSchoolEqualTo(school);
+		if(profession != null && !profession.equals(""))
+			criteria.andProfessionEqualTo(profession);
+		if(state != null && !state.equals("") && !state.equals("请选择") && !state.equals("状态"))
+			criteria.andStateEqualTo(state);
+		return stuMapper.selectByExample(example);
 	}
 
 }
