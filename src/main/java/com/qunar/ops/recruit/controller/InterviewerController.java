@@ -470,9 +470,19 @@ public class InterviewerController {
 			stu = PcHrService.get(pi);
 			session.setAttribute("student", stu);
 		}
-		stu.setState(RecruitConst.STUDENT_STATE_PASS_ME);
-		stu.setTrueTime(null);
-		studentService.updateStudentNotSelective(stu);
+		
+		if(stu.getState().equals(RecruitConst.STUDENT_STATE_GOING2TWOROOM)){
+			Student newStudent = studentService.getStudentById(stu.getId());
+			newStudent.setSecondTry(null);
+			newStudent.setState(RecruitConst.STUDENT_STATE_ONE_PASS);
+			studentService.updateStudentNotSelective(newStudent);
+			waitService.addTwoList(new StudentWaiter(newStudent));
+		}else{
+			stu.setState(RecruitConst.STUDENT_STATE_PASS_ME);
+			stu.setTrueTime(null);
+			studentService.updateStudentNotSelective(stu);
+		}
+		
 		return getNextStudent(session, mm);
 	}
 	
