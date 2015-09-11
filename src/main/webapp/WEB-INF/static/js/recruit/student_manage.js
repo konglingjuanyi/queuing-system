@@ -145,18 +145,43 @@ $(document).ready(function () {
       });
 	});
 	
+	$('#docancel').click(function(){
+		active($('#stupage'))
+	    $.ajax({
+	      url: "/hr/lead2StudentPage",
+	      type: "POST",
+	      dataType: "html",
+	      contentType: 'application/json; charset=utf-8',
+	      success: function (returnedData) {
+	    	  $('#content').html(returnedData);
+	    	  $.ajax({
+	    	      url: "/hr/getAllStudentInfos",
+	    	      type: "POST",
+	    	      dataType: "html",
+	    	      contentType: 'application/json; charset=utf-8',
+	    	      success: function (returnedData) {
+	    	    	  $('#studentInfoInner').html(returnedData);
+	    		  },
+	    	      error: function () {
+	    	           alert("系统发生了错误请稍后重试");
+	    	      }
+	    	    });
+		  },
+	      error: function () {
+	           alert("系统发生了错误请稍后重试");
+	      }
+	    });
+	});
+	
 	$('#dosubmitHr').click(function(){
-		var id=$("#stuId").val().trim();
-		var sid=$("#sId").val().trim();
-		var hrName=$("#hrName").val().trim();
-		var salay=$("#hrSuggestSalary").val().trim();
-		var hrdetail=$("#hrDetailIdea").val().trim();
-		var hrConclusion=$("#hr_conclusion").val().trim();
-	    $('#hrform').ajaxSubmit({
+		var stuid=$("#studentid").val().trim();
+		param = getSubmitParam(stuid);
+	    $.ajax({
             url:"/hr/AddHrStudentAssess",
-            cache:false,
+            type: "POST",
             dataType:'html',
-            data:{'id':id,'hrName':hrName,'salay':salay,'hrdetail':hrdetail,'hrConclusion':hrConclusion,'sid':sid},
+		    data: JSON.stringify(param),
+		    contentType: 'application/json; charset=utf-8',
             success: function(data) {
             	active($('#stupage'))
         	    $.ajax({
@@ -188,34 +213,6 @@ $(document).ready(function () {
                 alert("error");
             }
       });
-	});
-	
-	$('#docancel').click(function(){
-		active($('#stupage'))
-	    $.ajax({
-	      url: "/hr/lead2StudentPage",
-	      type: "POST",
-	      dataType: "html",
-	      contentType: 'application/json; charset=utf-8',
-	      success: function (returnedData) {
-	    	  $('#content').html(returnedData);
-	    	  $.ajax({
-	    	      url: "/hr/getAllStudentInfos",
-	    	      type: "POST",
-	    	      dataType: "html",
-	    	      contentType: 'application/json; charset=utf-8',
-	    	      success: function (returnedData) {
-	    	    	  $('#studentInfoInner').html(returnedData);
-	    		  },
-	    	      error: function () {
-	    	           alert("系统发生了错误请稍后重试");
-	    	      }
-	    	    });
-		  },
-	      error: function () {
-	           alert("系统发生了错误请稍后重试");
-	      }
-	    });
 	});
 });
 
@@ -429,6 +426,43 @@ function doSelect(id){
       data: {'id':id},
       success: function (returnedData) {
     	  $('#content').html(returnedData);
+    	  var stuid=$("#studentid").val();
+    	  var vars = {};
+ 		  vars["stuid"] = stuid;
+ 	      var params = {"vars": vars};
+    	  $.ajax({
+    	      url: "/hr/SelectStudentAssessInfo",
+    	      type: "POST",
+    	      dataType: "json",
+    	      data: JSON.stringify(params),
+    	      contentType: 'application/json; charset=utf-8',
+    	      success: function (ret) {
+    	    	  console.dir(ret);
+    	    	  if(ret.errorCode==0){
+    	    		  data=ret.data;
+        	    	  var stu=data.student;
+        	    	  var access=data.assess;
+        	    	  if(access!=null){
+    	    			  addValue(access);
+    	    		  }
+        	    	  $("#student_name").text(stu.name);
+			    	  $("#jobTitle").text(stu.job);
+			    	  
+			    	  $("#first_viewer").text(stu.firstTry);
+		    		  $("#second_viewer").text(stu.secondTry);
+		    		  
+			    	  $("#student_school").text(stu.school);
+			    	  $("#student_profession").text(stu.profession);
+			    	  $("#student_edu").text(stu.education);
+			    	  $("#student_phone").text(stu.phone);
+    	    	  }else{
+    	    		  alert("没有查到任何信息");
+    	    	  }
+    		  },
+    	      error: function () {
+    	           alert("系统发生了错误请稍后重试");
+    	      }
+    	    });
 	  },
       error: function () {
            alert("系统发生了错误请稍后重试");
@@ -464,4 +498,197 @@ function doUpdById(id){
 	      }
 	    });
 }
+
+function addValue(access){
+	$("#one_code").val(access.oneCode);
+	$("#one_code_detail").val(access.oneCodeDetail);
+	$("#one_algorithm").val(access.oneAlgorithm);
+	$("#one_algorithm_detail").val(access.oneAlgorithmDetail);
+	$("#one_network").val(access.oneNetwork);
+	$("#one_network_detail").val(access.oneNetworkDetail);
+	$("#one_experience").val(access.oneExperience);
+	$("#one_experience_detail").val(access.oneExperienceDetail);
+	$("#one_other").val(access.oneOther);
+	$("#one_other_detail").val(access.oneOtherDetail);
+	$("#one_logic").val(access.oneLogic);
+	$("#one_logic_detail").val(access.oneLogicDetail);
+	$("#one_creative").val(access.oneCreative);
+	$("#one_creative_detail").val(access.oneCreativeDetail);
+	$("#one_team").val(access.oneTeam);
+	$("#one_team_detail").val(access.oneTeamDetail);
+	$("#one_continuouslearning").val(access.oneContinuouslearning);
+	$("#one_continuouslearning_detail").val(access.oneContinuouslearningDetail);
+	$("#one_outstanding").val(access.oneOutstanding);
+	$("#one_outstanding_detail").val(access.oneOutstandingDetail);
+	$("#two_code").val(access.twoCode);
+	$("#two_code_detail").val(access.twoCodeDetail);
+	$("#two_algorithm").val(access.twoAlgorithm);
+	$("#two_algorithm_detail").val(access.twoAlgorithmDetail);
+	$("#two_network").val(access.twoNetwork);
+	$("#two_network_detail").val(access.twoNetworkDetail);
+	$("#two_experience").val(access.twoExperience);
+	$("#two_experience_detail").val(access.twoExperienceDetail);
+	$("#two_other").val(access.twoOther);
+	$("#two_other_detail").val(access.twoOtherDetail);
+	$("#two_logic").val(access.twoLogic);
+	$("#two_logic_detail").val(access.twoLogicDetail);
+	$("#two_creative").val(access.twoCreative);
+	$("#two_creative_detail").val(access.twoCreativeDetail);
+	$("#two_team").val(access.twoTeam);
+	$("#two_team_detail").val(access.twoTeamDetail);
+	$("#two_continuouslearning").val(access.twoContinuouslearning);
+	$("#two_continuouslearning_detail").val(access.twoContinuouslearningDetail);
+	$("#two_outstanding").val(access.twoOutstanding);
+	$("#two_outstanding_detail").val(access.twoOutstandingDetail);
+	$("#one_conclusion").val(access.oneConclusion);
+	$("#one_suggest_salary_detail").val(access.oneSuggestSalaryDetail);
+	$("#two_conclusion").val(access.twoConclusion);
+	$("#two_conclusion_detail").val(access.twoConclusionDetail);
+	$("#one_allocation_idea").val(access.oneAllocationIdea);
+	$("#two_allocation_idea").val(access.twoAllocationIdea);
+	$("#hrName").val(access.hrName);
+	$("#one_sum").val(access.oneSum);
+	$("#two_sum").val(access.twoSum);
+	$("#hrSuggestSalary").val(access.hrSuggestSalary);
+	$("#hrDetailIdea").val(access.hrDetailIdea);
+	$("#hr_conclusion").val(access.hrConclusion);
+	if(access.oneConclusion=='卓越'){
+		if(access.oneSuggestSalary!=null && access.oneSuggestSalary!=''){
+			$("#one_suggest_salary").val(access.oneSuggestSalary);
+			$("#one_suggest").css("display","");
+		}else{
+			$("#one_suggest_salary").val("");
+			$("#one_suggest").css("display","");
+		}
+	}else{
+		$("#one_suggest_salary").val("");
+		$("#one_suggest").css("display","none");
+	}
+	if(access.twoConclusion=='卓越'){
+		if(access.twoSuggestSalary!=null && access.twoSuggestSalary!=''){
+			$("#two_suggest_salary").val(access.twoSuggestSalary);
+			$("#two_suggest").css("display","");
+		}else{
+			$("#two_suggest_salary").val("");
+			$("#two_suggest").css("display","");
+		}
+	}else{
+		$("#two_suggest_salary").val("");
+		$("#two_suggest").css("display","none");
+	}
+	
+}
+
+function sumOneCount(){
+	var one_code=parseInt($("#one_code").val());
+	var one_algorithm=parseInt($("#one_algorithm").val());
+	var one_network=parseInt($("#one_network").val());
+	var one_experience=parseInt($("#one_experience").val());
+	var one_other=parseInt($("#one_other").val());
+	var one_logic=parseInt($("#one_logic").val());
+	var one_creative=parseInt($("#one_creative").val());
+	var one_team=parseInt($("#one_team").val());
+	var one_continuouslearning=parseInt($("#one_continuouslearning").val());
+	var one_outstanding=parseInt($("#one_outstanding").val());
+	var sum=one_code+one_algorithm+one_network+one_experience+one_other+one_logic+one_creative+one_team+one_continuouslearning+one_outstanding;
+	$("#one_sum").val(sum);
+	
+	
+}
+
+function sumTwoCount(){
+	var two_code=parseInt($("#two_code").val());
+	var two_algorithm=parseInt($("#two_algorithm").val());
+	var two_network=parseInt($("#two_network").val());
+	var two_experience=parseInt($("#two_experience").val());
+	var two_other=parseInt($("#two_other").val());
+	var two_logic=parseInt($("#two_logic").val());
+	var two_creative=parseInt($("#two_creative").val());
+	var two_team=parseInt($("#two_team").val());
+	var two_continuouslearning=parseInt($("#two_continuouslearning").val());
+	var two_outstanding=parseInt($("#two_outstanding").val());
+	var sum=two_code+two_algorithm+two_network+two_experience+two_other+two_logic+two_creative+two_team+two_continuouslearning+two_outstanding;
+	$("#two_sum").val(sum);
+}
+
+function showSuggest(flag1){
+	var stujob=$("#jobTitle").text().trim();
+	if(flag1==1){
+		if($("#one_conclusion").val()=='卓越'){
+			$("#one_suggest").css("display","");
+		}else{
+			$("#one_suggest").css("display","none");
+		}
+	}else{
+		if($("#two_conclusion").val()=='卓越'){
+			$("#two_suggest").css("display","");
+		}else{
+			$("#two_suggest").css("display","none");
+		}
+	}
+	
+}
+
+function getSubmitParam(id){
+	vars = {};
+	vars['studentid'] = id;
+	vars['one_code'] = $("#one_code").find("option:selected").text();
+	vars['one_code_detail'] = $("#one_code_detail").val();
+	vars['one_algorithm'] = $("#one_algorithm").find("option:selected").text();
+	vars['one_algorithm_detail'] = $("#one_algorithm_detail").val();
+	vars['one_network'] = $("#one_network").find("option:selected").text();
+	vars['one_network_detail'] = $("#one_network_detail").val();
+	vars['one_experience'] = $("#one_experience").find("option:selected").text();
+	vars['one_experience_detail'] = $("#one_experience_detail").val();
+	vars['one_other'] = $("#one_other").find("option:selected").text();
+	vars['one_other_detail'] = $("#one_other_detail").val();
+	vars['one_logic'] = $("#one_logic").find("option:selected").text();
+	vars['one_logic_detail'] = $("#one_logic_detail").val();
+	vars['one_creative'] = $("#one_creative").find("option:selected").text();
+	vars['one_creative_detail'] = $("#one_creative_detail").val();
+	vars['one_team'] = $("#one_team").find("option:selected").text();
+	vars['one_team_detail'] = $("#one_team_detail").val();
+	vars['one_continuouslearning'] = $("#one_continuouslearning").find("option:selected").text();
+	vars['one_continuouslearning_detail'] = $("#one_continuouslearning_detail").val();
+	vars['one_outstanding'] = $("#one_outstanding").find("option:selected").text();
+	vars['one_outstanding_detail'] = $("#one_outstanding_detail").val();
+	vars['two_code'] = $("#two_code").find("option:selected").text();
+	vars['two_code_detail'] = $("#two_code_detail").val();
+	vars['two_algorithm'] = $("#two_algorithm").find("option:selected").text();
+	vars['two_algorithm_detail'] = $("#two_algorithm_detail").val();
+	vars['two_network'] = $("#two_network").find("option:selected").text();
+	vars['two_network_detail'] = $("#two_network_detail").val();
+	vars['two_experience'] = $("#two_experience").find("option:selected").text();
+	vars['two_experience_detail'] = $("#two_experience_detail").val();
+	vars['two_other'] = $("#two_other").find("option:selected").text();
+	vars['two_other_detail'] = $("#two_other_detail").val();
+	vars['two_logic'] = $("#two_logic").find("option:selected").text();
+	vars['two_logic_detail'] = $("#two_logic_detail").val();
+	vars['two_creative'] = $("#two_creative").find("option:selected").text();
+	vars['two_creative_detail'] = $("#two_creative_detail").val();
+	vars['two_team'] = $("#two_team").find("option:selected").text();
+	vars['two_team_detail'] = $("#two_team_detail").val();
+	vars['two_continuouslearning'] = $("#two_continuouslearning").find("option:selected").text();
+	vars['two_continuouslearning_detail'] = $("#two_continuouslearning_detail").val();
+	vars['two_outstanding'] = $("#two_outstanding").find("option:selected").text();
+	vars['two_outstanding_detail'] = $("#two_outstanding_detail").val();
+	vars['one_conclusion'] = $("#one_conclusion").find("option:selected").text();
+	vars['one_suggest_salary'] = $("#one_suggest_salary").val();
+	vars['two_suggest_salary'] = $("#two_suggest_salary").val();
+	vars['one_suggest_salary_detail'] = $("#one_suggest_salary_detail").val();
+	vars['two_conclusion'] = $("#two_conclusion").find("option:selected").text();
+	vars['two_conclusion_detail'] = $("#two_conclusion_detail").val();
+	vars['one_allocation_idea'] = $("#one_allocation_idea").val();
+	vars['two_allocation_idea'] = $("#two_allocation_idea").val();
+	vars['hr_name'] = $("#hrName").val();
+	vars['one_sum'] = $("#one_sum").val();
+	vars['two_sum'] = $("#two_sum").val();
+	vars['hr_suggest_salary'] = $("#hrSuggestSalary").val();
+	vars['hr_detail_idea'] = $("#hrDetailIdea").val();
+	vars['hr_conclusion'] = $("#hr_conclusion").find("option:selected").text();
+	var params = {"vars": vars};
+	return params;
+}
+
+
 

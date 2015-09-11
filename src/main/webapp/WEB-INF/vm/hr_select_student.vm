@@ -15,27 +15,54 @@
 	<script type="text/javascript" src="/static/js/recruit/student_manage.js"></script>
 </head>
 <body>
-    <div class="l-fullsreen">
+     <div class="l-fullsreen">
         <div class="l-container">
             <div class="l-content">
                 <div class="row-fluid m-firsttry">
                     <div class="l-inner">
                         <div class="m-firsttry-bd">
                             <div class="interviewee-info">
-                                <div class="item">
-                                    <h3>面试人姓名：<span class="text">$!{stu.name}</span></h3>
+                            	<div class="interviewee-info-left">
+                                	<div class="item">
+                                    	<h3>面试人姓名：<span class="text" id="student_name"></span></h3>
+                                	</div>
+                                	<div class="item">
+                                    	<h3>复试面职位：<span class="text" id="jobTitle"></span></h3>
+                                	</div>
+                                	<div class="item" id="first_viewer_div">
+                                    	<h3>初试面试官：<span class="text" id="first_viewer"></span></h3>
+                                	</div>
+                                	<div class="item" id="second_viewer_div">
+                                    	<h3>复试面试官：<span class="text" id="second_viewer"></span></h3>
+                                	</div>
                                 </div>
-                                <div class="item">
-                                    <h3>复试面职位：<span class="text" id="jobTitle">$!{stuAss.job}</span></h3>
+                                <div class="interviewee-info-right">
+                                    <div class="item">
+                                        <h3>学校：<span class="text" id="student_school"></span></h3>
+                                    </div>
+                                    <div class="item">
+                                        <h3>专业：<span class="text" id="student_profession"></span></h3>
+                                    </div>
+                                    <div class="item">
+                                        <h3>学历：<span class="text" id="student_edu"></span></h3>
+                                    </div>
+                                    <div class="item">
+                                        <h3>电话：<span class="text" id="student_phone"></span></h3>
+                                    </div>
                                 </div>
-                                <div class="item">
-                                    <h3>初试面试官：<span class="text">$!{stuAss.oneViewer}</span></h3>
+                                <!--
+                                <div class="picture" style="text-align:center;width:100px;height:60px;">
+                                	<a href="javascript:;" class="a-upload">
+    									<input type="file" name="file" id="file1">选择图片
+									</a>
+									<input type="button" id="uploadImg" value="上传" />
+									<input type="hidden" id="imgsrc" name="imgsrc" value="" />
                                 </div>
-                                <div class="item">
-                                    <h3>复试面试官：<span class="text">$!{stuAss.twoViewer}</span></h3>
-                                </div>
+                                -->
                             </div>
                             <!--  -->
+                            <form id="submitForm" class="form-horizontal">
+                            <input type="hidden" name="studentid" id="studentid" value="$!{id}" />
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
@@ -50,96 +77,146 @@
                                     <tr>
                                         <td><a href="javascript:;" data-name="代码能力">代码能力</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneCode}</option>
+                                            <select name="one_code" id="one_code" onclick="sumOneCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneCodeDetail}</textarea>
+                                            <textarea name="one_code_detail" id="one_code_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoCode}</option>
+                                            <select name="" id="two_code"  onclick="sumTwoCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoCodeDetail}</textarea>
+                                            <textarea name="" id="two_code_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><a href="javascript:;" data-name="数据结构和算法">数据结构/算法</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneAlgorithm}</option>
+                                            <select name="" id="one_algorithm"  onclick="sumOneCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneAlgorithmDetail}</textarea>
+                                            <textarea name="" id="one_algorithm_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoAlgorithm}</option>
+                                            <select name="" id="two_algorithm" onclick="sumTwoCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoAlgorithmDetail}</textarea>
+                                            <textarea name="" id="two_algorithm_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><a href="javascript:;" data-name="系统知识">操作系统/网络</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneNetwork}</option>
+                                            <select name="" id="one_network"  onclick="sumOneCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneNetworkDetail}</textarea>
+                                            <textarea name="" id="one_network_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoNetwork}</option>
+                                            <select name="" id="two_network" onclick="sumTwoCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoNetworkDetail}</textarea>
+                                            <textarea name="" id="two_network_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><a href="javascript:;" data-name="项目经验">项目/测试/前端经验</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneExperience}</option>
+                                            <select name="" id="one_experience"  onclick="sumOneCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneExperienceDetail}</textarea>
+                                            <textarea name="" id="one_experience_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoExperience}</option>
+                                            <select name="" id="two_experience" onclick="sumTwoCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoExperienceDetail}</textarea>
+                                            <textarea name="" id="two_experience_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><a href="javascript:;" data-name="其他加分技能">其他加分技能</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneOther}</option>
+                                            <select name="" id="one_other"  onclick="sumOneCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneOtherDetail}</textarea>
+                                            <textarea name="" id="one_other_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoOther}</option>
+                                            <select name="" id="two_other" onclick="sumTwoCount()">
+                                                <option value="0">0</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoOtherDetail}</textarea>
+                                            <textarea name="" id="two_other_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -159,108 +236,128 @@
                                     <tr>
                                         <td><a href="javascript:;" data-num="0">逻辑思维</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneLogic}</option>
+                                            <select name="" id="one_logic"  onclick="sumOneCount()">
+                                                <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneLogicDetail}</textarea>
+                                            <textarea name="" id="one_logic_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoLogic}</option>
+                                            <select name="" id="two_logic" onclick="sumTwoCount()">
+                                                 <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoLogicDetail}</textarea>
+                                            <textarea name="" id="two_logic_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><a href="javascript:;" data-num="1">创新思考</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneCreative}</option>
+                                            <select name="" id="one_creative"  onclick="sumOneCount()">
+                                                 <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneCreativeDetail}</textarea>
+                                            <textarea name="" id="one_creative_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoCreative}</option>
+                                            <select name="" id="two_creative" onclick="sumTwoCount()">
+                                                 <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoCreativeDetail}</textarea>
+                                            <textarea name="" id="two_creative_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><a href="javascript:;" data-num="2">团队合作</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneTeam}</option>
+                                            <select name="" id="one_team"  onclick="sumOneCount()">
+                                                 <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneTeamDetail}</textarea>
+                                            <textarea name="" id="one_team_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoTeam}</option>
+                                            <select name="" id="two_team" onclick="sumTwoCount()">
+                                                 <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly"><$!{stuAss.twoTeamDetail}</textarea>
+                                            <textarea name="" id="two_team_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><a href="javascript:;" data-num="3">持续学习</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneContinuouslearning}</option>
+                                            <select name="" id="one_continuouslearning"  onclick="sumOneCount()">
+                                                 <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneContinuouslearningDetail}</textarea>
+                                            <textarea name="" id="one_continuouslearning_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoContinuouslearning}</option>
+                                            <select name="" id="two_continuouslearning" onclick="sumTwoCount()">
+                                                <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoContinuouslearningDetail}</textarea>
+                                            <textarea name="" id="two_continuouslearning_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><a href="javascript:;" data-num="4">追求卓越</a></td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneOutstanding}</option>
+                                            <select name="" id="one_outstanding"  onclick="sumOneCount()">
+                                                 <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneOutstandingDetail}</textarea>
+                                            <textarea name="" id="one_outstanding_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoOutstanding}</option>
+                                            <select name="" id="two_outstanding" onclick="sumTwoCount()">
+                                                 <option value="1">1</option>
+                                                <option value="0">0</option>
+                                                <option value="-1">-1</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoOutstandingDetail}</textarea>
+                                            <textarea name="" id="two_outstanding_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><a href="javascript:;" data-num="4">总分</a></td>
                                         <td>
-                                            <input type="text" class="input-mini" id="one_sum" readonly="readonly" value="$!{stuAss.oneSum}">
+                                            <input type="text" class="input-mini" id="one_sum" readonly="readonly">
                                         </td>
                                         <td>
                                             <textarea name="" id="" cols="30" rows="1" style="display:none;"></textarea>
                                         </td>
                                         <td>
-                                            <input type="text" class="input-mini" id="two_sum" readonly="readonly" value="$!{stuAss.twoSum}">
+                                            <input type="text" class="input-mini" id="two_sum" readonly="readonly">
                                         </td>
                                         <td>
                                             <textarea name="" id="" cols="30" rows="1" style="display:none;"></textarea>
@@ -272,8 +369,8 @@
                             <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th class="w_1">综合评价</th>
-                                        <th class="w_2">建议薪资</th>
+                                        <th class="w_1">初试结论</th>
+                                        <th class="w_2"></th>
                                         <th>具体说明</th>
                                         <th>复试结论</th>
                                         <th>具体说明</th>
@@ -282,43 +379,47 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.oneConclusion}</option>
+                                            <select name="" id="one_conclusion" onchange="showSuggest(1);">
+                                                <option value="">请选择</option>
+                                                <option value="卓越">卓越</option>
+                                                <option value="优秀">优秀</option>
+                                                <option value="合格">合格</option>
+                                                <option value="不通过">不通过</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <input type="text" class="input-mini" style="display:none;"/>
+                                            <input type="text" class="input-mini" id="" style="display:none;"/>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneSuggestSalaryDetail}</textarea>
+                                            <textarea name="" id="one_suggest_salary_detail" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
-                                            <select name="" id="" disabled>
-                                                <option value="">$!{stuAss.twoConclusion}</option>
+                                            <select name="" id="two_conclusion" onchange="showSuggest(2);">
+                                                <option value="">请选择</option>
+                                                <option value="卓越">卓越</option>
+                                                <option value="优秀">优秀</option>
+                                                <option value="合格">合格</option>
+                                                <option value="不通过">不通过</option>
                                             </select>
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoConclusionDetail}</textarea>
+                                            <textarea name="" id="two_conclusion_detail" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>
-                                        	#if($stuAss.oneConclusion == '卓越')
-                                        	<div id="one_suggest">
-                                           	建议薪资:<input type="text" readonly="readonly" class="input-mini" id="one_suggest_salary" value="$!{stuAss.oneSuggestSalary}"/>
+                                        	<div style="display:none;" id="one_suggest">
+                                           	建议薪资:<input type="text" class="input-mini" id="one_suggest_salary" />
                                            	</div>
-                                           	#end
                                         </td>
                                         <td>
                                         </td>
                                         <td>
                                         </td>
                                         <td>
-                                        	#if($stuAss.twoConclusion == '卓越')
-                                        	<div id="two_suggest">
-                                                                                                                                                          建议薪资:<input type="text" readonly="readonly" class="input-mini" id="two_suggest_salary" value="$!{stuAss.twoSuggestSalary}"/>
+                                        	<div style="display:none;" id="two_suggest">
+                                                                                                                                                          建议薪资:<input type="text" class="input-mini" id="two_suggest_salary"/>
                                             </div>
-                                            #end
                                         </td>
                                         <td>
                                             
@@ -330,13 +431,13 @@
                                              
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.oneAllocationIdea}</textarea>
+                                            <textarea name="" id="one_allocation_idea" cols="30" rows="1"></textarea>
                                         </td>
                                         <td>
                                            
                                         </td>
                                         <td>
-                                            <textarea name="" id="" cols="30" rows="1" readonly="readonly">$!{stuAss.twoAllocationIdea}</textarea>
+                                            <textarea name="" id="two_allocation_idea" cols="30" rows="1"></textarea>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -347,47 +448,36 @@
                                     <tr>
                                         <th class="w_1">HR意见</th>
                                         <th class="w_2">薪资</th>
-                                        <th>HR结论</th>
                                         <th>具体意见</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                	<form id="hrform" method="post" action="/hr/AddHrStudentAssess">
                                     <tr>
                                         <td>
-                                            <input type="text" class="input-mini" name="hrName" id="hrName" placeholder="HR签名" value="$!{stuAss.hrName}"/>
+                                            <input type="text" class="input-mini" name="hrName" id="hrName" placeholder="HR签名" value=""/>
                                         </td>
                                         <td>
-                                            <input type="text" class="input-mini" name="hrSuggestSalary" id="hrSuggestSalary" value="$!{stuAss.hrSuggestSalary}"/>
+                                            <input type="text" class="input-mini" name="hrSuggestSalary" id="hrSuggestSalary" value=""/>
                                         </td>
                                          <td>
                                             <select name="hr_conclusion" id="hr_conclusion">
-                                            	#if($stu.state=='' || $stu.state=='已发Offer' || $stu.state=='复试通过')
-                                                <option value="已发Offer" selected="selected">已发Offer</option>
-                                                <option value="待定Offer">待定Offer</option>
-                                                <option value="不发Offer">不发Offer</option>
-                                                #elseif($stu.state=='待定Offer')
-                                                <option value="已发Offer">已发Offer</option>
-                                                <option value="待定Offer" selected="selected">待定Offer</option>
-                                                <option value="不发Offer">不发Offer</option>
-                                                #else
+                                            	<option value="">请选择</option>
                                                 <option value="已发Offer">已发Offer</option>
                                                 <option value="待定Offer">待定Offer</option>
-                                                <option value="不发Offer" selected="selected">不发Offer</option>
-                                                #end
+                                                <option value="不发Offer">不发Offer</option>
                                             </select>
                                         </td>
-                                        <input type="hidden" name="stuId" id="stuId" value="$!{stuAss.id}"/>
-                                        <input type="hidden" name="sId" id="sId" value="$!{stu.id}"/>
+                                        <input type="hidden" name="stuId" id="stuId" value=""/>
+                                        <input type="hidden" name="sId" id="sId" value=""/>
                                         <td>
-                                            <textarea name="hrDetailIdea" id="hrDetailIdea" cols="30" rows="1">$!{stuAss.hrDetailIdea}</textarea>
+                                            <textarea name="hrDetailIdea" id="hrDetailIdea" cols="30" rows="1"></textarea>
                                             <button type="button" class="btn " id="dosubmitHr">保存</button>
                                             <button type="button" class="btn " id="docancel">取消</button>
                                         </td>
                                     </tr>
-                                    </form>
                                 </tbody>
                             </table>
+                            </form>
                         </div>
                         
                     </div>

@@ -50,6 +50,11 @@ $(document).ready(function () {
 				    	  }else{
 				    		  $("#first_viewer").text(phase_inter.intervierName);
 				    	  }
+				    	  $("#student_school").text(stu.school);
+				    	  $("#student_profession").text(stu.profession);
+				    	  $("#student_edu").text(stu.education);
+				    	  $("#student_phone").text(stu.phone);
+				    	  
 				    	  $("#interviewer_name").text(inter.userName);
 				    	  $("#interviewer_room").text(phase_inter.room);
 				    	  $("#getOneInterview").attr("disabled", true);
@@ -94,6 +99,11 @@ $(document).ready(function () {
 				    	  }else{
 				    		  $("#first_viewer").text(phase_inter.intervierName);
 				    	  }
+				    	  $("#student_school").text(stu.school);
+				    	  $("#student_profession").text(stu.profession);
+				    	  $("#student_edu").text(stu.education);
+				    	  $("#student_phone").text(stu.phone);
+				    	  
 				    	  $("#interviewer_name").text(inter.userName);
 				    	  $("#interviewer_room").text(phase_inter.room);
 				    	  $("#beginToInterview").show();
@@ -163,6 +173,11 @@ $(document).ready(function () {
 			    	  }else{
 			    		  $("#first_viewer").text(inter.intervierName);
 			    	  }
+			    	  $("#student_school").text(stu.school);
+			    	  $("#student_profession").text(stu.profession);
+			    	  $("#student_edu").text(stu.education);
+			    	  $("#student_phone").text(stu.phone);
+			    	  
 			    	  $("#getOneInterview").attr("disabled", true);
 			    	  $("#beginToInterview").attr("disabled", false);
 			    	  $("#beginToInterview").show();
@@ -225,6 +240,7 @@ $(document).ready(function () {
 	 });
 	
 	 $("#finishAndContinue").click(function(){
+	 if(confirm("确定结束并继续吗？")){
 		 var decheckbox;
 		 $("input[name='determine']:checked").each(function(){    
 			 decheckbox=$(this).val();    
@@ -258,6 +274,11 @@ $(document).ready(function () {
 			    	  $("#second_viewer").text("");
 			    	  $("#already_inter").text(parseInt($("#already_inter").text())+1);
 			    	  $("#getOneInterview").attr("disabled", false);
+			    	  
+			    	  $("#student_school").text("");
+			    	  $("#student_profession").text("");
+			    	  $("#student_edu").text("");
+			    	  $("#student_phone").text("");
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;
@@ -281,6 +302,11 @@ $(document).ready(function () {
 			    	  }else{
 			    		  $("#first_viewer").text(inter.intervierName);
 			    	  }
+			    	  $("#student_school").text(stu.school);
+			    	  $("#student_profession").text(stu.profession);
+			    	  $("#student_edu").text(stu.education);
+			    	  $("#student_phone").text(stu.phone);
+			    	  
 			    	  $("#getOneInterview").attr("disabled", true);
 			    	  $("#beginToInterview").show();
 			    	  $("#beginToInterview").attr("disabled", false);
@@ -296,9 +322,11 @@ $(document).ready(function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
+	 }
 	 });
 	 
 	 $("#finishAndRest").click(function(){
+	   if(confirm("确定结束并休息一下吗？")){
 		 var decheckbox;
 		 $("input[name='determine']:checked").each(function(){    
 			 decheckbox=$(this).val();    
@@ -328,14 +356,20 @@ $(document).ready(function () {
 		    	  $("#jobTitle").text("");
 		    	  $("#first_viewer").text("");
 		    	  $("#second_viewer").text("");
+		    	  $("#student_school").text("");
+		    	  $("#student_profession").text("");
+		    	  $("#student_edu").text("");
+		    	  $("#student_phone").text("");
 			  },
 		      error: function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
+	   }
 	 });
 	 
 	 $("#noComeFinish").click(function(){
+		 if(confirm("确定候选人未到吗？")){
 		 $.ajax({
 		      url: "/interviewer/noComeFinish",
 		      type: "POST",
@@ -356,6 +390,10 @@ $(document).ready(function () {
 			    	  $("#jobTitle").text("");
 			    	  $("#first_viewer").text("");
 		    		  $("#second_viewer").text("");
+		    		  $("#student_school").text("");
+			    	  $("#student_profession").text("");
+			    	  $("#student_edu").text("");
+			    	  $("#student_phone").text("");
 		    	  }else{
 		    		  var stu=data.student;
 			    	  var inter=data.phaseInterviewer;
@@ -378,6 +416,10 @@ $(document).ready(function () {
 			    	  }else{
 			    		  $("#first_viewer").text(inter.intervierName);
 			    	  }
+			    	  $("#student_school").text(stu.school);
+			    	  $("#student_profession").text(stu.profession);
+			    	  $("#student_edu").text(stu.education);
+			    	  $("#student_phone").text(stu.phone);
 			    	  $("#getOneInterview").attr("disabled", true);
 			    	  $("#beginToInterview").show();
 			    	  $("#finishInterview").show();
@@ -389,6 +431,7 @@ $(document).ready(function () {
 		           alert("系统发生了错误请稍后重试");
 		      }
 		    });
+		 }
 	 });
 	 
 	 setInterval(showOneAndTwoStu, 5000);
