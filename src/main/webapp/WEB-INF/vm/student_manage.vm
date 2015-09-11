@@ -8,6 +8,7 @@
 	<script type="text/javascript" src="/static/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/js/jquery-form.js"></script>
 	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+	<script type="text/javascript" src="/static/My97DatePicker/WdatePicker.js" charset="UTF-8"></script>
 	<script type="text/javascript" src="/static/js/recruit/search_student.js"></script>
 </head>
 <body>
@@ -17,15 +18,12 @@
 				<!-- 内容start -->
 				<div class="m-login">
 					<form class="form-inline">
-						<label class="control-label" for="">姓名</label>
-						<input type="text" class="input-small" placeholder="必填" id="student_name">
-						<label class="control-label" for="" >学校</label>
-						<input type="text" class="input-small" placeholder="必填"  id="student_school">
-						<label class="control-label" for="">专业</label>
-						<input type="text" class="input-small" placeholder="必填"  id="student_profession">
-						<label class="control-label" for="" >状态</label>
+						<input type="text" class="input-small" placeholder="姓名" id="student_name">
+						<input type="text" class="input-small" placeholder="学校"  id="student_school">
+						<input type="text" class="input-small" placeholder="专业"  id="student_profession">
+						<input class="input-medium" name="interviewTime" type="text" onclick="showTimeNoHour()" placeholder="面试时间" id="date">
 						<select name="" id="student_state">
-							<option value="">请选择</option>
+							<option value="">状态</option>
 							<option value="">未签到</option>
 							<option value="">签到</option>
 							<option value="">迟到</option>

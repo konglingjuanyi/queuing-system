@@ -8,6 +8,7 @@ $(document).ready(function () {
 		vars['school'] = $("#student_school").val();
 		vars['profession'] = $("#student_profession").val();
 		vars['state'] = $("#student_state").find("option:selected").text();
+		vars['date'] = $("#date").val();
 		var params = {"vars": vars};
 	    $.ajax({
 	      url: "/hr/getStudentInfos",
@@ -24,4 +25,10 @@ $(document).ready(function () {
 	      }
 	    });
 	});
+
 });
+function showTimeNoHour() {
+//	alert(11)
+    WdatePicker({dateFmt: 'yyyy-MM-dd'});
+}
+
