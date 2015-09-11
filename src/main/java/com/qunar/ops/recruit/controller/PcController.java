@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,11 +19,15 @@ import com.qunar.ops.recruit.model.PhaseInterviewer;
 import com.qunar.ops.recruit.model.Student;
 import com.qunar.ops.recruit.result.BaseResult;
 import com.qunar.ops.recruit.service.PcHrService;
+import com.qunar.ops.recruit.service.PhaseInterviewService;
 import com.qunar.ops.recruit.util.RecruitConst;
 
 @Controller
 public class PcController {
 
+	@Autowired
+	PhaseInterviewService piService;
+	
 	@RequestMapping(value = "/pc/login")
 	public String toPcLogin(HttpServletRequest request,ModelMap model) {
 		return "/pc/pc_login";
@@ -91,8 +96,9 @@ public class PcController {
 			Map<PhaseInterviewer, Student> map) {
 		List<List> list = new LinkedList<List>();
 		for (PhaseInterviewer pi : map.keySet()) {
+			PhaseInterviewer newPi=piService.getPhaseInterviewerBy(pi.getYear(), pi.getPhase(), pi.getCity(), pi.getIntervierName());
 			List tmp = new LinkedList();
-			tmp.add(pi);
+			tmp.add(newPi);
 			tmp.add(map.get(pi));
 			list.add(tmp);
 		}

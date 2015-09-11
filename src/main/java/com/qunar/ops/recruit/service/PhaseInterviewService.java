@@ -169,4 +169,9 @@ public class PhaseInterviewService {
 		
 	}
 
+	public PhaseInterviewer getPhaseInterviewerById(Integer id) {
+		// TODO Auto-generated method stub
+		return interMapper.selectByPrimaryKey(id);
+	}
+
 }
