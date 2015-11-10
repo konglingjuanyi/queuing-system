@@ -454,52 +454,52 @@ public class InterviewerExample {
             return (Criteria) this;
         }
 
-        public Criteria andViewCountEqualTo(Long value) {
+        public Criteria andViewCountEqualTo(Integer value) {
             addCriterion("view_count =", value, "viewCount");
             return (Criteria) this;
         }
 
-        public Criteria andViewCountNotEqualTo(Long value) {
+        public Criteria andViewCountNotEqualTo(Integer value) {
             addCriterion("view_count <>", value, "viewCount");
             return (Criteria) this;
         }
 
-        public Criteria andViewCountGreaterThan(Long value) {
+        public Criteria andViewCountGreaterThan(Integer value) {
             addCriterion("view_count >", value, "viewCount");
             return (Criteria) this;
         }
 
-        public Criteria andViewCountGreaterThanOrEqualTo(Long value) {
+        public Criteria andViewCountGreaterThanOrEqualTo(Integer value) {
             addCriterion("view_count >=", value, "viewCount");
             return (Criteria) this;
         }
 
-        public Criteria andViewCountLessThan(Long value) {
+        public Criteria andViewCountLessThan(Integer value) {
             addCriterion("view_count <", value, "viewCount");
             return (Criteria) this;
         }
 
-        public Criteria andViewCountLessThanOrEqualTo(Long value) {
+        public Criteria andViewCountLessThanOrEqualTo(Integer value) {
             addCriterion("view_count <=", value, "viewCount");
             return (Criteria) this;
         }
 
-        public Criteria andViewCountIn(List<Long> values) {
+        public Criteria andViewCountIn(List<Integer> values) {
             addCriterion("view_count in", values, "viewCount");
             return (Criteria) this;
         }
 
-        public Criteria andViewCountNotIn(List<Long> values) {
+        public Criteria andViewCountNotIn(List<Integer> values) {
             addCriterion("view_count not in", values, "viewCount");
             return (Criteria) this;
         }
 
-        public Criteria andViewCountBetween(Long value1, Long value2) {
+        public Criteria andViewCountBetween(Integer value1, Integer value2) {
             addCriterion("view_count between", value1, value2, "viewCount");
             return (Criteria) this;
         }
 
-        public Criteria andViewCountNotBetween(Long value1, Long value2) {
+        public Criteria andViewCountNotBetween(Integer value1, Integer value2) {
             addCriterion("view_count not between", value1, value2, "viewCount");
             return (Criteria) this;
         }

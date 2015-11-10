@@ -4,10 +4,10 @@
   <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.Interviewer" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="CHAR" />
-    <result column="one_view" property="oneView" jdbcType="CHAR" />
-    <result column="two_view" property="twoView" jdbcType="CHAR" />
-    <result column="view_count" property="viewCount" jdbcType="BIGINT" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="one_view" property="oneView" jdbcType="VARCHAR" />
+    <result column="two_view" property="twoView" jdbcType="VARCHAR" />
+    <result column="view_count" property="viewCount" jdbcType="INTEGER" />
     <result column="determine" property="determine" jdbcType="VARCHAR" />
     <result column="job" property="job" jdbcType="VARCHAR" />
   </resultMap>
@@ -110,8 +110,8 @@
     insert into interviewer (user_name, password, one_view, 
       two_view, view_count, determine, 
       job)
-    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, #{oneView,jdbcType=CHAR}, 
-      #{twoView,jdbcType=CHAR}, #{viewCount,jdbcType=BIGINT}, #{determine,jdbcType=VARCHAR}, 
+    values (#{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{oneView,jdbcType=VARCHAR}, 
+      #{twoView,jdbcType=VARCHAR}, #{viewCount,jdbcType=INTEGER}, #{determine,jdbcType=VARCHAR}, 
       #{job,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Interviewer" >
@@ -147,16 +147,16 @@
         #{userName,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
-        #{password,jdbcType=CHAR},
+        #{password,jdbcType=VARCHAR},
       </if>
       <if test="oneView != null" >
-        #{oneView,jdbcType=CHAR},
+        #{oneView,jdbcType=VARCHAR},
       </if>
       <if test="twoView != null" >
-        #{twoView,jdbcType=CHAR},
+        #{twoView,jdbcType=VARCHAR},
       </if>
       <if test="viewCount != null" >
-        #{viewCount,jdbcType=BIGINT},
+        #{viewCount,jdbcType=INTEGER},
       </if>
       <if test="determine != null" >
         #{determine,jdbcType=VARCHAR},
@@ -182,16 +182,16 @@
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
       <if test="record.password != null" >
-        password = #{record.password,jdbcType=CHAR},
+        password = #{record.password,jdbcType=VARCHAR},
       </if>
       <if test="record.oneView != null" >
-        one_view = #{record.oneView,jdbcType=CHAR},
+        one_view = #{record.oneView,jdbcType=VARCHAR},
       </if>
       <if test="record.twoView != null" >
-        two_view = #{record.twoView,jdbcType=CHAR},
+        two_view = #{record.twoView,jdbcType=VARCHAR},
       </if>
       <if test="record.viewCount != null" >
-        view_count = #{record.viewCount,jdbcType=BIGINT},
+        view_count = #{record.viewCount,jdbcType=INTEGER},
       </if>
       <if test="record.determine != null" >
         determine = #{record.determine,jdbcType=VARCHAR},
@@ -208,10 +208,10 @@
     update interviewer
     set id = #{record.id,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
-      password = #{record.password,jdbcType=CHAR},
-      one_view = #{record.oneView,jdbcType=CHAR},
-      two_view = #{record.twoView,jdbcType=CHAR},
-      view_count = #{record.viewCount,jdbcType=BIGINT},
+      password = #{record.password,jdbcType=VARCHAR},
+      one_view = #{record.oneView,jdbcType=VARCHAR},
+      two_view = #{record.twoView,jdbcType=VARCHAR},
+      view_count = #{record.viewCount,jdbcType=INTEGER},
       determine = #{record.determine,jdbcType=VARCHAR},
       job = #{record.job,jdbcType=VARCHAR}
     <if test="_parameter != null" >
@@ -225,16 +225,16 @@
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
       <if test="password != null" >
-        password = #{password,jdbcType=CHAR},
+        password = #{password,jdbcType=VARCHAR},
       </if>
       <if test="oneView != null" >
-        one_view = #{oneView,jdbcType=CHAR},
+        one_view = #{oneView,jdbcType=VARCHAR},
       </if>
       <if test="twoView != null" >
-        two_view = #{twoView,jdbcType=CHAR},
+        two_view = #{twoView,jdbcType=VARCHAR},
       </if>
       <if test="viewCount != null" >
-        view_count = #{viewCount,jdbcType=BIGINT},
+        view_count = #{viewCount,jdbcType=INTEGER},
       </if>
       <if test="determine != null" >
         determine = #{determine,jdbcType=VARCHAR},
@@ -248,10 +248,10 @@
   <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.Interviewer" >
     update interviewer
     set user_name = #{userName,jdbcType=VARCHAR},
-      password = #{password,jdbcType=CHAR},
-      one_view = #{oneView,jdbcType=CHAR},
-      two_view = #{twoView,jdbcType=CHAR},
-      view_count = #{viewCount,jdbcType=BIGINT},
+      password = #{password,jdbcType=VARCHAR},
+      one_view = #{oneView,jdbcType=VARCHAR},
+      two_view = #{twoView,jdbcType=VARCHAR},
+      view_count = #{viewCount,jdbcType=INTEGER},
       determine = #{determine,jdbcType=VARCHAR},
       job = #{job,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

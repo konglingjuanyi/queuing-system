@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.qunar.ops.recruit.dao.StudentAssessImgMapper" >
   <resultMap id="BaseResultMap" type="com.qunar.ops.recruit.model.StudentAssessImg" >
-    <result column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="id" jdbcType="INTEGER" />
     <result column="student_id" property="studentId" jdbcType="INTEGER" />
     <result column="img_name" property="imgName" jdbcType="VARCHAR" />
   </resultMap>
@@ -74,7 +74,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from student_assess_img
+    from studentassessimg
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -82,24 +82,34 @@
       order by ${orderByClause}
     </if>
   </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from studentassessimg
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from studentassessimg
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
   <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessImgExample" >
-    delete from student_assess_img
+    delete from studentassessimg
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.qunar.ops.recruit.model.StudentAssessImg" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('student_assess_img_id_seq')
+      select currval('studentassessimg_id_seq')
     </selectKey>
-    insert into student_assess_img (student_id, img_name)
+    insert into studentassessimg (student_id, img_name)
     values (#{studentId,jdbcType=INTEGER}, #{imgName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.StudentAssessImg" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('student_assess_img_id_seq')
+      select currval('studentassessimg_id_seq')
     </selectKey>
-    insert into student_assess_img
+    insert into studentassessimg
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="studentId != null" >
         student_id,
@@ -118,13 +128,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessImgExample" resultType="java.lang.Integer" >
-    select count(*) from student_assess_img
+    select count(*) from studentassessimg
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update student_assess_img
+    update studentassessimg
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -141,12 +151,30 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update student_assess_img
+    update studentassessimg
     set id = #{record.id,jdbcType=INTEGER},
       student_id = #{record.studentId,jdbcType=INTEGER},
       img_name = #{record.imgName,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.StudentAssessImg" >
+    update studentassessimg
+    <set >
+      <if test="studentId != null" >
+        student_id = #{studentId,jdbcType=INTEGER},
+      </if>
+      <if test="imgName != null" >
+        img_name = #{imgName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.StudentAssessImg" >
+    update studentassessimg
+    set student_id = #{studentId,jdbcType=INTEGER},
+      img_name = #{imgName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -5,7 +5,7 @@ public class Hr {
 
     private String userName;
 
-    private String passWord;
+    private String password;
 
     private String city;
 
@@ -25,12 +25,12 @@ public class Hr {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getPassWord() {
-        return passWord;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWord(String passWord) {
-        this.passWord = passWord == null ? null : passWord.trim();
+    public void setPassword(String password) {
+        this.password = password == null ? null : password.trim();
     }
 
     public String getCity() {

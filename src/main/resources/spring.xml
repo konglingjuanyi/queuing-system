@@ -27,11 +27,15 @@
 		ignore-unresolvable="true" local-override="true"
 		location="classpath*:/recruit.properties,classpath*:/mq.properties" />
 
+
+
 	<aop:aspectj-autoproxy/>
 	
-	<cache:annotation-driven/>
+	
 	
 	<context:component-scan base-package="com.qunar.ops.recruit" />
+	<!--  
+	<cache:annotation-driven/>
 	
 	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
 	  <property name="caches">
@@ -41,7 +45,7 @@
 	    </list>
 	  </property>
 	</bean>
-
+ -->
 	<bean id="uuidGenerator"
 		class="org.activiti.engine.impl.persistence.StrongUuidGenerator" />
 

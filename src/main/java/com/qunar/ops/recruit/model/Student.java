@@ -1,5 +1,6 @@
 package com.qunar.ops.recruit.model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Student {
@@ -37,7 +38,7 @@ public class Student {
 
     private Date graduateDate;
 
-    private Double salary;
+    private BigDecimal salary;
 
     private String assess;
 
@@ -231,11 +232,11 @@ public class Student {
         this.graduateDate = graduateDate;
     }
 
-    public Double getSalary() {
+    public BigDecimal getSalary() {
         return salary;
     }
 
-    public void setSalary(Double salary) {
+    public void setSalary(BigDecimal salary) {
         this.salary = salary;
     }
 

@@ -128,17 +128,18 @@ public class HrController {
 			rets.add(info);
 		}
 		model.addAttribute("message", rets);
-		return "/viewer_monitor";
+		return "/viewer_monitor";  
 	}
 	
 	@RequestMapping(value = "/hr/getInterviewersForManage")
 	public String getInterviewersForManage(HttpServletRequest request,  ModelMap model) {
+		System.out.println("add at 20151108=-000000-");
 		List<Interviewer> list =  interService.getInterviewers();
 		List<ResultPlusAdditionalInfo> rets = new LinkedList<ResultPlusAdditionalInfo>();
 		for (Interviewer interviewer : list) {
 			ResultPlusAdditionalInfo info = new ResultPlusAdditionalInfo();
-			info.setObj(interviewer);
-			rets.add(info);
+			info.setObj(interviewer); 
+			rets.add(info); 
 		}
 		model.addAttribute("message", rets);
 		return "/viewer_manage";

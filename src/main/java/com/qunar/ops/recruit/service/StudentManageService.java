@@ -1,5 +1,6 @@
 package com.qunar.ops.recruit.service;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -71,9 +72,9 @@ public class StudentManageService {
 			}
 			String sa=getStringCellValue(row.getCell(17));
 			if("".equals(sa)){
-				stu.setSalary(Double.valueOf(0));
+				stu.setSalary(BigDecimal.valueOf(0));
 			}else{
-				stu.setSalary(Double.valueOf(sa));
+				stu.setSalary(BigDecimal.valueOf(Double.valueOf(sa)));
 			}
 			stu.setAssess(getStringCellValue(row.getCell(18)));
 			stu.setFirstTry(getStringCellValue(row.getCell(19)));
@@ -283,9 +284,9 @@ public class StudentManageService {
 		inter.setState("未签到");
 		inter.setIsDeleted(RecruitConst.STUDENT_INIT);
 		if("".equals(salary) || salary==null){
-			inter.setSalary(Double.valueOf(0));
+			inter.setSalary(BigDecimal.valueOf(0));
 		}else{
-			inter.setSalary(Double.valueOf(salary));
+			inter.setSalary(BigDecimal.valueOf(Double.valueOf(salary)));
 		}
 		inter.setSchool(school);
 		inter.setSecondTry(secondTry);
@@ -451,9 +452,9 @@ public class StudentManageService {
 		inter.setIsDeleted(RecruitConst.STUDENT_INIT);
 		inter.setLocation(city);
 		if("".equals(salary) || salary==null){
-			inter.setSalary(Double.valueOf(0));
+			inter.setSalary(BigDecimal.valueOf(0));
 		}else{
-			inter.setSalary(Double.valueOf(salary));
+			inter.setSalary(BigDecimal.valueOf(Double.valueOf(salary)));
 		}
 		inter.setSchool(school);
 		inter.setSecondTry(secondTry);

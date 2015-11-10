@@ -10,13 +10,21 @@ public interface StudentAssessImgMapper {
 
     int deleteByExample(StudentAssessImgExample example);
 
+    int deleteByPrimaryKey(Integer id);
+
     int insert(StudentAssessImg record);
 
     int insertSelective(StudentAssessImg record);
 
     List<StudentAssessImg> selectByExample(StudentAssessImgExample example);
 
+    StudentAssessImg selectByPrimaryKey(Integer id);
+
     int updateByExampleSelective(@Param("record") StudentAssessImg record, @Param("example") StudentAssessImgExample example);
 
     int updateByExample(@Param("record") StudentAssessImg record, @Param("example") StudentAssessImgExample example);
+
+    int updateByPrimaryKeySelective(StudentAssessImg record);
+
+    int updateByPrimaryKey(StudentAssessImg record);
 }

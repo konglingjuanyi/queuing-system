@@ -76,7 +76,7 @@ public class HrService {
 		HrExample hr = new HrExample();
 		HrExample.Criteria criteria = hr.createCriteria();
 		criteria.andUserNameEqualTo(username);
-		criteria.andPassWordEqualTo(password);
+		criteria.andPasswordEqualTo(password);
 		List<Hr> inter = hrMapper.selectByExample(hr);
 		if(inter != null && inter.size() > 0){
 			return inter.get(0);

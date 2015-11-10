@@ -1,17 +1,23 @@
-#### ***æ–‡ä¸­é“¾æ¥å„ä½æ ¹æ®è‡ªå·±é¡¹ç›®å¯¹åº”ä¿®æ”¹***
---------------------------------------------------------------------------------
-#### **é¡¹ç›®ç®¡ç†**ï¼š
-#### *sp*:(http://sp.corp.qunar.com/default.aspx)<br />
+1.	ÏÂÔØ°²×°Postgresql¡£
+´Ó¹ÙÍøhttp://www.postgresql.org/ÉÏÏÂÔØ×îĞÂÎÈ¶¨°æ£¬ÎÒÏÂÔØµÄÊÇWindow ÏÂµÄVersion 9.4.5£¬´óĞ¡Îª58.42M£¬Ö´ĞĞexe°²×°¼´¿É¡£°²×°ºÃÒÔºó£¬Ä¬ÈÏÓÃ»§ÃûÊÇpostgres£¬ÃÜÂëÎª°²×°¹ı³ÌÖĞ×Ô¼ºÉè¶¨µÄ¡£pgAdminÊÇ×Ô´øµÄ¿ÉÊÓ»¯¹¤¾ß¡£½«#{°²×°Ä¿Â¼}/binÌí¼Óµ½»·¾³±äÁ¿ÒÔºó£¬¿ÉÒÔÔÚÃüÁîÌáÊ¾·ûÏÂÖ´ĞĞsqlÃüÁî£¬³£ÓÃÃüÁî¼ûhttp://blog.chinaunix.net/uid-26642180-id-3485465.html¡£
 
-#### *jira*:(http://task.corp.qunar.com/browse/)<br />
---------------------------------------------------------------------------------
-#### **å‘å¸ƒç›¸å…³**:
-#### *devbds*:(http://devbds.corp.qunar.com/jenkins/)<br />
-#### *bds*:(http://bds.corp.qunar.com/jenkins/)<br />
---------------------------------------------------------------------------------
-#### **è´¨é‡ç®¡ç†**:
-#### *bugfree*:(http://svn.corp.qunar.com/bugfree)<br />
-#### *case*:(http://bugfree.corp.qunar.com/bugfree/index.php/case)<br />
---------------------------------------------------------------------------------
-#### **é¡¹ç›®ä¿¡æ¯**:
-#### *wiki*:(http://wiki.corp.qunar.com/)<br />
+2.	MyeclipseÖĞÅäÖÃjetty run
+Run Configurations->Maven BuildÉÏÓÒ¼ü->new:
+1)	Ñ¡ÔñName£¬Ëæ±ãÌî£¬ÀıÈçjettyrun
+2)	µã»÷Browse Workspace£¬Ñ¡Ôñ¶ÔÓ¦ÒªÔËĞĞµÄÏîÄ¿
+3)	GoalsÌîjetty:run
+
+3.	myeclipse°²×°mybatis generator²å¼ş
+ÏÂÔØhttp://pan.baidu.com/s/1i3lk4ATÀëÏß²å¼ş£¬½âÑ¹Ëõ£¬½«½âÑ¹ËõÒÔºóµÄpluginsÎÄ¼ş¼ĞÏÂµÄÎÄ¼ş·Åµ½myeclipse°²×°Ä¿Â¼ÏÂµÄpluginsÎÄ¼ş¼ĞÏÂ¡£ÖØÆômyeclipse£¬ÔÚgenerator.xmlÉÏÓÒ¼ü£¬¿ÉÒÔ¿´µ½Generate Mybatis/ibatis artifacts×ÖÑù£¬ËµÃ÷°²×°³É¹¦¡£
+
+4.	Myeclipse°²×°jrebel²å¼ş
+ÏÂÔØhttp://pan.baidu.com/s/1gd9BjDhÆÆ½â²å¼ş£¬½âÑ¹Ëõ£¬°Ñjrebel.jarºÍjrebel.lic·Åµ½Ä³¸öÎÄ¼ş¼ĞÏÂ£¬È»ºóÔÙmyeclipseµÄvmÆô¶¯²ÎÊıÖĞÌí¼Ó£º
+-noverify -javaagent:D:\Java\jrebel\jrebel.jar     (Ëù·ÅjrebelÂ·¾¶)
+-Xbootclasspath/p:D:/Java/jrebel/rebelboot.jar   (ÉèÖÃÓëjrebelÏàÍ¬Â·¾¶¼´¿É)
+-Drebel.generate.show=true
+-Drebel.spring_plugin=true
+-Drebel.aspectj_plugin=true
+-Drebel.cxf_plugin=true
+-Drebel.logback_plugin=true
+-Drebel.mybatis_plugin=true
+

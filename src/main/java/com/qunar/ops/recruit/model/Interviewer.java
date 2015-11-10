@@ -11,7 +11,7 @@ public class Interviewer {
 
     private String twoView;
 
-    private Long viewCount;
+    private Integer viewCount;
 
     private String determine;
 
@@ -57,11 +57,11 @@ public class Interviewer {
         this.twoView = twoView == null ? null : twoView.trim();
     }
 
-    public Long getViewCount() {
+    public Integer getViewCount() {
         return viewCount;
     }
 
-    public void setViewCount(Long viewCount) {
+    public void setViewCount(Integer viewCount) {
         this.viewCount = viewCount;
     }
 
@@ -79,10 +79,5 @@ public class Interviewer {
 
     public void setJob(String job) {
         this.job = job == null ? null : job.trim();
-    }
-    
-    @Override
-    public String toString() {
-    	return this.getUserName();
     }
 }

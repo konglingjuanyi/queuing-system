@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>面试学生管理</title>
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="/static/css/style.min.css" />
+	<script type="text/javascript" src="/static/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/js/jquery-form.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+	<script type="text/javascript" src="/static/js/recruit/search_student.js"></script>
+</head>
+<body>
+	<div class="l-fullsreen">
+		<div class="l-container">
+			<div class="l-content">
+				<!-- 内容start -->
+				<div class="m-login">
+					<form class="form-inline">
+						<label class="control-label" for="">姓名</label>
+						<input type="text" class="input-small" placeholder="必填" id="student_name">
+						<label class="control-label" for="" >学校</label>
+						<input type="text" class="input-small" placeholder="必填"  id="student_school">
+						<label class="control-label" for="">专业</label>
+						<input type="text" class="input-small" placeholder="必填"  id="student_profession">
+						<label class="control-label" for="" >状态</label>
+						<select name="" id="student_state">
+							<option value="">请选择</option>
+							<option value="">未签到</option>
+							<option value="">签到</option>
+							<option value="">迟到</option>
+							<option value="">等待初试</option>
+							<option value="">初试中</option>
+							<option value="">过号</option>
+							<option value="">初试通过</option>
+							<option value="">初试未通过</option>
+							<option value="">等待复试中</option>
+							<option value="">复试中</option>
+							<option value="">复试通过</option>
+							<option value="">复试未通过</option>
+							<option value="">已发Offer</option>
+							<option value="">待定Offer</option>
+							<option value="">不发Offer</option>
+						</select>
+						<button type="button" id="searchStudent" class="btn">搜索</button>
+						<!--<button type="button" id="exportStudent" class="btn">导出</button>-->
+					</form>
+				</div>
+				<div class="l-inner" id="studentInfoInner">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

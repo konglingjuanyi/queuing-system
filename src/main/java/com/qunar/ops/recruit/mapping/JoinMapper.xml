@@ -15,21 +15,21 @@
     <association property="pi" javaType="com.qunar.ops.recruit.model.connect_table.InterviewerInfoToPage" resultMap="com.qunar.ops.recruit.dao.PhaseInterviewerMapper.BaseResultMap"/>  
  </resultMap>
   <select id="getFirstInterviewRoomNumber" resultType="java.lang.String" parameterType="com.qunar.ops.recruit.model.Student">
-  	select interviewer.room from interviewer, student_info 
+  	select interviewer.room from interviewer, student as student_info 
   	where interviewer.user_name = student_info.first_try and student_info.id = #{id}
   </select>
   <select id="getSecondInterviewRoomNumber" resultType="java.lang.String" parameterType="com.qunar.ops.recruit.model.Student">
-  	select interviewer.room from interviewer, student_info 
+  	select interviewer.room from interviewer, student as student_info 
   	where interviewer.user_name = student_info.second_try and student_info.id = #{id}
   </select>
   <select id="getInterviewersInfoToPages" resultMap="InterviewerInfoToPageMap">
   	select * from 
-  	(interviewer inner join phase_interviewer on 
+  	(interviewer inner join phaseinterviewer as phase_interviewer on 
   	interviewer.user_name=phase_interviewer.intervier_name
   	and phase_interviewer.year=#{year} 
   	and phase_interviewer.phase=#{phase} 
   	and phase_interviewer.city=#{city}) left join 
-  	(select first_try,count(*) from student_info where (state = #{state} or state = '已发Offer' or state = '待定Offer' or state = '不发Offer') and is_deleted != 1 group by first_try) as tmp 
+  	(select first_try,count(*) from student as student_info where (state = #{state} or state = '已发Offer' or state = '待定Offer' or state = '不发Offer') and is_deleted != 1 group by first_try) as tmp 
   	on phase_interviewer.intervier_name=tmp.first_try order by interviewer.user_name
 
   	
@@ -37,8 +37,8 @@
   <select id="getInterviewerDetailsInfoToPages" resultMap="InterviewerInfoToPageMap">
   	select * from 
   	interviewer,
-  	phase_interviewer,
-  	(select job, first_try,count(*) from student_info where (state = #{state} or state = '面试结束') and is_deleted != 1 group by first_try,job) as tmp 
+  	phaseinterviewer as phase_interviewer,
+  	(select job, first_try,count(*) from student as student_info where (state = #{state} or state = '面试结束') and is_deleted != 1 group by first_try,job) as tmp 
   	where interviewer.user_name=phase_interviewer.intervier_name
   	and phase_interviewer.intervier_name=tmp.first_try
   	and phase_interviewer.year=#{year} and phase_interviewer.phase=#{phase} and phase_interviewer.city=#{city} and interviewer.id = #{interid}

@@ -2,7 +2,7 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <!-- 数据库驱动包位置 -->
-    <classPathEntry location="C:\Users\xianhui.zhang\.m2\repository\postgresql\postgresql\9.1-901-1.jdbc4\postgresql-9.1-901-1.jdbc4.jar" /> 
+    <classPathEntry location="C:\Users\qyd\.m2\repository\postgresql\postgresql\9.1-901-1.jdbc4\postgresql-9.1-901-1.jdbc4.jar" /> 
     <!-- <classPathEntry location="C:\Users\yongnian.jiang.QUNARSERVERS\.m2\repository\postgresql\postgresql\9.2-1002.jdbc4\postgresql-9.2-1002.jdbc4.jar" />-->
     <context id="DB2Tables" targetRuntime="MyBatis3">
         <!-- <plugin type="com.qunar.ops.recruit.plugin.PaginationPlugin"></plugin> -->
@@ -10,47 +10,50 @@
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
         <!-- 数据库链接URL、用户名、密码 -->
-        <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://l-backyard1.ops.dev.cn6.qunar.com:5432/recruit"  userId="recruit" password="cLBiNcWNkREp6kL8Wb8kZvYNgd8=">
+        <jdbcConnection driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://localhost:5432/recruit"  userId="postgres" password="root">
         </jdbcConnection>
         
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false" />
         </javaTypeResolver>
         <!-- 生成模型的包名和位置 -->
-        <javaModelGenerator targetPackage="com.qunar.ops.recruit.model" targetProject="recruit">
+        <javaModelGenerator targetPackage="com.qunar.ops.recruit.model" targetProject="queuing_system">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
         </javaModelGenerator>
         <!-- 生成的映射文件包名和位置 -->
-        <sqlMapGenerator targetPackage="com.qunar.ops.recruit.mapping" targetProject="recruit">
+        <sqlMapGenerator targetPackage="com.qunar.ops.recruit.mapping" targetProject="queuing_system">
             <property name="enableSubPackages" value="true" />
         </sqlMapGenerator>
         <!-- 生成DAO的包名和位置 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.qunar.ops.recruit.dao" targetProject="recruit">
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.qunar.ops.recruit.dao" targetProject="queuing_system">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
         <!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
-        <table tableName="student_assess_img" domainObjectName="StudentAssessImg" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id" identity="true" sqlStatement="select currval('student_assess_img_id_seq')"/>
-        </table>
-        <!-- 
+        
         <table tableName="interviewer" domainObjectName="Interviewer" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
         	<generatedKey column="id" identity="true" sqlStatement="select currval('interviewer_id_seq')"/>
         </table>
-        <table tableName="student_info" domainObjectName="Student" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id" identity="true" sqlStatement="select currval('student_info_id_seq')"/>
+         <!-- 
+        <table tableName="student" domainObjectName="Student" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('student_id_seq')"/>
         </table>
-        <table tableName="phase_info" domainObjectName="Phase" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id" identity="true" sqlStatement="select currval('phase_info_id_seq')"/>
+        <table tableName="phase" domainObjectName="Phase" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('phase_id_seq')"/>
         </table>
-        <table tableName="hr_info" domainObjectName="Hr" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id" identity="true" sqlStatement="select currval('hr_info_id_seq')"/>
+        
+        <table tableName="hr" domainObjectName="Hr" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('hr_id_seq')"/>
         </table>
-        <table tableName="student_assess" domainObjectName="StudentAssess" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id" identity="true" sqlStatement="select currval('student_assess_id_seq')"/>
+       
+        <table tableName="studentAssess" domainObjectName="StudentAssess" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('studentassess_id_seq')"/>
         </table>
-        <table tableName="phase_interviewer" domainObjectName="PhaseInterviewer" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
-        	<generatedKey column="id" identity="true" sqlStatement="select currval('phase_interviewer_id_seq')"/>
+        <table tableName="phaseInterviewer" domainObjectName="PhaseInterviewer" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('phaseinterviewer_id_seq')"/>
+        </table>
+        <table tableName="studentAssessImg" domainObjectName="StudentAssessImg" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">
+        	<generatedKey column="id" identity="true" sqlStatement="select currval('studentassessimg_id_seq')"/>
         </table>
         
         <table tableName="form_approve_log" domainObjectName="FormApproveLog" enableInsert="true" enableUpdateByExample="true" enableDeleteByExample="true" enableSelectByExample="true" selectByExampleQueryId="true">

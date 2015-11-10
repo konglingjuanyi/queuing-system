@@ -94,4 +94,16 @@ public class GuavaCacheAdapter implements Cache, BeanNameAware, InitializingBean
 	  public void setExpireAfterWriteInSeconds(long expireAfterWriteInSeconds) {
 	    this.expireAfterWriteInSeconds = expireAfterWriteInSeconds;
 	  }
+
+	@Override
+	public <T> T get(Object arg0, Class<T> arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ValueWrapper putIfAbsent(Object arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -141,7 +141,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from student_assess
+    from studentassess
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -152,24 +152,24 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from student_assess
+    from studentassess
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from student_assess
+    delete from studentassess
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" >
-    delete from student_assess
+    delete from studentassess
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.qunar.ops.recruit.model.StudentAssess" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('student_assess_id_seq')
+      select currval('studentassess_id_seq')
     </selectKey>
-    insert into student_assess (studen_id, one_viewer, two_viewer, 
+    insert into studentassess (studen_id, one_viewer, two_viewer, 
       job, one_code, one_code_detail, 
       one_algorithm, one_algorithm_detail, one_network, 
       one_network_detail, one_experience, one_experience_detail, 
@@ -214,9 +214,9 @@
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.StudentAssess" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('student_assess_id_seq')
+      select currval('studentassess_id_seq')
     </selectKey>
-    insert into student_assess
+    insert into studentassess
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="studenId != null" >
         studen_id,
@@ -571,13 +571,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.qunar.ops.recruit.model.StudentAssessExample" resultType="java.lang.Integer" >
-    select count(*) from student_assess
+    select count(*) from studentassess
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update student_assess
+    update studentassess
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -762,7 +762,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update student_assess
+    update studentassess
     set id = #{record.id,jdbcType=INTEGER},
       studen_id = #{record.studenId,jdbcType=INTEGER},
       one_viewer = #{record.oneViewer,jdbcType=VARCHAR},
@@ -827,7 +827,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.StudentAssess" >
-    update student_assess
+    update studentassess
     <set >
       <if test="studenId != null" >
         studen_id = #{studenId,jdbcType=INTEGER},
@@ -1007,7 +1007,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.StudentAssess" >
-    update student_assess
+    update studentassess
     set studen_id = #{studenId,jdbcType=INTEGER},
       one_viewer = #{oneViewer,jdbcType=VARCHAR},
       two_viewer = #{twoViewer,jdbcType=VARCHAR},

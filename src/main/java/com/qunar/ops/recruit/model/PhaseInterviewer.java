@@ -1,8 +1,6 @@
 package com.qunar.ops.recruit.model;
 
-import java.io.Serializable;
-
-public class PhaseInterviewer implements Serializable{
+public class PhaseInterviewer {
     private Integer id;
 
     private String year;
@@ -161,16 +159,5 @@ public class PhaseInterviewer implements Serializable{
 
     public void setEnable(String enable) {
         this.enable = enable == null ? null : enable.trim();
-    }
-    
-    @Override
-    public int hashCode() {
-    	return this.getId();
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-    	PhaseInterviewer pi = (PhaseInterviewer) obj;
-    	return pi.getId().equals(this.getId());
     }
 }

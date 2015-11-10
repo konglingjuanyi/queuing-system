@@ -5,9 +5,9 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="note_no" property="noteNo" jdbcType="VARCHAR" />
     <result column="phase_no" property="phaseNo" jdbcType="VARCHAR" />
-    <result column="interview_time" property="interviewTime" jdbcType="TIMESTAMP" />
+    <result column="interview_time" property="interviewTime" jdbcType="DATE" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="sex" property="sex" jdbcType="CHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
     <result column="school" property="school" jdbcType="VARCHAR" />
     <result column="profession" property="profession" jdbcType="VARCHAR" />
     <result column="education" property="education" jdbcType="VARCHAR" />
@@ -16,23 +16,23 @@
     <result column="card_no" property="cardNo" jdbcType="VARCHAR" />
     <result column="qq_no" property="qqNo" jdbcType="VARCHAR" />
     <result column="job" property="job" jdbcType="VARCHAR" />
-    <result column="work_start" property="workStart" jdbcType="TIMESTAMP" />
-    <result column="work_end" property="workEnd" jdbcType="TIMESTAMP" />
-    <result column="graduate_date" property="graduateDate" jdbcType="TIMESTAMP" />
-    <result column="salary" property="salary" jdbcType="DOUBLE" />
+    <result column="work_start" property="workStart" jdbcType="DATE" />
+    <result column="work_end" property="workEnd" jdbcType="DATE" />
+    <result column="graduate_date" property="graduateDate" jdbcType="DATE" />
+    <result column="salary" property="salary" jdbcType="NUMERIC" />
     <result column="assess" property="assess" jdbcType="VARCHAR" />
     <result column="first_try" property="firstTry" jdbcType="VARCHAR" />
     <result column="second_try" property="secondTry" jdbcType="VARCHAR" />
     <result column="view_remark" property="viewRemark" jdbcType="VARCHAR" />
     <result column="location" property="location" jdbcType="VARCHAR" />
     <result column="offer_state" property="offerState" jdbcType="VARCHAR" />
-    <result column="three_side" property="threeSide" jdbcType="CHAR" />
-    <result column="pay_time" property="payTime" jdbcType="TIMESTAMP" />
-    <result column="three_state" property="threeState" jdbcType="CHAR" />
+    <result column="three_side" property="threeSide" jdbcType="VARCHAR" />
+    <result column="pay_time" property="payTime" jdbcType="DATE" />
+    <result column="three_state" property="threeState" jdbcType="VARCHAR" />
     <result column="refuse" property="refuse" jdbcType="VARCHAR" />
     <result column="refuse_reson" property="refuseReson" jdbcType="VARCHAR" />
-    <result column="refuse_date" property="refuseDate" jdbcType="TIMESTAMP" />
-    <result column="breaker" property="breaker" jdbcType="CHAR" />
+    <result column="refuse_date" property="refuseDate" jdbcType="DATE" />
+    <result column="breaker" property="breaker" jdbcType="VARCHAR" />
     <result column="train" property="train" jdbcType="VARCHAR" />
     <result column="staff_no" property="staffNo" jdbcType="VARCHAR" />
     <result column="interview_dept" property="interviewDept" jdbcType="VARCHAR" />
@@ -42,8 +42,8 @@
     <result column="leader" property="leader" jdbcType="VARCHAR" />
     <result column="one_result" property="oneResult" jdbcType="VARCHAR" />
     <result column="two_result" property="twoResult" jdbcType="VARCHAR" />
-    <result column="true_time" property="trueTime" jdbcType="TIMESTAMP" />
-    <result column="one_overtime" property="oneOvertime" jdbcType="TIMESTAMP" />
+    <result column="true_time" property="trueTime" jdbcType="DATE" />
+    <result column="one_overtime" property="oneOvertime" jdbcType="DATE" />
     <result column="state" property="state" jdbcType="VARCHAR" />
     <result column="assigned_interviewer" property="assignedInterviewer" jdbcType="VARCHAR" />
     <result column="year" property="year" jdbcType="VARCHAR" />
@@ -122,7 +122,7 @@
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from student_info
+    from student
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
@@ -133,59 +133,61 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
-    from student_info
+    from student
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from student_info
+    delete from student
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <delete id="deleteByExample" parameterType="com.qunar.ops.recruit.model.StudentExample" >
-    delete from student_info
+    delete from student
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.qunar.ops.recruit.model.Student" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('student_info_id_seq')
+      select currval('student_id_seq')
     </selectKey>
-    insert into student_info (note_no, phase_no, interview_time, 
-      name, sex, school, profession, 
-      education, phone, email, 
-      card_no, qq_no, job, 
-      work_start, work_end, graduate_date, 
-      salary, assess, first_try, 
-      second_try, view_remark, location, 
-      offer_state, three_side, pay_time, 
-      three_state, refuse, refuse_reson, 
-      refuse_date, breaker, train, 
-      staff_no, interview_dept, fenpei_dept, 
-      yuan_dept, organize, leader, 
-      one_result, two_result, true_time, 
-      one_overtime, state, assigned_interviewer, 
-      year, is_deleted)
-    values (#{noteNo,jdbcType=VARCHAR}, #{phaseNo,jdbcType=VARCHAR}, #{interviewTime,jdbcType=TIMESTAMP}, 
-      #{name,jdbcType=VARCHAR}, #{sex,jdbcType=CHAR}, #{school,jdbcType=VARCHAR}, #{profession,jdbcType=VARCHAR}, 
-      #{education,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{cardNo,jdbcType=VARCHAR}, #{qqNo,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, 
-      #{workStart,jdbcType=TIMESTAMP}, #{workEnd,jdbcType=TIMESTAMP}, #{graduateDate,jdbcType=TIMESTAMP}, 
-      #{salary,jdbcType=DOUBLE}, #{assess,jdbcType=VARCHAR}, #{firstTry,jdbcType=VARCHAR}, 
-      #{secondTry,jdbcType=VARCHAR}, #{viewRemark,jdbcType=VARCHAR}, #{location,jdbcType=VARCHAR}, 
-      #{offerState,jdbcType=VARCHAR}, #{threeSide,jdbcType=CHAR}, #{payTime,jdbcType=TIMESTAMP}, 
-      #{threeState,jdbcType=CHAR}, #{refuse,jdbcType=VARCHAR}, #{refuseReson,jdbcType=VARCHAR}, 
-      #{refuseDate,jdbcType=TIMESTAMP}, #{breaker,jdbcType=CHAR}, #{train,jdbcType=VARCHAR}, 
-      #{staffNo,jdbcType=VARCHAR}, #{interviewDept,jdbcType=VARCHAR}, #{fenpeiDept,jdbcType=VARCHAR}, 
-      #{yuanDept,jdbcType=VARCHAR}, #{organize,jdbcType=VARCHAR}, #{leader,jdbcType=VARCHAR}, 
-      #{oneResult,jdbcType=VARCHAR}, #{twoResult,jdbcType=VARCHAR}, #{trueTime,jdbcType=TIMESTAMP}, 
-      #{oneOvertime,jdbcType=TIMESTAMP}, #{state,jdbcType=VARCHAR}, #{assignedInterviewer,jdbcType=VARCHAR}, 
-      #{year,jdbcType=VARCHAR}, #{isDeleted,jdbcType=INTEGER})
+    insert into student (note_no, phase_no, interview_time, 
+      name, sex, school, 
+      profession, education, phone, 
+      email, card_no, qq_no, 
+      job, work_start, work_end, 
+      graduate_date, salary, assess, 
+      first_try, second_try, view_remark, 
+      location, offer_state, three_side, 
+      pay_time, three_state, refuse, 
+      refuse_reson, refuse_date, breaker, 
+      train, staff_no, interview_dept, 
+      fenpei_dept, yuan_dept, organize, 
+      leader, one_result, two_result, 
+      true_time, one_overtime, state, 
+      assigned_interviewer, year, is_deleted
+      )
+    values (#{noteNo,jdbcType=VARCHAR}, #{phaseNo,jdbcType=VARCHAR}, #{interviewTime,jdbcType=DATE}, 
+      #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, #{school,jdbcType=VARCHAR}, 
+      #{profession,jdbcType=VARCHAR}, #{education,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{cardNo,jdbcType=VARCHAR}, #{qqNo,jdbcType=VARCHAR}, 
+      #{job,jdbcType=VARCHAR}, #{workStart,jdbcType=DATE}, #{workEnd,jdbcType=DATE}, 
+      #{graduateDate,jdbcType=DATE}, #{salary,jdbcType=NUMERIC}, #{assess,jdbcType=VARCHAR}, 
+      #{firstTry,jdbcType=VARCHAR}, #{secondTry,jdbcType=VARCHAR}, #{viewRemark,jdbcType=VARCHAR}, 
+      #{location,jdbcType=VARCHAR}, #{offerState,jdbcType=VARCHAR}, #{threeSide,jdbcType=VARCHAR}, 
+      #{payTime,jdbcType=DATE}, #{threeState,jdbcType=VARCHAR}, #{refuse,jdbcType=VARCHAR}, 
+      #{refuseReson,jdbcType=VARCHAR}, #{refuseDate,jdbcType=DATE}, #{breaker,jdbcType=VARCHAR}, 
+      #{train,jdbcType=VARCHAR}, #{staffNo,jdbcType=VARCHAR}, #{interviewDept,jdbcType=VARCHAR}, 
+      #{fenpeiDept,jdbcType=VARCHAR}, #{yuanDept,jdbcType=VARCHAR}, #{organize,jdbcType=VARCHAR}, 
+      #{leader,jdbcType=VARCHAR}, #{oneResult,jdbcType=VARCHAR}, #{twoResult,jdbcType=VARCHAR}, 
+      #{trueTime,jdbcType=DATE}, #{oneOvertime,jdbcType=DATE}, #{state,jdbcType=VARCHAR}, 
+      #{assignedInterviewer,jdbcType=VARCHAR}, #{year,jdbcType=VARCHAR}, #{isDeleted,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.qunar.ops.recruit.model.Student" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
-      select currval('student_info_id_seq')
+      select currval('student_id_seq')
     </selectKey>
-    insert into student_info
+    insert into student
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="noteNo != null" >
         note_no,
@@ -331,13 +333,13 @@
         #{phaseNo,jdbcType=VARCHAR},
       </if>
       <if test="interviewTime != null" >
-        #{interviewTime,jdbcType=TIMESTAMP},
+        #{interviewTime,jdbcType=DATE},
       </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
-        #{sex,jdbcType=CHAR},
+        #{sex,jdbcType=VARCHAR},
       </if>
       <if test="school != null" >
         #{school,jdbcType=VARCHAR},
@@ -364,16 +366,16 @@
         #{job,jdbcType=VARCHAR},
       </if>
       <if test="workStart != null" >
-        #{workStart,jdbcType=TIMESTAMP},
+        #{workStart,jdbcType=DATE},
       </if>
       <if test="workEnd != null" >
-        #{workEnd,jdbcType=TIMESTAMP},
+        #{workEnd,jdbcType=DATE},
       </if>
       <if test="graduateDate != null" >
-        #{graduateDate,jdbcType=TIMESTAMP},
+        #{graduateDate,jdbcType=DATE},
       </if>
       <if test="salary != null" >
-        #{salary,jdbcType=DOUBLE},
+        #{salary,jdbcType=NUMERIC},
       </if>
       <if test="assess != null" >
         #{assess,jdbcType=VARCHAR},
@@ -394,13 +396,13 @@
         #{offerState,jdbcType=VARCHAR},
       </if>
       <if test="threeSide != null" >
-        #{threeSide,jdbcType=CHAR},
+        #{threeSide,jdbcType=VARCHAR},
       </if>
       <if test="payTime != null" >
-        #{payTime,jdbcType=TIMESTAMP},
+        #{payTime,jdbcType=DATE},
       </if>
       <if test="threeState != null" >
-        #{threeState,jdbcType=CHAR},
+        #{threeState,jdbcType=VARCHAR},
       </if>
       <if test="refuse != null" >
         #{refuse,jdbcType=VARCHAR},
@@ -409,10 +411,10 @@
         #{refuseReson,jdbcType=VARCHAR},
       </if>
       <if test="refuseDate != null" >
-        #{refuseDate,jdbcType=TIMESTAMP},
+        #{refuseDate,jdbcType=DATE},
       </if>
       <if test="breaker != null" >
-        #{breaker,jdbcType=CHAR},
+        #{breaker,jdbcType=VARCHAR},
       </if>
       <if test="train != null" >
         #{train,jdbcType=VARCHAR},
@@ -442,10 +444,10 @@
         #{twoResult,jdbcType=VARCHAR},
       </if>
       <if test="trueTime != null" >
-        #{trueTime,jdbcType=TIMESTAMP},
+        #{trueTime,jdbcType=DATE},
       </if>
       <if test="oneOvertime != null" >
-        #{oneOvertime,jdbcType=TIMESTAMP},
+        #{oneOvertime,jdbcType=DATE},
       </if>
       <if test="state != null" >
         #{state,jdbcType=VARCHAR},
@@ -462,13 +464,13 @@
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.qunar.ops.recruit.model.StudentExample" resultType="java.lang.Integer" >
-    select count(*) from student_info
+    select count(*) from student
     <if test="_parameter != null" >
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map" >
-    update student_info
+    update student
     <set >
       <if test="record.id != null" >
         id = #{record.id,jdbcType=INTEGER},
@@ -480,13 +482,13 @@
         phase_no = #{record.phaseNo,jdbcType=VARCHAR},
       </if>
       <if test="record.interviewTime != null" >
-        interview_time = #{record.interviewTime,jdbcType=TIMESTAMP},
+        interview_time = #{record.interviewTime,jdbcType=DATE},
       </if>
       <if test="record.name != null" >
         name = #{record.name,jdbcType=VARCHAR},
       </if>
       <if test="record.sex != null" >
-        sex = #{record.sex,jdbcType=CHAR},
+        sex = #{record.sex,jdbcType=VARCHAR},
       </if>
       <if test="record.school != null" >
         school = #{record.school,jdbcType=VARCHAR},
@@ -513,16 +515,16 @@
         job = #{record.job,jdbcType=VARCHAR},
       </if>
       <if test="record.workStart != null" >
-        work_start = #{record.workStart,jdbcType=TIMESTAMP},
+        work_start = #{record.workStart,jdbcType=DATE},
       </if>
       <if test="record.workEnd != null" >
-        work_end = #{record.workEnd,jdbcType=TIMESTAMP},
+        work_end = #{record.workEnd,jdbcType=DATE},
       </if>
       <if test="record.graduateDate != null" >
-        graduate_date = #{record.graduateDate,jdbcType=TIMESTAMP},
+        graduate_date = #{record.graduateDate,jdbcType=DATE},
       </if>
       <if test="record.salary != null" >
-        salary = #{record.salary,jdbcType=DOUBLE},
+        salary = #{record.salary,jdbcType=NUMERIC},
       </if>
       <if test="record.assess != null" >
         assess = #{record.assess,jdbcType=VARCHAR},
@@ -543,13 +545,13 @@
         offer_state = #{record.offerState,jdbcType=VARCHAR},
       </if>
       <if test="record.threeSide != null" >
-        three_side = #{record.threeSide,jdbcType=CHAR},
+        three_side = #{record.threeSide,jdbcType=VARCHAR},
       </if>
       <if test="record.payTime != null" >
-        pay_time = #{record.payTime,jdbcType=TIMESTAMP},
+        pay_time = #{record.payTime,jdbcType=DATE},
       </if>
       <if test="record.threeState != null" >
-        three_state = #{record.threeState,jdbcType=CHAR},
+        three_state = #{record.threeState,jdbcType=VARCHAR},
       </if>
       <if test="record.refuse != null" >
         refuse = #{record.refuse,jdbcType=VARCHAR},
@@ -558,10 +560,10 @@
         refuse_reson = #{record.refuseReson,jdbcType=VARCHAR},
       </if>
       <if test="record.refuseDate != null" >
-        refuse_date = #{record.refuseDate,jdbcType=TIMESTAMP},
+        refuse_date = #{record.refuseDate,jdbcType=DATE},
       </if>
       <if test="record.breaker != null" >
-        breaker = #{record.breaker,jdbcType=CHAR},
+        breaker = #{record.breaker,jdbcType=VARCHAR},
       </if>
       <if test="record.train != null" >
         train = #{record.train,jdbcType=VARCHAR},
@@ -591,10 +593,10 @@
         two_result = #{record.twoResult,jdbcType=VARCHAR},
       </if>
       <if test="record.trueTime != null" >
-        true_time = #{record.trueTime,jdbcType=TIMESTAMP},
+        true_time = #{record.trueTime,jdbcType=DATE},
       </if>
       <if test="record.oneOvertime != null" >
-        one_overtime = #{record.oneOvertime,jdbcType=TIMESTAMP},
+        one_overtime = #{record.oneOvertime,jdbcType=DATE},
       </if>
       <if test="record.state != null" >
         state = #{record.state,jdbcType=VARCHAR},
@@ -614,13 +616,13 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map" >
-    update student_info
+    update student
     set id = #{record.id,jdbcType=INTEGER},
       note_no = #{record.noteNo,jdbcType=VARCHAR},
       phase_no = #{record.phaseNo,jdbcType=VARCHAR},
-      interview_time = #{record.interviewTime,jdbcType=TIMESTAMP},
+      interview_time = #{record.interviewTime,jdbcType=DATE},
       name = #{record.name,jdbcType=VARCHAR},
-      sex = #{record.sex,jdbcType=CHAR},
+      sex = #{record.sex,jdbcType=VARCHAR},
       school = #{record.school,jdbcType=VARCHAR},
       profession = #{record.profession,jdbcType=VARCHAR},
       education = #{record.education,jdbcType=VARCHAR},
@@ -629,23 +631,23 @@
       card_no = #{record.cardNo,jdbcType=VARCHAR},
       qq_no = #{record.qqNo,jdbcType=VARCHAR},
       job = #{record.job,jdbcType=VARCHAR},
-      work_start = #{record.workStart,jdbcType=TIMESTAMP},
-      work_end = #{record.workEnd,jdbcType=TIMESTAMP},
-      graduate_date = #{record.graduateDate,jdbcType=TIMESTAMP},
-      salary = #{record.salary,jdbcType=DOUBLE},
+      work_start = #{record.workStart,jdbcType=DATE},
+      work_end = #{record.workEnd,jdbcType=DATE},
+      graduate_date = #{record.graduateDate,jdbcType=DATE},
+      salary = #{record.salary,jdbcType=NUMERIC},
       assess = #{record.assess,jdbcType=VARCHAR},
       first_try = #{record.firstTry,jdbcType=VARCHAR},
       second_try = #{record.secondTry,jdbcType=VARCHAR},
       view_remark = #{record.viewRemark,jdbcType=VARCHAR},
       location = #{record.location,jdbcType=VARCHAR},
       offer_state = #{record.offerState,jdbcType=VARCHAR},
-      three_side = #{record.threeSide,jdbcType=CHAR},
-      pay_time = #{record.payTime,jdbcType=TIMESTAMP},
-      three_state = #{record.threeState,jdbcType=CHAR},
+      three_side = #{record.threeSide,jdbcType=VARCHAR},
+      pay_time = #{record.payTime,jdbcType=DATE},
+      three_state = #{record.threeState,jdbcType=VARCHAR},
       refuse = #{record.refuse,jdbcType=VARCHAR},
       refuse_reson = #{record.refuseReson,jdbcType=VARCHAR},
-      refuse_date = #{record.refuseDate,jdbcType=TIMESTAMP},
-      breaker = #{record.breaker,jdbcType=CHAR},
+      refuse_date = #{record.refuseDate,jdbcType=DATE},
+      breaker = #{record.breaker,jdbcType=VARCHAR},
       train = #{record.train,jdbcType=VARCHAR},
       staff_no = #{record.staffNo,jdbcType=VARCHAR},
       interview_dept = #{record.interviewDept,jdbcType=VARCHAR},
@@ -655,8 +657,8 @@
       leader = #{record.leader,jdbcType=VARCHAR},
       one_result = #{record.oneResult,jdbcType=VARCHAR},
       two_result = #{record.twoResult,jdbcType=VARCHAR},
-      true_time = #{record.trueTime,jdbcType=TIMESTAMP},
-      one_overtime = #{record.oneOvertime,jdbcType=TIMESTAMP},
+      true_time = #{record.trueTime,jdbcType=DATE},
+      one_overtime = #{record.oneOvertime,jdbcType=DATE},
       state = #{record.state,jdbcType=VARCHAR},
       assigned_interviewer = #{record.assignedInterviewer,jdbcType=VARCHAR},
       year = #{record.year,jdbcType=VARCHAR},
@@ -666,7 +668,7 @@
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.qunar.ops.recruit.model.Student" >
-    update student_info
+    update student
     <set >
       <if test="noteNo != null" >
         note_no = #{noteNo,jdbcType=VARCHAR},
@@ -675,13 +677,13 @@
         phase_no = #{phaseNo,jdbcType=VARCHAR},
       </if>
       <if test="interviewTime != null" >
-        interview_time = #{interviewTime,jdbcType=TIMESTAMP},
+        interview_time = #{interviewTime,jdbcType=DATE},
       </if>
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="sex != null" >
-        sex = #{sex,jdbcType=CHAR},
+        sex = #{sex,jdbcType=VARCHAR},
       </if>
       <if test="school != null" >
         school = #{school,jdbcType=VARCHAR},
@@ -708,16 +710,16 @@
         job = #{job,jdbcType=VARCHAR},
       </if>
       <if test="workStart != null" >
-        work_start = #{workStart,jdbcType=TIMESTAMP},
+        work_start = #{workStart,jdbcType=DATE},
       </if>
       <if test="workEnd != null" >
-        work_end = #{workEnd,jdbcType=TIMESTAMP},
+        work_end = #{workEnd,jdbcType=DATE},
       </if>
       <if test="graduateDate != null" >
-        graduate_date = #{graduateDate,jdbcType=TIMESTAMP},
+        graduate_date = #{graduateDate,jdbcType=DATE},
       </if>
       <if test="salary != null" >
-        salary = #{salary,jdbcType=DOUBLE},
+        salary = #{salary,jdbcType=NUMERIC},
       </if>
       <if test="assess != null" >
         assess = #{assess,jdbcType=VARCHAR},
@@ -738,13 +740,13 @@
         offer_state = #{offerState,jdbcType=VARCHAR},
       </if>
       <if test="threeSide != null" >
-        three_side = #{threeSide,jdbcType=CHAR},
+        three_side = #{threeSide,jdbcType=VARCHAR},
       </if>
       <if test="payTime != null" >
-        pay_time = #{payTime,jdbcType=TIMESTAMP},
+        pay_time = #{payTime,jdbcType=DATE},
       </if>
       <if test="threeState != null" >
-        three_state = #{threeState,jdbcType=CHAR},
+        three_state = #{threeState,jdbcType=VARCHAR},
       </if>
       <if test="refuse != null" >
         refuse = #{refuse,jdbcType=VARCHAR},
@@ -753,10 +755,10 @@
         refuse_reson = #{refuseReson,jdbcType=VARCHAR},
       </if>
       <if test="refuseDate != null" >
-        refuse_date = #{refuseDate,jdbcType=TIMESTAMP},
+        refuse_date = #{refuseDate,jdbcType=DATE},
       </if>
       <if test="breaker != null" >
-        breaker = #{breaker,jdbcType=CHAR},
+        breaker = #{breaker,jdbcType=VARCHAR},
       </if>
       <if test="train != null" >
         train = #{train,jdbcType=VARCHAR},
@@ -786,10 +788,10 @@
         two_result = #{twoResult,jdbcType=VARCHAR},
       </if>
       <if test="trueTime != null" >
-        true_time = #{trueTime,jdbcType=TIMESTAMP},
+        true_time = #{trueTime,jdbcType=DATE},
       </if>
       <if test="oneOvertime != null" >
-        one_overtime = #{oneOvertime,jdbcType=TIMESTAMP},
+        one_overtime = #{oneOvertime,jdbcType=DATE},
       </if>
       <if test="state != null" >
         state = #{state,jdbcType=VARCHAR},
@@ -807,12 +809,12 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.qunar.ops.recruit.model.Student" >
-    update student_info
+    update student
     set note_no = #{noteNo,jdbcType=VARCHAR},
       phase_no = #{phaseNo,jdbcType=VARCHAR},
-      interview_time = #{interviewTime,jdbcType=TIMESTAMP},
+      interview_time = #{interviewTime,jdbcType=DATE},
       name = #{name,jdbcType=VARCHAR},
-      sex = #{sex,jdbcType=CHAR},
+      sex = #{sex,jdbcType=VARCHAR},
       school = #{school,jdbcType=VARCHAR},
       profession = #{profession,jdbcType=VARCHAR},
       education = #{education,jdbcType=VARCHAR},
@@ -821,23 +823,23 @@
       card_no = #{cardNo,jdbcType=VARCHAR},
       qq_no = #{qqNo,jdbcType=VARCHAR},
       job = #{job,jdbcType=VARCHAR},
-      work_start = #{workStart,jdbcType=TIMESTAMP},
-      work_end = #{workEnd,jdbcType=TIMESTAMP},
-      graduate_date = #{graduateDate,jdbcType=TIMESTAMP},
-      salary = #{salary,jdbcType=DOUBLE},
+      work_start = #{workStart,jdbcType=DATE},
+      work_end = #{workEnd,jdbcType=DATE},
+      graduate_date = #{graduateDate,jdbcType=DATE},
+      salary = #{salary,jdbcType=NUMERIC},
       assess = #{assess,jdbcType=VARCHAR},
       first_try = #{firstTry,jdbcType=VARCHAR},
       second_try = #{secondTry,jdbcType=VARCHAR},
       view_remark = #{viewRemark,jdbcType=VARCHAR},
       location = #{location,jdbcType=VARCHAR},
       offer_state = #{offerState,jdbcType=VARCHAR},
-      three_side = #{threeSide,jdbcType=CHAR},
-      pay_time = #{payTime,jdbcType=TIMESTAMP},
-      three_state = #{threeState,jdbcType=CHAR},
+      three_side = #{threeSide,jdbcType=VARCHAR},
+      pay_time = #{payTime,jdbcType=DATE},
+      three_state = #{threeState,jdbcType=VARCHAR},
       refuse = #{refuse,jdbcType=VARCHAR},
       refuse_reson = #{refuseReson,jdbcType=VARCHAR},
-      refuse_date = #{refuseDate,jdbcType=TIMESTAMP},
-      breaker = #{breaker,jdbcType=CHAR},
+      refuse_date = #{refuseDate,jdbcType=DATE},
+      breaker = #{breaker,jdbcType=VARCHAR},
       train = #{train,jdbcType=VARCHAR},
       staff_no = #{staffNo,jdbcType=VARCHAR},
       interview_dept = #{interviewDept,jdbcType=VARCHAR},
@@ -847,8 +849,8 @@
       leader = #{leader,jdbcType=VARCHAR},
       one_result = #{oneResult,jdbcType=VARCHAR},
       two_result = #{twoResult,jdbcType=VARCHAR},
-      true_time = #{trueTime,jdbcType=TIMESTAMP},
-      one_overtime = #{oneOvertime,jdbcType=TIMESTAMP},
+      true_time = #{trueTime,jdbcType=DATE},
+      one_overtime = #{oneOvertime,jdbcType=DATE},
       state = #{state,jdbcType=VARCHAR},
       assigned_interviewer = #{assignedInterviewer,jdbcType=VARCHAR},
       year = #{year,jdbcType=VARCHAR},
