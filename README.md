@@ -1,19 +1,19 @@
-1.	ÏÂÔØ°²×°Postgresql¡£
-´Ó¹ÙÍøhttp://www.postgresql.org/ ÉÏÏÂÔØ×îĞÂÎÈ¶¨°æ£¬ÎÒÏÂÔØµÄÊÇWindow ÏÂµÄVersion 9.4.5£¬´óĞ¡Îª58.42M£¬Ö´ĞĞexe°²×°¼´¿É¡£°²×°ºÃÒÔºó£¬Ä¬ÈÏÓÃ»§ÃûÊÇpostgres£¬ÃÜÂëÎª°²×°¹ı³ÌÖĞ×Ô¼ºÉè¶¨µÄ¡£pgAdminÊÇ×Ô´øµÄ¿ÉÊÓ»¯¹¤¾ß¡£½«#{°²×°Ä¿Â¼}/binÌí¼Óµ½»·¾³±äÁ¿ÒÔºó£¬¿ÉÒÔÔÚÃüÁîÌáÊ¾·ûÏÂÖ´ĞĞsqlÃüÁî£¬³£ÓÃÃüÁî¼ûhttp://blog.chinaunix.net/uid-26642180-id-3485465.html¡£
+1.	ä¸‹è½½å®‰è£…Postgresqlã€‚
+ä»å®˜ç½‘http://www.postgresql.org/ ä¸Šä¸‹è½½æœ€æ–°ç¨³å®šç‰ˆï¼Œæˆ‘ä¸‹è½½çš„æ˜¯Window ä¸‹çš„Version 9.4.5ï¼Œå¤§å°ä¸º58.42Mï¼Œæ‰§è¡Œexeå®‰è£…å³å¯ã€‚å®‰è£…å¥½ä»¥åï¼Œé»˜è®¤ç”¨æˆ·åæ˜¯postgresï¼Œå¯†ç ä¸ºå®‰è£…è¿‡ç¨‹ä¸­è‡ªå·±è®¾å®šçš„ã€‚pgAdminæ˜¯è‡ªå¸¦çš„å¯è§†åŒ–å·¥å…·ã€‚å°†#{å®‰è£…ç›®å½•}/binæ·»åŠ åˆ°ç¯å¢ƒå˜é‡ä»¥åï¼Œå¯ä»¥åœ¨å‘½ä»¤æç¤ºç¬¦ä¸‹æ‰§è¡Œsqlå‘½ä»¤ï¼Œå¸¸ç”¨å‘½ä»¤è§http://blog.chinaunix.net/uid-26642180-id-3485465.html
 
-2.	MyeclipseÖĞÅäÖÃjetty run
-Run Configurations->Maven BuildÉÏÓÒ¼ü->new:
-1)	Ñ¡ÔñName£¬Ëæ±ãÌî£¬ÀıÈçjettyrun
-2)	µã»÷Browse Workspace£¬Ñ¡Ôñ¶ÔÓ¦ÒªÔËĞĞµÄÏîÄ¿
-3)	GoalsÌîjetty:run
+2.	Myeclipseä¸­é…ç½®jetty run
+Run Configurations->Maven Buildä¸Šå³é”®->new:
+1)	é€‰æ‹©Nameï¼Œéšä¾¿å¡«ï¼Œä¾‹å¦‚jettyrun
+2)	ç‚¹å‡»Browse Workspaceï¼Œé€‰æ‹©å¯¹åº”è¦è¿è¡Œçš„é¡¹ç›®
+3)	Goalså¡«jetty:run
 
-3.	myeclipse°²×°mybatis generator²å¼ş
-ÏÂÔØhttp://pan.baidu.com/s/1i3lk4AT ÀëÏß²å¼ş£¬½âÑ¹Ëõ£¬½«½âÑ¹ËõÒÔºóµÄpluginsÎÄ¼ş¼ĞÏÂµÄÎÄ¼ş·Åµ½myeclipse°²×°Ä¿Â¼ÏÂµÄpluginsÎÄ¼ş¼ĞÏÂ¡£ÖØÆômyeclipse£¬ÔÚgenerator.xmlÉÏÓÒ¼ü£¬¿ÉÒÔ¿´µ½Generate Mybatis/ibatis artifacts×ÖÑù£¬ËµÃ÷°²×°³É¹¦¡£
+3.	myeclipseå®‰è£…mybatis generatoræ’ä»¶
+ä¸‹è½½http://pan.baidu.com/s/1i3lk4AT ç¦»çº¿æ’ä»¶ï¼Œè§£å‹ç¼©ï¼Œå°†è§£å‹ç¼©ä»¥åçš„pluginsæ–‡ä»¶å¤¹ä¸‹çš„æ–‡ä»¶æ”¾åˆ°myeclipseå®‰è£…ç›®å½•ä¸‹çš„pluginsæ–‡ä»¶å¤¹ä¸‹ã€‚é‡å¯myeclipseï¼Œåœ¨generator.xmlä¸Šå³é”®ï¼Œå¯ä»¥çœ‹åˆ°Generate Mybatis/ibatis artifactså­—æ ·ï¼Œè¯´æ˜å®‰è£…æˆåŠŸã€‚
 
-4.	Myeclipse°²×°jrebel²å¼ş
-ÏÂÔØhttp://pan.baidu.com/s/1gd9BjDh ÆÆ½â²å¼ş£¬½âÑ¹Ëõ£¬°Ñjrebel.jarºÍjrebel.lic·Åµ½Ä³¸öÎÄ¼ş¼ĞÏÂ£¬È»ºóÔÙmyeclipseµÄvmÆô¶¯²ÎÊıÖĞÌí¼Ó£º
--noverify -javaagent:D:\Java\jrebel\jrebel.jar     (Ëù·ÅjrebelÂ·¾¶)
--Xbootclasspath/p:D:/Java/jrebel/rebelboot.jar   (ÉèÖÃÓëjrebelÏàÍ¬Â·¾¶¼´¿É)
+4.	Myeclipseå®‰è£…jrebelæ’ä»¶
+ä¸‹è½½http://pan.baidu.com/s/1gd9BjDh ç ´è§£æ’ä»¶ï¼Œè§£å‹ç¼©ï¼ŒæŠŠjrebel.jarå’Œjrebel.licæ”¾åˆ°æŸä¸ªæ–‡ä»¶å¤¹ä¸‹ï¼Œç„¶åå†myeclipseçš„vmå¯åŠ¨å‚æ•°ä¸­æ·»åŠ ï¼š
+-noverify -javaagent:D:\Java\jrebel\jrebel.jar     (æ‰€æ”¾jrebelè·¯å¾„)
+-Xbootclasspath/p:D:/Java/jrebel/rebelboot.jar   (è®¾ç½®ä¸jrebelç›¸åŒè·¯å¾„å³å¯)
 -Drebel.generate.show=true
 -Drebel.spring_plugin=true
 -Drebel.aspectj_plugin=true
